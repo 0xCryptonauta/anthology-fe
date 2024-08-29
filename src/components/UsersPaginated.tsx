@@ -19,7 +19,7 @@ export const UsersPaginated = () => {
 
   useEffect(() => {
     const fetchUsersCount = async () => {
-      const _usersCount = await readFactory("getUsersCount");
+      const _usersCount = await readFactory("getUserCount");
       setUsersCount(_usersCount as bigint);
 
       console.log("userCount:", _usersCount);

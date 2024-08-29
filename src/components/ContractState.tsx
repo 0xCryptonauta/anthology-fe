@@ -13,6 +13,7 @@ export const ContractState: React.FC = () => {
   const [isFrozen, setIsFrozen] = useState<boolean>(false);
   const [erc20Token, setErc20Token] = useState<string>("");
   const [owner, setOwner] = useState<string>("");
+  const [userCount, setUserCount] = useState<bigint>(0n);
 
   useEffect(() => {
     const fetchContractData = async () => {
@@ -23,12 +24,14 @@ export const ContractState: React.FC = () => {
         useERC20,
         erc20Token,
         anthologyPrice,
+        userCount,
       } = contractInfo as {
         isFrozen: boolean;
         whitelistEnabled: boolean;
         useERC20: boolean;
         erc20Token: string;
         anthologyPrice: number;
+        userCount: bigint;
       };
       const owner = await readFactory("owner");
 
@@ -43,6 +46,8 @@ export const ContractState: React.FC = () => {
       setUseERC20(useERC20 as boolean);
       setIsFrozen(isFrozen as boolean);
       setErc20Token(erc20Token as string);
+      setUserCount(userCount as bigint);
+      console.log("userCount:", userCount);
     };
 
     fetchContractData();
@@ -92,6 +97,7 @@ export const ContractState: React.FC = () => {
         <span>Use ERC20: {useERC20 ? "Yes" : "No"}</span>
         <span>ERC20 address: {erc20Token}</span>
         <span>Deployments Frozen: {isFrozen ? "Yes" : "No"}</span>
+        <span>Users count: {userCount.toString()}</span>
       </div>
 
       <IsWhitelisted />

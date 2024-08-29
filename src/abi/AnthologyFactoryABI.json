@@ -340,6 +340,11 @@
             "internalType": "uint256",
             "name": "anthologyPrice",
             "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "userCount",
+            "type": "uint256"
           }
         ],
         "internalType": "struct ContractInfo",
@@ -390,6 +395,19 @@
   },
   {
     "inputs": [],
+    "name": "getUserCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "getUsers",
     "outputs": [
       {
@@ -420,19 +438,6 @@
         "internalType": "address[]",
         "name": "",
         "type": "address[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getUsersCount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -710,6 +715,19 @@
         "internalType": "address",
         "name": "",
         "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "userCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
