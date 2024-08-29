@@ -105,15 +105,3 @@ export const ContractState: React.FC = () => {
     </div>
   );
 };
-
-//TODO: sc-
-//    delete user* from array not mapping
-//    delete one anthology from mapping
-//    implement pagination in users
-//    *implment function to get all core state (5 variables) at once
-//    implment events that are missing
-
-//    Add hash Anthology to prevent useless rpc calls
-//    Add variable to anthology to store the skin (post-it, media, etc) - in Anthology
-
-//

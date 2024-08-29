@@ -146,10 +146,17 @@ export const setERC20Token = async (_newTokenAddr: string) => {
 
     ** Commit !!!
     ** Pagination of users
-    -> Add usersCount to contractInfo
+    ** Add usersCount to contractInfo
     -> Continue with Redux tool kit
     -> fix logic with address and only owner visibility
     -> Add shadcn components
     -> Continue with deployContract()
     -> Should i have a .env file?
+
+    -> Remove one user
+    -> Which events are missing
+
+    -> Add hash Anthology to prevent useless rpc calls
+    -> Add variable to anthology to store the skin (post-it, media, etc) - in Anthology
+    -> Add description to anthology
 */
