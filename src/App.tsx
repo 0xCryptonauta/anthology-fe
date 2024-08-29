@@ -4,6 +4,7 @@ import { ContractState } from "./components/ContractState";
 import { useEffect, useState } from "react";
 import { WalletConnector } from "./components/WalletConnector";
 import { OnlyOwner } from "./components/OnlyOwner";
+import { MainComponent } from "./components/MainComponent";
 
 const App = () => {
   const [address, setAddress] = useState("");
@@ -24,18 +25,33 @@ const App = () => {
     <div
       style={{
         display: "flex",
-        flexDirection: "row",
+        flexDirection: "column",
         border: "1px solid white",
-        width: "fit-content",
         padding: "7px",
         borderRadius: "7px",
         margin: "5px",
       }}
     >
-      <h1>Anthology Factory DApp</h1>
-      <WalletConnector />
-      <ContractState />
-      {address && <OnlyOwner />}
+      <div
+        style={{
+          border: "1px solid white",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          height: "60px",
+        }}
+      >
+        <div style={{ marginLeft: "7px" }}>
+          <h1>Anthology Factory DApp</h1>
+        </div>
+        <WalletConnector />
+      </div>
+
+      <div style={{ display: "flex" }}>
+        <MainComponent />
+        <ContractState />
+        {address && <OnlyOwner />}
+      </div>
     </div>
   );
 };

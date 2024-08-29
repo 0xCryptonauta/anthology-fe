@@ -8,7 +8,7 @@ import { hardhat as chain } from "@wagmi/core/chains";
 import AnthologyFactoryABI from "../abi/AnthologyFactoryABI.json";
 import { config } from "../config";
 
-const AnthologyFactoryAddress = "0x610178dA211FEF7D417bC0e6FeD39F05609AD788";
+const AnthologyFactoryAddress = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9";
 
 type readFunctions =
   | "getContractInfo"
@@ -19,6 +19,7 @@ type readFunctions =
   | "erc20Token"
   | "owner"
   | "getUsers"
+  | "getUsersCount"
   | "getUserContracts"
   | "getWhitelistedUsers"
   | "isWhitelisted"
@@ -143,9 +144,11 @@ export const setERC20Token = async (_newTokenAddr: string) => {
       * setAnthologyPrice()
       - withdraw()
 
-    -> Commit !!!
+    ** Commit !!!
+    -> Pagination of users
     -> Continue with Redux tool kit
     -> fix logic with address and only owner visibility
     -> Add shadcn components
     -> Continue with deployContract()
+    -> Should i have a .env file?
 */

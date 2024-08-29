@@ -4,9 +4,7 @@ import React, { useEffect, useState } from "react";
 import { parseEther } from "viem";
 import { readFactory } from "./FactoryFunctions";
 import { WhitelistedUsers } from "./WhitelistedUsers";
-import { Users } from "./Users";
 import { IsWhitelisted } from "./IsWhitelisted";
-import { GetUserContracts } from "./GetUserContracts";
 
 export const ContractState: React.FC = () => {
   const [whitelistEnabled, setWhitelistEnabled] = useState<boolean>(false);
@@ -76,18 +74,28 @@ export const ContractState: React.FC = () => {
         margin: "5px",
       }}
     >
-      <h3>Contract Variables</h3>
-      <span>Owner of factory: {owner}</span>
-      <span>Whitelist Enabled: {whitelistEnabled ? "Yes" : "No"}</span>
-      <span>Anthology Price: {anthologyPrice.toString()} ETH</span>
-      <span>Use ERC20: {useERC20 ? "Yes" : "No"}</span>
-      <span>ERC20 address: {erc20Token}</span>
-      <span>Deployments Frozen: {isFrozen ? "Yes" : "No"}</span>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          border: "1px solid white",
+          width: "fit-content",
+          padding: "7px",
+          borderRadius: "7px",
+          margin: "5px",
+        }}
+      >
+        <h3>Contract Variables</h3>
+        <span>Owner of factory: {owner}</span>
+        <span>Whitelist Enabled: {whitelistEnabled ? "Yes" : "No"}</span>
+        <span>Anthology Price: {anthologyPrice.toString()} ETH</span>
+        <span>Use ERC20: {useERC20 ? "Yes" : "No"}</span>
+        <span>ERC20 address: {erc20Token}</span>
+        <span>Deployments Frozen: {isFrozen ? "Yes" : "No"}</span>
+      </div>
 
-      <WhitelistedUsers />
-      <Users />
       <IsWhitelisted />
-      <GetUserContracts />
+      <WhitelistedUsers />
     </div>
   );
 };
@@ -98,8 +106,8 @@ export const ContractState: React.FC = () => {
 //    implement pagination in users
 //    *implment function to get all core state (5 variables) at once
 //    implment events that are missing
-//    Add hash Anthology to prevent useless rpc calls
 
+//    Add hash Anthology to prevent useless rpc calls
 //    Add variable to anthology to store the skin (post-it, media, etc) - in Anthology
 
 //
