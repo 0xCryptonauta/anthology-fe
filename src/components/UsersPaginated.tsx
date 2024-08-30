@@ -38,9 +38,11 @@ export const UsersPaginated = () => {
       <span>Users paginated: {users.length}</span>
       <br />
       <div>
-        {users.map((user, key) => {
-          return <div key={key}>{user}</div>;
-        })}
+        <ul>
+          {users.map((user, index) => (
+            <li key={index}>{user}</li>
+          ))}
+        </ul>
       </div>
     </div>
   );

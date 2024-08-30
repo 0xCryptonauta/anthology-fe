@@ -18,9 +18,11 @@ export const Users = () => {
     >
       <h3>Users: {users.length}</h3>
       <div>
-        {users.map((user, key) => {
-          return <div key={key}>{user}</div>;
-        })}
+        <ul>
+          {users.map((user, index) => (
+            <li key={index}>{user}</li>
+          ))}
+        </ul>
       </div>
     </div>
   );

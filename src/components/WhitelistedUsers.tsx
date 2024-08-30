@@ -18,9 +18,11 @@ export const WhitelistedUsers = () => {
     >
       <h3>Whitelisted addresses: {whitelistedUsers.length}</h3>
       <div>
-        {whitelistedUsers.map((user, key) => {
-          return <div key={key}>{user}</div>;
-        })}
+        <ul>
+          {whitelistedUsers.map((address, index) => (
+            <li key={index}>{address}</li>
+          ))}
+        </ul>
       </div>
     </div>
   );
