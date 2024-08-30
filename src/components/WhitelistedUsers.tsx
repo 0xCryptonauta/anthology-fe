@@ -1,18 +1,8 @@
-import { useEffect, useState } from "react";
-import { readFactory } from "./FactoryFunctions";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
 export const WhitelistedUsers = () => {
-  const [whitelistedUsers, setWhitelistedUsers] = useState([]);
-
-  useEffect(() => {
-    const fetchWhitelistedUsers = async () => {
-      const whitelistedUsers = await readFactory("getWhitelistedUsers");
-      setWhitelistedUsers(whitelistedUsers as []);
-      console.log("WhitelistedUsers:", whitelistedUsers);
-    };
-
-    fetchWhitelistedUsers();
-  }, []);
+  const { whitelistedUsers } = useSelector((state: RootState) => state.factory);
 
   return (
     <div
@@ -29,7 +19,7 @@ export const WhitelistedUsers = () => {
       <h3>Whitelisted addresses: {whitelistedUsers.length}</h3>
       <div>
         {whitelistedUsers.map((user, key) => {
-          return <span key={key}>{user}</span>;
+          return <div key={key}>{user}</div>;
         })}
       </div>
     </div>

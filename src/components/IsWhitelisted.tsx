@@ -1,7 +1,11 @@
 import { useState } from "react";
-import { readFactory } from "./FactoryFunctions";
+//import { readFactory } from "./FactoryFunctions";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 
 export const IsWhitelisted = () => {
+  const { whitelistedUsers } = useSelector((state: RootState) => state.factory);
+
   const [addressToCheck, setAddressToCheck] = useState("");
   const [isWhitelisted, setIsWhitelisted] = useState<boolean | undefined>(
     undefined
@@ -48,7 +52,8 @@ export const IsWhitelisted = () => {
       <span
         style={{ marginLeft: "7px", cursor: "pointer" }}
         onClick={async () => {
-          const isWl = await readFactory("isWhitelisted", [addressToCheck]);
+          //const isWl = await readFactory("isWhitelisted", [addressToCheck]);
+          const isWl = whitelistedUsers.includes(addressToCheck);
           setIsWhitelisted(isWl as boolean);
           console.log("isWhitelisted:", isWhitelisted);
         }}

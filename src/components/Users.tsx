@@ -1,20 +1,8 @@
-import { useEffect, useState } from "react";
-import { readFactory } from "./FactoryFunctions";
+import { RootState } from "../store";
+import { useSelector } from "react-redux";
 
-// Users can not grow much (10K or more) due to fetching and modifying the array
-// Can be changed to be the selected users* or something in those lines
 export const Users = () => {
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    const fetchWhitelistedUsers = async () => {
-      const Users = await readFactory("getUsers");
-      setUsers(Users as []);
-      console.log("WhitelistedUsers:", Users);
-    };
-
-    fetchWhitelistedUsers();
-  }, []);
+  const { users } = useSelector((state: RootState) => state.factory);
 
   return (
     <div

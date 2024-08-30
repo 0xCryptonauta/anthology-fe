@@ -1,25 +1,14 @@
-import { getAccount, reconnect } from "@wagmi/core";
-import { config } from "./config";
 import { ContractState } from "./components/ContractState";
-import { useEffect, useState } from "react";
 import { WalletConnector } from "./components/WalletConnector";
 import { OnlyOwner } from "./components/OnlyOwner";
 import { MainComponent } from "./components/MainComponent";
 
+import { useSelector } from "react-redux";
+import { RootState } from "./store";
+
 const App = () => {
-  const [address, setAddress] = useState("");
-
-  useEffect(() => {
-    const reconnectWallet = async () => {
-      const recWallets = await reconnect(config);
-      console.log("reconnected wallet:", recWallets);
-    };
-
-    reconnectWallet();
-
-    const account = getAccount(config);
-    setAddress(account.address ?? "");
-  }, []);
+  const userAddr = useSelector((state: RootState) => state.user.userAddr);
+  const factoryOwner = useSelector((state: RootState) => state.factory.owner);
 
   return (
     <div
@@ -50,7 +39,7 @@ const App = () => {
       <div style={{ display: "flex" }}>
         <MainComponent />
         <ContractState />
-        {address && <OnlyOwner />}
+        {factoryOwner == userAddr && <OnlyOwner />}
       </div>
     </div>
   );

@@ -1,7 +1,16 @@
-import { getAccount, getConnectors, disconnect, Connector } from "@wagmi/core";
+import {
+  getAccount,
+  getConnectors,
+  disconnect,
+  Connector,
+  reconnect,
+} from "@wagmi/core";
 
 import { config } from "../config";
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../store";
+import { updateUserAddr } from "../slices/userSlice";
 
 function shortenAddress(address: string): string {
   return `${address.substring(0, 6)}...${address.substring(
@@ -10,29 +19,38 @@ function shortenAddress(address: string): string {
 }
 
 export const WalletConnector = () => {
-  const [address, setAddress] = useState("");
+  const userAddr = useSelector((state: RootState) => state.user.userAddr);
+  const dispatch = useDispatch();
+
   const [connectors, setConnectors] = useState<Connector[]>([]);
   const [currentWalletIcon, setCurrentWalletIcon] = useState("");
 
   useEffect(() => {
-    const currentAccount = getAccount(config);
-    const connectors = getConnectors(config);
-    console.log("account:", currentAccount);
-    //connectors = connectors.filter((conn) => conn.id !== "injected");
+    const reconnectWallet = async () => {
+      const connectors = getConnectors(config);
+      setConnectors(connectors as Connector[]);
 
-    const getConnectorById = (id: string) => {
-      return connectors?.find((conn) => conn.id === id);
+      const recWallets = await reconnect(config);
+      console.log("reconnected wallet:", recWallets);
+      if (recWallets.length > 0) {
+        const currentAccount = getAccount(config);
+
+        const getConnectorById = (id: string) => {
+          return connectors?.find((conn) => conn.id === id);
+        };
+        const currentConnector = getConnectorById(
+          currentAccount.connector?.id ?? ""
+        );
+
+        setCurrentWalletIcon(currentConnector?.icon as string);
+        dispatch(updateUserAddr(currentAccount.address as string));
+      }
     };
-    const currentConnector = getConnectorById(
-      currentAccount.connector?.id ?? ""
-    );
-    setCurrentWalletIcon(currentConnector?.icon as string);
 
-    setAddress(currentAccount.address ?? "");
-    setConnectors(connectors as Connector[]);
-  }, []);
+    reconnectWallet();
+  }, [dispatch]);
 
-  return address ? (
+  return userAddr ? (
     <div
       style={{
         display: "flex",
@@ -45,7 +63,7 @@ export const WalletConnector = () => {
         margin: "5px",
       }}
     >
-      <span>{shortenAddress(address)}</span>
+      <span>{shortenAddress(userAddr)}</span>
       <img
         src={currentWalletIcon}
         width={25}
@@ -56,7 +74,7 @@ export const WalletConnector = () => {
         style={{ marginLeft: "5px", cursor: "pointer" }}
         onClick={async () => {
           disconnect(config);
-          setAddress("");
+          dispatch(updateUserAddr(""));
         }}
       >
         ❌
@@ -86,7 +104,8 @@ export const WalletConnector = () => {
             }}
             onClick={async () => {
               const result = await connector.connect();
-              setAddress(result.accounts[0]);
+              //setAddress(result.accounts[0]);
+              dispatch(updateUserAddr(result.accounts[0] as string));
               const icon = connector.icon;
               setCurrentWalletIcon(icon as string);
             }}

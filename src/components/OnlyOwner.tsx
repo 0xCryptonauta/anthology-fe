@@ -1,38 +1,39 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
-  addToWhitelist,
+  callAddToWhitelist,
   callSetIsFrozen,
   callSetUseERC20,
-  enableWhitelist,
-  readFactory,
-  removeFromWhitelist,
-  setERC20Token,
-  updateAnthologyPrice,
+  callEnableWhitelist,
+  callRemoveFromWhitelist,
+  callSetERC20Token,
+  callSetAnthologyPrice,
 } from "./FactoryFunctions";
 import { parseEther } from "viem";
 
+import { useSelector, useDispatch } from "react-redux";
+import {
+  updateAddToWhitelist,
+  updateAnthologyPrice,
+  updateErc20Token,
+  updateIsFrozen,
+  updateRemoveFromWhitelist,
+  updateUseErc20,
+  updateWhitelistEnabled,
+} from "../slices/factorySlice";
+import { RootState } from "../store";
+
 export const OnlyOwner = () => {
-  const [useERC20, setUseERC20] = useState(false);
-  const [whitelistEnabled, setWhitelistEnabled] = useState(false);
+  const dispatch = useDispatch();
+
+  const { isFrozen, whitelistEnabled, useErc20 } = useSelector(
+    (state: RootState) => state.factory
+  );
+
+  // input fields value
   const [addressToAdd, setAddresToAdd] = useState("");
   const [addressToRemove, setAddressToRemove] = useState("");
-  const [anthologyPrice, setAnthologyPrice] = useState("");
   const [erc20TokenAddr, setErc20TokenAddr] = useState("");
-  const [isFrozen, setIsFrozen] = useState(false);
-
-  useEffect(() => {
-    const fetchUseERC20 = async () => {
-      const _useERC20 = await readFactory("useERC20");
-      const _whitelistEnabled = await readFactory("whitelistEnabled");
-      const _isFrozen = await readFactory("isFrozen");
-
-      setUseERC20(_useERC20 as boolean);
-      setWhitelistEnabled(_whitelistEnabled as boolean);
-      setIsFrozen(_isFrozen as boolean);
-    };
-
-    fetchUseERC20();
-  }, []);
+  const [anthologyPrice, setAnthologyPrice] = useState<string>("0");
 
   return (
     <div
@@ -50,7 +51,7 @@ export const OnlyOwner = () => {
     >
       <h2>Owner only:</h2>
 
-      {/* ------------------------------ Update Anthology price ------------------------------ */}
+      {/* ------------------------------- Update Anthology price ------------------------------ */}
       <div
         style={{
           display: "flex",
@@ -80,25 +81,33 @@ export const OnlyOwner = () => {
           style={{ marginLeft: "7px", cursor: "pointer" }}
           onClick={async () => {
             //Check first if users include address before call
-            const txResponse = await updateAnthologyPrice(
+            const txHash = await callSetAnthologyPrice(
               parseEther(anthologyPrice)
             );
-            console.log("updating price", txResponse);
+            console.log("updating price", txHash);
+            if (txHash) dispatch(updateAnthologyPrice(Number(anthologyPrice)));
           }}
         >
           💰
         </span>
       </div>
 
-      {/* ------------------------------ Toggle useERC20 ------------------------------ */}
+      {/* ---------------------------------- Toggle useERC20 ---------------------------------- */}
 
       <div style={{ margin: "5px" }}>
-        <button onClick={async () => await callSetUseERC20(!useERC20)}>
-          {useERC20 ? "Change to ETH payment" : "Change to ERC20 payment"}
+        <button
+          onClick={async () => {
+            const txHash = await callSetUseERC20(!useErc20);
+
+            console.log("setting useERC20: ", txHash);
+            if (txHash) dispatch(updateUseErc20(!useErc20));
+          }}
+        >
+          {useErc20 ? "Change to ETH payment" : "Change to ERC20 payment"}
         </button>
       </div>
 
-      {/* ------------------------------- setERC20Token ------------------------------- */}
+      {/* ----------------------------------- setERC20Token ----------------------------------- */}
 
       <div
         style={{
@@ -130,26 +139,31 @@ export const OnlyOwner = () => {
           style={{ marginLeft: "7px", cursor: "pointer" }}
           onClick={async () => {
             //Check first if users include address before call
-            const txResponse = await setERC20Token(erc20TokenAddr);
-            console.log("updating ERC20 token addr", txResponse);
+            const txHash = await callSetERC20Token(erc20TokenAddr);
+            console.log("updating ERC20 token addr", txHash);
+            if (txHash) dispatch(updateErc20Token(erc20TokenAddr));
           }}
         >
           📝
         </span>
       </div>
 
-      {/* ------------------------------ Toggle whitelist ------------------------------ */}
+      {/* ---------------------------------- Toggle whitelist --------------------------------- */}
 
       <div style={{ margin: "5px" }}>
         <button
           onClick={async () => {
-            await enableWhitelist(!whitelistEnabled);
+            const txHash = await callEnableWhitelist(!whitelistEnabled);
+            console.log("enable whitelist (TOAST):", txHash);
+            if (txHash) dispatch(updateWhitelistEnabled(!whitelistEnabled));
           }}
         >
           {whitelistEnabled ? "Deactivate whitelist" : "Activate Whitelist"}
         </button>
       </div>
-      {/* ------------------------------ Add to Whitelist ------------------------------ */}
+
+      {/* ---------------------------------- Add to Whitelist --------------------------------- */}
+
       <div
         style={{
           display: "flex",
@@ -178,15 +192,16 @@ export const OnlyOwner = () => {
           style={{ marginLeft: "7px", cursor: "pointer" }}
           onClick={async () => {
             //Check first if users include address before call
-            const txResponse = await addToWhitelist(addressToAdd);
-            console.log("Adding to WL: confirm in toast", txResponse);
+            const txHash = await callAddToWhitelist(addressToAdd);
+            console.log("Adding to WL: confirm in toast", txHash);
+            if (txHash) dispatch(updateAddToWhitelist(addressToAdd));
           }}
         >
           📥
         </span>
       </div>
 
-      {/* ------------------------------ Remove From Whitelist ------------------------------ */}
+      {/* -------------------------------- Remove From Whitelist ------------------------------ */}
 
       <div
         style={{
@@ -216,19 +231,27 @@ export const OnlyOwner = () => {
           style={{ marginLeft: "7px", cursor: "pointer" }}
           onClick={async () => {
             //Check first if users include address before call
-            const txResponse = await removeFromWhitelist(addressToRemove);
-            console.log("Removing from WL: confirm in toast", txResponse);
+            const txHash = await callRemoveFromWhitelist(addressToRemove);
+            console.log("Removing from WL: confirm in toast", txHash);
+            if (txHash) dispatch(updateRemoveFromWhitelist(addressToRemove));
           }}
         >
           📤
         </span>
       </div>
 
-      {/*  */}
+      {/* ----------------------------------- Set isFrozen ------------------------------------ */}
 
       <div>
-        <button onClick={async () => await callSetIsFrozen(!isFrozen)}>
-          <span>{isFrozen ? "Unfreeze" : "Freeze"}</span>
+        <button
+          onClick={async () => {
+            const _newValue = !isFrozen;
+            const txHash = await callSetIsFrozen(_newValue);
+            console.log("Updating isFrozen:", txHash);
+            if (txHash) dispatch(updateIsFrozen(_newValue));
+          }}
+        >
+          <span>{isFrozen ? "Unfreeze contract" : "Freeze contract"}</span>
         </button>
       </div>
     </div>

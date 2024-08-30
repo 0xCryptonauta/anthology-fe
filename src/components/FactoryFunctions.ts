@@ -25,7 +25,7 @@ type readFunctions =
   | "isWhitelisted"
   | "getUserContracts";
 
-export const updateAnthologyPrice = async (_newValue: bigint) => {
+export const callSetAnthologyPrice = async (_newValue: bigint) => {
   const result = await writeContract(config, {
     abi: AnthologyFactoryABI,
     address: AnthologyFactoryAddress,
@@ -46,8 +46,6 @@ export const callSetUseERC20 = async (_newValue: boolean) => {
     args: [_newValue],
     chainId: chain.id,
   });
-
-  console.log("res.erc20:", result);
 
   return result;
 };
@@ -81,7 +79,7 @@ export const callSetIsFrozen = async (_newValue: boolean) => {
   return result;
 };
 
-export const addToWhitelist = async (_address: string) => {
+export const callAddToWhitelist = async (_address: string) => {
   const result = await writeContract(config, {
     abi: AnthologyFactoryABI,
     address: AnthologyFactoryAddress,
@@ -93,7 +91,7 @@ export const addToWhitelist = async (_address: string) => {
   return result;
 };
 
-export const removeFromWhitelist = async (_address: string) => {
+export const callRemoveFromWhitelist = async (_address: string) => {
   const result = await writeContract(config, {
     abi: AnthologyFactoryABI,
     address: AnthologyFactoryAddress,
@@ -105,7 +103,7 @@ export const removeFromWhitelist = async (_address: string) => {
   return result;
 };
 
-export const enableWhitelist = async (_newValue: boolean) => {
+export const callEnableWhitelist = async (_newValue: boolean) => {
   const result = await writeContract(config, {
     abi: AnthologyFactoryABI,
     address: AnthologyFactoryAddress,
@@ -117,7 +115,7 @@ export const enableWhitelist = async (_newValue: boolean) => {
   return result;
 };
 
-export const setERC20Token = async (_newTokenAddr: string) => {
+export const callSetERC20Token = async (_newTokenAddr: string) => {
   const result = await writeContract(config, {
     abi: AnthologyFactoryABI,
     address: AnthologyFactoryAddress,
@@ -130,31 +128,18 @@ export const setERC20Token = async (_newTokenAddr: string) => {
 };
 
 /* 
-  Missing functions
-    Public:
-      * getUserContracts()
-      - deployContract()  <------------- Ultimo
-      * isWhitelisted()
-
-    Owner
-      * enableWhitelist()
-      * addToWhitelist()
-      * removeFromWhitelist()
-      * setERC20Token()
-      * setAnthologyPrice()
-      - withdraw()
-
     ** Commit !!!
     ** Pagination of users
     ** Add usersCount to contractInfo
-    -> Continue with Redux tool kit
-    -> fix logic with address and only owner visibility
+    ** Continue with Redux tool kit
+    ** fix logic with address and only owner visibility
     -> Add shadcn components
-    -> Continue with deployContract()
-    -> Should i have a .env file?
+    -> deployContract()
+    -> when on how to use paginated users -> 
 
     -> Remove one user
     -> Which events are missing
+    -> Add message to requires
 
     -> Add hash Anthology to prevent useless rpc calls
     -> Add variable to anthology to store the skin (post-it, media, etc) - in Anthology

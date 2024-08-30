@@ -1,53 +1,66 @@
 /* global BigInt */
 
-import React, { useEffect, useState } from "react";
-import { parseEther } from "viem";
+import React, { useEffect } from "react";
 import { readFactory } from "./FactoryFunctions";
 import { WhitelistedUsers } from "./WhitelistedUsers";
 import { IsWhitelisted } from "./IsWhitelisted";
 
-export const ContractState: React.FC = () => {
-  const [whitelistEnabled, setWhitelistEnabled] = useState<boolean>(false);
-  const [anthologyPrice, setAnthologyPrice] = useState<bigint>(parseEther("0"));
-  const [useERC20, setUseERC20] = useState<boolean>(false);
-  const [isFrozen, setIsFrozen] = useState<boolean>(false);
-  const [erc20Token, setErc20Token] = useState<string>("");
-  const [owner, setOwner] = useState<string>("");
-  const [userCount, setUserCount] = useState<bigint>(0n);
+import { useDispatch, useSelector } from "react-redux";
+import {
+  updateFactoryBasicInfo,
+  updateWhitelistedUsers,
+} from "../slices/factorySlice";
+import { RootState } from "../store";
 
+export const ContractState: React.FC = () => {
+  const dispatch = useDispatch();
+
+  const {
+    owner,
+    isFrozen,
+    whitelistEnabled,
+    useErc20,
+    erc20Token,
+    anthologyPrice,
+    userCount,
+  } = useSelector((state: RootState) => state.factory);
+
+  // THIS SHOULD BE DONE BY APP.TS (?)
   useEffect(() => {
     const fetchContractData = async () => {
       const contractInfo = await readFactory("getContractInfo");
+      const whitelistedUsers = await readFactory("getWhitelistedUsers");
+
       const {
         isFrozen,
         whitelistEnabled,
-        useERC20,
+        useErc20,
         erc20Token,
         anthologyPrice,
         userCount,
       } = contractInfo as {
         isFrozen: boolean;
         whitelistEnabled: boolean;
-        useERC20: boolean;
+        useErc20: boolean;
         erc20Token: string;
-        anthologyPrice: number;
+        anthologyPrice: bigint;
         userCount: bigint;
       };
       const owner = await readFactory("owner");
 
-      const users = await readFactory("getUsers");
-      console.log("users:", users);
-
-      setOwner(owner as string);
-      setWhitelistEnabled(whitelistEnabled as boolean);
-      setAnthologyPrice(
-        parseEther(anthologyPrice ? anthologyPrice.toString() : "0") as bigint
+      dispatch(
+        updateFactoryBasicInfo({
+          owner: owner as string,
+          isFrozen,
+          whitelistEnabled,
+          useErc20,
+          erc20Token,
+          anthologyPrice: Number(anthologyPrice),
+          userCount: Number(userCount),
+        })
       );
-      setUseERC20(useERC20 as boolean);
-      setIsFrozen(isFrozen as boolean);
-      setErc20Token(erc20Token as string);
-      setUserCount(userCount as bigint);
-      console.log("userCount:", userCount);
+
+      dispatch(updateWhitelistedUsers(whitelistedUsers as string[]));
     };
 
     fetchContractData();
@@ -65,7 +78,7 @@ export const ContractState: React.FC = () => {
 
     //unwatch();
     //console.log("unwatch:", unwatch);
-  }, []);
+  }, [dispatch]);
 
   return (
     <div
@@ -94,7 +107,7 @@ export const ContractState: React.FC = () => {
         <span>Owner of factory: {owner}</span>
         <span>Whitelist Enabled: {whitelistEnabled ? "Yes" : "No"}</span>
         <span>Anthology Price: {anthologyPrice.toString()} ETH</span>
-        <span>Use ERC20: {useERC20 ? "Yes" : "No"}</span>
+        <span>Use ERC20: {useErc20 ? "Yes" : "No"}</span>
         <span>ERC20 address: {erc20Token}</span>
         <span>Deployments Frozen: {isFrozen ? "Yes" : "No"}</span>
         <span>Users count: {userCount.toString()}</span>
