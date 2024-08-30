@@ -1,5 +1,4 @@
 import { ContractState } from "./components/ContractState";
-import { WalletConnector } from "./components/WalletConnector";
 import { OnlyOwner } from "./components/OnlyOwner";
 import { MainComponent } from "./components/MainComponent";
 
@@ -14,33 +13,17 @@ const App = () => {
     <div
       style={{
         display: "flex",
-        flexDirection: "column",
-        border: "1px solid white",
+        flexWrap: "wrap",
+        justifyContent: "center",
+        flexDirection: "row",
         padding: "7px",
-        borderRadius: "7px",
-        margin: "5px",
+        color: "white",
       }}
+      className="bg-dark"
     >
-      <div
-        style={{
-          border: "1px solid white",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          height: "60px",
-        }}
-      >
-        <div style={{ marginLeft: "7px" }}>
-          <h1>Anthology Factory DApp</h1>
-        </div>
-        <WalletConnector />
-      </div>
-
-      <div style={{ display: "flex" }}>
-        <MainComponent />
-        <ContractState />
-        {factoryOwner == userAddr && <OnlyOwner />}
-      </div>
+      <MainComponent />
+      <ContractState />
+      {factoryOwner == userAddr && <OnlyOwner />}
     </div>
   );
 };

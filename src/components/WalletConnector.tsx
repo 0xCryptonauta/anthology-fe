@@ -61,6 +61,7 @@ export const WalletConnector = () => {
         padding: "3px",
         borderRadius: "7px",
         margin: "5px",
+        color: "white",
       }}
     >
       <span>{shortenAddress(userAddr)}</span>

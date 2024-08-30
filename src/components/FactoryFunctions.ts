@@ -8,7 +8,7 @@ import { hardhat as chain } from "@wagmi/core/chains";
 import AnthologyFactoryABI from "../abi/AnthologyFactoryABI.json";
 import { config } from "../config";
 
-const AnthologyFactoryAddress = "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6";
+const AnthologyFactoryAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
 type readFunctions =
   | "getContractInfo"
@@ -133,7 +133,19 @@ export const callSetERC20Token = async (_newTokenAddr: string) => {
     ** Add usersCount to contractInfo
     ** Continue with Redux tool kit
     ** fix logic with address and only owner visibility
-    -> Add shadcn components
+    ** Add bootstrap
+      * SidePanel
+    
+    -> Add Routes:
+        -> /
+        -> /#/account
+        -> /#/info
+        -> /#/about  
+
+    -> Add mapping(address -> string) contractTitles
+    -> Add mapping(address -> bool) deployedContracts
+    -> Add getSomeTitle(address[]) ->get titles from array of addresses
+
     -> deployContract()
     -> when on how to use paginated users -> 
 
