@@ -12,8 +12,10 @@ export const FactoryStateView = () => {
       style={{
         color: "white",
         display: "flex",
-        flexDirection: "column",
+        flexDirection: "row",
         alignItems: "center",
+        justifyContent: "space-around",
+        flexWrap: "wrap",
       }}
     >
       <ContractState />

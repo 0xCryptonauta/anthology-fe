@@ -8,7 +8,7 @@ export const RootView = () => {
       <Header />
       <div
         className="bg-dark"
-        style={{ height: "calc(100svh - 64px)", color: "white" }} // -64 of the Header height
+        style={{ minHeight: "calc(100svh - 64px)", color: "white" }} // -64 of the Header height
       >
         <Outlet />
       </div>
