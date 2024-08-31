@@ -128,6 +128,7 @@ export const callSetERC20Token = async (_newTokenAddr: string) => {
 };
 
 /* 
+    FRONT_END
     ** Commit !!!
     ** Pagination of users
     ** Add usersCount to contractInfo
@@ -136,15 +137,18 @@ export const callSetERC20Token = async (_newTokenAddr: string) => {
     ** Add bootstrap
       * SidePanel
     
-    -> Add Routes:
-        -> /
-        -> /#/account
-        -> /#/info
-        -> /#/about  
+    ** Add Routes:
+        ** /
+        ** /account
+        ** /info
+        ** /about  
+
+    CONTRACT
 
     -> Add mapping(address -> string) contractTitles
     -> Add mapping(address -> bool) deployedContracts
     -> Add getSomeTitle(address[]) ->get titles from array of addresses
+    ->
 
     -> deployContract()
     -> when on how to use paginated users -> 
@@ -156,4 +160,9 @@ export const callSetERC20Token = async (_newTokenAddr: string) => {
     -> Add hash Anthology to prevent useless rpc calls
     -> Add variable to anthology to store the skin (post-it, media, etc) - in Anthology
     -> Add description to anthology
+
+
+    -> Clean whitelist
+    -> clean anthology
+    -> clean anthology whitelist
 */

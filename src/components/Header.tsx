@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { SidePanel } from "./SidePanel";
 import { WalletConnector } from "./WalletConnector";
 /* import { WalletConnector } from "./WalletConnector"; */
@@ -11,7 +12,7 @@ export const Header = () => {
       data-bs-theme="dark"
     >
       <div className="container-fluid">
-        <a className="navbar-brand" href="#">
+        <Link className="navbar-brand" to="/">
           <img
             src="IB_icon.png"
             alt="Logo"
@@ -20,12 +21,18 @@ export const Header = () => {
             className="d-inline-block align-text-top"
             style={{ marginLeft: "5px" }}
           />
-          <span style={{ marginLeft: "10px", fontSize: "25px" }}>
+          {/* <span style={{ marginLeft: "10px", fontSize: "25px" }}>
             Anthology
-          </span>
-        </a>
+          </span> */}
+        </Link>
 
-        <div style={{ display: "flex", flexDirection: "row" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
           <WalletConnector />
           <SidePanel />
         </div>

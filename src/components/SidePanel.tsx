@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Button from "react-bootstrap/Button";
 import Offcanvas from "react-bootstrap/Offcanvas";
+import { Link } from "react-router-dom";
 
 export const SidePanel = () => {
   const [show, setShow] = useState(false);
@@ -10,9 +10,22 @@ export const SidePanel = () => {
 
   return (
     <>
-      <Button variant="secondary" onClick={handleShow} className="me-2">
-        🔑
-      </Button>
+      <div
+        onClick={handleShow}
+        style={{
+          display: "flex",
+          justifyContent: "Center",
+          alignItems: "center",
+          width: "30px",
+          height: "30px",
+          border: "1px solid white",
+          borderRadius: "7px",
+          cursor: "pointer",
+          color: "white",
+        }}
+      >
+        ☰
+      </div>
 
       <Offcanvas
         placement="end"
@@ -23,9 +36,10 @@ export const SidePanel = () => {
         style={{ width: "200px" }}
       >
         <Offcanvas.Header style={{ justifyContent: "center" }}>
-          <a
+          <Link
             className="navbar-brand"
-            href="#"
+            to="/"
+            onClick={handleClose}
             style={{ display: "flex", alignItems: "center" }}
           >
             <img
@@ -39,7 +53,7 @@ export const SidePanel = () => {
             <span style={{ marginLeft: "10px", fontSize: "25px" }}>
               inBytes
             </span>
-          </a>
+          </Link>
         </Offcanvas.Header>
         <Offcanvas.Body
           style={{
@@ -50,11 +64,27 @@ export const SidePanel = () => {
           }}
         >
           <div>
-            <div style={{ margin: "20px 0px", fontSize: "24px" }}>The Wall</div>
-            <div style={{ margin: "20px 0px" }}>My contracts</div>
-            <div style={{ margin: "20px 0px" }}>Contract Info</div>
+            <div style={{ margin: "20px 0px", fontSize: "24px" }}>
+              <Link to="/" onClick={handleClose}>
+                e-Brain
+              </Link>
+            </div>
+            <div style={{ margin: "20px 0px" }}>
+              <Link to="/account" onClick={handleClose}>
+                My contracts
+              </Link>
+            </div>
+            <div style={{ margin: "20px 0px" }}>
+              <Link to="/info" onClick={handleClose}>
+                Contract Info
+              </Link>
+            </div>
           </div>
-          <div>About</div>
+          <div>
+            <Link to="about" onClick={handleClose}>
+              About
+            </Link>
+          </div>
         </Offcanvas.Body>
       </Offcanvas>
     </>
