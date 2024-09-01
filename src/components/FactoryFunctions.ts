@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import {
   readContract,
   //watchContractEvent,
@@ -5,10 +7,10 @@ import {
 } from "@wagmi/core";
 import { hardhat as chain } from "@wagmi/core/chains";
 //import { parseEther } from "viem";
-import AnthologyFactoryABI from "../abi/AnthologyFactoryABI.json";
+import { AnthologyFactoryABI } from "../abi/AnthologyFactoryABI";
 import { config } from "../config";
 
-const AnthologyFactoryAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+const AnthologyFactoryAddress = "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318";
 
 type readFunctions =
   | "getContractInfo"
@@ -23,7 +25,11 @@ type readFunctions =
   | "getUserContracts"
   | "getWhitelistedUsers"
   | "isWhitelisted"
-  | "getUserContracts";
+  | "getUserContracts"
+  | "getContractTitle"
+  | "isDeployedContract"
+  | "getUserContractsWithTitles"
+  | "getMultipleUsersContractsWithTitles";
 
 export const callSetAnthologyPrice = async (_newValue: bigint) => {
   const result = await writeContract(config, {
@@ -65,6 +71,42 @@ export const readFactory = async (
   return result;
 };
 
+export const readTitles = async (_args: unknown[]) => {
+  const result = await readContract(config, {
+    abi: AnthologyFactoryABI,
+    address: AnthologyFactoryAddress,
+    functionName: "getContractTitle",
+    chainId: chain.id,
+    args: _args,
+  });
+
+  return result as string[];
+};
+
+// Remove and use readFactory
+export const callGetUserContracts = async (_args: unknown[]) => {
+  const result = await readContract(config, {
+    abi: AnthologyFactoryABI,
+    address: AnthologyFactoryAddress,
+    functionName: "getUserContracts",
+    chainId: chain.id,
+    args: _args,
+  });
+
+  return result as string[];
+};
+
+export const callDeployAnthology = async () => {
+  const result = await writeContract(config, {
+    abi: AnthologyFactoryABI,
+    address: AnthologyFactoryAddress,
+    functionName: "deployAnthology",
+    args: [],
+    chainId: chain.id,
+  });
+
+  return result;
+};
 // ---------------------------- Owner only ---------------------------------
 
 export const callSetIsFrozen = async (_newValue: boolean) => {
@@ -135,34 +177,34 @@ export const callSetERC20Token = async (_newTokenAddr: string) => {
     ** Continue with Redux tool kit
     ** fix logic with address and only owner visibility
     ** Add bootstrap
-      * SidePanel
-    
+        ** SidePanel
     ** Add Routes:
         ** /
         ** /account
         ** /info
         ** /about  
+    ** deployContract()
+    ** Can this be a Progressive web app? an be installable -> yes it can :)
+        -> Change update manifest when the time comes
+    -> when on how to use paginated users -> 
 
     CONTRACT
 
-    -> Add mapping(address -> string) contractTitles
-    -> Add mapping(address -> bool) deployedContracts
-    -> Add getSomeTitle(address[]) ->get titles from array of addresses
-    ->
-
-    -> deployContract()
-    -> when on how to use paginated users -> 
-
+    ** Add mapping(address -> string) contractTitles
+    ** Add mapping(address -> bool) deployedContracts
+    ** Add getContractTitle(address[]) ->get titles from array of addresses
+    ** getUserContractsWithTitle() -> return obj? ask gpt for with mappings
     -> Remove one user
+    -> Clean users (?)
     -> Which events are missing
-    -> Add message to requires
+    ** Add message to requires
 
     -> Add hash Anthology to prevent useless rpc calls
     -> Add variable to anthology to store the skin (post-it, media, etc) - in Anthology
     -> Add description to anthology
 
 
-    -> Clean whitelist
+    ** Clean whitelist
     -> clean anthology
     -> clean anthology whitelist
 */

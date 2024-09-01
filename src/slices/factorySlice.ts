@@ -21,7 +21,9 @@ export interface FactoryState {
   userCount: number;
 
   whitelistedUsers: string[];
-  users: string[];
+  users: string[]; // Array of user addresses
+  userContracts: { [key: string]: string[] }; // Mapping of user addresses to arrays of contract addresses
+  contractsTitles: { [key: string]: string }; // Mapping of contract addresses to contract details (e.g., title)
 }
 
 const initialState: FactoryState = {
@@ -35,6 +37,8 @@ const initialState: FactoryState = {
 
   whitelistedUsers: [],
   users: [],
+  userContracts: {},
+  contractsTitles: {},
 };
 
 export const factorySlice = createSlice({
@@ -82,7 +86,6 @@ export const factorySlice = createSlice({
           index = i;
         }
       }
-
       // Swap account addr with last position in array and pop (delete) the last one
       const lastIndex = state.whitelistedUsers.length - 1;
       if (index != lastIndex) {
@@ -90,6 +93,21 @@ export const factorySlice = createSlice({
       }
 
       state.whitelistedUsers.pop();
+    },
+    updateUsers: (state, action: PayloadAction<[]>) => {
+      state.users = action.payload;
+    },
+    updateUserContracts: (
+      state,
+      action: PayloadAction<{ [key: string]: string[] }>
+    ) => {
+      state.userContracts = action.payload;
+    },
+    updateContractTitles: (
+      state,
+      action: PayloadAction<{ [key: string]: string }>
+    ) => {
+      state.contractsTitles = action.payload;
     },
   },
 });
@@ -107,6 +125,9 @@ export const {
   updateWhitelistedUsers,
   updateAddToWhitelist,
   updateRemoveFromWhitelist,
+  updateUsers,
+  updateUserContracts,
+  updateContractTitles,
 } = factorySlice.actions;
 
 export default factorySlice.reducer;

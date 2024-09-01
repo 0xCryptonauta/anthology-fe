@@ -1,3 +1,4 @@
+import { DeployButton } from "../components/DeployButton";
 import { MainComponent } from "../components/MainComponent";
 
 export const UsersView = () => {
@@ -14,6 +15,8 @@ export const UsersView = () => {
       }}
     >
       <MainComponent />
+
+      <DeployButton />
     </div>
   );
 };

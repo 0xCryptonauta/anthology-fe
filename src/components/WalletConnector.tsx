@@ -1,16 +1,9 @@
-import {
-  getAccount,
-  getConnectors,
-  disconnect,
-  Connector,
-  reconnect,
-} from "@wagmi/core";
+import { getConnectors, disconnect } from "@wagmi/core";
 
 import { config } from "../config";
-import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../store";
-import { updateUserAddr } from "../slices/userSlice";
+import { updateUserAddr, updateWalletId } from "../slices/userSlice";
 
 function shortenAddress(address: string): string {
   return `${address.substring(0, 6)}...${address.substring(
@@ -19,43 +12,17 @@ function shortenAddress(address: string): string {
 }
 
 export const WalletConnector = () => {
-  const userAddr = useSelector((state: RootState) => state.user.userAddr);
+  const { userAddr, walletId } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
-
-  const [connectors, setConnectors] = useState<Connector[]>([]);
-  const [currentWalletIcon, setCurrentWalletIcon] = useState("");
-
-  useEffect(() => {
-    const reconnectWallet = async () => {
-      const connectors = getConnectors(config);
-      setConnectors(connectors as Connector[]);
-
-      const recWallets = await reconnect(config);
-      console.log("reconnected wallet:", recWallets);
-      if (recWallets.length > 0) {
-        const currentAccount = getAccount(config);
-
-        const getConnectorById = (id: string) => {
-          return connectors?.find((conn) => conn.id === id);
-        };
-        const currentConnector = getConnectorById(
-          currentAccount.connector?.id ?? ""
-        );
-
-        setCurrentWalletIcon(currentConnector?.icon as string);
-        dispatch(updateUserAddr(currentAccount.address as string));
-      }
-    };
-
-    reconnectWallet();
-  }, [dispatch]);
+  const connectors = getConnectors(config);
+  const currentConnector = connectors?.find((conn) => conn.id === walletId);
 
   return userAddr ? (
     <div
       style={{
         display: "flex",
         alignItems: "center",
-        border: "1px solid white",
+        //border: "1px solid white",
         width: "fit-content",
         height: "30px",
         padding: "3px",
@@ -66,7 +33,7 @@ export const WalletConnector = () => {
     >
       <span>{shortenAddress(userAddr)}</span>
       <img
-        src={currentWalletIcon}
+        src={currentConnector?.icon}
         width={25}
         height={25}
         style={{ marginLeft: "5px" }}
@@ -76,6 +43,7 @@ export const WalletConnector = () => {
         onClick={async () => {
           disconnect(config);
           dispatch(updateUserAddr(""));
+          dispatch(updateWalletId(""));
         }}
       >
         ❌
@@ -85,7 +53,7 @@ export const WalletConnector = () => {
     <div
       style={{
         display: "flex",
-        border: "1px solid white",
+        //border: "1px solid white",
         width: "fit-content",
         height: "30px",
         padding: "3px",
@@ -105,10 +73,8 @@ export const WalletConnector = () => {
             }}
             onClick={async () => {
               const result = await connector.connect();
-              //setAddress(result.accounts[0]);
               dispatch(updateUserAddr(result.accounts[0] as string));
-              const icon = connector.icon;
-              setCurrentWalletIcon(icon as string);
+              dispatch(updateWalletId(connector.id as string));
             }}
           >
             <img src={connector.icon} height={25} width={25} />

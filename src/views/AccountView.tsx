@@ -1,8 +1,12 @@
+import { DeployButton } from "../components/DeployButton";
+import { UserContracts } from "../components/UserContracts";
+
 export const AccountView = () => {
   return (
     <div
       className="bg-dark"
       style={{
+        //width: "100%",
         color: "white",
         display: "flex",
         flexDirection: "row",
@@ -11,7 +15,8 @@ export const AccountView = () => {
         flexWrap: "wrap",
       }}
     >
-      Show only data of user, should tae it from store and not fetch
+      <UserContracts />
+      <DeployButton />
     </div>
   );
 };

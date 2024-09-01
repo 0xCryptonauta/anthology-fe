@@ -1,8 +1,11 @@
 import { useState } from "react";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { Link } from "react-router-dom";
+import { RootState } from "../store";
+import { useSelector } from "react-redux";
 
 export const SidePanel = () => {
+  const { userAddr } = useSelector((state: RootState) => state.user);
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -69,11 +72,14 @@ export const SidePanel = () => {
                 e-Brain
               </Link>
             </div>
-            <div style={{ margin: "20px 0px" }}>
-              <Link to="/account" onClick={handleClose}>
-                My contracts
-              </Link>
-            </div>
+            {userAddr && (
+              <div style={{ margin: "20px 0px" }}>
+                <Link to="/account" onClick={handleClose}>
+                  My contracts
+                </Link>
+              </div>
+            )}
+
             <div style={{ margin: "20px 0px" }}>
               <Link to="/info" onClick={handleClose}>
                 Contract Info

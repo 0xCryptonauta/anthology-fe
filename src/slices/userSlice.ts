@@ -3,10 +3,12 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 
 export interface UserState {
   userAddr: string;
+  walletId: string;
 }
 
 const initialState: UserState = {
   userAddr: "",
+  walletId: "",
 };
 
 export const userSlice = createSlice({
@@ -16,9 +18,12 @@ export const userSlice = createSlice({
     updateUserAddr: (state, action: PayloadAction<string>) => {
       state.userAddr = action.payload;
     },
+    updateWalletId: (state, action: PayloadAction<string>) => {
+      state.walletId = action.payload;
+    },
   },
 });
 
-export const { updateUserAddr } = userSlice.actions;
+export const { updateUserAddr, updateWalletId } = userSlice.actions;
 
 export default userSlice.reducer;

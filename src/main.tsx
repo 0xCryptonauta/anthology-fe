@@ -10,6 +10,7 @@ import { UsersView } from "./views/UsersView.tsx";
 import { FactoryStateView } from "./views/FactoryStateView.tsx";
 import { AboutView } from "./views/AboutView.tsx";
 import { AccountView } from "./views/AccountView.tsx";
+import { StrictMode } from "react";
 
 const router = createBrowserRouter([
   {
@@ -38,10 +39,9 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")!).render(
-  <Provider store={store}>
-    <RouterProvider router={router} />
-
-    {/*  <Header /> */}
-    {/* <App /> */}
-  </Provider>
+  <StrictMode>
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
+  </StrictMode>
 );

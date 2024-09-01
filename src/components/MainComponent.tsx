@@ -1,4 +1,3 @@
-import { Users } from "./Users";
 import { UsersPaginated } from "./UsersPaginated";
 import { GetUserContracts } from "./GetUserContracts";
 
@@ -17,7 +16,6 @@ export const MainComponent = () => {
       }}
     >
       <span>THIS IS THE CORE</span>
-      <Users />
       <UsersPaginated />
       <GetUserContracts />
     </div>

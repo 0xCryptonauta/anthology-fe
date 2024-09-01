@@ -1,20 +1,14 @@
 /* global BigInt */
 
 import React, { useEffect } from "react";
-import { readFactory } from "./FactoryFunctions";
 import { WhitelistedUsers } from "./WhitelistedUsers";
 import { IsWhitelisted } from "./IsWhitelisted";
 
-import { useDispatch, useSelector } from "react-redux";
-import {
-  updateFactoryBasicInfo,
-  updateWhitelistedUsers,
-} from "../slices/factorySlice";
+import { useSelector } from "react-redux";
+
 import { RootState } from "../store";
 
 export const ContractState: React.FC = () => {
-  const dispatch = useDispatch();
-
   const {
     owner,
     isFrozen,
@@ -25,46 +19,7 @@ export const ContractState: React.FC = () => {
     userCount,
   } = useSelector((state: RootState) => state.factory);
 
-  // THIS SHOULD BE DONE BY APP.TS (?)
   useEffect(() => {
-    const fetchContractData = async () => {
-      const contractInfo = await readFactory("getContractInfo");
-      const whitelistedUsers = await readFactory("getWhitelistedUsers");
-
-      const {
-        isFrozen,
-        whitelistEnabled,
-        useErc20,
-        erc20Token,
-        anthologyPrice,
-        userCount,
-      } = contractInfo as {
-        isFrozen: boolean;
-        whitelistEnabled: boolean;
-        useErc20: boolean;
-        erc20Token: string;
-        anthologyPrice: bigint;
-        userCount: bigint;
-      };
-      const owner = await readFactory("owner");
-
-      dispatch(
-        updateFactoryBasicInfo({
-          owner: owner as string,
-          isFrozen,
-          whitelistEnabled,
-          useErc20,
-          erc20Token,
-          anthologyPrice: Number(anthologyPrice),
-          userCount: Number(userCount),
-        })
-      );
-
-      dispatch(updateWhitelistedUsers(whitelistedUsers as string[]));
-    };
-
-    fetchContractData();
-
     /* const unwatch = watchContractEvent(config, {
       address: AnthologyFactoryAddress,
       abi: AnthologyFactoryABI,
@@ -75,10 +30,9 @@ export const ContractState: React.FC = () => {
       },
       chainId: chain.id,
     }); */
-
     //unwatch();
     //console.log("unwatch:", unwatch);
-  }, [dispatch]);
+  }, []);
 
   return (
     <div
