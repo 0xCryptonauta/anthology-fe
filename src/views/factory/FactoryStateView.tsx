@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
-import { ContractState } from "../components/ContractState";
-import { OnlyOwner } from "../components/OnlyOwner";
-import { RootState } from "../store";
+import { ContractState } from "../../components/ContractState";
+import { OnlyOwner } from "../../components/OnlyOwner";
+import { RootState } from "../../store";
 
 export const FactoryStateView = () => {
   const userAddr = useSelector((state: RootState) => state.user.userAddr);
@@ -11,10 +11,11 @@ export const FactoryStateView = () => {
       className="bg-dark"
       style={{
         color: "white",
+        height: "100svh",
         display: "flex",
-        flexDirection: "row",
+        flexDirection: "column",
         alignItems: "center",
-        justifyContent: "space-around",
+        justifyContent: "flex-start",
         flexWrap: "wrap",
       }}
     >

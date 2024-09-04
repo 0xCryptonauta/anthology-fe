@@ -53,9 +53,9 @@ export const SidePanel = () => {
               className="d-inline-block align-text-top"
               style={{ marginLeft: "5px" }}
             />
-            <span style={{ marginLeft: "10px", fontSize: "25px" }}>
+            {/* <span style={{ marginLeft: "10px", fontSize: "25px" }}>
               inBytes
-            </span>
+            </span> */}
           </Link>
         </Offcanvas.Header>
         <Offcanvas.Body

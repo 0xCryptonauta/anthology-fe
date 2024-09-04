@@ -3,7 +3,7 @@ export function shortenAddress(
   initlen: number = 6,
   endlen: number = 4
 ): string {
-  return `${address.substring(0, initlen)}...${address.substring(
-    address.length - endlen
+  return `${address?.substring(0, initlen)}...${address?.substring(
+    address?.length - endlen
   )}`;
 }

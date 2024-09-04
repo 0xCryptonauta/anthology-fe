@@ -1,15 +1,20 @@
+import { useNavigate } from "react-router-dom";
 import { copyToClipboard } from "../functions/copyToClipboard";
 import { shortenAddress } from "../functions/shortenAddress";
 import { RootState } from "../store";
 import { useSelector } from "react-redux";
 
 export const UsersPaginated = () => {
+  const navigate = useNavigate();
   const { userCount, users, userContracts, contractsTitles } = useSelector(
     (state: RootState) => state.factory
   );
 
   const pageSize = 50;
   const page = 1;
+
+  //- useSelector is rerendering beacuse its fetching data in the backgo
+  console.log("how many rerenders?? ");
 
   return (
     <div
@@ -30,14 +35,14 @@ export const UsersPaginated = () => {
       <span>Users paginated: {users.length}</span>
       <br />
       <div style={{ margin: "5px" }}>
-        {users.map((user, index) => {
+        {users?.map((user, index) => {
           //console.log("userContracts[user]", userContracts[user]);
           return (
             <div key={index}>
               <div>
                 <span
                   style={{ fontSize: "20px", cursor: "pointer" }}
-                  onClick={() => copyToClipboard(user)}
+                  onClick={() => navigate("/" + user)}
                 >
                   👤 {shortenAddress(user, 12, 9)}
                 </span>

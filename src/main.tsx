@@ -5,11 +5,12 @@ import { Provider } from "react-redux";
 import { store } from "./store";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { RootView } from "./views/RootView.tsx";
-import { UsersView } from "./views/UsersView.tsx";
-import { FactoryStateView } from "./views/FactoryStateView.tsx";
-import { AboutView } from "./views/AboutView.tsx";
-import { AccountView } from "./views/AccountView.tsx";
+import { RootView } from "./views/factory/RootView.tsx";
+import { UsersView } from "./views/factory/UsersView.tsx";
+import { UserView } from "./views/factory/UserView.tsx";
+import { FactoryStateView } from "./views/factory/FactoryStateView.tsx";
+import { AboutView } from "./views/factory/AboutView.tsx";
+import { AccountView } from "./views/factory/AccountView.tsx";
 import { StrictMode } from "react";
 
 const router = createBrowserRouter([
@@ -23,16 +24,28 @@ const router = createBrowserRouter([
         element: <UsersView />,
       },
       {
-        path: "account",
-        element: <AccountView />,
-      },
-      {
         path: "info",
         element: <FactoryStateView />,
       },
       {
         path: "about",
         element: <AboutView />,
+      },
+      {
+        path: "account",
+        element: <AccountView />,
+      },
+      {
+        path: ":ethAddr",
+        element: <UserView />,
+      },
+      {
+        path: "not-found",
+        element: (
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            Error 404: Page Not Found
+          </div>
+        ),
       },
     ],
   },

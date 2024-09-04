@@ -1,11 +1,13 @@
-import { DeployButton } from "../components/DeployButton";
-import { MainComponent } from "../components/MainComponent";
+import { DeployButton } from "../../components/DeployButton";
+import { UserContracts } from "../../components/UserContracts";
 
-export const UsersView = () => {
+export const AccountView = () => {
   return (
     <div
       className="bg-dark"
       style={{
+        //width: "100%",
+        height: "100svh",
         color: "white",
         display: "flex",
         flexDirection: "row",
@@ -14,8 +16,7 @@ export const UsersView = () => {
         flexWrap: "wrap",
       }}
     >
-      <MainComponent />
-
+      <UserContracts />
       <DeployButton />
     </div>
   );

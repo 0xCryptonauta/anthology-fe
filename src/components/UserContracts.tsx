@@ -9,35 +9,39 @@ export const UserContracts = () => {
   );
   const { userAddr } = useSelector((state: RootState) => state.user);
 
-  console.log("contractTitles:", contractsTitles);
-  console.log("userContracts:", userContracts);
-
-  const pageSize = 50;
-  const page = 1;
+  /* const pageSize = 50;
+  const page = 1; */
 
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
-        border: "1px solid white",
-        width: "350px",
+        alignItems: "center",
+        //border: "1px solid white",
+        width: "100%",
         padding: "7px",
         borderRadius: "7px",
         margin: "5px",
       }}
     >
-      <h3>My Anthologies</h3>
-      <span>
+      {/*       <h3>
+        {" "}
+        {ethAddr?.length > 20 ? shortenAddress(ethAddr, 10, 8) : ethAddr}:
+        <span>Anthologies from:</span>
+      </h3> */}
+      <h4>{shortenAddress(userAddr, 10, 8)}</h4>
+
+      {/*       <span>
         Total: {page} Page size: {pageSize}
-      </span>
+      </span> */}
       <br />
       <div style={{ margin: "5px" }}>
-        {userContracts[userAddr]?.map((contractAddr) => {
+        {userContracts[userAddr]?.map((contractAddr, index) => {
           const contractTitle = contractsTitles[contractAddr];
 
           return (
-            <div>
+            <div key={index}>
               <span>💾 </span>
               <span style={{ fontSize: "14px" }}>
                 {contractTitle
