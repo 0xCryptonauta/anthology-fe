@@ -1,6 +1,12 @@
-export const AnthologyFactoryABI = [
+export const AnthologyABI = [
   {
-    inputs: [],
+    inputs: [
+      {
+        internalType: "address",
+        name: "_owner",
+        type: "address",
+      },
+    ],
     stateMutability: "nonpayable",
     type: "constructor",
   },
@@ -52,12 +58,12 @@ export const AnthologyFactoryABI = [
     inputs: [
       {
         indexed: false,
-        internalType: "uint256",
-        name: "newPrice",
-        type: "uint256",
+        internalType: "bool",
+        name: "enabled",
+        type: "bool",
       },
     ],
-    name: "AnthologyPriceUpdated",
+    name: "BufferEnabled",
     type: "event",
   },
   {
@@ -90,6 +96,107 @@ export const AnthologyFactoryABI = [
       },
     ],
     name: "EtherReceived",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "newMax",
+        type: "uint256",
+      },
+    ],
+    name: "MaxMemoirsUpdated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "title",
+        type: "string",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "content",
+        type: "string",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "timestamp",
+        type: "uint256",
+      },
+    ],
+    name: "MemoirAccepted",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "title",
+        type: "string",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "content",
+        type: "string",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "timestamp",
+        type: "uint256",
+      },
+    ],
+    name: "MemoirCreated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+    ],
+    name: "MemoirDeleted",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "newPrice",
+        type: "uint256",
+      },
+    ],
+    name: "MemoirPriceUpdated",
     type: "event",
   },
   {
@@ -204,12 +311,12 @@ export const AnthologyFactoryABI = [
     inputs: [
       {
         indexed: false,
-        internalType: "bool",
-        name: "frozen",
-        type: "bool",
+        internalType: "string",
+        name: "newTitle",
+        type: "string",
       },
     ],
-    name: "isFrozenUpdated",
+    name: "TitleUpdated",
     type: "event",
   },
   {
@@ -220,6 +327,19 @@ export const AnthologyFactoryABI = [
         internalType: "bytes32",
         name: "",
         type: "bytes32",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "MAX_MEMOIRS",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -254,6 +374,19 @@ export const AnthologyFactoryABI = [
   {
     inputs: [
       {
+        internalType: "uint256",
+        name: "_index",
+        type: "uint256",
+      },
+    ],
+    name: "acceptMemoir",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "account",
         type: "address",
@@ -266,20 +399,14 @@ export const AnthologyFactoryABI = [
   },
   {
     inputs: [],
-    name: "anthologyPrice",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
+    name: "cleanMemoirBuffer",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [],
-    name: "cleanUsers",
+    name: "cleanMemoirs",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -292,10 +419,60 @@ export const AnthologyFactoryABI = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "deployAnthology",
+    inputs: [
+      {
+        internalType: "string",
+        name: "_title",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_content",
+        type: "string",
+      },
+    ],
+    name: "createMemoir",
     outputs: [],
     stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "currentMemoirCount",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_index",
+        type: "uint256",
+      },
+    ],
+    name: "declineMemoir",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_index",
+        type: "uint256",
+      },
+    ],
+    name: "deleteMemoir",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -326,18 +503,56 @@ export const AnthologyFactoryABI = [
   },
   {
     inputs: [],
-    name: "getContractInfo",
+    name: "factory",
+    outputs: [
+      {
+        internalType: "contract AnthologyFactory",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getAnthologyInfo",
     outputs: [
       {
         components: [
           {
-            internalType: "bool",
-            name: "isFrozen",
-            type: "bool",
+            internalType: "string",
+            name: "title",
+            type: "string",
+          },
+          {
+            internalType: "uint256",
+            name: "totalCreatedMemoirs",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "currentMemoirCount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "maxMemoirs",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "memoirPrice",
+            type: "uint256",
           },
           {
             internalType: "bool",
             name: "whitelistEnabled",
+            type: "bool",
+          },
+          {
+            internalType: "bool",
+            name: "useBuffer",
             type: "bool",
           },
           {
@@ -352,16 +567,21 @@ export const AnthologyFactoryABI = [
           },
           {
             internalType: "uint256",
-            name: "anthologyPrice",
+            name: "memoirsCP",
             type: "uint256",
           },
           {
             internalType: "uint256",
-            name: "userCount",
+            name: "memoirBufferCP",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "whitelistCP",
             type: "uint256",
           },
         ],
-        internalType: "struct ContractInfo",
+        internalType: "struct AnthologyInfo",
         name: "",
         type: "tuple",
       },
@@ -370,19 +590,70 @@ export const AnthologyFactoryABI = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address[]",
-        name: "_contractAddresses",
-        type: "address[]",
-      },
-    ],
-    name: "getContractTitle",
+    inputs: [],
+    name: "getMemoirBuffer",
     outputs: [
       {
-        internalType: "string[]",
+        components: [
+          {
+            internalType: "address",
+            name: "sender",
+            type: "address",
+          },
+          {
+            internalType: "string",
+            name: "title",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "content",
+            type: "string",
+          },
+          {
+            internalType: "uint256",
+            name: "timestamp",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct Memoir[]",
         name: "",
-        type: "string[]",
+        type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getMemoirs",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "address",
+            name: "sender",
+            type: "address",
+          },
+          {
+            internalType: "string",
+            name: "title",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "content",
+            type: "string",
+          },
+          {
+            internalType: "uint256",
+            name: "timestamp",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct Memoir[]",
+        name: "",
+        type: "tuple[]",
       },
     ],
     stateMutability: "view",
@@ -409,68 +680,7 @@ export const AnthologyFactoryABI = [
   },
   {
     inputs: [],
-    name: "getUsers",
-    outputs: [
-      {
-        internalType: "address[]",
-        name: "",
-        type: "address[]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "pageNumber",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "pageSize",
-        type: "uint256",
-      },
-    ],
-    name: "getUsers",
-    outputs: [
-      {
-        internalType: "address[]",
-        name: "",
-        type: "address[]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address[]",
-        name: "_users",
-        type: "address[]",
-      },
-    ],
-    name: "getUsersContractsWithTitles",
-    outputs: [
-      {
-        internalType: "address[][]",
-        name: "",
-        type: "address[][]",
-      },
-      {
-        internalType: "string[][]",
-        name: "",
-        type: "string[][]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "getWhitelistedUsers",
+    name: "getWhitelist",
     outputs: [
       {
         internalType: "address[]",
@@ -524,19 +734,6 @@ export const AnthologyFactoryABI = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "isFrozen",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "address",
@@ -550,6 +747,92 @@ export const AnthologyFactoryABI = [
         internalType: "bool",
         name: "",
         type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "maxMemoirs",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "memoirBufferCP",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "memoirPrice",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "memoirs",
+    outputs: [
+      {
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+      {
+        internalType: "string",
+        name: "title",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "content",
+        type: "string",
+      },
+      {
+        internalType: "uint256",
+        name: "timestamp",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "memoirsCP",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -577,13 +860,6 @@ export const AnthologyFactoryABI = [
       },
     ],
     name: "removeFromWhitelist",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "removeUser",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -634,19 +910,6 @@ export const AnthologyFactoryABI = [
   {
     inputs: [
       {
-        internalType: "uint256",
-        name: "_newPrice",
-        type: "uint256",
-      },
-    ],
-    name: "setAnthologyPrice",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
         internalType: "address",
         name: "_tokenAddress",
         type: "address",
@@ -660,12 +923,51 @@ export const AnthologyFactoryABI = [
   {
     inputs: [
       {
+        internalType: "uint256",
+        name: "_newMax",
+        type: "uint256",
+      },
+    ],
+    name: "setMaxMemoirs",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_newPrice",
+        type: "uint256",
+      },
+    ],
+    name: "setMemoirPrice",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "_newTitle",
+        type: "string",
+      },
+    ],
+    name: "setTitle",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "bool",
-        name: "_frozen",
+        name: "_useBuffer",
         type: "bool",
       },
     ],
-    name: "setIsFrozen",
+    name: "setUseBuffer",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -703,6 +1005,32 @@ export const AnthologyFactoryABI = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "title",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "totalCreatedMemoirs",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -716,16 +1044,16 @@ export const AnthologyFactoryABI = [
     type: "function",
   },
   {
-    inputs: [
+    inputs: [],
+    name: "useBuffer",
+    outputs: [
       {
-        internalType: "string",
-        name: "newTitle",
-        type: "string",
+        internalType: "bool",
+        name: "",
+        type: "bool",
       },
     ],
-    name: "updateContractTitle",
-    outputs: [],
-    stateMutability: "nonpayable",
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -742,56 +1070,13 @@ export const AnthologyFactoryABI = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "userContracts",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [],
-    name: "userCount",
+    name: "whitelistCP",
     outputs: [
       {
         internalType: "uint256",
         name: "",
         type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "users",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
       },
     ],
     stateMutability: "view",

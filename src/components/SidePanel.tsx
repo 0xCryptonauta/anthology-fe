@@ -67,26 +67,30 @@ export const SidePanel = () => {
           }}
         >
           <div>
-            <div style={{ margin: "20px 0px", fontSize: "24px" }}>
+            {/* <div style={{ margin: "20px 0px", fontSize: "24px" }}>
               <Link to="/" onClick={handleClose}>
                 e-Brain
               </Link>
-            </div>
+            </div> */}
             {userAddr && (
               <div style={{ margin: "20px 0px" }}>
                 <Link to="/account" onClick={handleClose}>
-                  My contracts
+                  My anthologies
                 </Link>
               </div>
             )}
-
-            <div style={{ margin: "20px 0px" }}>
-              <Link to="/info" onClick={handleClose}>
-                Contract Info
-              </Link>
-            </div>
           </div>
-          <div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Link to="/info" onClick={handleClose}>
+              Factory Info
+            </Link>
+            <br />
             <Link to="about" onClick={handleClose}>
               About
             </Link>

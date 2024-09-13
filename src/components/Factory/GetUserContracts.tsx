@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { readFactory, readTitles } from "./FactoryFunctions";
+import { readFactory, readTitles } from "../ContractFunctions/FactoryFunctions";
 
 export const GetUserContracts = () => {
   const [userToGetContract, setUserToGetContract] = useState("");

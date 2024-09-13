@@ -1,5 +1,5 @@
 import { DeployButton } from "../../components/DeployButton";
-import { MainComponent } from "../../components/MainComponent";
+import { MainComponent } from "../../components/Factory/MainComponent";
 
 export const UsersView = () => {
   return (

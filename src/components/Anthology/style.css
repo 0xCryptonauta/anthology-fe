@@ -1,0 +1,10 @@
+.cardStyle {
+  width: 11rem;
+  margin: 3px;
+}
+
+.cardBodyStyle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

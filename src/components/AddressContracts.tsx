@@ -1,4 +1,4 @@
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { copyToClipboard } from "../functions/copyToClipboard";
 import { shortenAddress } from "../functions/shortenAddress";
 import { RootState } from "../store";
@@ -10,6 +10,7 @@ const addressEnsregex =
 const ethAddrRegex = /^0x[a-fA-F0-9]{40}$/;
 
 export const AddressContracts = () => {
+  const navigate = useNavigate();
   const { userContracts, contractsTitles } = useSelector(
     (state: RootState) => state.factory
   );
@@ -67,7 +68,10 @@ export const AddressContracts = () => {
             return (
               <div key={index}>
                 <span>💾 </span>
-                <span style={{ fontSize: "14px" }}>
+                <span
+                  style={{ fontSize: "14px", cursor: "pointer" }}
+                  onClick={() => navigate("/user/" + ethAddr + "/" + index)}
+                >
                   {contractTitle
                     ? contractTitle
                     : shortenAddress(contractAddr || "", 10, 8)}

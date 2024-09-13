@@ -1,9 +1,11 @@
-import { copyToClipboard } from "../functions/copyToClipboard";
-import { shortenAddress } from "../functions/shortenAddress";
-import { RootState } from "../store";
+import { useNavigate } from "react-router-dom";
+import { copyToClipboard } from "../../functions/copyToClipboard";
+import { shortenAddress } from "../../functions/shortenAddress";
+import { RootState } from "../../store";
 import { useSelector } from "react-redux";
 
 export const UserContracts = () => {
+  const navigate = useNavigate();
   const { userContracts, contractsTitles } = useSelector(
     (state: RootState) => state.factory
   );
@@ -43,7 +45,10 @@ export const UserContracts = () => {
           return (
             <div key={index}>
               <span>💾 </span>
-              <span style={{ fontSize: "14px" }}>
+              <span
+                style={{ fontSize: "14px", cursor: "pointer" }}
+                onClick={() => navigate("/user/" + userAddr + "/" + index)}
+              >
                 {contractTitle
                   ? contractTitle
                   : shortenAddress(contractAddr, 10, 8)}

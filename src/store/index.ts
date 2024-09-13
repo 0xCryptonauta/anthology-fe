@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import factoryReducer from "../slices/factorySlice";
 import userReducer from "../slices/userSlice";
+import anthologyReducer from "../slices/anthologySlice";
 
 export const store = configureStore({
   reducer: {
     factory: factoryReducer,
     user: userReducer,
+    anthology: anthologyReducer,
   },
   devTools: true,
 });

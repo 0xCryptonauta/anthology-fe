@@ -7,12 +7,12 @@ import {
 } from "@wagmi/core";
 import { hardhat as chain } from "@wagmi/core/chains";
 //import { parseEther } from "viem";
-import { AnthologyFactoryABI } from "../abi/AnthologyFactoryABI";
-import { config } from "../config";
+import { AnthologyFactoryABI } from "../../abi/AnthologyFactoryABI";
+import { config } from "../../config";
 
-const AnthologyFactoryAddress = "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318";
+const AnthologyFactoryAddress = "0x5067457698Fd6Fa1C6964e416b3f42713513B3dD";
 
-type readFunctions =
+type readFactoryFunctions =
   | "getContractInfo"
   | "anthologyPrice"
   | "isFrozen"
@@ -21,15 +21,16 @@ type readFunctions =
   | "erc20Token"
   | "owner"
   | "getUsers"
-  | "getUserCount"
   | "getUserContracts"
   | "getWhitelistedUsers"
   | "isWhitelisted"
   | "getUserContracts"
   | "getContractTitle"
   | "isDeployedContract"
-  | "getUserContractsWithTitles"
-  | "getMultipleUsersContractsWithTitles";
+  //| "getUserContractsWithTitles"
+  | "getUsersContractsWithTitles";
+
+type writeFactoryFunctions = "cleanWhitelist" | "cleanUsers";
 
 export const callSetAnthologyPrice = async (_newValue: bigint) => {
   const result = await writeContract(config, {
@@ -57,16 +58,45 @@ export const callSetUseERC20 = async (_newValue: boolean) => {
 };
 
 export const readFactory = async (
-  _functionName: readFunctions,
+  _functionName: readFactoryFunctions,
   _args?: unknown[]
 ) => {
-  const result = await readContract(config, {
-    abi: AnthologyFactoryABI,
-    address: AnthologyFactoryAddress,
-    functionName: _functionName,
-    chainId: chain.id,
-    args: _args,
-  });
+  let result;
+  console.log("Reading factory");
+  try {
+    result = await readContract(config, {
+      abi: AnthologyFactoryABI,
+      address: AnthologyFactoryAddress,
+      functionName: _functionName,
+      chainId: chain.id,
+      args: _args,
+    });
+  } catch (error) {
+    console.log("Error reading:", _functionName);
+    console.log("error:", error);
+  }
+
+  return result;
+};
+
+export const writeFactory = async (
+  _functionName: writeFactoryFunctions,
+  _args?: unknown[]
+) => {
+  let result;
+  console.log("writing to factory");
+  try {
+    result = await writeContract(config, {
+      abi: AnthologyFactoryABI,
+      address: AnthologyFactoryAddress,
+      functionName: _functionName,
+      chainId: chain.id,
+      args: _args,
+    });
+  } catch (error) {
+    console.log("Error writing:", _functionName);
+    console.log("error:", error);
+  }
 
   return result;
 };
@@ -194,17 +224,18 @@ export const callSetERC20Token = async (_newTokenAddr: string) => {
     ** Add mapping(address -> bool) deployedContracts
     ** Add getContractTitle(address[]) ->get titles from array of addresses
     ** getUserContractsWithTitle() -> return obj? ask gpt for with mappings
+    ** delete getter from only public -> it has default getter as name o variable in read
     -> Remove one user
-    -> Clean users (?)
+    ** Clean users (?)
     -> Which events are missing
     ** Add message to requires
 
-    -> Add hash Anthology to prevent useless rpc calls
+    ** Add hash Anthology to prevent useless rpc calls
     -> Add variable to anthology to store the skin (post-it, media, etc) - in Anthology
     -> Add description to anthology
 
 
     ** Clean whitelist
-    -> clean anthology
-    -> clean anthology whitelist
+    ** clean anthology
+    ** clean anthology whitelist
 */

@@ -14,7 +14,7 @@ export const Header = () => {
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
           <img
-            src="IB_icon.png"
+            src="/IB_icon.png"
             alt="Logo"
             width="30"
             height="24"

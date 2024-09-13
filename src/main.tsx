@@ -5,19 +5,24 @@ import { Provider } from "react-redux";
 import { store } from "./store";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { RootView } from "./views/factory/RootView.tsx";
+import { RootView } from "./views/RootView.tsx";
 import { UsersView } from "./views/factory/UsersView.tsx";
 import { UserView } from "./views/factory/UserView.tsx";
 import { FactoryStateView } from "./views/factory/FactoryStateView.tsx";
 import { AboutView } from "./views/factory/AboutView.tsx";
 import { AccountView } from "./views/factory/AccountView.tsx";
 import { StrictMode } from "react";
+import { AnthologyView } from "./views/anthology/AnthologyView.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RootView />,
-    errorElement: <div>Error 404</div>,
+    errorElement: (
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        Error 404: Page Not Found
+      </div>
+    ),
     children: [
       {
         path: "/",
@@ -36,7 +41,11 @@ const router = createBrowserRouter([
         element: <AccountView />,
       },
       {
-        path: ":ethAddr",
+        path: "/user/:ethAddr/:id",
+        element: <AnthologyView />,
+      },
+      {
+        path: "/user/:ethAddr",
         element: <UserView />,
       },
       {

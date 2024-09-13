@@ -1,12 +1,12 @@
 /* global BigInt */
 
 import React, { useEffect } from "react";
-import { WhitelistedUsers } from "./WhitelistedUsers";
-import { IsWhitelisted } from "./IsWhitelisted";
 
 import { useSelector } from "react-redux";
 
-import { RootState } from "../store";
+import { RootState } from "../../store";
+import { IsWhitelisted } from "./IsWhitelisted";
+import { WhitelistedUsers } from "./WhitelistedUsers";
 
 export const ContractState: React.FC = () => {
   const {

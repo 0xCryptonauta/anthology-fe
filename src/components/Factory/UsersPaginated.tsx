@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { copyToClipboard } from "../functions/copyToClipboard";
-import { shortenAddress } from "../functions/shortenAddress";
-import { RootState } from "../store";
+import { copyToClipboard } from "../../functions/copyToClipboard";
+import { shortenAddress } from "../../functions/shortenAddress";
+import { RootState } from "../../store";
 import { useSelector } from "react-redux";
 
 export const UsersPaginated = () => {
@@ -42,7 +42,7 @@ export const UsersPaginated = () => {
               <div>
                 <span
                   style={{ fontSize: "20px", cursor: "pointer" }}
-                  onClick={() => navigate("/" + user)}
+                  onClick={() => navigate("/user/" + user)}
                 >
                   👤 {shortenAddress(user, 12, 9)}
                 </span>
@@ -53,7 +53,12 @@ export const UsersPaginated = () => {
                     return (
                       <div key={index}>
                         <span>💾 </span>
-                        <span style={{ fontSize: "14px" }}>
+                        <span
+                          style={{ fontSize: "14px", cursor: "pointer" }}
+                          onClick={() =>
+                            navigate("/user/" + user + "/" + index)
+                          }
+                        >
                           {contractTitle
                             ? contractTitle
                             : shortenAddress(contractAddr, 10, 8)}

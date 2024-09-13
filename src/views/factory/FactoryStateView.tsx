@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
-import { ContractState } from "../../components/ContractState";
-import { OnlyOwner } from "../../components/OnlyOwner";
+import { ContractState } from "../../components/Factory/ContractState";
+import { OnlyOwner } from "../../components/Factory/OnlyOwner";
 import { RootState } from "../../store";
 
 export const FactoryStateView = () => {

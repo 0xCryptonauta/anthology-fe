@@ -7,7 +7,8 @@ import {
   callRemoveFromWhitelist,
   callSetERC20Token,
   callSetAnthologyPrice,
-} from "./FactoryFunctions";
+  writeFactory,
+} from "../ContractFunctions/FactoryFunctions";
 import { parseEther } from "viem";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -19,8 +20,8 @@ import {
   updateRemoveFromWhitelist,
   updateUseErc20,
   updateWhitelistEnabled,
-} from "../slices/factorySlice";
-import { RootState } from "../store";
+} from "../../slices/factorySlice";
+import { RootState } from "../../store";
 
 export const OnlyOwner = () => {
   const dispatch = useDispatch();
@@ -252,6 +253,38 @@ export const OnlyOwner = () => {
           }}
         >
           <span>{isFrozen ? "Unfreeze contract" : "Freeze contract"}</span>
+        </button>
+      </div>
+
+      {/* ----------------------------------- cleanUsers ------------------------------------ */}
+
+      {/*  <div style={{ margin: "5px" }}>
+        <button
+          style={{ backgroundColor: "red" }}
+          onClick={async () => {
+            const txHash = await writeFactory("cleanUsers");
+
+            console.log("Cleaning users: ", txHash);
+            //if (txHash) dispatch(updateUseErc20(!useErc20));
+          }}
+        >
+          Clean Users
+        </button>
+      </div> */}
+
+      {/* ----------------------------------- cleanWhitelist ------------------------------------ */}
+
+      <div style={{ margin: "5px" }}>
+        <button
+          style={{ backgroundColor: "red" }}
+          onClick={async () => {
+            const txHash = await writeFactory("cleanWhitelist");
+
+            console.log("Cleaning whitelist: ", txHash);
+            //if (txHash) dispatch(updateUseErc20(!useErc20));
+          }}
+        >
+          Clean whitelist
         </button>
       </div>
     </div>

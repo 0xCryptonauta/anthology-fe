@@ -1,5 +1,5 @@
 import { DeployButton } from "../../components/DeployButton";
-import { UserContracts } from "../../components/UserContracts";
+import { UserContracts } from "../../components/Factory/UserContracts";
 
 export const AccountView = () => {
   return (
