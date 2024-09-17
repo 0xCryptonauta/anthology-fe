@@ -109,6 +109,9 @@ export const factorySlice = createSlice({
     ) => {
       state.contractsTitles = action.payload;
     },
+    clearFactoryStore: () => {
+      return initialState;
+    },
   },
 });
 
@@ -128,6 +131,7 @@ export const {
   updateUsers,
   updateUserContracts,
   updateContractTitles,
+  clearFactoryStore,
 } = factorySlice.actions;
 
 export default factorySlice.reducer;

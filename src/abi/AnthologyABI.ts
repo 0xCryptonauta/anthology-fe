@@ -521,6 +521,11 @@ export const AnthologyABI = [
       {
         components: [
           {
+            internalType: "address",
+            name: "owner",
+            type: "address",
+          },
+          {
             internalType: "string",
             name: "title",
             type: "string",

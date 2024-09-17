@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { Provider } from "react-redux";
-import { store } from "./store";
+import { store, persistor } from "./store";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { RootView } from "./views/RootView.tsx";
@@ -13,6 +13,7 @@ import { AboutView } from "./views/factory/AboutView.tsx";
 import { AccountView } from "./views/factory/AccountView.tsx";
 import { StrictMode } from "react";
 import { AnthologyView } from "./views/anthology/AnthologyView.tsx";
+import { PersistGate } from "redux-persist/integration/react";
 
 const router = createBrowserRouter([
   {
@@ -60,10 +61,20 @@ const router = createBrowserRouter([
   },
 ]);
 
-createRoot(document.getElementById("root")!).render(
+/* createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <PersistGate loading={null} persistor={persistor}>
+        <RouterProvider router={router} />
+      </PersistGate>
     </Provider>
   </StrictMode>
+); */
+
+createRoot(document.getElementById("root")!).render(
+  <Provider store={store}>
+    <PersistGate loading={null} persistor={persistor}>
+      <RouterProvider router={router} />
+    </PersistGate>
+  </Provider>
 );

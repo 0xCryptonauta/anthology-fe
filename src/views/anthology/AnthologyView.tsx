@@ -2,7 +2,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { RootState } from "../../store";
 import { useEffect, useState } from "react";
-import { readAnthology } from "../../components/ContractFunctions/AnthologyFunctions";
+import {
+  readAnthology,
+  writeAnthology,
+} from "../../components/ContractFunctions/AnthologyFunctions";
 
 import {
   addAnthology,
@@ -12,6 +15,9 @@ import {
   updateMemoirs,
   updateWhitelist,
   updateMemoirBuffer,
+  updateAnthologyCP,
+  updateAnthologyWhitelistCP,
+  updateAnthologyBufferCP,
 } from "../../slices/anthologySlice";
 import { fetchAnthologyInfo } from "../../functions/initialStateUpdate";
 import { Memoirs } from "../../components/Anthology/Memoirs";
@@ -51,29 +57,118 @@ export const AnthologyView = () => {
   );
 
   useEffect(() => {
-    const callAnthology = async () => {
-      const anthologyInfo = await fetchAnthologyInfo(contractAddr);
+    console.log("useEffect AnthologyView");
+
+    const setupAnthology = async () => {
+      console.log("useEffect callAnthology");
+
+      //const anthologyInfo = await fetchAnthologyInfo(contractAddr);
+
+      let memoirsCP;
+      let whitelistCP;
+      let memoirBufferCP;
 
       if (ethAddr && contractAddr) {
-        if (!anthology) {
+        if (anthology) {
+          console.log("Existing anthology updated - updating CP");
+          memoirsCP = await readAnthology(contractAddr, "memoirsCP");
+
+          if (anthology?.anthologyState.memoirsCP != memoirsCP) {
+            const _memoirs = (await readAnthology(
+              contractAddr,
+              "getMemoirs"
+            )) as MemoirInterface[];
+
+            const memoirsString = _memoirs.map((memoir) => ({
+              ...memoir,
+              timestamp: memoir.timestamp.toString(),
+            }));
+
+            dispatch(
+              updateAnthologyCP({
+                contract: contractAddr,
+                memoirsCP: Number(memoirsCP),
+              })
+            );
+
+            dispatch(
+              updateMemoirs({
+                contract: contractAddr,
+                memoirs: memoirsString,
+              })
+            );
+          }
+
+          if (anthology.anthologyState.whitelistEnabled) {
+            whitelistCP = await readAnthology(contractAddr, "whitelistCP");
+
+            if (anthology.anthologyState.whitelistCP != whitelistCP) {
+              const whitelistedUsers = await readAnthology(
+                contractAddr,
+                "getWhitelist"
+              );
+
+              dispatch(
+                updateAnthologyWhitelistCP({
+                  contract: contractAddr,
+                  whitelistCP: Number(whitelistCP),
+                })
+              );
+
+              dispatch(
+                updateWhitelist({
+                  contract: contractAddr,
+                  whitelistedUsers: whitelistedUsers as string[],
+                })
+              );
+            }
+          }
+
+          if (
+            anthology.anthologyState.useBuffer &&
+            anthology.anthologyState.owner === userAddr
+          ) {
+            memoirBufferCP = await readAnthology(
+              contractAddr,
+              "memoirBufferCP"
+            );
+
+            if (anthology.anthologyState.memoirBufferCP != memoirBufferCP) {
+              const memoirBuffer = (await readAnthology(
+                contractAddr,
+                "getMemoirBuffer"
+              )) as MemoirInterface[];
+
+              const memoirBufferString = memoirBuffer.map((memoir) => ({
+                ...memoir,
+                timestamp: memoir.timestamp.toString(),
+              }));
+
+              dispatch(
+                updateAnthologyBufferCP({
+                  contract: contractAddr,
+                  memoirBufferCP: Number(memoirBufferCP),
+                })
+              );
+
+              dispatch(
+                updateMemoirBuffer({
+                  contract: contractAddr,
+                  memoirBuffer: memoirBufferString,
+                })
+              );
+            }
+          }
+        } else {
           console.log("New anthology added");
+          const anthologyInfo = await fetchAnthologyInfo(contractAddr);
           dispatch(
             addAnthology({
               contract: contractAddr,
               anthologyInfo: anthologyInfo as AnthologyInfoInterface,
             })
           );
-        } else {
-          console.log("Existing anthology updated");
-          dispatch(
-            updateAnthologyState({
-              contract: contractAddr,
-              anthologyInfo: anthologyInfo as AnthologyInfoInterface,
-            })
-          );
-        }
 
-        if (anthology?.anthologyState.memoirsCP != anthologyInfo?.memoirsCP) {
           const _memoirs = (await readAnthology(
             contractAddr,
             "getMemoirs"
@@ -84,8 +179,6 @@ export const AnthologyView = () => {
             timestamp: memoir.timestamp.toString(),
           }));
 
-          console.log("CAlling memoirs");
-
           dispatch(
             updateMemoirs({
               contract: contractAddr,
@@ -93,54 +186,20 @@ export const AnthologyView = () => {
             })
           );
         }
-
-        if (
-          anthologyInfo.whitelistEnabled &&
-          anthology?.anthologyState.whitelistCP != anthologyInfo?.whitelistCP
-        ) {
-          const whitelistedUsers = await readAnthology(
-            contractAddr,
-            "getWhitelist"
-          );
-          console.log("CAlling whitelist");
-          dispatch(
-            updateWhitelist({
-              contract: contractAddr,
-              whitelistedUsers: whitelistedUsers as string[],
-            })
-          );
-        }
-
-        if (
-          anthologyInfo.owner == userAddr &&
-          anthologyInfo.useBuffer &&
-          anthology?.anthologyState.memoirBufferCP !=
-            anthologyInfo?.memoirBufferCP
-        ) {
-          const memoirBuffer = (await readAnthology(
-            contractAddr,
-            "getMemoirBuffer"
-          )) as MemoirInterface[];
-
-          const memoirBufferString = memoirBuffer.map((memoir) => ({
-            ...memoir,
-            timestamp: memoir.timestamp.toString(),
-          }));
-
-          console.log("CAlling memoirBuffer");
-          dispatch(
-            updateMemoirBuffer({
-              contract: contractAddr,
-              memoirBuffer: memoirBufferString,
-            })
-          );
-        }
       }
     };
 
     //Validate if contract already exist before making rpc call
-    if (contractAddr && !anthology) callAnthology();
-  }, [contractAddr, userContracts, dispatch, ethAddr, anthology, userAddr]);
+    setupAnthology();
+  }, []);
+
+  const fillAnthology = async () => {
+    const txHash = await writeAnthology(contractAddr, "createMemoir", [
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed.",
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc accumsan sem ut ligula scelerisque, nec porta felis convallis. Proin posuere, tellus et euismod vehicula, risus ante rhoncus leo, auctor elementum est risus sed eiusmod tempor incididunt voluptate.",
+    ]);
+    console.log("TX Hash:", txHash);
+  };
 
   return (
     <div
@@ -168,6 +227,21 @@ export const AnthologyView = () => {
           }}
         >
           {showInfo ? "Show memoirs" : "Show Info"}
+        </div>
+        <div
+          onClick={async () => {
+            fillAnthology();
+          }}
+          style={{
+            border: "1px solid white",
+            padding: "3px",
+            borderRadius: "7px",
+            cursor: "pointer",
+            marginRight: "10px",
+          }}
+        >
+          {" "}
+          Fill Anthology
         </div>
         {showInfo && userAddr === anthology?.anthologyState.owner && (
           <div
@@ -203,21 +277,16 @@ export const AnthologyView = () => {
               justifyContent: "space-around",
             }}
           >
-            {!sudoMode ? (
+            {sudoMode ? (
+              <>
+                <AnthologyOwner contractAddr={contractAddr} />
+                <MemoirBuffer contractAddr={contractAddr} />{" "}
+              </>
+            ) : (
               <>
                 <AnthologyState />
                 {anthology?.anthologyState.whitelistEnabled && (
                   <AnthologyWhitelistedUsers contractAddr={contractAddr} />
-                )}
-              </>
-            ) : (
-              <>
-                {userAddr === anthology?.anthologyState.owner && (
-                  <>
-                    <AnthologyOwner contractAddr={contractAddr} />
-                    <MemoirBuffer contractAddr={contractAddr} />{" "}
-                    {/* remove button and leave it to CP */}
-                  </>
                 )}
               </>
             )}

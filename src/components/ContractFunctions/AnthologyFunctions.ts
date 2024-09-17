@@ -15,6 +15,9 @@ type readFunctions =
   | "title"
   | "memoirPrice"
   | "anthologyHash"
+  | "memoirsCP"
+  | "whitelistCP"
+  | "memoirBufferCP"
   | "getMemoirs"
   | "getMemoirBuffer"
   | "getAnthologyInfo"
@@ -105,7 +108,7 @@ export const writeAnthology = async (
         ** memoirs
         ** memoirBuffer
         ** whitelist
-            -> Then persist the data.
+            ** Then persist the data.
 
     ** How to toggle between anthology and state/owner -> toggle/view button
 
@@ -113,20 +116,31 @@ export const writeAnthology = async (
       if CP is checked by front end, logic of call is handled by frontend
       ** If CP has not changed -> do nothing
       ** If CP has changed -> getArray
-      ?? fetchAnthologyInfo gets 10 variables at one, should i add anthologyInfoCP?
+      ** fetchAnthologyInfo gets 10 variables at one, should i add anthologyInfoCP?
 
     ** Add hash Anthology to prevent useless rpc calls
-    -> Add variable to anthology to store the skin (post-it, media, etc) - in Anthology
-    -> Add description to anthology -> (?) 
+    ** Add owner to getContractInfo()
+    ** Call whitelistedUsers only if whitelist is enable
 
     ** Clean whitelist
     ** clean anthology
     ** clean anthology whitelist
 
-    ** memoirsCheckPoint = 0;
+    ** memoirsCP = 0;
     ** memoirBufferCP = 0;
     ** whitelistCP = 0;
 
+    -> 1st render getContractInfo -> after redux persist only call getUserCP
+        -> IF erro call getContractInfo (?)
+    -> Add CP to users -> usersCP (?)
+    -> Change users type from address[] to mapping(uint => address)
+        -> create deleteUser
+            -> 0x0000 deleteUser(<index>)
+        -> cleanUsers -> delete users
+        -> addUser (?)
+        -> change in userCP diff can be used to get users paginated
+    -> Add variable to anthology to store the skin (post-it, media, etc) - in Anthology
+    -> Add description to anthology -> (?) 
 
     -> After cleanUsers, new users are added to users -> what to do?
 */

@@ -14,7 +14,6 @@ export const UsersPaginated = () => {
   const page = 1;
 
   //- useSelector is rerendering beacuse its fetching data in the backgo
-  console.log("how many rerenders?? ");
 
   return (
     <div
@@ -28,7 +27,7 @@ export const UsersPaginated = () => {
         margin: "5px",
       }}
     >
-      <h3>Total users: {userCount.toString()}</h3>
+      <h3>Total users: {userCount?.toString()}</h3>
       <span>
         Page: {page} Page size: {pageSize}
       </span>

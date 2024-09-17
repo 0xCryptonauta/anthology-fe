@@ -10,7 +10,7 @@ import { hardhat as chain } from "@wagmi/core/chains";
 import { AnthologyFactoryABI } from "../../abi/AnthologyFactoryABI";
 import { config } from "../../config";
 
-const AnthologyFactoryAddress = "0x5067457698Fd6Fa1C6964e416b3f42713513B3dD";
+const AnthologyFactoryAddress = "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0";
 
 type readFactoryFunctions =
   | "getContractInfo"
@@ -19,6 +19,7 @@ type readFactoryFunctions =
   | "whitelistEnabled"
   | "useERC20"
   | "erc20Token"
+  | "userCount"
   | "owner"
   | "getUsers"
   | "getUserContracts"
@@ -62,7 +63,7 @@ export const readFactory = async (
   _args?: unknown[]
 ) => {
   let result;
-  console.log("Reading factory");
+  console.log("Reading factory: ", _functionName);
   try {
     result = await readContract(config, {
       abi: AnthologyFactoryABI,

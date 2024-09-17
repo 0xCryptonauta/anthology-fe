@@ -74,6 +74,42 @@ export const anthologySlice = createSlice({
       state[_contract].anthologyState = _anthologyInfo;
     },
 
+    updateAnthologyCP: (
+      state,
+      action: PayloadAction<{
+        contract: string;
+        memoirsCP: number;
+      }>
+    ) => {
+      const _contract = action.payload.contract;
+      const _newCP = action.payload.memoirsCP;
+      state[_contract].anthologyState.memoirsCP = _newCP;
+    },
+
+    updateAnthologyWhitelistCP: (
+      state,
+      action: PayloadAction<{
+        contract: string;
+        whitelistCP: number;
+      }>
+    ) => {
+      const _contract = action.payload.contract;
+      const _newCP = action.payload.whitelistCP;
+      state[_contract].anthologyState.whitelistCP = _newCP;
+    },
+
+    updateAnthologyBufferCP: (
+      state,
+      action: PayloadAction<{
+        contract: string;
+        memoirBufferCP: number;
+      }>
+    ) => {
+      const _contract = action.payload.contract;
+      const _newCP = action.payload.memoirBufferCP;
+      state[_contract].anthologyState.whitelistCP = _newCP;
+    },
+
     updateMemoirs: (
       state,
       action: PayloadAction<{
@@ -143,17 +179,25 @@ export const anthologySlice = createSlice({
       const _whitelistedUsers = action.payload.whitelistedUsers;
       state[_contract].whitelist = _whitelistedUsers;
     },
+
+    clearAnthologyStore: () => {
+      return initialState;
+    },
   },
 });
 
 export const {
   addAnthology,
   updateAnthologyState,
+  updateAnthologyCP,
+  updateAnthologyWhitelistCP,
+  updateAnthologyBufferCP,
   updateMemoirs,
   updateMemoirBuffer,
   updateWhitelist,
   removeOneFromBuffer,
   removeOneFromMemoirs,
+  clearAnthologyStore,
 } = anthologySlice.actions;
 
 export default anthologySlice.reducer;

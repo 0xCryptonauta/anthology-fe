@@ -331,6 +331,11 @@ export const AnthologyFactoryABI = [
       {
         components: [
           {
+            internalType: "address",
+            name: "owner",
+            type: "address",
+          },
+          {
             internalType: "bool",
             name: "isFrozen",
             type: "bool",
@@ -577,13 +582,6 @@ export const AnthologyFactoryABI = [
       },
     ],
     name: "removeFromWhitelist",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "removeUser",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

@@ -28,6 +28,7 @@ export const Memoirs = ({ contractAddr }: { contractAddr: string }) => {
               key={index}
               style={{
                 border: "1px solid white",
+                maxWidth: "500px",
                 padding: "5px",
                 borderRadius: "7px",
                 margin: "3px",

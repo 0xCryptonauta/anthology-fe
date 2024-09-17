@@ -4,33 +4,20 @@ import { config } from "../config";
 import { readAnthology } from "../components/ContractFunctions/AnthologyFunctions";
 
 export const fetchContractData = async () => {
-  const contractInfo = await readFactory("getContractInfo");
-
-  const {
-    isFrozen,
-    whitelistEnabled,
-    useErc20,
-    erc20Token,
-    anthologyPrice,
-    userCount,
-  } = contractInfo as {
+  const contractInfo = (await readFactory("getContractInfo")) as {
+    owner: string;
     isFrozen: boolean;
     whitelistEnabled: boolean;
     useErc20: boolean;
     erc20Token: string;
-    anthologyPrice: bigint;
-    userCount: bigint;
+    anthologyPrice: number;
+    userCount: number;
   };
-  const owner = await readFactory("owner");
 
   return {
-    owner: owner as string,
-    isFrozen,
-    whitelistEnabled,
-    useErc20,
-    erc20Token,
-    anthologyPrice: Number(anthologyPrice),
-    userCount: Number(userCount),
+    ...contractInfo,
+    anthologyPrice: Number(contractInfo.anthologyPrice),
+    userCount: Number(contractInfo.userCount),
   };
 };
 
@@ -47,22 +34,11 @@ export const reconnectWallet = async () => {
 };
 
 export const fetchAnthologyInfo = async (contractAddr: string) => {
-  const anthologyInfo = await readAnthology(contractAddr, "getAnthologyInfo");
-  const {
-    title,
-    totalCreatedMemoirs,
-    currentMemoirCount,
-    maxMemoirs,
-    memoirPrice,
-    whitelistEnabled,
-    //isFrozen,
-    useBuffer,
-    useERC20,
-    erc20Token,
-    memoirsCP,
-    memoirBufferCP,
-    whitelistCP,
-  } = anthologyInfo as {
+  const anthologyInfo = (await readAnthology(
+    contractAddr,
+    "getAnthologyInfo"
+  )) as {
+    owner: string;
     title: string;
     totalCreatedMemoirs: bigint;
     currentMemoirCount: number;
@@ -77,22 +53,15 @@ export const fetchAnthologyInfo = async (contractAddr: string) => {
     memoirBufferCP: number;
     whitelistCP: number;
   };
-  const owner = await readAnthology(contractAddr, "owner");
 
   return {
-    owner: owner as string,
-    title,
-    totalCreatedMemoirs: Number(totalCreatedMemoirs),
-    currentMemoirCount: Number(currentMemoirCount),
-    maxMemoirs: Number(maxMemoirs),
-    memoirPrice: Number(memoirPrice),
-    whitelistEnabled,
-    //isFrozen,
-    useBuffer,
-    useERC20,
-    erc20Token,
-    memoirsCP: Number(memoirsCP),
-    memoirBufferCP: Number(memoirBufferCP),
-    whitelistCP: Number(whitelistCP),
+    ...anthologyInfo,
+    totalCreatedMemoirs: Number(anthologyInfo.totalCreatedMemoirs),
+    currentMemoirCount: Number(anthologyInfo.currentMemoirCount),
+    maxMemoirs: Number(anthologyInfo.maxMemoirs),
+    memoirPrice: Number(anthologyInfo.memoirPrice),
+    memoirsCP: Number(anthologyInfo.memoirsCP),
+    memoirBufferCP: Number(anthologyInfo.memoirBufferCP),
+    whitelistCP: Number(anthologyInfo.whitelistCP),
   };
 };

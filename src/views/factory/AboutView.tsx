@@ -1,6 +1,10 @@
+import { useDispatch } from "react-redux";
 import { store } from "../../store";
+import { clearAnthologyStore } from "../../slices/anthologySlice";
+import { clearFactoryStore } from "../../slices/factorySlice";
 
 export const AboutView = () => {
+  const dispatch = useDispatch();
   return (
     <div
       className="bg-dark"
@@ -25,6 +29,14 @@ export const AboutView = () => {
         }}
       >
         size of redux storage
+      </button>
+      <button
+        onClick={() => {
+          dispatch(clearAnthologyStore());
+          dispatch(clearFactoryStore());
+        }}
+      >
+        CLEAN STORE
       </button>
     </div>
   );

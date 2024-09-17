@@ -63,12 +63,12 @@ export const ContractState: React.FC = () => {
         <span>Owner of factory:</span>
         <span style={{ fontSize: "14px" }}>{owner}</span>
         <span>Whitelist Enabled: {whitelistEnabled ? "Yes" : "No"}</span>
-        <span>Anthology Price: {anthologyPrice.toString()} ETH</span>
+        <span>Anthology Price: {anthologyPrice?.toString()} ETH</span>
         <span>Use ERC20: {useErc20 ? "Yes" : "No"}</span>
         <span>ERC20 address:</span>
         <span style={{ fontSize: "14px" }}>{erc20Token}</span>
         <span>Deployments Frozen: {isFrozen ? "Yes" : "No"}</span>
-        <span>Users count: {userCount.toString()}</span>
+        <span>Users count: {userCount?.toString()}</span>
       </div>
 
       <IsWhitelisted />
