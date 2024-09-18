@@ -70,15 +70,22 @@ export const writeAnthology = async (
   _functionName: writeFunctions,
   _args?: unknown[]
 ) => {
-  const result = await writeContract(config, {
-    abi: AnthologyABI,
-    address: _contractAddr,
-    functionName: _functionName,
-    args: _args,
-    chainId: chain.id,
-  });
+  try {
+    const result = await writeContract(config, {
+      abi: AnthologyABI,
+      address: _contractAddr,
+      functionName: _functionName,
+      args: _args,
+      chainId: chain.id,
+    });
 
-  return result;
+    return result;
+  } catch (error) {
+    //result = undefined;
+    console.log("ERROR calling:", _functionName);
+    console.log("FOR:", _contractAddr);
+    console.log("EEOR:", error);
+  }
 };
 
 /* 
@@ -100,6 +107,7 @@ export const writeAnthology = async (
           ** cleanWhitelist
           ** cleanWhitelist (factory)
           ** cleanUsers (factory)
+          -> deleteUser                 <<----------------
     ** Display whitelist
 
     ** Hash memoirBuffer to avoid calls -> not hash but checkpoint (incremental value due to change)
@@ -130,15 +138,17 @@ export const writeAnthology = async (
     ** memoirBufferCP = 0;
     ** whitelistCP = 0;
 
-    -> 1st render getContractInfo -> after redux persist only call getUserCP
-        -> IF erro call getContractInfo (?)
-    -> Add CP to users -> usersCP (?)
-    -> Change users type from address[] to mapping(uint => address)
-        -> create deleteUser
-            -> 0x0000 deleteUser(<index>)
-        -> cleanUsers -> delete users
-        -> addUser (?)
-        -> change in userCP diff can be used to get users paginated
+    ** 1st render getContractInfo -> after redux persist only call getUserCP
+        -> IF error -> call getContractInfo (?)
+    ** Add CP to users -> usersCP (?)
+    ** Change users type from address[] to mapping(uint => address)
+        ** create deleteUser
+            ** 0x0000 deleteUser(<index>)
+        ** cleanUsers -> delete users -> cannot, too expensive 
+        ** addUser (?) -> NO
+        ** there is a problem with the store and deploy chaindID (?) -> move reconnect to rootview useEffect
+        ** change in userCP diff can be used to get users paginated
+
     -> Add variable to anthology to store the skin (post-it, media, etc) - in Anthology
     -> Add description to anthology -> (?) 
 

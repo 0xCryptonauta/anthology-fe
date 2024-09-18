@@ -9,6 +9,7 @@ export interface FactoryBaseState {
   erc20Token: string;
   anthologyPrice: number;
   userCount: number;
+  usersCP: number;
 }
 
 export interface FactoryState {
@@ -19,6 +20,7 @@ export interface FactoryState {
   erc20Token: string;
   anthologyPrice: number;
   userCount: number;
+  usersCP: number;
 
   whitelistedUsers: string[];
   users: string[]; // Array of user addresses
@@ -34,6 +36,7 @@ const initialState: FactoryState = {
   erc20Token: "",
   anthologyPrice: 0,
   userCount: 0,
+  usersCP: 0,
 
   whitelistedUsers: [],
   users: [],
@@ -66,6 +69,9 @@ export const factorySlice = createSlice({
     updateUserCount: (state, action: PayloadAction<number>) => {
       state.userCount = action.payload;
     },
+    updateUsersCP: (state, action: PayloadAction<number>) => {
+      state.usersCP = action.payload;
+    },
     updateFactoryBasicInfo: (
       state,
       action: PayloadAction<FactoryBaseState>
@@ -95,19 +101,28 @@ export const factorySlice = createSlice({
       state.whitelistedUsers.pop();
     },
     updateUsers: (state, action: PayloadAction<[]>) => {
-      state.users = action.payload;
+      const data = action.payload;
+      state.users.push(...data);
     },
     updateUserContracts: (
       state,
       action: PayloadAction<{ [key: string]: string[] }>
     ) => {
-      state.userContracts = action.payload;
+      //state.userContracts = action.payload;
+      state.userContracts = Object.keys(action.payload).reduce((acc, key) => {
+        if (acc[key]) {
+          acc[key] = [...acc[key], ...action.payload[key]];
+        } else {
+          acc[key] = action.payload[key];
+        }
+        return acc;
+      }, state.userContracts);
     },
     updateContractTitles: (
       state,
       action: PayloadAction<{ [key: string]: string }>
     ) => {
-      state.contractsTitles = action.payload;
+      state.contractsTitles = { ...state.contractsTitles, ...action.payload };
     },
     clearFactoryStore: () => {
       return initialState;
@@ -132,6 +147,7 @@ export const {
   updateUserContracts,
   updateContractTitles,
   clearFactoryStore,
+  updateUsersCP,
 } = factorySlice.actions;
 
 export default factorySlice.reducer;

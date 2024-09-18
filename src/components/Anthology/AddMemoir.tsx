@@ -20,6 +20,7 @@ export const AddMemoir = ({ contractAddr }: { contractAddr: string }) => {
       <input
         placeholder=""
         value={anthologyTitle}
+        maxLength={50}
         onChange={(e) => {
           setAnthologyTitle(e.target.value);
         }}
@@ -28,6 +29,7 @@ export const AddMemoir = ({ contractAddr }: { contractAddr: string }) => {
       <span>Content:</span>
       <textarea
         value={anthologyContent}
+        maxLength={255}
         onChange={(e) => {
           setAnthologyContent(e.target.value);
         }}

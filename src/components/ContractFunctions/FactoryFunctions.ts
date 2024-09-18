@@ -10,7 +10,7 @@ import { hardhat as chain } from "@wagmi/core/chains";
 import { AnthologyFactoryABI } from "../../abi/AnthologyFactoryABI";
 import { config } from "../../config";
 
-const AnthologyFactoryAddress = "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0";
+const AnthologyFactoryAddress = "0x922D6956C99E12DFeB3224DEA977D0939758A1Fe";
 
 type readFactoryFunctions =
   | "getContractInfo"
@@ -22,6 +22,7 @@ type readFactoryFunctions =
   | "userCount"
   | "owner"
   | "getUsers"
+  | "usersCP"
   | "getUserContracts"
   | "getWhitelistedUsers"
   | "isWhitelisted"

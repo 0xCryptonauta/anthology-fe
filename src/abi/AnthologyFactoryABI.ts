@@ -279,14 +279,20 @@ export const AnthologyFactoryABI = [
   },
   {
     inputs: [],
-    name: "cleanUsers",
+    name: "cleanWhitelist",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
-    inputs: [],
-    name: "cleanWhitelist",
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "index",
+        type: "uint256",
+      },
+    ],
+    name: "deleteUser",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -365,6 +371,11 @@ export const AnthologyFactoryABI = [
             name: "userCount",
             type: "uint256",
           },
+          {
+            internalType: "uint256",
+            name: "usersCP",
+            type: "uint256",
+          },
         ],
         internalType: "struct ContractInfo",
         name: "",
@@ -413,28 +424,15 @@ export const AnthologyFactoryABI = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "getUsers",
-    outputs: [
-      {
-        internalType: "address[]",
-        name: "",
-        type: "address[]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "uint256",
-        name: "pageNumber",
+        name: "_offset",
         type: "uint256",
       },
       {
         internalType: "uint256",
-        name: "pageSize",
+        name: "_limit",
         type: "uint256",
       },
     ],
@@ -777,19 +775,13 @@ export const AnthologyFactoryABI = [
     type: "function",
   },
   {
-    inputs: [
+    inputs: [],
+    name: "usersCP",
+    outputs: [
       {
         internalType: "uint256",
         name: "",
         type: "uint256",
-      },
-    ],
-    name: "users",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
       },
     ],
     stateMutability: "view",

@@ -31,7 +31,7 @@ export const UsersPaginated = () => {
       <span>
         Page: {page} Page size: {pageSize}
       </span>
-      <span>Users paginated: {users.length}</span>
+      <span>Users paginated: {users?.length}</span>
       <br />
       <div style={{ margin: "5px" }}>
         {users?.map((user, index) => {

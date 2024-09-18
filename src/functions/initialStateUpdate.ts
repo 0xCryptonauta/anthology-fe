@@ -12,12 +12,14 @@ export const fetchContractData = async () => {
     erc20Token: string;
     anthologyPrice: number;
     userCount: number;
+    usersCP: number;
   };
 
   return {
     ...contractInfo,
     anthologyPrice: Number(contractInfo.anthologyPrice),
     userCount: Number(contractInfo.userCount),
+    usersCP: Number(contractInfo.usersCP),
   };
 };
 
