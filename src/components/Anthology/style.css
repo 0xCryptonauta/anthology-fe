@@ -8,3 +8,12 @@
   flex-direction: column;
   align-items: center;
 }
+
+.addMemoirButton {
+  font-size: 35px;
+  cursor: pointer;
+
+  &:hover {
+    font-size: 40px;
+  }
+}

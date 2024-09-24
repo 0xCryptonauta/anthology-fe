@@ -47,7 +47,7 @@ export const UserContracts = () => {
               <span>💾 </span>
               <span
                 style={{ fontSize: "14px", cursor: "pointer" }}
-                onClick={() => navigate("/user/" + userAddr + "/" + index)}
+                onClick={() => navigate("/" + userAddr + "/" + index)}
               >
                 {contractTitle
                   ? contractTitle

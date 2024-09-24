@@ -35,6 +35,14 @@ export const reconnectWallet = async () => {
   }
 };
 
+function hexToString(hex: string) {
+  let str = "";
+  for (let i = 0; i < hex.length; i += 2) {
+    str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+  }
+  return str;
+}
+
 export const fetchAnthologyInfo = async (contractAddr: string) => {
   const anthologyInfo = (await readAnthology(
     contractAddr,
@@ -42,6 +50,7 @@ export const fetchAnthologyInfo = async (contractAddr: string) => {
   )) as {
     owner: string;
     title: string;
+    skin: string;
     totalCreatedMemoirs: bigint;
     currentMemoirCount: number;
     maxMemoirs: number;
@@ -58,6 +67,7 @@ export const fetchAnthologyInfo = async (contractAddr: string) => {
 
   return {
     ...anthologyInfo,
+    skin: hexToString(anthologyInfo.skin),
     totalCreatedMemoirs: Number(anthologyInfo.totalCreatedMemoirs),
     currentMemoirCount: Number(anthologyInfo.currentMemoirCount),
     maxMemoirs: Number(anthologyInfo.maxMemoirs),

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { readFactory, readTitles } from "../ContractFunctions/FactoryFunctions";
+import { readFactory } from "../ContractFunctions/FactoryFunctions";
+import { transformData } from "../../functions/transformData";
 
 export const GetUserContracts = () => {
   const [userToGetContract, setUserToGetContract] = useState("");
@@ -30,14 +31,20 @@ export const GetUserContracts = () => {
       <span
         style={{ marginLeft: "7px", cursor: "pointer" }}
         onClick={async () => {
-          const userContracts = (await readFactory("getUserContracts", [
-            userToGetContract,
-          ])) as string[];
+          const userDB = await readFactory("getUsersContractsWithTitles", [
+            [userToGetContract],
+          ]);
 
-          const titles = await readTitles(
-            userContracts.length > 1 ? [userContracts] : userContracts
+          const { userContracts, titles } = transformData(
+            userDB as string[][][],
+            [userToGetContract] as string[]
           );
+
+          /*           const titles = await readTitles(
+            userContracts.length > 1 ? [userContracts] : userContracts
+          ); */
           console.log("titles:", titles);
+          console.log("contracts:", userContracts);
         }}
       >
         🔎

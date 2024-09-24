@@ -213,8 +213,10 @@ export const AnthologyView = () => {
         justifyContent: "flex-start",
       }}
     >
-      <h3>{contractTitle}</h3>
-      <span>Anthology Address: {contractAddr}</span>
+      <h3>
+        <AddMemoir contractAddr={contractAddr} /> {contractTitle}
+      </h3>
+
       <div style={{ display: "flex" }}>
         <div
           onClick={() => setShowInfo(!showInfo)}
@@ -280,7 +282,9 @@ export const AnthologyView = () => {
             {sudoMode ? (
               <>
                 <AnthologyOwner contractAddr={contractAddr} />
-                <MemoirBuffer contractAddr={contractAddr} />{" "}
+                {anthology?.anthologyState.useBuffer && (
+                  <MemoirBuffer contractAddr={contractAddr} />
+                )}
               </>
             ) : (
               <>
@@ -294,7 +298,7 @@ export const AnthologyView = () => {
         </div>
       ) : (
         <>
-          <AddMemoir contractAddr={contractAddr} />
+          {/* <AddMemoir contractAddr={contractAddr} /> */}
           <Memoirs contractAddr={contractAddr} />
         </>
       )}

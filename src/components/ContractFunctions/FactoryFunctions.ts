@@ -5,12 +5,14 @@ import {
   //watchContractEvent,
   writeContract,
 } from "@wagmi/core";
-import { hardhat as chain } from "@wagmi/core/chains";
+//import { hardhat as chain } from "@wagmi/core/chains";
+import { optimism as chain } from "@wagmi/core/chains";
 //import { parseEther } from "viem";
 import { AnthologyFactoryABI } from "../../abi/AnthologyFactoryABI";
 import { config } from "../../config";
 
-const AnthologyFactoryAddress = "0x922D6956C99E12DFeB3224DEA977D0939758A1Fe";
+//const AnthologyFactoryAddress = "0x2E2Ed0Cfd3AD2f1d34481277b3204d807Ca2F8c2";
+const AnthologyFactoryAddress = "0x33E39Da0eC5Bc7c75cF5e1700Ea2D5Ff29233FDf"; //Polygon
 
 type readFactoryFunctions =
   | "getContractInfo"
@@ -227,14 +229,14 @@ export const callSetERC20Token = async (_newTokenAddr: string) => {
     ** Add getContractTitle(address[]) ->get titles from array of addresses
     ** getUserContractsWithTitle() -> return obj? ask gpt for with mappings
     ** delete getter from only public -> it has default getter as name o variable in read
-    -> Remove one user
+    ** Remove one user
     ** Clean users (?)
     -> Which events are missing
     ** Add message to requires
 
     ** Add hash Anthology to prevent useless rpc calls
-    -> Add variable to anthology to store the skin (post-it, media, etc) - in Anthology
-    -> Add description to anthology
+    ** Add variable to anthology to store the skin (post-it, media, etc) - in Anthology
+    ** Add description to anthology -> NO too long
 
 
     ** Clean whitelist

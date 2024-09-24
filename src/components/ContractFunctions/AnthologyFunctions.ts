@@ -5,7 +5,8 @@ import {
   //watchContractEvent,
   writeContract,
 } from "@wagmi/core";
-import { hardhat as chain } from "@wagmi/core/chains";
+//import { hardhat as chain } from "@wagmi/core/chains";
+import { optimism as chain } from "@wagmi/core/chains";
 //import { parseEther } from "viem";
 import { AnthologyABI } from "../../abi/AnthologyABI";
 import { config } from "../../config";
@@ -16,6 +17,7 @@ type readFunctions =
   | "memoirPrice"
   | "anthologyHash"
   | "memoirsCP"
+  | "skin"
   | "whitelistCP"
   | "memoirBufferCP"
   | "getMemoirs"
@@ -149,8 +151,11 @@ export const writeAnthology = async (
         ** there is a problem with the store and deploy chaindID (?) -> move reconnect to rootview useEffect
         ** change in userCP diff can be used to get users paginated
 
-    -> Add variable to anthology to store the skin (post-it, media, etc) - in Anthology
-    -> Add description to anthology -> (?) 
+    ** Add variable to anthology to store the skin (post-it, media, etc) - in Anthology
+    ** Add description to anthology -> (?) -> NO to long
+
+    -> Change string for bytes50, bytes256 ??? is it worth it?
+        ->  If no -> Change back skin to string type
 
     -> After cleanUsers, new users are added to users -> what to do?
 */

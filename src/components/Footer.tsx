@@ -7,9 +7,10 @@ export const Footer = () => {
         flexDirection: "row",
         justifyContent: "center",
         color: "white",
+        height: "50px",
       }}
     >
-      Recording the collective memory
+      {/* Recording the collective memory */}
     </div>
   );
 };

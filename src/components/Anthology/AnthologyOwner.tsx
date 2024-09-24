@@ -55,7 +55,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: string }) => {
         width: "fit-content",
         padding: "7px",
         borderRadius: "7px",
-        margin: "5px",
+        margin: "20px 5px",
       }}
     >
       <h2>Anthology Owner</h2>

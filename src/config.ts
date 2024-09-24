@@ -1,5 +1,5 @@
 import { http, createConfig } from "@wagmi/core";
-import { mainnet, sepolia, localhost } from "@wagmi/core/chains";
+import { mainnet, sepolia, optimism, localhost } from "@wagmi/core/chains";
 
 export const hardhat = {
   id: 31337,
@@ -16,11 +16,23 @@ export const hardhat = {
   },
 };
 
+const optimism2 = {
+  ...optimism,
+  rpcUrls: {
+    default: {
+      http: [
+        "https://g.w.lavanet.xyz:443/gateway/optm/rpc-http/99f8d50396b4bf539a7b29e33ded4d41",
+      ],
+    },
+  },
+};
+
 export const config = createConfig({
-  chains: [mainnet, sepolia, hardhat, localhost],
+  chains: [mainnet, sepolia, optimism2, hardhat, localhost],
   transports: {
     [mainnet.id]: http(),
     [sepolia.id]: http(),
+    [optimism.id]: http(),
     [localhost.id]: http(),
     [hardhat.id]: http(),
   },

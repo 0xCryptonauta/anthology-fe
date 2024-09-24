@@ -334,32 +334,6 @@ export const AnthologyABI = [
   },
   {
     inputs: [],
-    name: "MAX_MEMOIRS",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "MAX_WHITELISTED",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "WHITELISTED_ROLE",
     outputs: [
       {
@@ -529,6 +503,11 @@ export const AnthologyABI = [
             internalType: "string",
             name: "title",
             type: "string",
+          },
+          {
+            internalType: "bytes8",
+            name: "skin",
+            type: "bytes8",
           },
           {
             internalType: "uint256",
@@ -954,6 +933,19 @@ export const AnthologyABI = [
   {
     inputs: [
       {
+        internalType: "bytes8",
+        name: "_skin",
+        type: "bytes8",
+      },
+    ],
+    name: "setSkin",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "string",
         name: "_newTitle",
         type: "string",
@@ -988,6 +980,19 @@ export const AnthologyABI = [
     name: "setUseERC20",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "skin",
+    outputs: [
+      {
+        internalType: "bytes8",
+        name: "",
+        type: "bytes8",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {

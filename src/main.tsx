@@ -42,11 +42,11 @@ const router = createBrowserRouter([
         element: <AccountView />,
       },
       {
-        path: "/user/:ethAddr/:id",
+        path: "/:ethAddr/:id",
         element: <AnthologyView />,
       },
       {
-        path: "/user/:ethAddr",
+        path: "/:ethAddr",
         element: <UserView />,
       },
       {

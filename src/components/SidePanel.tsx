@@ -46,7 +46,7 @@ export const SidePanel = () => {
             style={{ display: "flex", alignItems: "center" }}
           >
             <img
-              src="IB_icon.png"
+              src="/IB_icon.png"
               alt="Logo"
               width="30"
               height="24"

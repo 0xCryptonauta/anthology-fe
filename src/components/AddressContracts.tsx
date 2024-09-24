@@ -3,6 +3,7 @@ import { copyToClipboard } from "../functions/copyToClipboard";
 import { shortenAddress } from "../functions/shortenAddress";
 import { RootState } from "../store";
 import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
 const addressEnsregex =
   /^(0x[a-fA-F0-9]{40})|([a-zA-Z0-9.-]+\.eth([.][a-zA-Z0-9-]+)*)$/;
@@ -15,6 +16,19 @@ export const AddressContracts = () => {
     (state: RootState) => state.factory
   );
 
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   /*   const pageSize = 50;
   const page = 1; */
 
@@ -23,12 +37,11 @@ export const AddressContracts = () => {
   if (ethAddr && addressEnsregex.test(ethAddr)) {
     if (ethAddrRegex.test(ethAddr)) {
       console.log("Call wagmi to get ens", ethAddr);
-      const userAddrSeg = ethAddr.split(".");
-      console.log("segmented:", userAddrSeg);
+      //const userAddrSeg = ethAddr.split(".");
     } else {
       console.log("Call wagmi to get Addr", ethAddr);
-      const userAddrSeg = ethAddr.split(".");
-      console.log("segmented:", userAddrSeg);
+      //const userAddrSeg = ethAddr.split(".");
+      //console.log("segmented:", userAddrSeg);
     }
     // Validate the Ethereum address
   } else {
@@ -54,7 +67,7 @@ export const AddressContracts = () => {
         {ethAddr?.length > 20 ? shortenAddress(ethAddr, 10, 8) : ethAddr}:
         <span>Anthologies from:</span>
       </h3> */}
-      <h4>{ethAddr}</h4>
+      <h4>{width < 580 ? shortenAddress(ethAddr, 12, 10) : ethAddr}</h4>
 
       {/*       <span>
         Total: {page} Page size: {pageSize}
@@ -70,7 +83,7 @@ export const AddressContracts = () => {
                 <span>💾 </span>
                 <span
                   style={{ fontSize: "14px", cursor: "pointer" }}
-                  onClick={() => navigate("/user/" + ethAddr + "/" + index)}
+                  onClick={() => navigate("/" + ethAddr + "/" + index)}
                 >
                   {contractTitle
                     ? contractTitle

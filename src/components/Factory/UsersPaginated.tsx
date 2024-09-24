@@ -41,7 +41,7 @@ export const UsersPaginated = () => {
               <div>
                 <span
                   style={{ fontSize: "20px", cursor: "pointer" }}
-                  onClick={() => navigate("/user/" + user)}
+                  onClick={() => navigate("/" + user)}
                 >
                   👤 {shortenAddress(user, 12, 9)}
                 </span>
@@ -54,9 +54,7 @@ export const UsersPaginated = () => {
                         <span>💾 </span>
                         <span
                           style={{ fontSize: "14px", cursor: "pointer" }}
-                          onClick={() =>
-                            navigate("/user/" + user + "/" + index)
-                          }
+                          onClick={() => navigate("/" + user + "/" + index)}
                         >
                           {contractTitle
                             ? contractTitle

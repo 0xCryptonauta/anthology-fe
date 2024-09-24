@@ -13,6 +13,7 @@ export interface MemoirInterface {
 export interface AnthologyInfoInterface {
   owner: string;
   title: string;
+  skin: string;
   totalCreatedMemoirs: number;
   currentMemoirCount: number;
   maxMemoirs: number;

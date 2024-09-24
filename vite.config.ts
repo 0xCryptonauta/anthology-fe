@@ -15,7 +15,7 @@ export default defineConfig({
         enabled: true,
       }, */
 
-      includeAssets: ["IB_icon.png"],
+      includeAssets: ["/IB_icon.png"],
       manifest: {
         name: "Anthology",
         short_name: "Memory",

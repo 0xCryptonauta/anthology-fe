@@ -43,6 +43,13 @@ export const AnthologyState = () => {
     >
       <Card className="cardStyle">
         <Card.Body>
+          <Card.Title>Contract Addr</Card.Title>
+          <Card.Text style={{ fontSize: "12px" }}>{contractAddr}</Card.Text>
+        </Card.Body>
+      </Card>
+
+      <Card className="cardStyle">
+        <Card.Body>
           <Card.Title>Owner</Card.Title>
           <Card.Text style={{ fontSize: "12px" }}>
             {anthologyState?.owner.toString()}

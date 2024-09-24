@@ -22,7 +22,8 @@ export const ChangeAnthologyTitle = ({
         value={newTitle}
         onChange={(e) => setNewTitle(e.target.value)}
       ></input>
-      <button
+      <span
+        style={{ marginLeft: "7px" }}
         onClick={async () => {
           const txHash_setTitle = await writeAnthology(
             contractAddr,
@@ -32,9 +33,8 @@ export const ChangeAnthologyTitle = ({
           console.log("txHash setTitle", txHash_setTitle);
         }}
       >
-        {" "}
-        Change Title
-      </button>
+        🔄
+      </span>
     </div>
   );
 };
