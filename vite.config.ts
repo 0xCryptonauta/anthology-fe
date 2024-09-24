@@ -11,9 +11,9 @@ export default defineConfig({
     VitePWA({
       //registerType: "autoUpdate",
 
-      /*       devOptions: {
-        enabled: true,
-      }, */
+      devOptions: {
+        enabled: false,
+      },
 
       includeAssets: ["/IB_icon.png"],
       manifest: {
@@ -60,4 +60,9 @@ export default defineConfig({
       },
     }),
   ],
+  //base: "/anthology-fe/",
+  base: "/",
+  build: {
+    outDir: "dist",
+  },
 });
