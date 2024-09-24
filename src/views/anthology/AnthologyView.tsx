@@ -9,7 +9,6 @@ import {
 
 import {
   addAnthology,
-  updateAnthologyState,
   AnthologyInfoInterface,
   MemoirInterface,
   updateMemoirs,
