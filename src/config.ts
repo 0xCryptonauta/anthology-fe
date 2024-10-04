@@ -29,10 +29,8 @@ const metadata = {
   icons: ["/IB_icon.png"],
 };
 
-const chains = [optimism2, localhost];
-
 export const config = createConfig({
-  chains: chains,
+  chains: [optimism2, localhost],
   connectors: [
     injected(),
     walletConnect({

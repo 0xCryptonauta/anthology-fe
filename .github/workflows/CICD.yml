@@ -20,6 +20,12 @@ concurrency:
   group: "pages"
   cancel-in-progress: true
 
+  #Allow repo secrets
+env:
+  VITE_ALCHEMY_OPTIMISM_RPC: ${{ secrets.VITE_ALCHEMY_OPTIMISM_RPC }}
+  VITE_FACTORY_CONTRACT: ${{secrets.VITE_FACTORY_CONTRACT}}
+  VITE_PROJECT_ID: ${{secrets.VITE_PROJECT_ID}}
+
 jobs:
   # Single deploy job since we're just deploying
   deploy:
