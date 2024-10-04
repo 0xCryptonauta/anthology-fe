@@ -4,7 +4,7 @@ import { RootState } from "../../store";
 import { useEffect, useState } from "react";
 import {
   readAnthology,
-  writeAnthology,
+  //writeAnthology,
 } from "../../components/ContractFunctions/AnthologyFunctions";
 
 import {
@@ -192,13 +192,13 @@ export const AnthologyView = () => {
     setupAnthology();
   }, []);
 
-  const fillAnthology = async () => {
+  /*  const fillAnthology = async () => {
     const txHash = await writeAnthology(contractAddr, "createMemoir", [
       "Lorem ipsum dolor sit amet, consectetur adipiscin.",
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc accumsan sem ut ligula scelerisque, nec porta felis convallis. Proin posuere, tellus et euismod vehicula, risus ante rhoncus leo, auctor elementum est risus sed eiusmod tempor incididunt volup.",
     ]);
     console.log("TX Hash:", txHash);
-  };
+  }; */
 
   return (
     <div
@@ -229,7 +229,7 @@ export const AnthologyView = () => {
         >
           {showInfo ? "Show memoirs" : "Show Info"}
         </div>
-        <div
+        {/* <div
           onClick={async () => {
             fillAnthology();
           }}
@@ -243,7 +243,7 @@ export const AnthologyView = () => {
         >
           {" "}
           Fill Anthology
-        </div>
+        </div> */}
         {showInfo && userAddr === anthology?.anthologyState.owner && (
           <div
             onClick={() => setSudoMode(!sudoMode)}

@@ -12,7 +12,7 @@ import { AnthologyFactoryABI } from "../../abi/AnthologyFactoryABI";
 import { config } from "../../config";
 
 //const AnthologyFactoryAddress = "0x2E2Ed0Cfd3AD2f1d34481277b3204d807Ca2F8c2";
-const AnthologyFactoryAddress = "0x33E39Da0eC5Bc7c75cF5e1700Ea2D5Ff29233FDf"; //Polygon
+const AnthologyFactoryAddress = import.meta.env.VITE_FACTORY_CONTRACT; //Polygon
 
 type readFactoryFunctions =
   | "getContractInfo"

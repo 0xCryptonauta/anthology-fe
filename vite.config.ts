@@ -20,7 +20,7 @@ export default defineConfig({
         name: "Anthology",
         short_name: "Memory",
         description: "Recording the collective memory",
-        theme_color: "#ffffff",
+        theme_color: "#242424",
         id: "/",
         icons: [
           {
