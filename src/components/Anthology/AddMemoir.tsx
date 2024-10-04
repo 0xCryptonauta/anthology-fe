@@ -17,10 +17,15 @@ export const AddMemoir = ({ contractAddr }: { contractAddr: string }) => {
       <span onClick={handleShow} className="addMemoirButton">
         📝
       </span>
-      <Offcanvas show={show} onHide={handleClose} placement="bottom">
-        <Offcanvas.Header closeButton>
+      <Offcanvas
+        show={show}
+        onHide={handleClose}
+        placement="bottom"
+        style={{ height: "350px", backgroundColor: "none !important" }}
+      >
+        {/* <Offcanvas.Header closeButton>
           <Offcanvas.Title>Add new memoir</Offcanvas.Title>
-        </Offcanvas.Header>
+        </Offcanvas.Header> */}
         <Offcanvas.Body
           style={{
             display: "flex",
@@ -30,6 +35,7 @@ export const AddMemoir = ({ contractAddr }: { contractAddr: string }) => {
         >
           <div
             style={{
+              backgroundColor: "white",
               display: "flex",
               flexDirection: "column",
               border: "1px solid black",
@@ -53,6 +59,7 @@ export const AddMemoir = ({ contractAddr }: { contractAddr: string }) => {
             <span>Content:</span>
             <textarea
               value={anthologyContent}
+              style={{ height: "100px" }}
               maxLength={255}
               onChange={(e) => {
                 setAnthologyContent(e.target.value);

@@ -11,16 +11,15 @@ export const FactoryStateView = () => {
       className="bg-dark"
       style={{
         color: "white",
-        height: "100svh",
         display: "flex",
-        flexDirection: "column",
         alignItems: "center",
-        justifyContent: "flex-start",
+        justifyContent: "space-evenly",
         flexWrap: "wrap",
+        flexDirection: "row",
       }}
     >
-      <ContractState />
       {factoryOwner == userAddr && <OnlyOwner />}
+      <ContractState />
     </div>
   );
 };
