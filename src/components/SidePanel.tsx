@@ -36,7 +36,11 @@ export const SidePanel = () => {
         data-bs-theme="dark"
         show={show}
         onHide={handleClose}
-        style={{ width: "200px" }}
+        style={{
+          width: "200px",
+          color: "red",
+          backgroundColor: "red !important",
+        }}
       >
         <Offcanvas.Header style={{ justifyContent: "center" }}>
           <Link
