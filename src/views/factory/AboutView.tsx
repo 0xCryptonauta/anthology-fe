@@ -2,7 +2,6 @@ import { useDispatch } from "react-redux";
 import { store } from "../../store";
 import { clearAnthologyStore } from "../../slices/anthologySlice";
 import { clearFactoryStore } from "../../slices/factorySlice";
-import QRScanner from "../../components/QRScanner";
 
 export const AboutView = () => {
   const dispatch = useDispatch();
@@ -40,7 +39,6 @@ export const AboutView = () => {
       >
         CLEAN STORE
       </button>
-      <QRScanner />
     </div>
   );
 };
