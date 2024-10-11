@@ -20,7 +20,7 @@ export const UsersPaginated = () => {
       style={{
         display: "flex",
         flexDirection: "column",
-        border: "1px solid white",
+        //border: "1px solid white",
         width: "350px",
         padding: "7px",
         borderRadius: "7px",

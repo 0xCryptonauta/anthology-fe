@@ -24,7 +24,7 @@ export const Memoirs = ({ contractAddr }: { contractAddr: string }) => {
   return (
     <div
       style={{
-        border: "1px solid white",
+        //border: "1px solid white",
         padding: "5px",
         borderRadius: "7px",
         margin: "3px",
@@ -48,7 +48,7 @@ export const Memoirs = ({ contractAddr }: { contractAddr: string }) => {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                border: "1px solid white",
+                //border: "1px solid white",
                 maxWidth: "360px",
                 padding: "5px",
                 borderRadius: "7px",

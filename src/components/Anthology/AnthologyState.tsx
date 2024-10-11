@@ -32,7 +32,7 @@ export const AnthologyState = () => {
   return (
     <div
       style={{
-        border: "1px solid white",
+        //border: "1px solid white",
         padding: "5px",
         borderRadius: "7px",
         margin: "3px",
