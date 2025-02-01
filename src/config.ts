@@ -10,16 +10,16 @@ const optimism2 = {
   ...optimism,
   rpcUrls: {
     default: {
-      /* http: [
-        import.meta.env.VITE_LAVA_OPTIMISM_RPC,
-      ], */
-      http: [String(import.meta.env.VITE_ALCHEMY_OPTIMISM_RPC)],
+      http: [
+        "https://mainnet.optimism.io",
+        "https://g.w.lavanet.xyz:443/gateway/optm/rpc-http/3dc655f970c930f1d3e78ee71beece18",
+      ],
     },
   },
 };
 
 // 1. Your Reown Cloud project ID
-const projectId = import.meta.env.VITE_PROJECT_ID;
+const wcProjectId = import.meta.env.VITE_WC_PROJECT_ID;
 
 // 2. Create wagmiConfig
 const metadata = {
@@ -34,7 +34,7 @@ export const config = createConfig({
   connectors: [
     injected(),
     walletConnect({
-      projectId: projectId,
+      projectId: wcProjectId,
       isNewChainsStale: false,
       showQrModal: false,
       qrModalOptions: {

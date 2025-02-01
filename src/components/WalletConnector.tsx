@@ -120,7 +120,7 @@ function shortenAddress(address: string) {
         shimDisconnect: false,
       }),
       walletConnect({
-        projectId: import.meta.env.VITE_PROJECT_ID,
+        projectId: import.meta.env.VITE_WC_PROJECT_ID,
       }),
     ],
   });
@@ -159,7 +159,7 @@ export const WalletConnector = () => {
   const connectWalletConnect = async () => {
     const currentUser = await connect(config, {
       connector: walletConnect({
-        projectId: import.meta.env.VITE_PROJECT_ID,
+        projectId: import.meta.env.VITE_WC_PROJECT_ID,
       }),
     });
     console.log("Wallet result: ", currentUser);
