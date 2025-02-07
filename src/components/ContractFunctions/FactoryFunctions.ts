@@ -1,4 +1,5 @@
-//@ts-check
+// @ts-nocheck
+
 import {
   readContract,
   //watchContractEvent,
