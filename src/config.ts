@@ -3,23 +3,34 @@ import {
   //mainnet,
   optimism,
   localhost,
+  base,
+  arbitrum,
+  Chain,
 } from "@wagmi/core/chains";
 import { injected, walletConnect } from "@wagmi/connectors";
 
-const optimism2 = {
-  ...optimism,
+// 1. Your Reown Cloud project ID
+const wcProjectId = import.meta.env.VITE_WC_PROJECT_ID;
+const lavaProjectId = import.meta.env.VITE_LAVA_PROJECT_ID;
+
+const createCustomChain = (
+  chain: Chain,
+  network: string,
+  projectId: string
+) => ({
+  ...chain,
   rpcUrls: {
     default: {
       http: [
-        "https://mainnet.optimism.io",
-        "https://g.w.lavanet.xyz:443/gateway/optm/rpc-http/3dc655f970c930f1d3e78ee71beece18",
+        `https://g.w.lavanet.xyz:443/gateway/${network}/rpc-http/${projectId}`,
       ],
     },
   },
-};
+});
 
-// 1. Your Reown Cloud project ID
-const wcProjectId = import.meta.env.VITE_WC_PROJECT_ID;
+const optimismCustom = createCustomChain(optimism, "optm", lavaProjectId);
+const baseCustom = createCustomChain(base, "base", lavaProjectId);
+const arbitrumCustom = createCustomChain(arbitrum, "arb1", lavaProjectId);
 
 // 2. Create wagmiConfig
 const metadata = {
@@ -30,7 +41,7 @@ const metadata = {
 };
 
 export const config = createConfig({
-  chains: [optimism2, localhost],
+  chains: [optimismCustom, baseCustom, arbitrumCustom, localhost],
   connectors: [
     injected(),
     walletConnect({
@@ -46,7 +57,9 @@ export const config = createConfig({
   transports: {
     //[mainnet.id]: http(),
 
-    [optimism2.id]: http(),
+    [optimismCustom.id]: http(),
+    [baseCustom.id]: http(),
+    [arbitrumCustom.id]: http(),
     [localhost.id]: http(),
   },
 });

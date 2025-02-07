@@ -6,7 +6,7 @@ import {
   writeContract,
 } from "@wagmi/core";
 //import { hardhat as chain } from "@wagmi/core/chains";
-import { optimism as chain } from "@wagmi/core/chains";
+import { arbitrum as chain } from "@wagmi/core/chains";
 //import { parseEther } from "viem";
 import { AnthologyABI } from "../../abi/AnthologyABI";
 import { config } from "../../config";

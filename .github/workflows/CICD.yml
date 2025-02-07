@@ -22,8 +22,9 @@ concurrency:
 
   #Allow repo secrets
 env:
-  VITE_FACTORY_CONTRACT_ADDRESS: ${{secrets.VITE_FACTORY_CONTRACT_ADDRESS}}
-  VITE_PROJECT_ID: ${{secrets.VITE_WC_PROJECT_ID}}
+  VITE_FACTORY_ARBITRUM: ${{secrets.VITE_FACTORY_ARBITRUM}}
+  VITE_LAVA_PROJECT_ID: ${{secrets.VITE_WC_PROJECT_ID}}
+  VITE_WC_PROJECT_ID: ${{secrets.VITE_WC_PROJECT_ID}}
 
 jobs:
   # Single deploy job since we're just deploying

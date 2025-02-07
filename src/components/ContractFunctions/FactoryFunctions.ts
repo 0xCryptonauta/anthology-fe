@@ -1,18 +1,17 @@
-// @ts-nocheck
-
+//@ts-check
 import {
   readContract,
   //watchContractEvent,
   writeContract,
 } from "@wagmi/core";
 //import { hardhat as chain } from "@wagmi/core/chains";
-import { optimism as chain } from "@wagmi/core/chains";
+import { arbitrum as chain } from "@wagmi/core/chains";
 //import { parseEther } from "viem";
 import { AnthologyFactoryABI } from "../../abi/AnthologyFactoryABI";
 import { config } from "../../config";
 
-//const AnthologyFactoryAddress = "0x2E2Ed0Cfd3AD2f1d34481277b3204d807Ca2F8c2";
-const AnthologyFactoryAddress = import.meta.env.VITE_FACTORY_CONTRACT_ADDRESS; //Polygon
+//const AnthologyFactoryAddress = import.meta.env.VITE_FACTORY_CONTRACT_ADDRESS; //Optimism
+const AnthologyFactoryAddress = import.meta.env.VITE_FACTORY_ARBITRUM; //Arbitrum
 
 type readFactoryFunctions =
   | "getContractInfo"
