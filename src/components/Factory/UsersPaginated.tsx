@@ -10,8 +10,8 @@ export const UsersPaginated = () => {
     (state: RootState) => state.factory
   );
 
-  const pageSize = 50;
-  const page = 1;
+  /*   const pageSize = 50;
+  const page = 1; */
 
   //- useSelector is rerendering beacuse its fetching data in the backgo
 
@@ -28,10 +28,10 @@ export const UsersPaginated = () => {
       }}
     >
       <h3>Total users: {userCount?.toString()}</h3>
-      <span>
+      {/*       <span>
         Page: {page} Page size: {pageSize}
       </span>
-      <span>Users paginated: {users?.length}</span>
+      <span>Users paginated: {users?.length}</span> */}
       <br />
       <div style={{ margin: "5px" }}>
         {users?.map((user, index) => {

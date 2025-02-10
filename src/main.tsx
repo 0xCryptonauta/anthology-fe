@@ -72,7 +72,7 @@ createRoot(document.getElementById("root")!).render(
   </StrictMode>
 );
 
-// DEV?
+// DEV
 /* createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>

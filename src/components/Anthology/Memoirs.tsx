@@ -5,12 +5,19 @@ import { writeAnthology } from "../ContractFunctions/AnthologyFunctions";
 import { removeOneFromMemoirs } from "../../slices/anthologySlice";
 import { formatUnixTime } from "../../functions/formatUnixTime";
 import { useNavigate } from "react-router-dom";
+import { LazyYT } from "../LazyYT";
 
 const youtubeRegex =
   /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?(?:.*?v=)?|embed\/|shorts\/)|youtu\.be\/)(.{11})$/i;
 
 const spotifyRegex =
   /^(?:https?:\/\/)?(?:open\.)?spotify\.com\/(track|album|playlist|episode|show)\/([a-zA-Z0-9]{22})(?:\?.*)?$/i;
+
+const isValidURL = (str: string) => {
+  const regex =
+    /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+  return regex.test(str);
+};
 
 export const Memoirs = ({ contractAddr }: { contractAddr: string }) => {
   const navigate = useNavigate();
@@ -84,21 +91,22 @@ export const Memoirs = ({ contractAddr }: { contractAddr: string }) => {
                       margin: "0px 5px",
                     }}
                   >
-                    {memoir.content}
+                    {isValidURL(memoir.content) ? (
+                      <a
+                        href={memoir.content}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {memoir.content}
+                      </a>
+                    ) : (
+                      memoir.content
+                    )}
                   </p>
                 )}
                 {youtubeMatch && (
                   <div>
-                    <iframe
-                      width="fit-content"
-                      //height="315"
-                      src={"https://www.youtube.com/embed/" + youtubeMatch[1]}
-                      title="YouTube video player"
-                      frameBorder="0"
-                      allow="encrypted-media; picture-in-picture; web-share"
-                      referrerPolicy="strict-origin-when-cross-origin"
-                      allowFullScreen
-                    ></iframe>
+                    <LazyYT videoId={youtubeMatch[1]} />
                   </div>
                 )}
 

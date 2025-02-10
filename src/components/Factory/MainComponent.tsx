@@ -1,5 +1,5 @@
 import { UsersPaginated } from "./UsersPaginated";
-import { GetUserContracts } from "./GetUserContracts";
+//import { GetUserContracts } from "./GetUserContracts";
 
 export const MainComponent = () => {
   return (
@@ -15,7 +15,7 @@ export const MainComponent = () => {
         margin: "5px",
       }}
     >
-      <GetUserContracts />
+      {/* <GetUserContracts /> */}
       <UsersPaginated />
     </div>
   );
