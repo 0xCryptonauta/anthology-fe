@@ -38,7 +38,10 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const addToast = (toast: Omit<ToastProps, "id">) => {
     console.log("Adding toast:", toast);
-    const newToast = { ...toast, id: crypto.randomUUID() }; // Unique ID for tracking
+    const newToast = {
+      ...toast,
+      id: Math.floor(Math.random() * 100000).toString(),
+    }; // Unique ID for tracking
     setToasts((prev) => [...prev, newToast]);
 
     setTimeout(() => {
