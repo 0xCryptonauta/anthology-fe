@@ -27,7 +27,7 @@ export const UsersPaginated = () => {
         margin: "5px",
       }}
     >
-      <h3>Total users: {userCount?.toString()}</h3>
+      {/* <h3>Total users: {userCount?.toString()}</h3> */}
       {/*       <span>
         Page: {page} Page size: {pageSize}
       </span>

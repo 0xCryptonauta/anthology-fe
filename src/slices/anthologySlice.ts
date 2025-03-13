@@ -3,6 +3,8 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 
 type Address = string;
 
+export type SkinType = "media" | "json" | "text" | "\0default\0";
+
 export interface MemoirInterface {
   sender: Address;
   title: string;
@@ -13,7 +15,7 @@ export interface MemoirInterface {
 export interface AnthologyInfoInterface {
   owner: string;
   title: string;
-  skin: string;
+  skin: SkinType;
   totalCreatedMemoirs: number;
   currentMemoirCount: number;
   maxMemoirs: number;
@@ -62,7 +64,7 @@ export const anthologySlice = createSlice({
         whitelist: [],
       };
     },
-
+    //NOT BEING USED,
     updateAnthologyState: (
       state,
       action: PayloadAction<{

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { writeAnthology } from "../ContractFunctions/AnthologyFunctions";
 import { Offcanvas } from "react-bootstrap";
 import "./style.css";
+import { useToast } from "../Toast";
 
 export const AddMemoir = ({ contractAddr }: { contractAddr: string }) => {
   const [anthologyTitle, setAnthologyTitle] = useState("");
@@ -11,6 +12,8 @@ export const AddMemoir = ({ contractAddr }: { contractAddr: string }) => {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const { addToast } = useToast();
 
   return (
     <>
@@ -77,6 +80,12 @@ export const AddMemoir = ({ contractAddr }: { contractAddr: string }) => {
                 if (txHash_setTitle) {
                   setAnthologyContent("");
                   setAnthologyTitle("");
+                  addToast({
+                    title: "Memoir Added",
+                    content: "TxHash: " + txHash_setTitle,
+                    variant: "success",
+                    delay: 5000,
+                  });
                 }
               }}
             >

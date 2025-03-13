@@ -43,14 +43,14 @@ export const AnthologyState = () => {
     >
       <Card className="cardStyle">
         <Card.Body>
-          <Card.Title>Contract Addr</Card.Title>
+          <Card.Title style={{ textAlign: "center" }}>Contract Addr</Card.Title>
           <Card.Text style={{ fontSize: "12px" }}>{contractAddr}</Card.Text>
         </Card.Body>
       </Card>
 
       <Card className="cardStyle">
         <Card.Body>
-          <Card.Title>Owner</Card.Title>
+          <Card.Title style={{ textAlign: "center" }}>Owner</Card.Title>
           <Card.Text style={{ fontSize: "12px" }}>
             {anthologyState?.owner.toString()}
           </Card.Text>
@@ -82,7 +82,9 @@ export const AnthologyState = () => {
 
       <Card className="cardStyle">
         <Card.Body>
-          <Card.Title>ERC20 Address </Card.Title>
+          <Card.Title style={{ textAlign: "center" }}>
+            ERC20 Address{" "}
+          </Card.Title>
           <Card.Text style={{ fontSize: "12px" }}>
             {anthologyState?.erc20Token.toString()}
           </Card.Text>
@@ -125,6 +127,13 @@ export const AnthologyState = () => {
             whitelistedEnabled
           </Card.Title>
           <Card.Text>{anthologyState?.whitelistEnabled.toString()}</Card.Text>
+        </Card.Body>
+      </Card>
+
+      <Card className="cardStyle">
+        <Card.Body className="cardBodyStyle">
+          <Card.Title style={{ fontSize: "18px" }}>Skin</Card.Title>
+          <Card.Text>{anthologyState?.skin}</Card.Text>
         </Card.Body>
       </Card>
     </div>

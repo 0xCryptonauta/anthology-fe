@@ -17,6 +17,7 @@ import {
   updateAnthologyCP,
   updateAnthologyWhitelistCP,
   updateAnthologyBufferCP,
+  SkinType,
 } from "../../slices/anthologySlice";
 import { fetchAnthologyInfo } from "../../functions/initialStateUpdate";
 import { Memoirs } from "../../components/Anthology/Memoirs";
@@ -25,6 +26,8 @@ import { AnthologyState } from "../../components/Anthology/AnthologyState";
 import { AnthologyOwner } from "../../components/Anthology/AnthologyOwner";
 import { MemoirBuffer } from "../../components/Anthology/MemoirBuffer";
 import { AnthologyWhitelistedUsers } from "../../components/Anthology/AnthologyWhitelistedUsers";
+import { SkinSelector } from "../../components/SkinSelector";
+import { OrderSelector, OrderType } from "../../components/OrderSelector";
 
 export const AnthologyView = () => {
   const dispatch = useDispatch();
@@ -33,9 +36,6 @@ export const AnthologyView = () => {
   );
 
   const { ethAddr, id } = useParams();
-
-  const [showInfo, setShowInfo] = useState(false);
-  const [sudoMode, setSudoMode] = useState(false);
 
   let contractAddr = "";
   let contractTitle = "";
@@ -48,12 +48,25 @@ export const AnthologyView = () => {
       console.error("Error getting userContracts:", error);
     }
   }
-  //const anthologies = useSelector((state: RootState) => state.anthology);
 
   const { userAddr } = useSelector((state: RootState) => state.user);
   const anthology = useSelector((state: RootState) =>
     contractAddr ? state.anthology[contractAddr] : undefined
   );
+
+  const [showInfo, setShowInfo] = useState(false);
+  const [sudoMode, setSudoMode] = useState(false);
+
+  const [currentSkin, setCurrentSkin] = useState<SkinType>(
+    anthology
+      ? anthology?.anthologyState?.skin === "\0default\0" //TODO: Fix this -> comes from contract encoding
+        ? "text"
+        : anthology?.anthologyState.skin
+      : "text"
+  );
+  const [currentOrder, setCurrentOrder] = useState<OrderType>("Newer");
+
+  console.log("Changing from AnthologyView to:", currentOrder);
 
   useEffect(() => {
     console.log("useEffect AnthologyView");
@@ -69,10 +82,10 @@ export const AnthologyView = () => {
 
       if (ethAddr && contractAddr) {
         if (anthology) {
-          console.log("Existing anthology updated - updating CP");
           memoirsCP = await readAnthology(contractAddr, "memoirsCP");
 
           if (anthology?.anthologyState.memoirsCP != memoirsCP) {
+            console.log("CP has changed");
             const _memoirs = (await readAnthology(
               contractAddr,
               "getMemoirs"
@@ -161,6 +174,7 @@ export const AnthologyView = () => {
         } else {
           console.log("New anthology added");
           const anthologyInfo = await fetchAnthologyInfo(contractAddr);
+          console.log("RAW:", anthologyInfo.skin);
           dispatch(
             addAnthology({
               contract: contractAddr,
@@ -192,14 +206,6 @@ export const AnthologyView = () => {
     setupAnthology();
   }, []);
 
-  /*  const fillAnthology = async () => {
-    const txHash = await writeAnthology(contractAddr, "createMemoir", [
-      "Lorem ipsum dolor sit amet, consectetur adipiscin.",
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc accumsan sem ut ligula scelerisque, nec porta felis convallis. Proin posuere, tellus et euismod vehicula, risus ante rhoncus leo, auctor elementum est risus sed eiusmod tempor incididunt volup.",
-    ]);
-    console.log("TX Hash:", txHash);
-  }; */
-
   return (
     <div
       className="bg-dark"
@@ -229,21 +235,21 @@ export const AnthologyView = () => {
         >
           {showInfo ? "Show memoirs" : "Show Info"}
         </div>
-        {/* <div
-          onClick={async () => {
-            fillAnthology();
-          }}
-          style={{
-            border: "1px solid white",
-            padding: "3px",
-            borderRadius: "7px",
-            cursor: "pointer",
-            marginRight: "10px",
-          }}
-        >
-          {" "}
-          Fill Anthology
-        </div> */}
+
+        {!showInfo && (
+          <div>
+            <SkinSelector
+              value={currentSkin}
+              onChange={(newValue) => setCurrentSkin(newValue)}
+            />
+
+            <OrderSelector
+              value={currentOrder}
+              onChange={(newValue) => setCurrentOrder(newValue)}
+            />
+          </div>
+        )}
+
         {showInfo && userAddr === anthology?.anthologyState.owner && (
           <div
             onClick={() => setSudoMode(!sudoMode)}
@@ -298,7 +304,11 @@ export const AnthologyView = () => {
       ) : (
         <>
           {/* <AddMemoir contractAddr={contractAddr} /> */}
-          <Memoirs contractAddr={contractAddr} />
+          <Memoirs
+            contractAddr={contractAddr}
+            skin={currentSkin}
+            order={currentOrder}
+          />
         </>
       )}
     </div>

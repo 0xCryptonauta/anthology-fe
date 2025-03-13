@@ -32,11 +32,13 @@ export const SidePanel = () => {
 
       <Offcanvas
         placement="end"
-        className="bg-dark"
+        className="bg-warning"
         data-bs-theme="dark"
         show={show}
         onHide={handleClose}
-        style={{ width: "200px" }}
+        style={{
+          width: "200px",
+        }}
       >
         <Offcanvas.Header style={{ justifyContent: "center" }}>
           <Link
