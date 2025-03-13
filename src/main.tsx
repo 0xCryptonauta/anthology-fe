@@ -14,6 +14,7 @@ import { AccountView } from "./views/factory/AccountView.tsx";
 import { StrictMode } from "react";
 import { AnthologyView } from "./views/anthology/AnthologyView.tsx";
 import { PersistGate } from "redux-persist/integration/react";
+import { ToastProvider } from "./components/Toast.tsx";
 
 const router = createBrowserRouter([
   {
@@ -66,7 +67,9 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <RouterProvider router={router} />
+        <ToastProvider>
+          <RouterProvider router={router} />
+        </ToastProvider>
       </PersistGate>
     </Provider>
   </StrictMode>

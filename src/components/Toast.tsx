@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
 import { Toast as BootstrapToast, ToastContainer } from "react-bootstrap";
-import { v4 as uuidv4 } from "uuid"; // For generating unique IDs
 
 export type ToastVariantType =
   | "primary"
@@ -39,7 +38,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const addToast = (toast: Omit<ToastProps, "id">) => {
     console.log("Adding toast:", toast);
-    const newToast = { ...toast, id: uuidv4() }; // Unique ID for tracking
+    const newToast = { ...toast, id: crypto.randomUUID() }; // Unique ID for tracking
     setToasts((prev) => [...prev, newToast]);
 
     setTimeout(() => {

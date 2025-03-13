@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 export const UsersPaginated = () => {
   const navigate = useNavigate();
-  const { userCount, users, userContracts, contractsTitles } = useSelector(
+  const { users, userContracts, contractsTitles } = useSelector(
     (state: RootState) => state.factory
   );
 
