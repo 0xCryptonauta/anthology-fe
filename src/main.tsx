@@ -27,7 +27,7 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: "/",
+        index: true,
         element: <UsersView />,
       },
       {
@@ -60,11 +60,19 @@ const router = createBrowserRouter([
       },
     ],
   },
+
+  {
+    path: "*",
+    element: (
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        Error 404: Page Not Found
+      </div>
+    ),
+  },
 ]);
 
-// PRODUCTION
-/* createRoot(document.getElementById("root")!).render(
-  <StrictMode>
+createRoot(document.getElementById("root")!).render(
+  import.meta.env.VITE_ENV === "development" ? (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <ToastProvider>
@@ -72,16 +80,15 @@ const router = createBrowserRouter([
         </ToastProvider>
       </PersistGate>
     </Provider>
-  </StrictMode>
-); */
-
-// DEV
-createRoot(document.getElementById("root")!).render(
-  <Provider store={store}>
-    <PersistGate loading={null} persistor={persistor}>
-      <ToastProvider>
-        <RouterProvider router={router} />
-      </ToastProvider>
-    </PersistGate>
-  </Provider>
+  ) : (
+    <StrictMode>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <ToastProvider>
+            <RouterProvider router={router} />
+          </ToastProvider>
+        </PersistGate>
+      </Provider>
+    </StrictMode>
+  )
 );
