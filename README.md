@@ -39,6 +39,7 @@ git commit -m "Add search functionality"
 ```
 git checkout dev
 git merge --no-ff feature/add-search -m "Merged 'feature/add-search' into dev"
+git merge --no-ff --no-edit <BRANCH NAME>
 ```
 
 ### 4. Delete the feature branch:
