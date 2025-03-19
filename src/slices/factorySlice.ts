@@ -124,6 +124,12 @@ export const factorySlice = createSlice({
     ) => {
       state.contractsTitles = { ...state.contractsTitles, ...action.payload };
     },
+    updateOneContractTitle: (
+      state,
+      action: PayloadAction<{ contract: string; title: string }>
+    ) => {
+      state.contractsTitles[action.payload.contract] = action.payload.title;
+    },
     clearFactoryStore: () => {
       return initialState;
     },
@@ -148,6 +154,7 @@ export const {
   updateContractTitles,
   clearFactoryStore,
   updateUsersCP,
+  updateOneContractTitle,
 } = factorySlice.actions;
 
 export default factorySlice.reducer;

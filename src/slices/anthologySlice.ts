@@ -186,6 +186,56 @@ export const anthologySlice = createSlice({
     clearAnthologyStore: () => {
       return initialState;
     },
+
+    // ---------------------- New functions for owner panel ----------------------
+
+    updateAnthologyTitle: (
+      state,
+      action: PayloadAction<{
+        contract: string;
+        title: string;
+      }>
+    ) => {
+      const _contract = action.payload.contract;
+      const _title = action.payload.title;
+      state[_contract].anthologyState.title = _title;
+    },
+
+    updateUseBuffer: (
+      state,
+      action: PayloadAction<{
+        contract: string;
+        useBuffer: boolean;
+      }>
+    ) => {
+      const _contract = action.payload.contract;
+      const _useBuffer = action.payload.useBuffer;
+      state[_contract].anthologyState.useBuffer = _useBuffer;
+    },
+
+    updateUseErc20: (
+      state,
+      action: PayloadAction<{
+        contract: string;
+        useERC20: boolean;
+      }>
+    ) => {
+      const _contract = action.payload.contract;
+      const _useERC20 = action.payload.useERC20;
+      state[_contract].anthologyState.useERC20 = _useERC20;
+    },
+
+    updateWhitelistEnabled: (
+      state,
+      action: PayloadAction<{
+        contract: string;
+        whitelistEnabled: boolean;
+      }>
+    ) => {
+      const _contract = action.payload.contract;
+      const _whitelistEnabled = action.payload.whitelistEnabled;
+      state[_contract].anthologyState.whitelistEnabled = _whitelistEnabled;
+    },
   },
 });
 
@@ -201,6 +251,11 @@ export const {
   removeOneFromBuffer,
   removeOneFromMemoirs,
   clearAnthologyStore,
+  //New functions
+  updateAnthologyTitle,
+  updateUseBuffer,
+  updateUseErc20,
+  updateWhitelistEnabled,
 } = anthologySlice.actions;
 
 export default anthologySlice.reducer;

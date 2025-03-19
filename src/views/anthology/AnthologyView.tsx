@@ -31,19 +31,15 @@ import { OrderSelector, OrderType } from "../../components/OrderSelector";
 
 export const AnthologyView = () => {
   const dispatch = useDispatch();
-  const { userContracts, contractsTitles } = useSelector(
-    (state: RootState) => state.factory
-  );
+  const { userContracts } = useSelector((state: RootState) => state.factory);
 
   const { ethAddr, id } = useParams();
 
   let contractAddr = "";
-  let contractTitle = "";
 
   if (JSON.stringify(userContracts) != "{}") {
     try {
       contractAddr = userContracts[ethAddr as string][Number(id)];
-      contractTitle = contractsTitles && contractsTitles[contractAddr];
     } catch (error) {
       console.error("Error getting userContracts:", error);
     }
@@ -53,6 +49,8 @@ export const AnthologyView = () => {
   const anthology = useSelector((state: RootState) =>
     contractAddr ? state.anthology[contractAddr] : undefined
   );
+
+  const contractTitle = anthology?.anthologyState.title;
 
   const [showInfo, setShowInfo] = useState(false);
   const [sudoMode, setSudoMode] = useState(false);

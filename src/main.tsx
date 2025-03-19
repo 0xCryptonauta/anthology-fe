@@ -63,7 +63,7 @@ const router = createBrowserRouter([
 ]);
 
 // PRODUCTION
-createRoot(document.getElementById("root")!).render(
+/* createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
@@ -73,10 +73,10 @@ createRoot(document.getElementById("root")!).render(
       </PersistGate>
     </Provider>
   </StrictMode>
-);
+); */
 
 // DEV
-/* createRoot(document.getElementById("root")!).render(
+createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <ToastProvider>
@@ -84,4 +84,4 @@ createRoot(document.getElementById("root")!).render(
       </ToastProvider>
     </PersistGate>
   </Provider>
-); */
+);

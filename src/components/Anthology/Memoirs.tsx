@@ -10,12 +10,22 @@ import { SkinType } from "../../slices/anthologySlice";
 import { MemoirInterface } from "../../slices/anthologySlice";
 import { OrderType } from "../OrderSelector";
 import { ToastVariantType, useToast } from "../Toast";
+import { TwitterEmbed } from "../TwitterEmbed";
 
 const youtubeRegex =
   /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?(?:.*?v=)?|embed\/|shorts\/)|youtu\.be\/)(.{11})$/i;
 
 const spotifyRegex =
-  /^(?:https?:\/\/)?(?:open\.)?spotify\.com\/(track|album|playlist|episode|show)\/([a-zA-Z0-9]{22})(?:\?.*)?$/i;
+  /^(?:https?:\/\/)?(?:open\.)?spotify\.com\/(track|album|playlist|episode|show)\/([a-zA-Z0-9]{22})/i;
+
+const twitterRegex =
+  /^(?:https?:\/\/)?(?:www\.)?(?:twitter\.com|x\.com)\/([\w]+)\/status\/(\d+)/i;
+
+/* const instagramRegex =
+  /^(?:https?:\/\/)?(?:www\.)?instagram\.com\/p\/([\w-]+)/i; */
+
+/* const facebookRegex =
+  /^(?:https?:\/\/)?(?:www\.)?facebook\.com\/\w+\/posts\/(\d+)/i; */
 
 const isValidURL = (str: string) => {
   const regex =
@@ -86,11 +96,13 @@ const RenderMediaMemoirs = ({
   navigate: NavigateFunction;
 }) => {
   const { addToast } = useToast();
+
   return (
     <>
       {memoirs.map((memoir, index) => {
         const youtubeMatch = youtubeRegex.exec(memoir.content);
         const spotifyMatch = spotifyRegex.exec(memoir.content);
+        const twitterMatch = twitterRegex.exec(memoir.content);
 
         const renderContent = () => {
           if (youtubeMatch) return <LazyYT videoId={youtubeMatch[1]} />;
@@ -105,6 +117,13 @@ const RenderMediaMemoirs = ({
                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                 loading="lazy"
               ></iframe>
+            );
+          if (twitterMatch)
+            return (
+              <TwitterEmbed
+                username={twitterMatch[1]}
+                postId={twitterMatch[2]}
+              />
             );
           return isValidURL(memoir.content) ? (
             <a href={memoir.content} target="_blank" rel="noopener noreferrer">
@@ -151,41 +170,43 @@ const RenderMediaMemoirs = ({
               {renderContent()}
             </div>
 
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                margin: "0 40px",
-              }}
-            >
-              <span
-                style={{ fontSize: "12px", cursor: "pointer" }}
-                onClick={() => navigate(`/${memoir.sender}`)}
-              >
-                {shortenAddress(memoir.sender, 10, 8)}
-              </span>
-              <span style={{ fontSize: "12px", marginLeft: "7px" }}>
-                {formatUnixTime(Number(memoir.timestamp))}
-              </span>
-            </div>
-
-            {(currentUser === anthologyOwner ||
-              currentUser === memoir.sender) && (
-              <span
+            <div>
+              <div
                 style={{
-                  cursor: "pointer",
-                  position: "absolute",
-                  right: "10px",
-                  bottom: "5px",
-                }}
-                onClick={() => {
-                  handleDelete({ contractAddr, index, dispatch, addToast });
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  margin: "0 40px",
                 }}
               >
-                ❌
-              </span>
-            )}
+                <span
+                  style={{ fontSize: "12px", cursor: "pointer" }}
+                  onClick={() => navigate(`/${memoir.sender}`)}
+                >
+                  {shortenAddress(memoir.sender, 10, 8)}
+                </span>
+                <span style={{ fontSize: "12px", marginLeft: "7px" }}>
+                  {formatUnixTime(Number(memoir.timestamp))}
+                </span>
+              </div>
+
+              {(currentUser === anthologyOwner ||
+                currentUser === memoir.sender) && (
+                <span
+                  style={{
+                    cursor: "pointer",
+                    position: "absolute",
+                    right: "10px",
+                    bottom: "5px",
+                  }}
+                  onClick={() => {
+                    handleDelete({ contractAddr, index, dispatch, addToast });
+                  }}
+                >
+                  ❌
+                </span>
+              )}
+            </div>
           </div>
         );
       })}
