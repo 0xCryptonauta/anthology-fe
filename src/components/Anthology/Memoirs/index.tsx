@@ -1,31 +1,38 @@
 import { useDispatch, useSelector } from "react-redux";
-import { shortenAddress } from "../../functions/shortenAddress";
-import { AppDispatch, RootState } from "../../store";
-import { writeAnthology } from "../ContractFunctions/AnthologyFunctions";
-import { removeOneFromMemoirs } from "../../slices/anthologySlice";
-import { formatUnixTime } from "../../functions/formatUnixTime";
+import { shortenAddress } from "../../../functions/shortenAddress";
+import { AppDispatch, RootState } from "../../../store";
+import { writeAnthology } from "../../ContractFunctions/AnthologyFunctions";
+import { removeOneFromMemoirs } from "../../../slices/anthologySlice";
+import { formatUnixTime } from "../../../functions/formatUnixTime";
 import { NavigateFunction, useNavigate } from "react-router-dom";
-import { LazyYT } from "../LazyYT";
-import { SkinType } from "../../slices/anthologySlice";
-import { MemoirInterface } from "../../slices/anthologySlice";
-import { OrderType } from "../OrderSelector";
-import { ToastVariantType, useToast } from "../Toast";
-import { TwitterEmbed } from "../TwitterEmbed";
+import { SkinType } from "../../../slices/anthologySlice";
+import { MemoirInterface } from "../../../slices/anthologySlice";
+import { OrderType } from "../../OrderSelector";
+import { ToastVariantType, useToast } from "../../Toast";
+// Media memoir skins
+import { TwitterEmbed } from "./TwitterEmbed";
+import { LazyYT } from "./LazyYT";
+import RedditEmbed from "./RedditEmbed";
+import FacebookEmbed from "./facebookEmbed";
+import InstagramEmbed from "./InstagramEmbed";
 
 const youtubeRegex =
   /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?(?:.*?v=)?|embed\/|shorts\/)|youtu\.be\/)(.{11})$/i;
 
 const spotifyRegex =
-  /^(?:https?:\/\/)?(?:open\.)?spotify\.com\/(track|album|playlist|episode|show)\/([a-zA-Z0-9]{22})/i;
+  /^(?:https?:\/\/)?(?:open\.)?spotify\.com\/(?:intl-[a-z]{2}\/)?(track|album|playlist|episode|show)\/([a-zA-Z0-9]{22})/i;
 
 const twitterRegex =
   /^(?:https?:\/\/)?(?:www\.)?(?:twitter\.com|x\.com)\/([\w]+)\/status\/(\d+)/i;
 
-/* const instagramRegex =
-  /^(?:https?:\/\/)?(?:www\.)?instagram\.com\/p\/([\w-]+)/i; */
+const redditRegex =
+  /^(?:https?:\/\/)?(?:www\.)?reddit\.com\/r\/([\w]+)\/(?:comments\/([\w]+)\/?([\w%-]*)|s\/[\w]+)\/?$/i;
 
-/* const facebookRegex =
-  /^(?:https?:\/\/)?(?:www\.)?facebook\.com\/\w+\/posts\/(\d+)/i; */
+const instagramRegex =
+  /^(?:https?:\/\/)?(?:www\.)?instagram\.com\/((p|reel|tv)\/[\w-]+\/?|[\w.-]+\/?)$/i;
+
+const facebookRegex =
+  /^(?:https?:\/\/)?(?:www\.|m\.)?facebook\.com\/(?:\w+\/(?:posts|videos)\/(\d+)|watch\?v=(\d+))/i;
 
 const isValidURL = (str: string) => {
   const regex =
@@ -103,9 +110,42 @@ const RenderMediaMemoirs = ({
         const youtubeMatch = youtubeRegex.exec(memoir.content);
         const spotifyMatch = spotifyRegex.exec(memoir.content);
         const twitterMatch = twitterRegex.exec(memoir.content);
+        const redditMatch = redditRegex.exec(memoir.content);
+        const facebookMatch = facebookRegex.exec(memoir.content);
+        const instagramMatch = instagramRegex.exec(memoir.content);
 
         const renderContent = () => {
           if (youtubeMatch) return <LazyYT videoId={youtubeMatch[1]} />;
+          if (twitterMatch)
+            return (
+              <TwitterEmbed
+                username={twitterMatch[1]}
+                postId={twitterMatch[2]}
+              />
+            );
+          if (redditMatch) {
+            if (redditMatch[2]) return <RedditEmbed postUrl={memoir.content} />;
+            // THIS RETURN is temporal -> Depends on  /s/ reddit links (no post id or username)
+            return (
+              <div style={{ overflowWrap: "break-word" }}>
+                <a
+                  href={memoir.content}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {memoir.content}
+                </a>
+              </div>
+            );
+          }
+          if (facebookMatch) {
+            console.log("facebookMatch:", facebookMatch);
+            return <FacebookEmbed postUrl={memoir.content} />;
+          }
+          if (instagramMatch) {
+            console.log("instagramMatch:", instagramMatch);
+            return <InstagramEmbed postUrl={memoir.content} />;
+          }
           if (spotifyMatch)
             return (
               <iframe
@@ -118,13 +158,7 @@ const RenderMediaMemoirs = ({
                 loading="lazy"
               ></iframe>
             );
-          if (twitterMatch)
-            return (
-              <TwitterEmbed
-                username={twitterMatch[1]}
-                postId={twitterMatch[2]}
-              />
-            );
+
           return isValidURL(memoir.content) ? (
             <a href={memoir.content} target="_blank" rel="noopener noreferrer">
               {memoir.content}
@@ -165,6 +199,7 @@ const RenderMediaMemoirs = ({
                 maxWidth: "350px",
                 padding: "5px",
                 margin: "0 5px",
+                overflowWrap: "break-word",
               }}
             >
               {renderContent()}

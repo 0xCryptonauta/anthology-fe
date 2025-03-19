@@ -8,6 +8,7 @@ needs .env file
 > >
 > > LAVA_PROJECT_ID = "LAVA PROJECT ID"
 > > WC_PROJECT_ID = "WC PROJECT ID"
+> > VITE_ENV = "development" || "production"
 
 How to run this project
 
