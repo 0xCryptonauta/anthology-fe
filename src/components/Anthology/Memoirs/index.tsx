@@ -390,6 +390,60 @@ const RenderTextMemoirs = ({
   }
 };
 
+const RenderListMemoirs = ({ memoirs }: { memoirs: MemoirInterface[] }) => {
+  return (
+    <div style={{ marginTop: "30px" }}>
+      {memoirs.map((memoir, index) => {
+        return (
+          <div key={index}>
+            <span>
+              {index} - {memoir.title}
+            </span>
+            <p>{memoir.content}</p>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+const RenderPlaylistMemoirs = ({ memoirs }: { memoirs: MemoirInterface[] }) => {
+  const extractYoutubeIds = (videoLinks: MemoirInterface[]) => {
+    return videoLinks.map((vlink) => {
+      const match = vlink.content.match(youtubeRegex);
+      return match && match[1] ? match[1] : "";
+    });
+  };
+
+  const youtubeIds = extractYoutubeIds(memoirs);
+  const nonEmptyYoutubeIds = youtubeIds.filter((str) => str !== "");
+
+  const playlistUrl = `https://www.youtube.com/embed/${
+    nonEmptyYoutubeIds[0]
+  }?playlist=${nonEmptyYoutubeIds.slice(1).join(",")}`;
+
+  return (
+    <div
+      style={{
+        width: "100vw",
+        aspectRatio: "16/9",
+        maxHeight: "75vh",
+        margin: "10px",
+      }}
+    >
+      <iframe
+        width="100%"
+        height="100%"
+        src={playlistUrl}
+        title="YouTube video player"
+        frameBorder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+      />
+    </div>
+  );
+};
+
 const RenderMemoirs = ({
   anthologySkin,
   order,
@@ -436,6 +490,15 @@ const RenderMemoirs = ({
           currentUser,
           dispatch,
           navigate,
+        });
+      case "list":
+        return RenderListMemoirs({
+          memoirs: orderedMemoirs,
+        });
+
+      case "playlist":
+        return RenderPlaylistMemoirs({
+          memoirs: orderedMemoirs,
         });
       default:
         return RenderTextMemoirs({
