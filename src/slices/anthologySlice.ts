@@ -3,7 +3,13 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 
 type Address = string;
 
-export type SkinType = "media" | "json" | "text" | "\0default\0";
+export type SkinType =
+  | "media"
+  | "json"
+  | "text"
+  | "playlist"
+  | "list"
+  | "\0default\0";
 
 export interface MemoirInterface {
   sender: Address;
