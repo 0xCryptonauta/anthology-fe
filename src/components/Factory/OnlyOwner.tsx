@@ -8,7 +8,7 @@ import {
   callSetERC20Token,
   callSetAnthologyPrice,
   writeFactory,
-} from "../ContractFunctions/FactoryFunctions";
+} from "../../contract-functions/FactoryFunctions";
 import { parseEther } from "viem";
 
 import { useSelector, useDispatch } from "react-redux";

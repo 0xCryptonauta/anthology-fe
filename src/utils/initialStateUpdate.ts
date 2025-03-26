@@ -1,7 +1,7 @@
 import { reconnect } from "@wagmi/core";
-import { readFactory } from "../components/ContractFunctions/FactoryFunctions";
+import { readFactory } from "../contract-functions/FactoryFunctions";
 import { config } from "../config";
-import { readAnthology } from "../components/ContractFunctions/AnthologyFunctions";
+import { readAnthology } from "../contract-functions/AnthologyFunctions";
 
 export const fetchContractData = async () => {
   const contractInfo = (await readFactory("getContractInfo")) as {

@@ -1,6 +1,6 @@
-import { writeAnthology } from "../ContractFunctions/AnthologyFunctions";
+import { writeAnthology } from "../../contract-functions/AnthologyFunctions";
 import { removeOneFromBuffer } from "../../slices/anthologySlice";
-import { shortenAddress } from "../../functions/shortenAddress";
+import { shortenAddress } from "../../utils/shortenAddress";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 

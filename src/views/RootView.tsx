@@ -4,7 +4,7 @@ import { Footer } from "../components/Footer";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { updateUserAddr, updateWalletId } from "../slices/userSlice";
-import { reconnectWallet } from "../functions/initialStateUpdate";
+import { reconnectWallet } from "../utils/initialStateUpdate";
 
 export const RootView = () => {
   const dispatch = useDispatch();

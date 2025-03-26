@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { copyToClipboard } from "../../functions/copyToClipboard";
-import { shortenAddress } from "../../functions/shortenAddress";
+import { copyToClipboard } from "../../utils/copyToClipboard";
+import { shortenAddress } from "../../utils/shortenAddress";
 import { RootState } from "../../store";
 import { useSelector } from "react-redux";
 

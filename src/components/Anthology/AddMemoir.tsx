@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { writeAnthology } from "../ContractFunctions/AnthologyFunctions";
+import { writeAnthology } from "../../contract-functions/AnthologyFunctions";
 import { Offcanvas } from "react-bootstrap";
 import "./style.css";
 import { useToast } from "../Toast";

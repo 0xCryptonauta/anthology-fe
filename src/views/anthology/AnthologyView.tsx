@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import {
   readAnthology,
   //writeAnthology,
-} from "../../components/ContractFunctions/AnthologyFunctions";
+} from "../../contract-functions/AnthologyFunctions";
 
 import {
   addAnthology,
@@ -19,7 +19,7 @@ import {
   updateAnthologyBufferCP,
   SkinType,
 } from "../../slices/anthologySlice";
-import { fetchAnthologyInfo } from "../../functions/initialStateUpdate";
+import { fetchAnthologyInfo } from "../../utils/initialStateUpdate";
 import { Memoirs } from "../../components/Anthology/Memoirs";
 import { AddMemoir } from "../../components/Anthology/AddMemoir";
 import { AnthologyState } from "../../components/Anthology/AnthologyState";

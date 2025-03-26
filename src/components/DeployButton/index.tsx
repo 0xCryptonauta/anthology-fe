@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { callDeployAnthology } from "../ContractFunctions/FactoryFunctions";
+import { callDeployAnthology } from "../../contract-functions/FactoryFunctions";
 import "./index.css";
 import { RootState } from "../../store";
 

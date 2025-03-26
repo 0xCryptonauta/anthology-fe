@@ -9,7 +9,7 @@ import { useState } from "react";
   callSetAnthologyPrice,
 } from "../FactoryFunctions"; */
 import { parseEther } from "viem";
-import { writeAnthology } from "../ContractFunctions/AnthologyFunctions";
+import { writeAnthology } from "../../contract-functions/AnthologyFunctions";
 //import { ChangeAnthologyTitle } from "./ChangeAnthologyTitle";
 import { useToast } from "../Toast";
 

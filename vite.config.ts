@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 //import { viteSingleFile } from "vite-plugin-singlefile";
 import { VitePWA } from "vite-plugin-pwa";
+import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -64,5 +65,16 @@ export default defineConfig({
   base: "/",
   build: {
     outDir: "dist",
+  },
+  resolve: {
+    alias: {
+      "@abi": path.resolve(__dirname, "src/abi"),
+      "@components": path.resolve(__dirname, "src/components"),
+      "@assets": path.resolve(__dirname, "src/assets"),
+      "@slices": path.resolve(__dirname, "src/slices"),
+      "@store": path.resolve(__dirname, "src/store"),
+      "@utils": path.resolve(__dirname, "src/utils"),
+      "@views": path.resolve(__dirname, "src/views"),
+    },
   },
 });

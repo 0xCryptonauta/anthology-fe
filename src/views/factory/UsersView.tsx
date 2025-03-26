@@ -2,7 +2,7 @@ import { DeployButton } from "../../components/DeployButton";
 import { MainComponent } from "../../components/Factory/MainComponent";
 
 import { useEffect } from "react";
-import { fetchContractData } from "../../functions/initialStateUpdate";
+import { fetchContractData } from "../../utils/initialStateUpdate";
 import { useDispatch, useSelector } from "react-redux";
 import {
   updateContractTitles,
@@ -12,8 +12,8 @@ import {
   updateUsersCP,
   updateWhitelistedUsers,
 } from "../../slices/factorySlice";
-import { readFactory } from "../../components/ContractFunctions/FactoryFunctions";
-import { transformData } from "../../functions/transformData";
+import { readFactory } from "../../contract-functions/FactoryFunctions";
+import { transformData } from "../../utils/transformData";
 import { RootState } from "../../store";
 
 export const UsersView = () => {
