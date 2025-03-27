@@ -1,12 +1,12 @@
-import { useSelector } from "react-redux";
-import { callDeployAnthology } from "../ContractFunctions/FactoryFunctions";
+import { useAppSelector } from "@store/utils/hooks";
+
+import { callDeployAnthology } from "@contract-functions/FactoryFunctions";
 import "./index.css";
-import { RootState } from "../../store";
 
 export const DeployButton = () => {
-  const { userAddr } = useSelector((state: RootState) => state.user);
-  const { whitelistEnabled, whitelistedUsers } = useSelector(
-    (state: RootState) => state.factory
+  const { userAddr } = useAppSelector((state) => state.user);
+  const { whitelistEnabled, whitelistedUsers } = useAppSelector(
+    (state) => state.factory
   );
 
   return (

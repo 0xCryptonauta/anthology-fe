@@ -8,8 +8,8 @@ import {
 //import { hardhat as chain } from "@wagmi/core/chains";
 import { arbitrum as chain } from "@wagmi/core/chains";
 //import { parseEther } from "viem";
-import { AnthologyFactoryABI } from "../../abi/AnthologyFactoryABI";
-import { config } from "../../config";
+import { AnthologyFactoryABI } from "@abi/AnthologyFactoryABI";
+import { config } from "@src/config";
 
 //const AnthologyFactoryAddress = import.meta.env.VITE_FACTORY_CONTRACT_ADDRESS; //Optimism
 const AnthologyFactoryAddress = import.meta.env.VITE_FACTORY_ARBITRUM; //Arbitrum

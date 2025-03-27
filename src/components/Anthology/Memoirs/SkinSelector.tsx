@@ -1,5 +1,5 @@
 import React from "react";
-import { SkinType } from "../slices/anthologySlice";
+import { SkinType } from "@store/slices/anthologySlice";
 
 // Define the component props interface
 interface SelectorProps {

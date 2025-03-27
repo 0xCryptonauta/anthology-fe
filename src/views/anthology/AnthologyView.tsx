@@ -1,11 +1,12 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch } from "@store/utils/hooks";
+import { useAppSelector } from "@store/utils/hooks";
 import { useParams } from "react-router-dom";
-import { RootState } from "../../store";
+
 import { useEffect, useState } from "react";
 import {
   readAnthology,
   //writeAnthology,
-} from "../../components/ContractFunctions/AnthologyFunctions";
+} from "@contract-functions/AnthologyFunctions";
 
 import {
   addAnthology,
@@ -18,20 +19,23 @@ import {
   updateAnthologyWhitelistCP,
   updateAnthologyBufferCP,
   SkinType,
-} from "../../slices/anthologySlice";
-import { fetchAnthologyInfo } from "../../functions/initialStateUpdate";
-import { Memoirs } from "../../components/Anthology/Memoirs";
-import { AddMemoir } from "../../components/Anthology/AddMemoir";
-import { AnthologyState } from "../../components/Anthology/AnthologyState";
-import { AnthologyOwner } from "../../components/Anthology/AnthologyOwner";
-import { MemoirBuffer } from "../../components/Anthology/MemoirBuffer";
-import { AnthologyWhitelistedUsers } from "../../components/Anthology/AnthologyWhitelistedUsers";
-import { SkinSelector } from "../../components/SkinSelector";
-import { OrderSelector, OrderType } from "../../components/OrderSelector";
+} from "@store/slices/anthologySlice";
+import { fetchAnthologyInfo } from "@utils/initialStateUpdate";
+import { Memoirs } from "@components/Anthology/Memoirs";
+import { AddMemoir } from "@components/Anthology/AddMemoir";
+import { AnthologyState } from "@components/Anthology/AnthologyState";
+import { AnthologyOwner } from "@components/Anthology/AnthologyOwner";
+import { MemoirBuffer } from "@components/Anthology/MemoirBuffer";
+import { AnthologyWhitelistedUsers } from "@components/Anthology/AnthologyWhitelistedUsers";
+import { SkinSelector } from "@components/Anthology/Memoirs/SkinSelector";
+import {
+  OrderSelector,
+  OrderType,
+} from "@components/Anthology/Memoirs/OrderSelector";
 
 export const AnthologyView = () => {
-  const dispatch = useDispatch();
-  const { userContracts } = useSelector((state: RootState) => state.factory);
+  const dispatch = useAppDispatch();
+  const { userContracts } = useAppSelector((state) => state.factory);
 
   const { ethAddr, id } = useParams();
 
@@ -45,8 +49,8 @@ export const AnthologyView = () => {
     }
   }
 
-  const { userAddr } = useSelector((state: RootState) => state.user);
-  const anthology = useSelector((state: RootState) =>
+  const { userAddr } = useAppSelector((state) => state.user);
+  const anthology = useAppSelector((state) =>
     contractAddr ? state.anthology[contractAddr] : undefined
   );
 

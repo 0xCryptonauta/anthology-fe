@@ -1,14 +1,15 @@
-import { useDispatch, useSelector } from "react-redux";
-import { shortenAddress } from "../../../functions/shortenAddress";
-import { AppDispatch, RootState } from "../../../store";
-import { writeAnthology } from "../../ContractFunctions/AnthologyFunctions";
-import { removeOneFromMemoirs } from "../../../slices/anthologySlice";
-import { formatUnixTime } from "../../../functions/formatUnixTime";
+import { useAppDispatch } from "@store/utils/hooks";
+import { useAppSelector } from "@store/utils/hooks";
+import { shortenAddress } from "@utils/shortenAddress";
+import { AppDispatch } from "@store/redux";
+import { writeAnthology } from "@contract-functions/AnthologyFunctions";
+import { removeOneFromMemoirs } from "@store/slices/anthologySlice";
+import { formatUnixTime } from "@utils/formatUnixTime";
 import { NavigateFunction, useNavigate } from "react-router-dom";
-import { SkinType } from "../../../slices/anthologySlice";
-import { MemoirInterface } from "../../../slices/anthologySlice";
-import { OrderType } from "../../OrderSelector";
-import { ToastVariantType, useToast } from "../../Toast";
+import { SkinType } from "@store/slices/anthologySlice";
+import { MemoirInterface } from "@store/slices/anthologySlice";
+import { OrderType } from "./OrderSelector";
+import { ToastVariantType, useToast } from "@components/Layout/Toast";
 // Media memoir skins
 import { TwitterEmbed } from "./TwitterEmbed";
 import { LazyYT } from "./LazyYT";
@@ -557,12 +558,12 @@ export const Memoirs = ({
   skin: SkinType;
   order: OrderType;
 }) => {
-  const anthology = useSelector((state: RootState) =>
+  const anthology = useAppSelector((state) =>
     contractAddr ? state.anthology[contractAddr] : undefined
   );
-  const { userAddr } = useSelector((state: RootState) => state.user);
+  const { userAddr } = useAppSelector((state) => state.user);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return (
     <div

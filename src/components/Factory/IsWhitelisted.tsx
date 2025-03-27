@@ -1,10 +1,9 @@
 import { useState } from "react";
 //import { readFactory } from "./FactoryFunctions";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { useAppSelector } from "@store/utils/hooks";
 
 export const IsWhitelisted = () => {
-  const { whitelistedUsers } = useSelector((state: RootState) => state.factory);
+  const { whitelistedUsers } = useAppSelector((state) => state.factory);
 
   const [addressToCheck, setAddressToCheck] = useState("");
   const [isWhitelisted, setIsWhitelisted] = useState<boolean | undefined>(

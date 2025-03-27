@@ -1,8 +1,8 @@
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { copyToClipboard } from "../functions/copyToClipboard";
-import { shortenAddress } from "../functions/shortenAddress";
-import { RootState } from "../store";
-import { useSelector } from "react-redux";
+import { copyToClipboard } from "@utils/copyToClipboard";
+import { shortenAddress } from "@utils/shortenAddress";
+import { useAppSelector } from "@store/utils/hooks";
+
 import { useEffect, useState } from "react";
 
 const addressEnsregex =
@@ -12,8 +12,8 @@ const ethAddrRegex = /^0x[a-fA-F0-9]{40}$/;
 
 export const AddressContracts = () => {
   const navigate = useNavigate();
-  const { userContracts, contractsTitles } = useSelector(
-    (state: RootState) => state.factory
+  const { userContracts, contractsTitles } = useAppSelector(
+    (state) => state.factory
   );
 
   const [width, setWidth] = useState(window.innerWidth);

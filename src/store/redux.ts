@@ -1,7 +1,7 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import factoryReducer from "../slices/factorySlice";
-import userReducer from "../slices/userSlice";
-import anthologyReducer from "../slices/anthologySlice";
+import factoryReducer from "./slices/factorySlice";
+import userReducer from "./slices/userSlice";
+import anthologyReducer from "./slices/anthologySlice";
 import storage from "redux-persist/lib/storage";
 
 import {

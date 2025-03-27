@@ -1,36 +1,27 @@
 import { useState } from "react";
-/* import {
-  callAddToWhitelist,
-  callSetIsFrozen,
-  callSetUseERC20,
-  callEnableWhitelist,
-  callRemoveFromWhitelist,
-  callSetERC20Token,
-  callSetAnthologyPrice,
-} from "../FactoryFunctions"; */
 import { parseEther } from "viem";
-import { writeAnthology } from "../ContractFunctions/AnthologyFunctions";
+import { writeAnthology } from "@contract-functions/AnthologyFunctions";
 //import { ChangeAnthologyTitle } from "./ChangeAnthologyTitle";
-import { useToast } from "../Toast";
+import { useToast } from "@components/Layout/Toast";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useAppSelector, useAppDispatch } from "@store/utils/hooks";
 import {
   updateAnthologyTitle,
   updateUseBuffer,
   updateUseErc20,
   updateWhitelistEnabled,
-} from "../../slices/anthologySlice";
-import { RootState } from "../../store";
-import { updateOneContractTitle } from "../../slices/factorySlice";
+} from "@store/slices/anthologySlice";
+
+import { updateOneContractTitle } from "@store/slices/factorySlice";
 
 export const AnthologyOwner = ({ contractAddr }: { contractAddr: string }) => {
   const { addToast } = useToast();
 
-  const anthologyState = useSelector((state: RootState) =>
+  const anthologyState = useAppSelector((state) =>
     contractAddr ? state.anthology[contractAddr]?.anthologyState : undefined
   );
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   // input fields value
   const [addressToAdd, setAddresToAdd] = useState("");

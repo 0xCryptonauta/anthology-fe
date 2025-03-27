@@ -1,11 +1,11 @@
-import { useDispatch } from "react-redux";
-import { store } from "../../store";
-import { clearAnthologyStore } from "../../slices/anthologySlice";
-import { clearFactoryStore } from "../../slices/factorySlice";
+import { useAppDispatch } from "@store/utils/hooks";
+import { store } from "@store/redux";
+import { clearAnthologyStore } from "@store/slices/anthologySlice";
+import { clearFactoryStore } from "@store/slices/factorySlice";
 import { useState } from "react";
-import { useToast } from "../../components/Toast";
+import { useToast } from "@components/Layout/Toast";
 export const AboutView = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const { addToast } = useToast();
 

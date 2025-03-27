@@ -1,11 +1,12 @@
 import { Card } from "react-bootstrap";
-import { RootState } from "../../store";
-import { useSelector } from "react-redux";
+
+import { useAppSelector } from "@store/utils/hooks";
+
 import { useParams } from "react-router-dom";
 import "./style.css";
 
 export const AnthologyState = () => {
-  const { userContracts } = useSelector((state: RootState) => state.factory);
+  const { userContracts } = useAppSelector((state) => state.factory);
 
   const { ethAddr, id } = useParams();
 
@@ -19,7 +20,7 @@ export const AnthologyState = () => {
     }
   }
 
-  const anthologyState = useSelector((state: RootState) => {
+  const anthologyState = useAppSelector((state) => {
     try {
       if (state.anthology[contractAddr])
         return state.anthology[contractAddr].anthologyState;

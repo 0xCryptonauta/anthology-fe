@@ -1,9 +1,10 @@
-import { DeployButton } from "../../components/DeployButton";
-import { MainComponent } from "../../components/Factory/MainComponent";
+import { DeployButton } from "@components/Factory/DeployButton";
+import { MainComponent } from "@components/Factory/MainComponent";
 
 import { useEffect } from "react";
-import { fetchContractData } from "../../functions/initialStateUpdate";
-import { useDispatch, useSelector } from "react-redux";
+import { fetchContractData } from "@utils/initialStateUpdate";
+import { useAppDispatch } from "@store/utils/hooks";
+import { useAppSelector } from "@store/utils/hooks";
 import {
   updateContractTitles,
   updateFactoryBasicInfo,
@@ -11,15 +12,14 @@ import {
   updateUsers,
   updateUsersCP,
   updateWhitelistedUsers,
-} from "../../slices/factorySlice";
-import { readFactory } from "../../components/ContractFunctions/FactoryFunctions";
-import { transformData } from "../../functions/transformData";
-import { RootState } from "../../store";
+} from "@store/slices/factorySlice";
+import { readFactory } from "@contract-functions/FactoryFunctions";
+import { transformData } from "@utils/transformData";
 
 export const UsersView = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const { usersCP } = useSelector((state: RootState) => state.factory);
+  const { usersCP } = useAppSelector((state) => state.factory);
 
   useEffect(() => {
     console.log("useEffect FactoryView.");

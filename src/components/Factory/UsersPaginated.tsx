@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import { copyToClipboard } from "../../functions/copyToClipboard";
-import { shortenAddress } from "../../functions/shortenAddress";
-import { RootState } from "../../store";
-import { useSelector } from "react-redux";
+import { copyToClipboard } from "@utils/copyToClipboard";
+import { shortenAddress } from "@utils/shortenAddress";
+
+import { useAppSelector } from "@store/utils/hooks";
 
 export const UsersPaginated = () => {
   const navigate = useNavigate();
-  const { users, userContracts, contractsTitles } = useSelector(
-    (state: RootState) => state.factory
+  const { users, userContracts, contractsTitles } = useAppSelector(
+    (state) => state.factory
   );
 
   /*   const pageSize = 50;
