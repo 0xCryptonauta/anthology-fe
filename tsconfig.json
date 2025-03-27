@@ -6,6 +6,7 @@
   ],
   "compilerOptions": {
     "moduleResolution": "Node",
+    "types": ["node"],
     "strict": true,
     "baseUrl": "./",
     "paths": {
