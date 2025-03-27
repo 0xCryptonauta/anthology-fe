@@ -7,8 +7,8 @@ import { formatUnixTime } from "../../../utils/formatUnixTime";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { SkinType } from "../../../slices/anthologySlice";
 import { MemoirInterface } from "../../../slices/anthologySlice";
-import { OrderType } from "../../OrderSelector";
-import { ToastVariantType, useToast } from "../../Toast";
+import { OrderType } from "./OrderSelector";
+import { ToastVariantType, useToast } from "../../Layout/Toast";
 // Media memoir skins
 import { TwitterEmbed } from "./TwitterEmbed";
 import { LazyYT } from "./LazyYT";

@@ -22,7 +22,7 @@ import {
   updateWhitelistEnabled,
 } from "../../slices/factorySlice";
 import { RootState } from "../../store";
-import { useToast } from "../Toast";
+import { useToast } from "../Layout/Toast";
 
 export const OnlyOwner = () => {
   const dispatch = useDispatch();

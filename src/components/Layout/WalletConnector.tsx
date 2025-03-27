@@ -97,15 +97,15 @@ import {
   getConnections,
 } from "@wagmi/core";
 
-import { config } from "../config";
+import { config } from "../../config";
 
 import {
   walletConnect,
   //injected
 } from "@wagmi/connectors";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store";
-import { updateUserAddr, updateWalletId } from "../slices/userSlice";
+import { RootState } from "../../store";
+import { updateUserAddr, updateWalletId } from "../../slices/userSlice";
 
 function shortenAddress(address: string) {
   return `${address?.substring(0, 6)}...${address?.substring(

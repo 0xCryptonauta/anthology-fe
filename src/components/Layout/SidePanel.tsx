@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { Link } from "react-router-dom";
-import { RootState } from "../store";
+import { RootState } from "../../store";
 import { useSelector } from "react-redux";
 
 export const SidePanel = () => {

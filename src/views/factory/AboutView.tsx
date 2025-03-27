@@ -3,7 +3,7 @@ import { store } from "../../store";
 import { clearAnthologyStore } from "../../slices/anthologySlice";
 import { clearFactoryStore } from "../../slices/factorySlice";
 import { useState } from "react";
-import { useToast } from "../../components/Toast";
+import { useToast } from "../../components/Layout/Toast";
 export const AboutView = () => {
   const dispatch = useDispatch();
 

@@ -26,8 +26,11 @@ import { AnthologyState } from "../../components/Anthology/AnthologyState";
 import { AnthologyOwner } from "../../components/Anthology/AnthologyOwner";
 import { MemoirBuffer } from "../../components/Anthology/MemoirBuffer";
 import { AnthologyWhitelistedUsers } from "../../components/Anthology/AnthologyWhitelistedUsers";
-import { SkinSelector } from "../../components/SkinSelector";
-import { OrderSelector, OrderType } from "../../components/OrderSelector";
+import { SkinSelector } from "../../components/Anthology/Memoirs/SkinSelector";
+import {
+  OrderSelector,
+  OrderType,
+} from "../../components/Anthology/Memoirs/OrderSelector";
 
 export const AnthologyView = () => {
   const dispatch = useDispatch();

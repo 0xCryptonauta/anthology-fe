@@ -11,7 +11,7 @@ import { useState } from "react";
 import { parseEther } from "viem";
 import { writeAnthology } from "../../contract-functions/AnthologyFunctions";
 //import { ChangeAnthologyTitle } from "./ChangeAnthologyTitle";
-import { useToast } from "../Toast";
+import { useToast } from "../Layout/Toast";
 
 import { useSelector, useDispatch } from "react-redux";
 import {

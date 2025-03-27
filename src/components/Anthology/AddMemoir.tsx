@@ -2,7 +2,7 @@ import { useState } from "react";
 import { writeAnthology } from "../../contract-functions/AnthologyFunctions";
 import { Offcanvas } from "react-bootstrap";
 import "./style.css";
-import { useToast } from "../Toast";
+import { useToast } from "../../components/Layout/Toast";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 

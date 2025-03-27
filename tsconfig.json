@@ -9,8 +9,8 @@
     "baseUrl": "./",
     "paths": {
       "@abi/*": ["src/abi/*"],
-      "@components/*": ["src/components/*"],
-      "@assets/*": ["src/assets/*"],
+      "@components/*": ["./src/components/*"],
+      "@contract-functions/*": ["./src/contract-functions/*"],
       "@slices/*": ["src/slices/*"],
       "@store/*": ["src/store/*"],
       "@utils/*": ["src/utils/*"],
