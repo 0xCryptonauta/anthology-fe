@@ -1,8 +1,8 @@
 import { writeAnthology } from "../../contract-functions/AnthologyFunctions";
-import { removeOneFromBuffer } from "../../slices/anthologySlice";
+import { removeOneFromBuffer } from "../../store/slices/anthologySlice";
 import { shortenAddress } from "../../utils/shortenAddress";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { RootState } from "../../store/redux";
 
 export const MemoirBuffer = ({ contractAddr }: { contractAddr: string }) => {
   const memoirBuffer = useSelector((state: RootState) =>

@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { Provider } from "react-redux";
-import { store, persistor } from "./store";
+import { store, persistor } from "./store/redux.ts";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { RootView } from "./views/RootView.tsx";

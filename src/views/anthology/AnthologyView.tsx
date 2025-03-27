@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { RootState } from "../../store";
+import { RootState } from "../../store/redux";
 import { useEffect, useState } from "react";
 import {
   readAnthology,
@@ -18,7 +18,7 @@ import {
   updateAnthologyWhitelistCP,
   updateAnthologyBufferCP,
   SkinType,
-} from "../../slices/anthologySlice";
+} from "../../store/slices/anthologySlice";
 import { fetchAnthologyInfo } from "../../utils/initialStateUpdate";
 import { Memoirs } from "../../components/Anthology/Memoirs";
 import { AddMemoir } from "../../components/Anthology/AddMemoir";

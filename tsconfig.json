@@ -5,13 +5,13 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
+    "moduleResolution": "Node",
     "strict": true,
     "baseUrl": "./",
     "paths": {
       "@abi/*": ["src/abi/*"],
-      "@components/*": ["./src/components/*"],
-      "@contract-functions/*": ["./src/contract-functions/*"],
-      "@slices/*": ["src/slices/*"],
+      "@components/*": ["src/components/*"],
+      "@contract-functions/*": ["src/contract-functions/*"],
       "@store/*": ["src/store/*"],
       "@utils/*": ["src/utils/*"],
       "@views/*": ["src/views/*"]

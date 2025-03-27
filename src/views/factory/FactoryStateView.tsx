@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { ContractState } from "../../components/Factory/ContractState";
 import { OnlyOwner } from "../../components/Factory/OnlyOwner";
-import { RootState } from "../../store";
+import { RootState } from "../../store/redux";
 
 export const FactoryStateView = () => {
   const userAddr = useSelector((state: RootState) => state.user.userAddr);

@@ -1,4 +1,4 @@
-import { DeployButton } from "../../components/DeployButton";
+import { DeployButton } from "@components/Factory/DeployButton";
 import { MainComponent } from "../../components/Factory/MainComponent";
 
 import { useEffect } from "react";
@@ -11,10 +11,10 @@ import {
   updateUsers,
   updateUsersCP,
   updateWhitelistedUsers,
-} from "../../slices/factorySlice";
+} from "../../store/slices/factorySlice";
 import { readFactory } from "../../contract-functions/FactoryFunctions";
 import { transformData } from "../../utils/transformData";
-import { RootState } from "../../store";
+import { RootState } from "../../store/redux";
 
 export const UsersView = () => {
   const dispatch = useDispatch();

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { copyToClipboard } from "../../utils/copyToClipboard";
 import { shortenAddress } from "../../utils/shortenAddress";
-import { RootState } from "../../store";
+import { RootState } from "../../store/redux";
 import { useSelector } from "react-redux";
 
 export const UserContracts = () => {

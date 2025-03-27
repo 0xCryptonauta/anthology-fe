@@ -74,7 +74,6 @@ export default defineConfig({
         __dirname,
         "./src/contract-functions"
       ),
-      "@slices": path.resolve(__dirname, "src/slices"),
       "@store": path.resolve(__dirname, "src/store"),
       "@utils": path.resolve(__dirname, "src/utils"),
       "@views": path.resolve(__dirname, "src/views"),

@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 
 import { useSelector } from "react-redux";
 
-import { RootState } from "../../store";
+import { RootState } from "../../store/redux";
 //import { IsWhitelisted } from "./IsWhitelisted";
 import { WhitelistedUsers } from "./WhitelistedUsers";
 import { Card } from "react-bootstrap";

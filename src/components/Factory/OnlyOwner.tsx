@@ -20,8 +20,8 @@ import {
   updateRemoveFromWhitelist,
   updateUseErc20,
   updateWhitelistEnabled,
-} from "../../slices/factorySlice";
-import { RootState } from "../../store";
+} from "../../store/slices/factorySlice";
+import { RootState } from "../../store/redux";
 import { useToast } from "../Layout/Toast";
 
 export const OnlyOwner = () => {

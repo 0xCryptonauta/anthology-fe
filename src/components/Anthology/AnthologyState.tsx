@@ -1,5 +1,5 @@
 import { Card } from "react-bootstrap";
-import { RootState } from "../../store";
+import { RootState } from "../../store/redux";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import "./style.css";

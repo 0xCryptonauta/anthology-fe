@@ -3,7 +3,7 @@ import { Header } from "../components/Layout/Header";
 import { Footer } from "../components/Layout/Footer";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { updateUserAddr, updateWalletId } from "../slices/userSlice";
+import { updateUserAddr, updateWalletId } from "../store/slices/userSlice";
 import { reconnectWallet } from "../utils/initialStateUpdate";
 
 export const RootView = () => {

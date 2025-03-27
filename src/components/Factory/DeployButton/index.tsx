@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
-import { callDeployAnthology } from "../../contract-functions/FactoryFunctions";
+import { callDeployAnthology } from "@contract-functions/FactoryFunctions";
 import "./index.css";
-import { RootState } from "../../store";
+import { RootState } from "@store/redux";
 
 export const DeployButton = () => {
   const { userAddr } = useSelector((state: RootState) => state.user);

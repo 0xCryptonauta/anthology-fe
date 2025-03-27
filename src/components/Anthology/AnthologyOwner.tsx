@@ -9,9 +9,9 @@ import { useState } from "react";
   callSetAnthologyPrice,
 } from "../FactoryFunctions"; */
 import { parseEther } from "viem";
-import { writeAnthology } from "../../contract-functions/AnthologyFunctions";
+import { writeAnthology } from "@contract-functions/AnthologyFunctions";
 //import { ChangeAnthologyTitle } from "./ChangeAnthologyTitle";
-import { useToast } from "../Layout/Toast";
+import { useToast } from "@components/Layout/Toast";
 
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -19,9 +19,9 @@ import {
   updateUseBuffer,
   updateUseErc20,
   updateWhitelistEnabled,
-} from "../../slices/anthologySlice";
-import { RootState } from "../../store";
-import { updateOneContractTitle } from "../../slices/factorySlice";
+} from "../../store/slices/anthologySlice";
+import { RootState } from "../../store/redux";
+import { updateOneContractTitle } from "../../store/slices/factorySlice";
 
 export const AnthologyOwner = ({ contractAddr }: { contractAddr: string }) => {
   const { addToast } = useToast();

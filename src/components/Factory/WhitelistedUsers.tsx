@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { RootState } from "../../store/redux";
 
 export const WhitelistedUsers = () => {
   const { whitelistedUsers } = useSelector((state: RootState) => state.factory);

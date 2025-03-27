@@ -104,8 +104,8 @@ import {
   //injected
 } from "@wagmi/connectors";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store";
-import { updateUserAddr, updateWalletId } from "../../slices/userSlice";
+import { RootState } from "../../store/redux";
+import { updateUserAddr, updateWalletId } from "../../store/slices/userSlice";
 
 function shortenAddress(address: string) {
   return `${address?.substring(0, 6)}...${address?.substring(

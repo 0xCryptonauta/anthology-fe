@@ -1,7 +1,7 @@
 import { useState } from "react";
 //import { readFactory } from "./FactoryFunctions";
 import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { RootState } from "../../store/redux";
 
 export const IsWhitelisted = () => {
   const { whitelistedUsers } = useSelector((state: RootState) => state.factory);

@@ -1,12 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
 import { shortenAddress } from "../../../utils/shortenAddress";
-import { AppDispatch, RootState } from "../../../store";
+import { AppDispatch, RootState } from "../../../store/redux";
 import { writeAnthology } from "../../../contract-functions/AnthologyFunctions";
-import { removeOneFromMemoirs } from "../../../slices/anthologySlice";
+import { removeOneFromMemoirs } from "../../../store/slices/anthologySlice";
 import { formatUnixTime } from "../../../utils/formatUnixTime";
 import { NavigateFunction, useNavigate } from "react-router-dom";
-import { SkinType } from "../../../slices/anthologySlice";
-import { MemoirInterface } from "../../../slices/anthologySlice";
+import { SkinType } from "../../../store/slices/anthologySlice";
+import { MemoirInterface } from "../../../store/slices/anthologySlice";
 import { OrderType } from "./OrderSelector";
 import { ToastVariantType, useToast } from "../../Layout/Toast";
 // Media memoir skins
