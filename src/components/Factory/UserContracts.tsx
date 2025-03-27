@@ -1,15 +1,15 @@
 import { useNavigate } from "react-router-dom";
 import { copyToClipboard } from "../../utils/copyToClipboard";
 import { shortenAddress } from "../../utils/shortenAddress";
-import { RootState } from "../../store/redux";
-import { useSelector } from "react-redux";
+
+import { useAppSelector } from "@store/utils/hooks";
 
 export const UserContracts = () => {
   const navigate = useNavigate();
-  const { userContracts, contractsTitles } = useSelector(
-    (state: RootState) => state.factory
+  const { userContracts, contractsTitles } = useAppSelector(
+    (state) => state.factory
   );
-  const { userAddr } = useSelector((state: RootState) => state.user);
+  const { userAddr } = useAppSelector((state) => state.user);
 
   /* const pageSize = 50;
   const page = 1; */

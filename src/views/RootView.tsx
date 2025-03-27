@@ -2,12 +2,12 @@ import { Outlet } from "react-router-dom";
 import { Header } from "../components/Layout/Header";
 import { Footer } from "../components/Layout/Footer";
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "@store/utils/hooks";
 import { updateUserAddr, updateWalletId } from "../store/slices/userSlice";
 import { reconnectWallet } from "../utils/initialStateUpdate";
 
 export const RootView = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     console.log("RootView - Reconnect");

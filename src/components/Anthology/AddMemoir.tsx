@@ -3,8 +3,7 @@ import { writeAnthology } from "@contract-functions/AnthologyFunctions";
 import { Offcanvas } from "react-bootstrap";
 import "./style.css";
 import { useToast } from "@components/Layout/Toast";
-import { useSelector } from "react-redux";
-import { RootState } from "@store/redux";
+import { useAppSelector } from "@store/utils/hooks";
 
 export const AddMemoir = ({ contractAddr }: { contractAddr: string }) => {
   const [anthologyTitle, setAnthologyTitle] = useState("");
@@ -12,12 +11,12 @@ export const AddMemoir = ({ contractAddr }: { contractAddr: string }) => {
 
   const [show, setShow] = useState(false);
 
-  const { userAddr } = useSelector((state: RootState) => state.user || "");
-  const { whitelistEnabled, owner } = useSelector(
-    (state: RootState) => state.anthology[contractAddr]?.anthologyState || ""
+  const { userAddr } = useAppSelector((state) => state.user || "");
+  const { whitelistEnabled, owner } = useAppSelector(
+    (state) => state.anthology[contractAddr]?.anthologyState || ""
   );
-  const whitelist = useSelector(
-    (state: RootState) => state.anthology[contractAddr]?.whitelist
+  const whitelist = useAppSelector(
+    (state) => state.anthology[contractAddr]?.whitelist
   );
 
   const handleClose = () => setShow(false);

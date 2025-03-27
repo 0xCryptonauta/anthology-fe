@@ -1,11 +1,11 @@
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@store/utils/hooks";
+
 import { ContractState } from "../../components/Factory/ContractState";
 import { OnlyOwner } from "../../components/Factory/OnlyOwner";
-import { RootState } from "../../store/redux";
 
 export const FactoryStateView = () => {
-  const userAddr = useSelector((state: RootState) => state.user.userAddr);
-  const factoryOwner = useSelector((state: RootState) => state.factory.owner);
+  const userAddr = useAppSelector((state) => state.user.userAddr);
+  const factoryOwner = useAppSelector((state) => state.factory.owner);
   return (
     <div
       className="bg-dark"

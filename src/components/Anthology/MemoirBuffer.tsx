@@ -1,15 +1,15 @@
 import { writeAnthology } from "../../contract-functions/AnthologyFunctions";
 import { removeOneFromBuffer } from "../../store/slices/anthologySlice";
 import { shortenAddress } from "../../utils/shortenAddress";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store/redux";
+import { useAppDispatch } from "@store/utils/hooks";
+import { useAppSelector } from "@store/utils/hooks";
 
 export const MemoirBuffer = ({ contractAddr }: { contractAddr: string }) => {
-  const memoirBuffer = useSelector((state: RootState) =>
+  const memoirBuffer = useAppSelector((state) =>
     contractAddr ? state.anthology[contractAddr].memoirBuffer : []
   );
   //const [memoirBuffer, setMemoirBuffer] = useState<MemoirInterface[]>([]);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return (
     <div>

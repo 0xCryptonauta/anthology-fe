@@ -1,7 +1,7 @@
 /* import { getConnectors, disconnect } from "@wagmi/core";
 
 import { config } from "../config";
-import { useSelector, useDispatch } from "react-redux";
+import { useAppSelector, useAppDispatch } from "@store/utils/hooks";
 import { RootState } from "../store";
 import { updateUserAddr, updateWalletId } from "../slices/userSlice";
 
@@ -12,8 +12,8 @@ function shortenAddress(address: string): string {
 }
 
 export const WalletConnector = () => {
-  const { userAddr, walletId } = useSelector((state: RootState) => state.user);
-  const dispatch = useDispatch();
+  const { userAddr, walletId } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
   const connectors = getConnectors(config);
   console.log("CONNECTORS:", connectors);
   const currentConnector = connectors?.find((conn) => conn.id === walletId);
@@ -103,8 +103,9 @@ import {
   walletConnect,
   //injected
 } from "@wagmi/connectors";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store/redux";
+import { useAppDispatch } from "@store/utils/hooks";
+import { useAppSelector } from "@store/utils/hooks";
+
 import { updateUserAddr, updateWalletId } from "../../store/slices/userSlice";
 
 function shortenAddress(address: string) {
@@ -135,8 +136,8 @@ function shortenAddress(address: string) {
 }; */
 
 export const WalletConnector = () => {
-  const dispatch = useDispatch();
-  const { userAddr, walletId } = useSelector((state: RootState) => state.user);
+  const dispatch = useAppDispatch();
+  const { userAddr, walletId } = useAppSelector((state) => state.user);
   //const [account, setAccount] = useState<Config>();
   //const [currentAddr, setCurrentAddr] = useState("");
 

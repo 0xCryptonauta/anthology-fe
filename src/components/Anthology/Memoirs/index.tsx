@@ -1,6 +1,7 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch } from "@store/utils/hooks";
+import { useAppSelector } from "@store/utils/hooks";
 import { shortenAddress } from "../../../utils/shortenAddress";
-import { AppDispatch, RootState } from "../../../store/redux";
+import { AppDispatch } from "../../../store/redux";
 import { writeAnthology } from "../../../contract-functions/AnthologyFunctions";
 import { removeOneFromMemoirs } from "../../../store/slices/anthologySlice";
 import { formatUnixTime } from "../../../utils/formatUnixTime";
@@ -557,12 +558,12 @@ export const Memoirs = ({
   skin: SkinType;
   order: OrderType;
 }) => {
-  const anthology = useSelector((state: RootState) =>
+  const anthology = useAppSelector((state) =>
     contractAddr ? state.anthology[contractAddr] : undefined
   );
-  const { userAddr } = useSelector((state: RootState) => state.user);
+  const { userAddr } = useAppSelector((state) => state.user);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return (
     <div

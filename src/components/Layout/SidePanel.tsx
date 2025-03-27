@@ -1,11 +1,11 @@
 import { useState } from "react";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { Link } from "react-router-dom";
-import { RootState } from "../../store/redux";
-import { useSelector } from "react-redux";
+
+import { useAppSelector } from "@store/utils/hooks";
 
 export const SidePanel = () => {
-  const { userAddr } = useSelector((state: RootState) => state.user);
+  const { userAddr } = useAppSelector((state) => state.user);
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);

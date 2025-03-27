@@ -1,12 +1,11 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/redux";
+import { useAppSelector } from "@store/utils/hooks";
 
 export const AnthologyWhitelistedUsers = ({
   contractAddr,
 }: {
   contractAddr: string;
 }) => {
-  const whitelistedUsers = useSelector((state: RootState) =>
+  const whitelistedUsers = useAppSelector((state) =>
     contractAddr ? state.anthology[contractAddr].whitelist : []
   );
 

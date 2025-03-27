@@ -2,9 +2,8 @@
 
 import React, { useEffect } from "react";
 
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@store/utils/hooks";
 
-import { RootState } from "../../store/redux";
 //import { IsWhitelisted } from "./IsWhitelisted";
 import { WhitelistedUsers } from "./WhitelistedUsers";
 import { Card } from "react-bootstrap";
@@ -20,7 +19,7 @@ export const ContractState: React.FC = () => {
     erc20Token,
     anthologyPrice,
     userCount,
-  } = useSelector((state: RootState) => state.factory);
+  } = useAppSelector((state) => state.factory);
 
   useEffect(() => {
     /* const unwatch = watchContractEvent(config, {

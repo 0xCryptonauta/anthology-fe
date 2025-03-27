@@ -1,6 +1,7 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch } from "@store/utils/hooks";
+import { useAppSelector } from "@store/utils/hooks";
 import { useParams } from "react-router-dom";
-import { RootState } from "../../store/redux";
+
 import { useEffect, useState } from "react";
 import {
   readAnthology,
@@ -33,8 +34,8 @@ import {
 } from "../../components/Anthology/Memoirs/OrderSelector";
 
 export const AnthologyView = () => {
-  const dispatch = useDispatch();
-  const { userContracts } = useSelector((state: RootState) => state.factory);
+  const dispatch = useAppDispatch();
+  const { userContracts } = useAppSelector((state) => state.factory);
 
   const { ethAddr, id } = useParams();
 
@@ -48,8 +49,8 @@ export const AnthologyView = () => {
     }
   }
 
-  const { userAddr } = useSelector((state: RootState) => state.user);
-  const anthology = useSelector((state: RootState) =>
+  const { userAddr } = useAppSelector((state) => state.user);
+  const anthology = useAppSelector((state) =>
     contractAddr ? state.anthology[contractAddr] : undefined
   );
 

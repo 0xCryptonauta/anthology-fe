@@ -11,7 +11,7 @@ import {
 } from "../../contract-functions/FactoryFunctions";
 import { parseEther } from "viem";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useAppSelector, useAppDispatch } from "@store/utils/hooks";
 import {
   updateAddToWhitelist,
   updateAnthologyPrice,
@@ -21,15 +21,15 @@ import {
   updateUseErc20,
   updateWhitelistEnabled,
 } from "../../store/slices/factorySlice";
-import { RootState } from "../../store/redux";
+
 import { useToast } from "../Layout/Toast";
 
 export const OnlyOwner = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { addToast } = useToast();
 
-  const { isFrozen, whitelistEnabled, useErc20 } = useSelector(
-    (state: RootState) => state.factory
+  const { isFrozen, whitelistEnabled, useErc20 } = useAppSelector(
+    (state) => state.factory
   );
 
   // input fields value

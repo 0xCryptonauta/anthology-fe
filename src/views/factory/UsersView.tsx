@@ -3,7 +3,8 @@ import { MainComponent } from "../../components/Factory/MainComponent";
 
 import { useEffect } from "react";
 import { fetchContractData } from "../../utils/initialStateUpdate";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch } from "@store/utils/hooks";
+import { useAppSelector } from "@store/utils/hooks";
 import {
   updateContractTitles,
   updateFactoryBasicInfo,
@@ -14,12 +15,11 @@ import {
 } from "../../store/slices/factorySlice";
 import { readFactory } from "../../contract-functions/FactoryFunctions";
 import { transformData } from "../../utils/transformData";
-import { RootState } from "../../store/redux";
 
 export const UsersView = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const { usersCP } = useSelector((state: RootState) => state.factory);
+  const { usersCP } = useAppSelector((state) => state.factory);
 
   useEffect(() => {
     console.log("useEffect FactoryView.");
