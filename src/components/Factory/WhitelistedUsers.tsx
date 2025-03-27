@@ -1,15 +1,14 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
+import { useAppSelector } from "@store/utils/hooks";
 
 export const WhitelistedUsers = () => {
-  const { whitelistedUsers } = useSelector((state: RootState) => state.factory);
+  const { whitelistedUsers } = useAppSelector((state) => state.factory);
 
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
-        border: "1px solid white",
+        //border: "1px solid white",
         width: "fit-content",
         padding: "7px",
         borderRadius: "7px",

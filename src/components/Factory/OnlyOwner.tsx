@@ -8,10 +8,10 @@ import {
   callSetERC20Token,
   callSetAnthologyPrice,
   writeFactory,
-} from "../ContractFunctions/FactoryFunctions";
+} from "@contract-functions/FactoryFunctions";
 import { parseEther } from "viem";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useAppSelector, useAppDispatch } from "@store/utils/hooks";
 import {
   updateAddToWhitelist,
   updateAnthologyPrice,
@@ -20,14 +20,16 @@ import {
   updateRemoveFromWhitelist,
   updateUseErc20,
   updateWhitelistEnabled,
-} from "../../slices/factorySlice";
-import { RootState } from "../../store";
+} from "@store/slices/factorySlice";
+
+import { useToast } from "@components/Layout/Toast";
 
 export const OnlyOwner = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const { addToast } = useToast();
 
-  const { isFrozen, whitelistEnabled, useErc20 } = useSelector(
-    (state: RootState) => state.factory
+  const { isFrozen, whitelistEnabled, useErc20 } = useAppSelector(
+    (state) => state.factory
   );
 
   // input fields value
@@ -81,12 +83,29 @@ export const OnlyOwner = () => {
         <span
           style={{ marginLeft: "7px", cursor: "pointer" }}
           onClick={async () => {
-            //Check first if users include address before call
-            const txHash = await callSetAnthologyPrice(
-              parseEther(anthologyPrice)
-            );
-            console.log("updating price", txHash);
-            if (txHash) dispatch(updateAnthologyPrice(Number(anthologyPrice)));
+            try {
+              //Check first if users include address before call
+              const txHash = await callSetAnthologyPrice(
+                parseEther(anthologyPrice)
+              );
+              if (txHash) {
+                addToast({
+                  title: "New anthology price:",
+                  content: anthologyPrice + "\n\n TxHash: " + txHash,
+                  variant: "success",
+                  delay: 5000,
+                });
+                dispatch(updateAnthologyPrice(Number(anthologyPrice)));
+              }
+            } catch (error) {
+              addToast({
+                title: "Error setting anthology price",
+                content: "Unknown error",
+                variant: "warning",
+                delay: 5000,
+              });
+              console.error("Error setting anthology price", error);
+            }
           }}
         >
           💰
@@ -98,10 +117,28 @@ export const OnlyOwner = () => {
       <div style={{ margin: "5px" }}>
         <button
           onClick={async () => {
-            const txHash = await callSetUseERC20(!useErc20);
-
-            console.log("setting useERC20: ", txHash);
-            if (txHash) dispatch(updateUseErc20(!useErc20));
+            try {
+              const txHash = await callSetUseERC20(!useErc20);
+              if (txHash) {
+                addToast({
+                  title: "Anthology now uses",
+                  content: !useErc20
+                    ? "ETH"
+                    : "ERC20" + "\n\n TxHash: " + txHash,
+                  variant: "success",
+                  delay: 5000,
+                });
+                dispatch(updateUseErc20(!useErc20));
+              }
+            } catch (error) {
+              addToast({
+                title: "Error setting ",
+                content: "Unknown error",
+                variant: "warning",
+                delay: 5000,
+              });
+              console.error("Error setting", error);
+            }
           }}
         >
           {useErc20 ? "Change to ETH payment" : "Change to ERC20 payment"}
@@ -140,9 +177,26 @@ export const OnlyOwner = () => {
           style={{ marginLeft: "7px", cursor: "pointer" }}
           onClick={async () => {
             //Check first if users include address before call
-            const txHash = await callSetERC20Token(erc20TokenAddr);
-            console.log("updating ERC20 token addr", txHash);
-            if (txHash) dispatch(updateErc20Token(erc20TokenAddr));
+            try {
+              const txHash = await callSetERC20Token(erc20TokenAddr);
+              if (txHash) {
+                addToast({
+                  title: "New ERC20 address",
+                  content: erc20TokenAddr + "\n\n TxHash: " + txHash,
+                  variant: "success",
+                  delay: 5000,
+                });
+                dispatch(updateErc20Token(erc20TokenAddr));
+              }
+            } catch (error) {
+              addToast({
+                title: "Error setting erc20 address",
+                content: "Unknown error",
+                variant: "warning",
+                delay: 5000,
+              });
+              console.error("Error setting erc20 address", error);
+            }
           }}
         >
           📝
@@ -154,9 +208,28 @@ export const OnlyOwner = () => {
       <div style={{ margin: "5px" }}>
         <button
           onClick={async () => {
-            const txHash = await callEnableWhitelist(!whitelistEnabled);
-            console.log("enable whitelist (TOAST):", txHash);
-            if (txHash) dispatch(updateWhitelistEnabled(!whitelistEnabled));
+            try {
+              const txHash = await callEnableWhitelist(!whitelistEnabled);
+              if (txHash) {
+                addToast({
+                  title: "Whitelist has been:",
+                  content: !whitelistEnabled
+                    ? "Disabled"
+                    : "Activated" + "\n\n TxHash: " + txHash,
+                  variant: "success",
+                  delay: 5000,
+                });
+                dispatch(updateWhitelistEnabled(!whitelistEnabled));
+              }
+            } catch (error) {
+              addToast({
+                title: "Error enabling whitelist ",
+                content: "Unknown error",
+                variant: "warning",
+                delay: 5000,
+              });
+              console.error("Error enabling whitelist", error);
+            }
           }}
         >
           {whitelistEnabled ? "Deactivate whitelist" : "Activate Whitelist"}
@@ -193,9 +266,26 @@ export const OnlyOwner = () => {
           style={{ marginLeft: "7px", cursor: "pointer" }}
           onClick={async () => {
             //Check first if users include address before call
-            const txHash = await callAddToWhitelist(addressToAdd);
-            console.log("Adding to WL: confirm in toast", txHash);
-            if (txHash) dispatch(updateAddToWhitelist(addressToAdd));
+            try {
+              const txHash = await callAddToWhitelist(addressToAdd);
+              if (txHash) {
+                addToast({
+                  title: "Address added to whitelist",
+                  content: addressToAdd + "\n\n TxHash: " + txHash,
+                  variant: "success",
+                  delay: 5000,
+                });
+                dispatch(updateAddToWhitelist(addressToAdd));
+              }
+            } catch (error) {
+              addToast({
+                title: "Error adding addr to whitelist ",
+                content: "Unknown error",
+                variant: "warning",
+                delay: 5000,
+              });
+              console.error("Error adding addr to whitelist", error);
+            }
           }}
         >
           📥
@@ -231,10 +321,26 @@ export const OnlyOwner = () => {
         <span
           style={{ marginLeft: "7px", cursor: "pointer" }}
           onClick={async () => {
-            //Check first if users include address before call
-            const txHash = await callRemoveFromWhitelist(addressToRemove);
-            console.log("Removing from WL: confirm in toast", txHash);
-            if (txHash) dispatch(updateRemoveFromWhitelist(addressToRemove));
+            try {
+              const txHash = await callRemoveFromWhitelist(addressToRemove);
+              if (txHash) {
+                addToast({
+                  title: "Address removed from whitelist",
+                  content: addressToRemove + "\n\n TxHash: " + txHash,
+                  variant: "success",
+                  delay: 5000,
+                });
+                dispatch(updateRemoveFromWhitelist(addressToRemove));
+              }
+            } catch (error) {
+              addToast({
+                title: "Error removing address from whitelist ",
+                content: "Unknown error",
+                variant: "warning",
+                delay: 5000,
+              });
+              console.error("Error removing address from whitelist", error);
+            }
           }}
         >
           📤
@@ -247,9 +353,29 @@ export const OnlyOwner = () => {
         <button
           onClick={async () => {
             const _newValue = !isFrozen;
-            const txHash = await callSetIsFrozen(_newValue);
-            console.log("Updating isFrozen:", txHash);
-            if (txHash) dispatch(updateIsFrozen(_newValue));
+
+            try {
+              const txHash = await callSetIsFrozen(_newValue);
+              if (txHash) {
+                addToast({
+                  title: "Factory is",
+                  content: _newValue
+                    ? "Active"
+                    : "Frozen" + "\n\n TxHash: " + txHash,
+                  variant: "success",
+                  delay: 5000,
+                });
+                dispatch(updateIsFrozen(_newValue));
+              }
+            } catch (error) {
+              addToast({
+                title: "Error setting ",
+                content: "Unknown error",
+                variant: "warning",
+                delay: 5000,
+              });
+              console.error("Error setting", error);
+            }
           }}
         >
           <span>{isFrozen ? "Unfreeze contract" : "Freeze contract"}</span>
@@ -266,6 +392,24 @@ export const OnlyOwner = () => {
 
             console.log("Cleaning users: ", txHash);
             //if (txHash) dispatch(updateUseErc20(!useErc20));
+                        try {
+              if (txHash) {
+                addToast({
+                  title: "New anthology price:",
+                  content: anthologyPrice + "\n\n TxHash: " + txHash,
+                  variant: "success",
+                  delay: 5000,
+                });
+              }
+            } catch (error) {
+              addToast({
+                title: "Error setting ",
+                content: "Unknown error",
+                variant: "warning",
+                delay: 5000,
+              });
+              console.error("Error setting", error);
+            }
           }}
         >
           Clean Users
@@ -278,10 +422,26 @@ export const OnlyOwner = () => {
         <button
           style={{ backgroundColor: "red" }}
           onClick={async () => {
-            const txHash = await writeFactory("cleanWhitelist");
-
-            console.log("Cleaning whitelist: ", txHash);
-            //if (txHash) dispatch(updateUseErc20(!useErc20));
+            try {
+              const txHash = await writeFactory("cleanWhitelist");
+              if (txHash) {
+                addToast({
+                  title: "New anthology price:",
+                  content: anthologyPrice + "\n\n TxHash: " + txHash,
+                  variant: "success",
+                  delay: 5000,
+                });
+                dispatch(updateUseErc20(!useErc20));
+              }
+            } catch (error) {
+              addToast({
+                title: "Error setting ",
+                content: "Unknown error",
+                variant: "warning",
+                delay: 5000,
+              });
+              console.error("Error setting", error);
+            }
           }}
         >
           Clean whitelist

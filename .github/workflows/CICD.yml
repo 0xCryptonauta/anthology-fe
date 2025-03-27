@@ -22,9 +22,9 @@ concurrency:
 
   #Allow repo secrets
 env:
-  VITE_ALCHEMY_OPTIMISM_RPC: ${{ secrets.VITE_ALCHEMY_OPTIMISM_RPC }}
-  VITE_FACTORY_CONTRACT: ${{secrets.VITE_FACTORY_CONTRACT}}
-  VITE_PROJECT_ID: ${{secrets.VITE_PROJECT_ID}}
+  VITE_FACTORY_ARBITRUM: ${{secrets.VITE_FACTORY_ARBITRUM}}
+  VITE_LAVA_PROJECT_ID: ${{secrets.VITE_WC_PROJECT_ID}}
+  VITE_WC_PROJECT_ID: ${{secrets.VITE_WC_PROJECT_ID}}
 
 jobs:
   # Single deploy job since we're just deploying

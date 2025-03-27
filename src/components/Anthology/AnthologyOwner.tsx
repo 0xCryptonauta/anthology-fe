@@ -1,41 +1,27 @@
 import { useState } from "react";
-/* import {
-  callAddToWhitelist,
-  callSetIsFrozen,
-  callSetUseERC20,
-  callEnableWhitelist,
-  callRemoveFromWhitelist,
-  callSetERC20Token,
-  callSetAnthologyPrice,
-} from "../FactoryFunctions"; */
 import { parseEther } from "viem";
-import { writeAnthology } from "../ContractFunctions/AnthologyFunctions";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store";
-import { ChangeAnthologyTitle } from "./ChangeAnthologyTitle";
+import { writeAnthology } from "@contract-functions/AnthologyFunctions";
+//import { ChangeAnthologyTitle } from "./ChangeAnthologyTitle";
+import { useToast } from "@components/Layout/Toast";
 
-/* import { useSelector, useDispatch } from "react-redux";
+import { useAppSelector, useAppDispatch } from "@store/utils/hooks";
 import {
-  updateAddToWhitelist,
-  updateAnthologyPrice,
-  updateErc20Token,
-  updateIsFrozen,
-  updateRemoveFromWhitelist,
+  updateAnthologyTitle,
+  updateUseBuffer,
   updateUseErc20,
   updateWhitelistEnabled,
-} from "../../slices/factorySlice";
-import { RootState } from "../../store"; */
+} from "@store/slices/anthologySlice";
+
+import { updateOneContractTitle } from "@store/slices/factorySlice";
 
 export const AnthologyOwner = ({ contractAddr }: { contractAddr: string }) => {
-  const anthologyState = useSelector((state: RootState) =>
+  const { addToast } = useToast();
+
+  const anthologyState = useAppSelector((state) =>
     contractAddr ? state.anthology[contractAddr]?.anthologyState : undefined
   );
 
-  //const dispatch = useDispatch();
-
-  /* const { isFrozen, whitelistEnabled, useErc20 } = useSelector(
-    (state: RootState) => state.factory
-  ); */
+  const dispatch = useAppDispatch();
 
   // input fields value
   const [addressToAdd, setAddresToAdd] = useState("");
@@ -43,6 +29,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: string }) => {
   const [erc20TokenAddr, setErc20TokenAddr] = useState("");
   const [memoirPrice, setMemoirPrice] = useState<string>("0");
   const [newMaxMemoirs, setNewMaxMemoirs] = useState("");
+  const [newTitle, setNewTitle] = useState("");
 
   return (
     <div
@@ -59,8 +46,61 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: string }) => {
       }}
     >
       <h2>Anthology Owner</h2>
-
-      <ChangeAnthologyTitle contractAddr={contractAddr} />
+      {/* ------------------------------- Update Anthology title ------------------------------ */}
+      <div
+        style={{
+          border: "1px solid white",
+          padding: "5px",
+          borderRadius: "7px",
+          margin: "3px",
+        }}
+      >
+        <input
+          placeholder="New title"
+          value={newTitle}
+          onChange={(e) => setNewTitle(e.target.value)}
+        ></input>
+        <span
+          style={{ marginLeft: "7px" }}
+          onClick={async () => {
+            try {
+              const txHash = await writeAnthology(contractAddr, "setTitle", [
+                [newTitle],
+              ]);
+              if (txHash) {
+                addToast({
+                  title: "New title:",
+                  content: newTitle,
+                  variant: "success",
+                  delay: 5000,
+                });
+                dispatch(
+                  updateAnthologyTitle({
+                    contract: contractAddr,
+                    title: newTitle,
+                  })
+                );
+                dispatch(
+                  updateOneContractTitle({
+                    contract: contractAddr,
+                    title: newTitle,
+                  })
+                );
+              }
+            } catch (error) {
+              addToast({
+                title: "Error setting new title",
+                content: "Unknown error",
+                variant: "warning",
+                delay: 5000,
+              });
+              console.error("Error setting new title", error);
+            }
+          }}
+        >
+          🔄
+        </span>
+      </div>
 
       {/* ------------------------------- Update Anthology price ------------------------------ */}
       <div
@@ -91,14 +131,31 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: string }) => {
         <span
           style={{ marginLeft: "7px", cursor: "pointer" }}
           onClick={async () => {
-            //Check first if users include address before call
-            const txHash = await writeAnthology(
-              contractAddr,
-              "setMemoirPrice",
-              [parseEther(memoirPrice)]
-            );
-            console.log("updating price", txHash);
-            //if (txHash) dispatch(updateAnthologyPrice(Number(anthologyPrice)));
+            try {
+              //Check first if users include address before call
+              const txHash = await writeAnthology(
+                contractAddr,
+                "setMemoirPrice",
+                [parseEther(memoirPrice)]
+              );
+              console.log("updating price", txHash);
+              if (txHash) {
+                addToast({
+                  title: "New price:",
+                  content: memoirPrice,
+                  variant: "success",
+                  delay: 5000,
+                });
+              }
+            } catch (error) {
+              addToast({
+                title: "Error setting new price",
+                content: "Unknown error",
+                variant: "warning",
+                delay: 5000,
+              });
+              console.error("Error setting new price", error);
+            }
           }}
         >
           💰
@@ -110,12 +167,33 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: string }) => {
       <div style={{ margin: "5px" }}>
         <button
           onClick={async () => {
-            const txHash = await writeAnthology(contractAddr, "setUseERC20", [
-              !anthologyState?.useERC20,
-            ]);
-
-            console.log("setting useERC20: ", txHash);
-            //if (txHash) dispatch(updateUseErc20(!useErc20));
+            try {
+              const txHash = await writeAnthology(contractAddr, "setUseERC20", [
+                !anthologyState?.useERC20,
+              ]);
+              if (txHash) {
+                addToast({
+                  title: "Payment method changed to:",
+                  content: !anthologyState?.useERC20 + "\n\nTxHash: " + txHash,
+                  variant: "success",
+                  delay: 5000,
+                });
+                dispatch(
+                  updateUseErc20({
+                    contract: contractAddr,
+                    useERC20: !anthologyState?.useERC20,
+                  })
+                );
+              }
+            } catch (error) {
+              addToast({
+                title: "Error setting ",
+                content: "Unknown error",
+                variant: "warning",
+                delay: 5000,
+              });
+              console.error("Error setting", error);
+            }
           }}
         >
           {anthologyState && anthologyState.useERC20
@@ -154,12 +232,30 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: string }) => {
         <span
           style={{ marginLeft: "7px", cursor: "pointer" }}
           onClick={async () => {
-            //Check first if users include address before call
-            const txHash = await writeAnthology(contractAddr, "setERC20Token", [
-              erc20TokenAddr,
-            ]);
-            console.log("updating ERC20 token addr", txHash);
-            //if (txHash) dispatch(updateErc20Token(erc20TokenAddr));
+            try {
+              //Check first if users include address before call
+              const txHash = await writeAnthology(
+                contractAddr,
+                "setERC20Token",
+                [erc20TokenAddr]
+              );
+              if (txHash) {
+                addToast({
+                  title: "ERC20 address set to:",
+                  content: erc20TokenAddr + "\n\nTxHash: " + txHash,
+                  variant: "success",
+                  delay: 5000,
+                });
+              }
+            } catch (error) {
+              addToast({
+                title: "Error setting new price",
+                content: "Unknown error",
+                variant: "warning",
+                delay: 5000,
+              });
+              console.error("Error setting erc20 address", error);
+            }
           }}
         >
           📝
@@ -171,13 +267,37 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: string }) => {
       <div style={{ margin: "5px" }}>
         <button
           onClick={async () => {
-            const txHash = await writeAnthology(
-              contractAddr,
-              "enableWhitelist",
-              [!anthologyState?.whitelistEnabled]
-            );
-            console.log("enable whitelist (TOAST):", txHash);
-            //if (txHash) dispatch(updateWhitelistEnabled(!whitelistEnabled));
+            try {
+              const txHash = await writeAnthology(
+                contractAddr,
+                "enableWhitelist",
+                [!anthologyState?.whitelistEnabled]
+              );
+              if (txHash) {
+                addToast({
+                  title: "Whitelist has been:",
+                  content: !anthologyState?.whitelistEnabled
+                    ? "Activated"
+                    : "Disabled" + "\n\nTxHash: " + txHash,
+                  variant: "success",
+                  delay: 5000,
+                });
+                dispatch(
+                  updateWhitelistEnabled({
+                    contract: contractAddr,
+                    whitelistEnabled: !anthologyState?.whitelistEnabled,
+                  })
+                );
+              }
+            } catch (error) {
+              addToast({
+                title: "error setting whitelist",
+                content: "Unknown error",
+                variant: "warning",
+                delay: 5000,
+              });
+              console.error("Error setting whitelist", error);
+            }
           }}
         >
           {anthologyState && anthologyState?.whitelistEnabled
@@ -216,13 +336,30 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: string }) => {
           style={{ marginLeft: "7px", cursor: "pointer" }}
           onClick={async () => {
             //Check first if users include address before call
-            const txHash = await writeAnthology(
-              contractAddr,
-              "addToWhitelist",
-              [addressToAdd]
-            );
-            console.log("Adding to WL: confirm in toast", txHash);
-            //if (txHash) dispatch(updateAddToWhitelist(addressToAdd));
+
+            try {
+              const txHash = await writeAnthology(
+                contractAddr,
+                "addToWhitelist",
+                [addressToAdd]
+              );
+              if (txHash) {
+                addToast({
+                  title: "Address added to whitelist",
+                  content: addressToAdd + "\n\nTxHash: " + txHash,
+                  variant: "success",
+                  delay: 5000,
+                });
+              }
+            } catch (error) {
+              addToast({
+                title: "Error addng to whitelist",
+                content: "Unknown error",
+                variant: "warning",
+                delay: 5000,
+              });
+              console.error("Error adding to whitelist", error);
+            }
           }}
         >
           📥
@@ -258,14 +395,30 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: string }) => {
         <span
           style={{ marginLeft: "7px", cursor: "pointer" }}
           onClick={async () => {
-            //Check first if users include address before call
-            const txHash = await writeAnthology(
-              contractAddr,
-              "removeFromWhitelist",
-              [addressToRemove]
-            );
-            console.log("Removing from WL: confirm in toast", txHash);
-            //if (txHash) dispatch(updateRemoveFromWhitelist(addressToRemove));
+            try {
+              //Check first if users include address before call
+              const txHash = await writeAnthology(
+                contractAddr,
+                "removeFromWhitelist",
+                [addressToRemove]
+              );
+              if (txHash) {
+                addToast({
+                  title: "Address removed from whitelist",
+                  content: addressToRemove + "\n\nTxHash: " + txHash,
+                  variant: "success",
+                  delay: 5000,
+                });
+              }
+            } catch (error) {
+              addToast({
+                title: "Error removing from whitelist",
+                content: "Unknown error",
+                variant: "warning",
+                delay: 5000,
+              });
+              console.error("Error removing from whitelist", error);
+            }
           }}
         >
           📤
@@ -277,11 +430,37 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: string }) => {
       <div>
         <button
           onClick={async () => {
-            const txHash = await writeAnthology(contractAddr, "setUseBuffer", [
-              !anthologyState?.useBuffer,
-            ]);
-            console.log("Updating useBuffer:", txHash);
-            //if (txHash) dispatch(updateIsFrozen(_newValue));
+            try {
+              const txHash = await writeAnthology(
+                contractAddr,
+                "setUseBuffer",
+                [!anthologyState?.useBuffer]
+              );
+              if (txHash) {
+                addToast({
+                  title: "Buffer has been:",
+                  content: !anthologyState?.useBuffer
+                    ? "Activated"
+                    : "Disabled" + "\n\nTxHash: " + txHash,
+                  variant: "success",
+                  delay: 5000,
+                });
+                dispatch(
+                  updateUseBuffer({
+                    contract: contractAddr,
+                    useBuffer: !anthologyState?.useBuffer,
+                  })
+                );
+              }
+            } catch (error) {
+              addToast({
+                title: "Error updating buffer status",
+                content: "Unknown error",
+                variant: "warning",
+                delay: 5000,
+              });
+              console.error("Error setting buffer status", error);
+            }
           }}
         >
           <span>
@@ -335,12 +514,30 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: string }) => {
         <span
           style={{ marginLeft: "7px", cursor: "pointer" }}
           onClick={async () => {
-            //Check first if users include address before call
-            const txHash = await writeAnthology(contractAddr, "setMaxMemoirs", [
-              newMaxMemoirs,
-            ]);
-            console.log("updating maxMemoirs", txHash);
-            //if (txHash) dispatch(updateAnthologyPrice(Number(anthologyPrice)));
+            try {
+              //Check first if users include address before call
+              const txHash = await writeAnthology(
+                contractAddr,
+                "setMaxMemoirs",
+                [newMaxMemoirs]
+              );
+              if (txHash) {
+                addToast({
+                  title: "New max number of memoirs:",
+                  content: newMaxMemoirs + "\n\nTxHash: " + txHash,
+                  variant: "success",
+                  delay: 5000,
+                });
+              }
+            } catch (error) {
+              addToast({
+                title: "Error setting new maxMemoirs",
+                content: "Unknown error",
+                variant: "warning",
+                delay: 5000,
+              });
+              console.error("Error setting new maxMemoirs", error);
+            }
           }}
         >
           💰
@@ -353,10 +550,25 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: string }) => {
         <button
           style={{ backgroundColor: "red" }}
           onClick={async () => {
-            const txHash = await writeAnthology(contractAddr, "cleanMemoirs");
-
-            console.log("Cleaning memoirs: ", txHash);
-            //if (txHash) dispatch(updateUseErc20(!useErc20));
+            try {
+              const txHash = await writeAnthology(contractAddr, "cleanMemoirs");
+              if (txHash) {
+                addToast({
+                  title: "Cleaning memoirs",
+                  content: "txHash: " + txHash,
+                  variant: "success",
+                  delay: 5000,
+                });
+              }
+            } catch (error) {
+              addToast({
+                title: "Error cleaning memoirs",
+                content: "Unknown error",
+                variant: "warning",
+                delay: 5000,
+              });
+              console.error("Error cleaning memoirs", error);
+            }
           }}
         >
           Clean Memoirs
@@ -369,13 +581,28 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: string }) => {
         <button
           style={{ backgroundColor: "red" }}
           onClick={async () => {
-            const txHash = await writeAnthology(
-              contractAddr,
-              "cleanMemoirBuffer"
-            );
-
-            console.log("Cleaning memoirBuffer: ", txHash);
-            //if (txHash) dispatch(updateUseErc20(!useErc20));
+            try {
+              const txHash = await writeAnthology(
+                contractAddr,
+                "cleanMemoirBuffer"
+              );
+              if (txHash) {
+                addToast({
+                  title: "Cleaning memoir buffer",
+                  content: "txHash: " + txHash,
+                  variant: "success",
+                  delay: 5000,
+                });
+              }
+            } catch (error) {
+              addToast({
+                title: "Error cleaning memoirs buffer",
+                content: "Unknown error",
+                variant: "warning",
+                delay: 5000,
+              });
+              console.error("Error cleaning memoirs buffer", error);
+            }
           }}
         >
           Clean Buffer
@@ -388,10 +615,28 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: string }) => {
         <button
           style={{ backgroundColor: "red" }}
           onClick={async () => {
-            const txHash = await writeAnthology(contractAddr, "cleanWhitelist");
-
-            console.log("Cleaning whitelist: ", txHash);
-            //if (txHash) dispatch(updateUseErc20(!useErc20));
+            try {
+              const txHash = await writeAnthology(
+                contractAddr,
+                "cleanWhitelist"
+              );
+              if (txHash) {
+                addToast({
+                  title: "Cleaning whitelist",
+                  content: "txHash: " + txHash,
+                  variant: "success",
+                  delay: 5000,
+                });
+              }
+            } catch (error) {
+              addToast({
+                title: "Error cleaning whitelist",
+                content: "Unknown error",
+                variant: "warning",
+                delay: 5000,
+              });
+              console.error("Error cleaning whitelist", error);
+            }
           }}
         >
           Clean Whitelist

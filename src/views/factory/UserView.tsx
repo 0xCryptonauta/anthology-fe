@@ -1,4 +1,4 @@
-import { AddressContracts } from "../../components/AddressContracts";
+import { AddressContracts } from "@components/AddressContracts";
 
 export const UserView = () => {
   return (

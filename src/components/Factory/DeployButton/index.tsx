@@ -1,13 +1,17 @@
-import { useSelector } from "react-redux";
-import { callDeployAnthology } from "../ContractFunctions/FactoryFunctions";
+import { useAppSelector } from "@store/utils/hooks";
+
+import { callDeployAnthology } from "@contract-functions/FactoryFunctions";
 import "./index.css";
-import { RootState } from "../../store";
 
 export const DeployButton = () => {
-  const { userAddr } = useSelector((state: RootState) => state.user);
+  const { userAddr } = useAppSelector((state) => state.user);
+  const { whitelistEnabled, whitelistedUsers } = useAppSelector(
+    (state) => state.factory
+  );
 
   return (
-    userAddr && (
+    !whitelistEnabled ||
+    (whitelistedUsers.includes(userAddr) && (
       <button
         className="btn-rocket"
         onClick={async () => {
@@ -29,6 +33,6 @@ export const DeployButton = () => {
         </svg>
         <span>Deploy Anthology</span>
       </button>
-    )
+    ))
   );
 };

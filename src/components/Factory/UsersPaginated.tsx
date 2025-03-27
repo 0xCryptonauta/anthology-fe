@@ -1,17 +1,17 @@
 import { useNavigate } from "react-router-dom";
-import { copyToClipboard } from "../../functions/copyToClipboard";
-import { shortenAddress } from "../../functions/shortenAddress";
-import { RootState } from "../../store";
-import { useSelector } from "react-redux";
+import { copyToClipboard } from "@utils/copyToClipboard";
+import { shortenAddress } from "@utils/shortenAddress";
+
+import { useAppSelector } from "@store/utils/hooks";
 
 export const UsersPaginated = () => {
   const navigate = useNavigate();
-  const { userCount, users, userContracts, contractsTitles } = useSelector(
-    (state: RootState) => state.factory
+  const { users, userContracts, contractsTitles } = useAppSelector(
+    (state) => state.factory
   );
 
-  const pageSize = 50;
-  const page = 1;
+  /*   const pageSize = 50;
+  const page = 1; */
 
   //- useSelector is rerendering beacuse its fetching data in the backgo
 
@@ -20,18 +20,18 @@ export const UsersPaginated = () => {
       style={{
         display: "flex",
         flexDirection: "column",
-        border: "1px solid white",
+        //border: "1px solid white",
         width: "350px",
         padding: "7px",
         borderRadius: "7px",
         margin: "5px",
       }}
     >
-      <h3>Total users: {userCount?.toString()}</h3>
-      <span>
+      {/* <h3>Total users: {userCount?.toString()}</h3> */}
+      {/*       <span>
         Page: {page} Page size: {pageSize}
       </span>
-      <span>Users paginated: {users?.length}</span>
+      <span>Users paginated: {users?.length}</span> */}
       <br />
       <div style={{ margin: "5px" }}>
         {users?.map((user, index) => {
