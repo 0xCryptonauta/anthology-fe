@@ -1,7 +1,7 @@
 import { useAppSelector } from "@store/utils/hooks";
 
-import { ContractState } from "../../components/Factory/ContractState";
-import { OnlyOwner } from "../../components/Factory/OnlyOwner";
+import { ContractState } from "@components/Factory/ContractState";
+import { OnlyOwner } from "@components/Factory/OnlyOwner";
 
 export const FactoryStateView = () => {
   const userAddr = useAppSelector((state) => state.user.userAddr);

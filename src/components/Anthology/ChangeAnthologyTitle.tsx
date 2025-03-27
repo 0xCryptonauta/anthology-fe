@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { writeAnthology } from "../../contract-functions/AnthologyFunctions";
+import { writeAnthology } from "@contract-functions/AnthologyFunctions";
 
 export const ChangeAnthologyTitle = ({
   contractAddr,

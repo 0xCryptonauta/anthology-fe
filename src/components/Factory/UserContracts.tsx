@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { copyToClipboard } from "../../utils/copyToClipboard";
-import { shortenAddress } from "../../utils/shortenAddress";
+import { copyToClipboard } from "@utils/copyToClipboard";
+import { shortenAddress } from "@utils/shortenAddress";
 
 import { useAppSelector } from "@store/utils/hooks";
 

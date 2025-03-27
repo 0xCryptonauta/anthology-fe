@@ -9,6 +9,7 @@
     "strict": true,
     "baseUrl": "./",
     "paths": {
+      "@src/*": ["src/*"],
       "@abi/*": ["src/abi/*"],
       "@components/*": ["src/components/*"],
       "@contract-functions/*": ["src/contract-functions/*"],

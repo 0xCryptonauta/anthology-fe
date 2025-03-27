@@ -1,8 +1,8 @@
 import { DeployButton } from "@components/Factory/DeployButton";
-import { MainComponent } from "../../components/Factory/MainComponent";
+import { MainComponent } from "@components/Factory/MainComponent";
 
 import { useEffect } from "react";
-import { fetchContractData } from "../../utils/initialStateUpdate";
+import { fetchContractData } from "@utils/initialStateUpdate";
 import { useAppDispatch } from "@store/utils/hooks";
 import { useAppSelector } from "@store/utils/hooks";
 import {
@@ -12,9 +12,9 @@ import {
   updateUsers,
   updateUsersCP,
   updateWhitelistedUsers,
-} from "../../store/slices/factorySlice";
-import { readFactory } from "../../contract-functions/FactoryFunctions";
-import { transformData } from "../../utils/transformData";
+} from "@store/slices/factorySlice";
+import { readFactory } from "@contract-functions/FactoryFunctions";
+import { transformData } from "@utils/transformData";
 
 export const UsersView = () => {
   const dispatch = useAppDispatch();

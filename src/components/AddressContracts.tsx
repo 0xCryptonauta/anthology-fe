@@ -1,7 +1,6 @@
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { copyToClipboard } from "../utils/copyToClipboard";
-import { shortenAddress } from "../utils/shortenAddress";
-import { RootState } from "../store/redux";
+import { copyToClipboard } from "@utils/copyToClipboard";
+import { shortenAddress } from "@utils/shortenAddress";
 import { useAppSelector } from "@store/utils/hooks";
 
 import { useEffect, useState } from "react";

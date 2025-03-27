@@ -1,6 +1,6 @@
-import { writeAnthology } from "../../contract-functions/AnthologyFunctions";
-import { removeOneFromBuffer } from "../../store/slices/anthologySlice";
-import { shortenAddress } from "../../utils/shortenAddress";
+import { writeAnthology } from "@contract-functions/AnthologyFunctions";
+import { removeOneFromBuffer } from "@store/slices/anthologySlice";
+import { shortenAddress } from "@utils/shortenAddress";
 import { useAppDispatch } from "@store/utils/hooks";
 import { useAppSelector } from "@store/utils/hooks";
 

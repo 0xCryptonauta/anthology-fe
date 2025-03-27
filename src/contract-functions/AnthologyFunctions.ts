@@ -8,8 +8,8 @@ import {
 //import { hardhat as chain } from "@wagmi/core/chains";
 import { arbitrum as chain } from "@wagmi/core/chains";
 //import { parseEther } from "viem";
-import { AnthologyABI } from "../abi/AnthologyABI";
-import { config } from "../config";
+import { AnthologyABI } from "@abi/AnthologyABI";
+import { config } from "@src/config";
 
 type readFunctions =
   | "owner"

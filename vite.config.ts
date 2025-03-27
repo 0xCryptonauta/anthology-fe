@@ -68,6 +68,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
+      "@src": path.resolve(__dirname, "src"),
       "@abi": path.resolve(__dirname, "src/abi"),
       "@components": path.resolve(__dirname, "./src/components"),
       "@contract-functions": path.resolve(

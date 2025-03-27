@@ -1,13 +1,4 @@
 import { useState } from "react";
-/* import {
-  callAddToWhitelist,
-  callSetIsFrozen,
-  callSetUseERC20,
-  callEnableWhitelist,
-  callRemoveFromWhitelist,
-  callSetERC20Token,
-  callSetAnthologyPrice,
-} from "../FactoryFunctions"; */
 import { parseEther } from "viem";
 import { writeAnthology } from "@contract-functions/AnthologyFunctions";
 //import { ChangeAnthologyTitle } from "./ChangeAnthologyTitle";
@@ -19,9 +10,9 @@ import {
   updateUseBuffer,
   updateUseErc20,
   updateWhitelistEnabled,
-} from "../../store/slices/anthologySlice";
+} from "@store/slices/anthologySlice";
 
-import { updateOneContractTitle } from "../../store/slices/factorySlice";
+import { updateOneContractTitle } from "@store/slices/factorySlice";
 
 export const AnthologyOwner = ({ contractAddr }: { contractAddr: string }) => {
   const { addToast } = useToast();

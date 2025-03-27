@@ -1,15 +1,15 @@
 import { useAppDispatch } from "@store/utils/hooks";
 import { useAppSelector } from "@store/utils/hooks";
-import { shortenAddress } from "../../../utils/shortenAddress";
-import { AppDispatch } from "../../../store/redux";
-import { writeAnthology } from "../../../contract-functions/AnthologyFunctions";
-import { removeOneFromMemoirs } from "../../../store/slices/anthologySlice";
-import { formatUnixTime } from "../../../utils/formatUnixTime";
+import { shortenAddress } from "@utils/shortenAddress";
+import { AppDispatch } from "@store/redux";
+import { writeAnthology } from "@contract-functions/AnthologyFunctions";
+import { removeOneFromMemoirs } from "@store/slices/anthologySlice";
+import { formatUnixTime } from "@utils/formatUnixTime";
 import { NavigateFunction, useNavigate } from "react-router-dom";
-import { SkinType } from "../../../store/slices/anthologySlice";
-import { MemoirInterface } from "../../../store/slices/anthologySlice";
+import { SkinType } from "@store/slices/anthologySlice";
+import { MemoirInterface } from "@store/slices/anthologySlice";
 import { OrderType } from "./OrderSelector";
-import { ToastVariantType, useToast } from "../../Layout/Toast";
+import { ToastVariantType, useToast } from "@components/Layout/Toast";
 // Media memoir skins
 import { TwitterEmbed } from "./TwitterEmbed";
 import { LazyYT } from "./LazyYT";

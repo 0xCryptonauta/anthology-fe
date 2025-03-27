@@ -8,7 +8,7 @@ import {
   callSetERC20Token,
   callSetAnthologyPrice,
   writeFactory,
-} from "../../contract-functions/FactoryFunctions";
+} from "@contract-functions/FactoryFunctions";
 import { parseEther } from "viem";
 
 import { useAppSelector, useAppDispatch } from "@store/utils/hooks";
@@ -20,9 +20,9 @@ import {
   updateRemoveFromWhitelist,
   updateUseErc20,
   updateWhitelistEnabled,
-} from "../../store/slices/factorySlice";
+} from "@store/slices/factorySlice";
 
-import { useToast } from "../Layout/Toast";
+import { useToast } from "@components/Layout/Toast";
 
 export const OnlyOwner = () => {
   const dispatch = useAppDispatch();

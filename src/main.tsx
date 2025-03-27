@@ -2,19 +2,19 @@ import "bootstrap/dist/css/bootstrap.css";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { Provider } from "react-redux";
-import { store, persistor } from "./store/redux.ts";
+import { store, persistor } from "@store/redux.ts";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { RootView } from "./views/RootView.tsx";
-import { UsersView } from "./views/factory/UsersView.tsx";
-import { UserView } from "./views/factory/UserView.tsx";
-import { FactoryStateView } from "./views/factory/FactoryStateView.tsx";
-import { AboutView } from "./views/factory/AboutView.tsx";
-import { AccountView } from "./views/factory/AccountView.tsx";
+import { RootView } from "@views/RootView.tsx";
+import { UsersView } from "@views/factory/UsersView.tsx";
+import { UserView } from "@views/factory/UserView.tsx";
+import { FactoryStateView } from "@views/factory/FactoryStateView.tsx";
+import { AboutView } from "@views/factory/AboutView.tsx";
+import { AccountView } from "@views/factory/AccountView.tsx";
 import { StrictMode } from "react";
-import { AnthologyView } from "./views/anthology/AnthologyView.tsx";
+import { AnthologyView } from "@views/anthology/AnthologyView.tsx";
 import { PersistGate } from "redux-persist/integration/react";
-import { ToastProvider } from "./components/Layout/Toast.tsx";
+import { ToastProvider } from "@components/Layout/Toast.tsx";
 
 const router = createBrowserRouter([
   {
