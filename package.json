@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
+    "release": "branch=$(git branch --show-current); if [ \"$branch\" != \"main\" ]; then echo 'Release only allowed on main branch!'; exit 1; fi; standard-version",
     "build": "vite build",
     "tsc": "tsc -b",
     "lint": "eslint .",
@@ -36,6 +37,7 @@
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.9",
     "globals": "^15.9.0",
+    "standard-version": "^9.5.0",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1",

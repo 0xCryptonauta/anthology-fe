@@ -165,3 +165,17 @@ docs: improve README instructions
 #   - Use the body to explain what and why vs. how
 #   - Can use multiple lines with "-" for bullet points in body.
 ```
+
+### Pushing to main
+
+only on main
+
+```
+npm run release
+```
+
+Push tags with
+
+```
+git push --follow-tags origin main.
+```
