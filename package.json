@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
+    "pre-release": "standard-version --dry-run",
     "release": "branch=$(git branch --show-current); if [ \"$branch\" != \"main\" ]; then echo 'Release only allowed on main branch!'; exit 1; fi; standard-version",
     "build": "vite build",
     "tsc": "tsc -b",
