@@ -25,15 +25,11 @@ function shortenAddress(address: string) {
 export const WalletConnector = () => {
   const dispatch = useAppDispatch();
   const { userAddr, walletId } = useAppSelector((state) => state.user);
-  //const [account, setAccount] = useState<Config>();
-  //const [currentAddr, setCurrentAddr] = useState("");
 
   const connections = getConnections(config);
-  console.log("connections:", connections);
+  //console.log("connections:", connections);
 
   const connectors = getConnectors(config);
-
-  //const currentWalletId = account?.connector?.id;
 
   const currentConnector = connectors?.find((conn) => conn.id === walletId);
 
@@ -41,8 +37,8 @@ export const WalletConnector = () => {
     (conn) => conn.id !== "injected" && conn.id !== "walletConnect"
   );
 
-  console.log("filtered", filteredConnectors);
-  console.log("Current conn:", currentConnector);
+  console.log("Filtered conn", filteredConnectors);
+  //console.log("Current conn:", currentConnector);
 
   const connectWalletConnect = async () => {
     const currentUser = await connect(config, {
@@ -50,7 +46,7 @@ export const WalletConnector = () => {
         projectId: import.meta.env.VITE_WC_PROJECT_ID,
       }),
     });
-    console.log("Wallet result: ", currentUser);
+    //console.log("Wallet result: ", currentUser);
     dispatch(updateUserAddr(currentUser.accounts[0] as string));
   };
 
@@ -64,7 +60,6 @@ export const WalletConnector = () => {
     reconnectW();
   }, []); */
 
-  console.log("ACC:", userAddr);
   return userAddr ? (
     <div
       style={{

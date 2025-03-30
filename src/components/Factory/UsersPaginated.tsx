@@ -28,7 +28,12 @@ export const UsersPaginated = () => {
     const categories: Categories = {};
     const uncategorized: Contract[] = [];
 
-    contracts.forEach(({ address, title, originalIndex }) => {
+    contracts?.forEach(({ address, title, originalIndex }) => {
+      if (!title.trim()) {
+        uncategorized.push({ address, title, originalIndex });
+        return;
+      }
+
       const match =
         title.match(/\[(.*?)\](?:\[(.*?)\])?\s*(.*)$/) ||
         title.match(/^([^[]+)$/);
@@ -70,7 +75,6 @@ export const UsersPaginated = () => {
       style={{
         display: "flex",
         flexDirection: "column",
-        //width: "350px",
         padding: "7px",
         borderRadius: "7px",
         margin: "5px",
@@ -81,7 +85,7 @@ export const UsersPaginated = () => {
           const userTitles: Contract[] = userContracts[user].map(
             (contractAddr: string, index: number) => ({
               address: contractAddr,
-              title: contractsTitles[contractAddr],
+              title: contractsTitles[contractAddr] || "",
               originalIndex: index,
             })
           );
@@ -159,7 +163,6 @@ export const UsersPaginated = () => {
                             </div>
                           )
                         )}
-                        {/* Category divider */}
                         {index < arr.length - 1 && <hr className="my-2" />}
                       </div>
                     )
@@ -178,7 +181,9 @@ export const UsersPaginated = () => {
                                   navigate(`/${user}/${originalIndex}`)
                                 }
                               >
-                                {title}
+                                {title.trim()
+                                  ? title
+                                  : shortenAddress(address, 12, 9)}
                               </span>
                               <span
                                 style={{ cursor: "pointer" }}

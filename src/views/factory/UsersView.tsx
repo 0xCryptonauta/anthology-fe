@@ -22,7 +22,7 @@ export const UsersView = () => {
   const { usersCP } = useAppSelector((state) => state.factory);
 
   useEffect(() => {
-    console.log("useEffect FactoryView.");
+    //console.log("useEffect FactoryView.");
     const setupFactory = async () => {
       let CP = 0;
 

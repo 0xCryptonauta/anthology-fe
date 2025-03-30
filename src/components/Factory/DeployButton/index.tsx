@@ -1,5 +1,5 @@
 import { useAppSelector } from "@store/utils/hooks";
-
+import { useToast } from "@components/Layout/Toast";
 import { callDeployAnthology } from "@contract-functions/FactoryFunctions";
 import "./index.css";
 
@@ -8,6 +8,7 @@ export const DeployButton = () => {
   const { whitelistEnabled, whitelistedUsers } = useAppSelector(
     (state) => state.factory
   );
+  const { addToast } = useToast();
 
   return (
     !whitelistEnabled ||
@@ -17,6 +18,14 @@ export const DeployButton = () => {
         onClick={async () => {
           const txHash = await callDeployAnthology();
           console.log("txHash: ", txHash);
+          if (txHash) {
+            addToast({
+              title: "New Anthology was created",
+              content: "TxHash: " + txHash,
+              variant: "success",
+              delay: 5000,
+            });
+          }
         }}
       >
         <svg

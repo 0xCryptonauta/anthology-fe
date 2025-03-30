@@ -78,13 +78,11 @@ export const AnthologyView = () => {
   );
   const [currentOrder, setCurrentOrder] = useState<OrderType>("Newer");
 
-  console.log("Changing from AnthologyView to:", currentOrder);
-
   useEffect(() => {
-    console.log("useEffect AnthologyView");
+    //console.log("useEffect AnthologyView");
 
     const setupAnthology = async () => {
-      console.log("useEffect callAnthology");
+      //console.log("useEffect callAnthology");
 
       //const anthologyInfo = await fetchAnthologyInfo(contractAddr);
 
