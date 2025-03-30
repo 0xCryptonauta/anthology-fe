@@ -33,6 +33,16 @@ import {
   OrderType,
 } from "@components/Anthology/Memoirs/OrderSelector";
 
+const formatTitle = (title?: string): string => {
+  if (!title) return ""; // Handle undefined case
+
+  const match = title.match(/\[(.*?)\](?:\[(.*?)\])?\s*(.*)/);
+  if (!match) return title; // Return original title if no match
+
+  const [, category, subcategory, item] = match;
+  return [category, subcategory, item].filter(Boolean).join(" > ");
+};
+
 export const AnthologyView = () => {
   const dispatch = useAppDispatch();
   const { userContracts } = useAppSelector((state) => state.factory);
@@ -221,7 +231,7 @@ export const AnthologyView = () => {
       }}
     >
       <h3>
-        <AddMemoir contractAddr={contractAddr} /> {contractTitle}
+        <AddMemoir contractAddr={contractAddr} /> {formatTitle(contractTitle)}
       </h3>
 
       <div style={{ display: "flex" }}>
