@@ -58,6 +58,15 @@ export default defineConfig({
         scope: "/",
         start_url: "/",
         orientation: "portrait",
+        share_target: {
+          action: "/share",
+          method: "GET",
+          params: {
+            title: "title",
+            text: "text",
+            url: "url",
+          },
+        },
       },
     }),
   ],
