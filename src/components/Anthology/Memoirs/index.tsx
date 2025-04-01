@@ -535,6 +535,8 @@ const orderMemoirs = ({
         return memoirs.sort(
           (a, b) => Number(a.timestamp) - Number(b.timestamp)
         );
+      case "Random":
+        return [...memoirs].sort(() => Math.random() - 0.5);
       case "A -> Z":
         return memoirs.sort((a, b) => a.title.localeCompare(b.title));
       case "Z -> A":

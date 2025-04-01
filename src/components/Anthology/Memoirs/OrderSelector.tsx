@@ -1,6 +1,6 @@
 import React from "react";
 
-export type OrderType = "Newer" | "Older" | "A -> Z" | "Z -> A";
+export type OrderType = "Newer" | "Older" | "Random" | "A -> Z" | "Z -> A";
 
 // Define the component props interface
 interface SelectorProps {
@@ -8,7 +8,7 @@ interface SelectorProps {
   onChange: (value: OrderType) => void;
 }
 
-const skinOptions = ["Newer", "Older", "A -> Z", "Z -> A"];
+const skinOptions = ["Newer", "Older", "Random", "A -> Z", "Z -> A"];
 
 // Define the component
 export const OrderSelector = ({ value, onChange }: SelectorProps) => {
