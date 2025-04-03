@@ -15,7 +15,7 @@ import { StrictMode } from "react";
 import { AnthologyView } from "@views/anthology/AnthologyView.tsx";
 import { PersistGate } from "redux-persist/integration/react";
 import { ToastProvider } from "@components/Layout/Toast.tsx";
-import { SharePage } from "@components/Layout/SharePage";
+import { AnthologyShareView } from "./views/anthology/AnthologyShareView";
 
 const router = createBrowserRouter([
   {
@@ -53,7 +53,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/share",
-        element: <SharePage />,
+        element: <AnthologyShareView />,
       },
       {
         path: "not-found",

@@ -1,8 +1,23 @@
+import { useAppSelector } from "@src/store/utils/hooks";
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import ContractSelector from "./ContractSelector";
+
+/* 
+  users: string[]; // Array of user addresses
+  userContracts: { [key: string]: string[] }; // Mapping of user addresses to arrays of contract addresses
+  contractsTitles: { [key: string]: string }; // Mapping of contract addresses to contract details (e.g., title)
+*/
 
 export const SharePage = () => {
+  const { users, userContracts, contractsTitles } = useAppSelector(
+    (state) => state.factory
+  );
   const [searchParams] = useSearchParams();
+
+  console.log("Users:", users);
+  console.log("userContracts:", userContracts);
+  console.log("contractsTitles:", contractsTitles);
 
   useEffect(() => {
     const title = searchParams.get("title");
@@ -16,13 +31,25 @@ export const SharePage = () => {
     // You can now use this data in your UI
   }, [searchParams]);
 
-  const title = searchParams.get("title");
+  /*   const title = searchParams.get("title");
   const text = searchParams.get("text");
-  const url = searchParams.get("url");
+  const url = searchParams.get("url"); */
 
   return (
-    <div>
-      <h1>Shared Content</h1>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "space-around",
+        border: "1px solid white",
+        width: "fit-content",
+        padding: "7px",
+        borderRadius: "7px",
+        margin: "5px",
+      }}
+    >
+      {/*       <h1>Shared Content</h1>
       <p>Title: {title || "No title provided"}</p>
       <p>Text: {text || "No text provided"}</p>
       <p>
@@ -34,7 +61,12 @@ export const SharePage = () => {
         ) : (
           "No URL provided"
         )}
-      </p>
+      </p> */}
+      <ContractSelector
+        users={users}
+        userContracts={userContracts}
+        contractsTitles={contractsTitles}
+      />
     </div>
   );
 };
