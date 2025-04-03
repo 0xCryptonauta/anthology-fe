@@ -5,9 +5,17 @@ import "./style.css";
 import { useToast } from "@components/Layout/Toast";
 import { useAppSelector } from "@store/utils/hooks";
 
-export const AddMemoir = ({ contractAddr }: { contractAddr: string }) => {
-  const [anthologyTitle, setAnthologyTitle] = useState("");
-  const [anthologyContent, setAnthologyContent] = useState("");
+export const AddMemoir = ({
+  contractAddr,
+  title = "",
+  content = "",
+}: {
+  contractAddr: string;
+  title?: string;
+  content?: string;
+}) => {
+  const [anthologyTitle, setAnthologyTitle] = useState(title);
+  const [anthologyContent, setAnthologyContent] = useState(content);
 
   const [show, setShow] = useState(false);
 

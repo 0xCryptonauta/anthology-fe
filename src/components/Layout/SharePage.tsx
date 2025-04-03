@@ -1,7 +1,8 @@
 import { useAppSelector } from "@src/store/utils/hooks";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import ContractSelector from "./ContractSelector";
+import { AddMemoir } from "../Anthology/AddMemoir";
 
 /* 
   users: string[]; // Array of user addresses
@@ -14,6 +15,8 @@ export const SharePage = () => {
     (state) => state.factory
   );
   const [searchParams] = useSearchParams();
+
+  const [selectedContract, setSelectedContract] = useState("");
 
   console.log("Users:", users);
   console.log("userContracts:", userContracts);
@@ -34,7 +37,7 @@ export const SharePage = () => {
   /*   const title = searchParams.get("title");
   const text = searchParams.get("text");
   const url = searchParams.get("url"); */
-
+  console.log("selected:", selectedContract);
   return (
     <div
       style={{
@@ -66,7 +69,9 @@ export const SharePage = () => {
         users={users}
         userContracts={userContracts}
         contractsTitles={contractsTitles}
+        setSelectedContract={setSelectedContract}
       />
+      {selectedContract && <AddMemoir contractAddr={selectedContract} />}
     </div>
   );
 };

@@ -18,12 +18,14 @@ interface Props {
   users: string[];
   userContracts: Record<string, string[]>;
   contractsTitles: Record<string, string>;
+  setSelectedContract: (addr: string) => void;
 }
 
 const ContractSelector: React.FC<Props> = ({
   users,
   userContracts,
   contractsTitles,
+  setSelectedContract,
 }) => {
   const [selectedUser, setSelectedUser] = useState<string>(users[0] || "");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -118,11 +120,13 @@ const ContractSelector: React.FC<Props> = ({
     setSelectedCategory(e.target.value);
     setSelectedSubcategory("");
     setSelectedAddress("");
+    setSelectedContract("");
   };
 
   const handleSubcategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedSubcategory(e.target.value);
     setSelectedAddress("");
+    setSelectedContract("");
   };
 
   return (
@@ -145,6 +149,7 @@ const ContractSelector: React.FC<Props> = ({
           setSelectedCategory("");
           setSelectedSubcategory("");
           setSelectedAddress("");
+          setSelectedContract("");
         }}
       >
         {users.map((user) => (
@@ -160,7 +165,7 @@ const ContractSelector: React.FC<Props> = ({
         onChange={handleCategoryChange}
         style={{ minHeight: "30px" }}
       >
-        <option value="">Select Category</option>
+        <option value="">No Category</option>
         {categoryOptions.map((category) => (
           <option key={category} value={category}>
             {category}
@@ -191,35 +196,58 @@ const ContractSelector: React.FC<Props> = ({
         )}
       </div>
 
-      <h3>Titles</h3>
-      <ul
+      <div
         style={{
-          minHeight: "100px",
-          //border: "1px solid #ccc",
-          padding: "10px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
-        {filteredContracts.map((contract) => (
-          <li
-            key={contract.address}
-            onClick={() => setSelectedAddress(contract.address)}
-            style={{
-              cursor: "pointer",
-              color: selectedAddress === contract.address ? "gray" : "white",
-            }}
-          >
-            {contract.title}
-          </li>
-        ))}
-      </ul>
+        <h3>Memoirs</h3>
+        <ul
+          style={{
+            minHeight: "100px",
+            //border: "1px solid #ccc",
+            padding: "0px 10px 10px 10px",
+          }}
+        >
+          {filteredContracts.map((contract) => (
+            <li
+              key={contract.address}
+              onClick={() => {
+                setSelectedAddress(contract.address);
+                setSelectedContract(contract.address);
+              }}
+              style={{
+                cursor: "pointer",
+                color: selectedAddress === contract.address ? "gray" : "white",
+              }}
+            >
+              {contract.title}
+            </li>
+          ))}
+        </ul>
+      </div>
 
-      <label>Anthology Address: </label>
-      <input
-        type="text"
-        value={selectedAddress}
-        readOnly
-        style={{ width: "100%" }}
-      />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <label>Anthology Address: </label>
+        <input
+          type="text"
+          value={
+            selectedAddress
+              ? shortenAddress(selectedAddress, 10, 10)
+              : selectedAddress
+          }
+          readOnly
+          style={{ width: "100%", justifyItems: "center" }}
+        />
+      </div>
     </div>
   );
 };
