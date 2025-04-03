@@ -34,9 +34,8 @@ export const SharePage = () => {
     // You can now use this data in your UI
   }, [searchParams]);
 
-  /*   const title = searchParams.get("title");
-  const text = searchParams.get("text");
-  const url = searchParams.get("url"); */
+  const title = searchParams.get("title") || undefined;
+  const text = searchParams.get("text") || undefined;
   console.log("selected:", selectedContract);
   return (
     <div
@@ -71,7 +70,13 @@ export const SharePage = () => {
         contractsTitles={contractsTitles}
         setSelectedContract={setSelectedContract}
       />
-      {selectedContract && <AddMemoir contractAddr={selectedContract} />}
+      {selectedContract && (
+        <AddMemoir
+          contractAddr={selectedContract}
+          title={title}
+          content={text}
+        />
+      )}
     </div>
   );
 };
