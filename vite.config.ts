@@ -10,8 +10,7 @@ export default defineConfig({
     react(),
     /* viteSingleFile(), */
     VitePWA({
-      //registerType: "autoUpdate",
-
+      registerType: "autoUpdate", // or prompt
       devOptions: {
         enabled: false,
       },

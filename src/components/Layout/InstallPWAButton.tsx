@@ -53,18 +53,33 @@ const InstallPWAButton: React.FC = () => {
   if (isInstalled || !deferredPrompt) return null;
 
   return (
-    <span
-      role="button"
-      tabIndex={0}
-      onClick={handleInstallClick}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") handleInstallClick();
+    <div
+      style={{
+        width: "fit-content",
+        height: "fit-content",
+        padding: "10px",
+        borderRadius: "10px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
       }}
-      className="text-2xl cursor-pointer select-none hover:opacity-80 transition"
-      style={{ fontSize: "25px" }}
     >
-      📲
-    </span>
+      <span>Install App: </span>
+      <span
+        role="button"
+        tabIndex={0}
+        onClick={handleInstallClick}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") handleInstallClick();
+        }}
+        className="text-2xl cursor-pointer select-none hover:opacity-80 transition"
+        style={{ fontSize: "25px" }}
+      >
+        📲
+      </span>
+
+      <InstallPWAButton />
+    </div>
   );
 };
 

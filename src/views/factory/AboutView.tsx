@@ -80,21 +80,8 @@ export const AboutView = () => {
           CLEAN STORE
         </button>
       </div>
-      <div
-        style={{
-          border: "1px solid white",
-          width: "fit-content",
-          height: "fit-content",
-          padding: "10px",
-          borderRadius: "10px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <span>If you see the emoji, you can install PWA: </span>
-        <InstallPWAButton />
-      </div>
+
+      <InstallPWAButton />
     </div>
   );
 };
