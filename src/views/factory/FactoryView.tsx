@@ -1,6 +1,5 @@
 import { UsersPaginated } from "@src/components/Factory/UsersPaginated";
-import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
-import { syncUsersContractsToStore } from "@src/store/utils/thunks";
+import { useAppSelector } from "@src/store/utils/hooks";
 
 //import { GetUserContracts } from "./GetUserContracts";
 import { ActiveView } from "@src/types/common";
@@ -11,8 +10,6 @@ interface FactoryViewProps {
 
 export const FactoryView: React.FC<FactoryViewProps> = ({ setActiveView }) => {
   const { users } = useAppSelector((state) => state.factory);
-
-  const dispatch = useAppDispatch();
 
   return (
     <div
@@ -28,15 +25,6 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setActiveView }) => {
       }}
     >
       {/* <GetUserContracts /> */}
-      {users && (
-        <span
-          style={{ cursor: "pointer" }}
-          onClick={() => dispatch(syncUsersContractsToStore(users))}
-        >
-          {" "}
-          🔄
-        </span>
-      )}
       {users ? (
         <UsersPaginated setActiveView={setActiveView} />
       ) : (

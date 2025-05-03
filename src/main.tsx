@@ -23,7 +23,7 @@ const router = createBrowserRouter([
       { index: true, element: <IndexView /> },
       { path: "info", element: <FactoryStateView /> },
       { path: "about", element: <AboutView /> },
-      { path: "/share", element: <AnthologyShareView /> },
+      { path: "share", element: <AnthologyShareView /> },
     ],
   },
   { path: "*", element: <NotFound /> },
