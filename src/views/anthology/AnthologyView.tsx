@@ -1,6 +1,6 @@
 import { useAppDispatch } from "@store/utils/hooks";
 import { useAppSelector } from "@store/utils/hooks";
-import { useParams } from "react-router-dom";
+//import { useParams } from "react-router-dom";
 
 import { useEffect, useState } from "react";
 import {
@@ -32,6 +32,7 @@ import {
   OrderSelector,
   OrderType,
 } from "@components/Anthology/Memoirs/OrderSelector";
+import { ActiveView } from "@src/types/common";
 
 const formatTitle = (title?: string): string => {
   if (!title) return ""; // Handle undefined case
@@ -43,23 +44,33 @@ const formatTitle = (title?: string): string => {
   return [category, subcategory, item].filter(Boolean).join(" > ");
 };
 
-export const AnthologyView = () => {
+interface AnthologyViewProps {
+  activeView: ActiveView;
+  setActiveView: (newActiveView: ActiveView) => void;
+}
+
+export const AnthologyView: React.FC<AnthologyViewProps> = ({
+  activeView,
+  setActiveView,
+}) => {
   const dispatch = useAppDispatch();
-  const { userContracts } = useAppSelector((state) => state.factory);
+  //const { userContracts } = useAppSelector((state) => state.factory);
 
-  const { ethAddr, id } = useParams();
+  //const { ethAddr, } = useParams();
 
-  let contractAddr = "";
+  //let contractAddr = "";
+  const contractAddr = activeView.split("/")[1];
 
-  if (JSON.stringify(userContracts) != "{}") {
+  /*   if (JSON.stringify(userContracts) != "{}") {
     try {
       contractAddr = userContracts[ethAddr as string][Number(id)];
     } catch (error) {
       console.error("Error getting userContracts:", error);
     }
-  }
+  } */
 
   const { userAddr } = useAppSelector((state) => state.user);
+
   const anthology = useAppSelector((state) =>
     contractAddr ? state.anthology[contractAddr] : undefined
   );
@@ -90,7 +101,7 @@ export const AnthologyView = () => {
       let whitelistCP;
       let memoirBufferCP;
 
-      if (ethAddr && contractAddr) {
+      if (contractAddr) {
         if (anthology) {
           memoirsCP = await readAnthology(contractAddr, "memoirsCP");
 
@@ -303,7 +314,7 @@ export const AnthologyView = () => {
               </>
             ) : (
               <>
-                <AnthologyState />
+                <AnthologyState contractAddr={contractAddr} />
                 {anthology?.anthologyState.whitelistEnabled && (
                   <AnthologyWhitelistedUsers contractAddr={contractAddr} />
                 )}
@@ -318,6 +329,7 @@ export const AnthologyView = () => {
             contractAddr={contractAddr}
             skin={currentSkin}
             order={currentOrder}
+            setActiveView={setActiveView}
           />
         </>
       )}

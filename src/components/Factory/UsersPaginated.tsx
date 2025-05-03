@@ -1,8 +1,7 @@
-import { useNavigate } from "react-router-dom";
-import { copyToClipboard } from "@utils/copyToClipboard";
+//import { useNavigate } from "react-router-dom";
 import { shortenAddress } from "@utils/shortenAddress";
 import { useAppSelector } from "@store/utils/hooks";
-
+import { ActiveView } from "@src/types/common";
 interface Contract {
   address: string;
   title: string;
@@ -16,8 +15,15 @@ interface Categories {
   };
 }
 
-export const UsersPaginated = () => {
-  const navigate = useNavigate();
+interface UsersPaginantedProps {
+  setActiveView: (newActiveView: ActiveView) => void;
+}
+
+export const UsersPaginated: React.FC<UsersPaginantedProps> = ({
+  setActiveView,
+}) => {
+  //const navigate = useNavigate();
+
   const { users, userContracts, contractsTitles } = useAppSelector(
     (state) => state.factory
   );
@@ -70,6 +76,17 @@ export const UsersPaginated = () => {
     return { categories, uncategorized };
   };
 
+  const handleOnClick = (newActiveView: ActiveView) => {
+    setActiveView(newActiveView); // Update local state
+
+    // Push new history entry without changing URL
+    window.history.pushState(
+      { activeView: newActiveView }, // Store component name in history.state
+      "", // Unused title
+      window.location.pathname // Keep URL as `/`
+    );
+  };
+
   return (
     <div
       style={{
@@ -82,7 +99,7 @@ export const UsersPaginated = () => {
     >
       <div style={{ margin: "5px" }}>
         {users?.map((user, userIndex) => {
-          const userTitles: Contract[] = userContracts[user].map(
+          const userTitles: Contract[] = userContracts[user]?.map(
             (contractAddr: string, index: number) => ({
               address: contractAddr,
               title: contractsTitles[contractAddr] || "",
@@ -97,7 +114,9 @@ export const UsersPaginated = () => {
               <div>
                 <span
                   style={{ fontSize: "20px", cursor: "pointer" }}
-                  onClick={() => navigate("/" + user)}
+                  onClick={() => {
+                    handleOnClick(`user/${user}`);
+                  }}
                 >
                   👤 {shortenAddress(user, 12, 9)}
                 </span>
@@ -109,21 +128,13 @@ export const UsersPaginated = () => {
                         <ul className="ml-4">
                           {items.map(({ address, title, originalIndex }) => (
                             <li key={address}>
-                              💾{" "}
                               <span
                                 style={{ cursor: "pointer" }}
-                                onClick={() =>
-                                  navigate(`/${user}/${originalIndex}`)
-                                }
+                                onClick={() => {
+                                  handleOnClick(`contract/${address}`);
+                                }}
                               >
                                 {title}
-                              </span>
-                              <span
-                                style={{ cursor: "pointer" }}
-                                onClick={() => copyToClipboard(address)}
-                              >
-                                {" "}
-                                🔗
                               </span>
                             </li>
                           ))}
@@ -140,21 +151,13 @@ export const UsersPaginated = () => {
                                 {subItems.map(
                                   ({ address, title, originalIndex }) => (
                                     <li key={address}>
-                                      💾{" "}
                                       <span
                                         style={{ cursor: "pointer" }}
-                                        onClick={() =>
-                                          navigate(`/${user}/${originalIndex}`)
-                                        }
+                                        onClick={() => {
+                                          handleOnClick(`contract/${address}`);
+                                        }}
                                       >
                                         {title}
-                                      </span>
-                                      <span
-                                        style={{ cursor: "pointer" }}
-                                        onClick={() => copyToClipboard(address)}
-                                      >
-                                        {" "}
-                                        🔗
                                       </span>
                                     </li>
                                   )
@@ -174,23 +177,15 @@ export const UsersPaginated = () => {
                         {uncategorized.map(
                           ({ address, title, originalIndex }) => (
                             <li key={address}>
-                              💾{" "}
                               <span
                                 style={{ cursor: "pointer" }}
-                                onClick={() =>
-                                  navigate(`/${user}/${originalIndex}`)
-                                }
+                                onClick={() => {
+                                  handleOnClick(`contract/${address}`);
+                                }}
                               >
                                 {title.trim()
                                   ? title
                                   : shortenAddress(address, 12, 9)}
-                              </span>
-                              <span
-                                style={{ cursor: "pointer" }}
-                                onClick={() => copyToClipboard(address)}
-                              >
-                                {" "}
-                                🔗
                               </span>
                             </li>
                           )

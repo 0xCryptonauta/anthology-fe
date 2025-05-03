@@ -31,7 +31,7 @@ type readFactoryFunctions =
   | "getUserContracts"
   | "getContractTitle"
   | "isDeployedContract"
-  //| "getUserContractsWithTitles"
+  | "getUserContractsWithTitles"
   | "getUsersContractsWithTitles";
 
 type writeFactoryFunctions = "cleanWhitelist" | "cleanUsers";

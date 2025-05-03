@@ -2,15 +2,25 @@ import { Card } from "react-bootstrap";
 
 import { useAppSelector } from "@store/utils/hooks";
 
-import { useParams } from "react-router-dom";
+//import { useParams } from "react-router-dom";
 import "./style.css";
 
-export const AnthologyState = () => {
-  const { userContracts } = useAppSelector((state) => state.factory);
+interface AnthologyStateProps {
+  contractAddr: string;
+}
 
-  const { ethAddr, id } = useParams();
+export const AnthologyState: React.FC<AnthologyStateProps> = ({
+  contractAddr,
+}) => {
+  //const { userContracts } = useAppSelector((state) => state.factory);
 
-  let contractAddr = "";
+  //const { ethAddr, id } = useParams();
+
+  /* const anthology = useAppSelector((state) =>
+    contractAddr ? state.anthology[contractAddr] : undefined
+  ); */
+
+  /*   let contractAddr = "";
 
   if (JSON.stringify(userContracts) != "{}") {
     try {
@@ -18,17 +28,19 @@ export const AnthologyState = () => {
     } catch (error) {
       console.error("Error getting userContracts:", error);
     }
-  }
+  } */
 
   const anthologyState = useAppSelector((state) => {
     try {
       if (state.anthology[contractAddr])
         return state.anthology[contractAddr].anthologyState;
     } catch (error) {
-      console.log("e", error);
+      console.error("error in anthologyState", error);
       return null;
     }
   });
+
+  console.log("ANTHO STATE:", anthologyState);
 
   return (
     <div

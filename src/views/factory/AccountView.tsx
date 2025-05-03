@@ -1,7 +1,10 @@
-import { DeployButton } from "@components/Factory/DeployButton";
 import { UserContracts } from "@components/Factory/UserContracts";
+import { ActiveView } from "@src/types/common";
+interface AccountViewProps {
+  setActiveView: (newActiveView: ActiveView) => void;
+}
 
-export const AccountView = () => {
+export const AccountView: React.FC<AccountViewProps> = ({ setActiveView }) => {
   return (
     <div
       className="bg-dark"
@@ -11,13 +14,12 @@ export const AccountView = () => {
         color: "white",
         display: "flex",
         flexDirection: "row",
-        alignItems: "center",
+        alignItems: "flex-start",
         justifyContent: "space-around",
         flexWrap: "wrap",
       }}
     >
-      <UserContracts />
-      <DeployButton />
+      <UserContracts setActiveView={setActiveView} />
     </div>
   );
 };
