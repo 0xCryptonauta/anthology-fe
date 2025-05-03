@@ -5,7 +5,6 @@ import { AppDispatch } from "@store/redux";
 import { writeAnthology } from "@contract-functions/AnthologyFunctions";
 import { removeOneFromMemoirs } from "@store/slices/anthologySlice";
 import { formatUnixTime } from "@utils/formatUnixTime";
-import { NavigateFunction, useNavigate } from "react-router-dom";
 import { SkinType } from "@store/slices/anthologySlice";
 import { MemoirInterface } from "@store/slices/anthologySlice";
 import { OrderType } from "./OrderSelector";
@@ -16,6 +15,7 @@ import { LazyYT } from "./LazyYT";
 import RedditEmbed from "./RedditEmbed";
 import FacebookEmbed from "./facebookEmbed";
 import InstagramEmbed from "./InstagramEmbed";
+import { ActiveView } from "@src/types/common";
 
 const youtubeRegex =
   /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?(?:.*?v=)?|embed\/|shorts\/)|youtu\.be\/)(.{11})$/i;
@@ -86,22 +86,24 @@ const handleDelete = async ({
   }
 };
 
-const RenderMediaMemoirs = ({
-  contractAddr,
-  anthologyOwner,
-  memoirs,
-  orderMap,
-  currentUser,
-  dispatch,
-  navigate,
-}: {
+interface RenderMediaMemoirsProps {
   contractAddr: string;
   currentUser: string;
   anthologyOwner: string;
   memoirs: MemoirInterface[];
   orderMap: number[];
   dispatch: AppDispatch;
-  navigate: NavigateFunction;
+  setActiveView: (newActiveView: ActiveView) => void;
+}
+
+const RenderMediaMemoirs: React.FC<RenderMediaMemoirsProps> = ({
+  contractAddr,
+  anthologyOwner,
+  memoirs,
+  orderMap,
+  currentUser,
+  dispatch,
+  setActiveView,
 }) => {
   const { addToast } = useToast();
 
@@ -217,7 +219,7 @@ const RenderMediaMemoirs = ({
               >
                 <span
                   style={{ fontSize: "12px", cursor: "pointer" }}
-                  onClick={() => navigate(`/${memoir.sender}`)}
+                  onClick={() => setActiveView(`user/${memoir.sender}`)}
                 >
                   {shortenAddress(memoir.sender, 10, 8)}
                 </span>
@@ -275,20 +277,22 @@ const RenderJsonMemoirs = ({ memoirs }: { memoirs: MemoirInterface[] }) => {
   );
 };
 
-const RenderTextMemoirs = ({
-  contractAddr,
-  anthologyOwner,
-  memoirs,
-  currentUser,
-  dispatch,
-  navigate,
-}: {
+interface RenderTextMemoirsProps {
   contractAddr: string;
   currentUser: string;
   anthologyOwner: string;
   memoirs: MemoirInterface[];
   dispatch: AppDispatch;
-  navigate: NavigateFunction;
+  setActiveView: (newActiveView: ActiveView) => void;
+}
+
+const RenderTextMemoirs: React.FC<RenderTextMemoirsProps> = ({
+  contractAddr,
+  anthologyOwner,
+  memoirs,
+  currentUser,
+  dispatch,
+  setActiveView,
 }) => {
   const { addToast } = useToast();
 
@@ -357,7 +361,7 @@ const RenderTextMemoirs = ({
             <div>
               <span
                 style={{ fontSize: "12px", cursor: "pointer" }}
-                onClick={() => navigate("/" + memoir.sender)}
+                onClick={() => setActiveView(`user/${memoir.sender}`)}
               >
                 {shortenAddress(memoir.sender, 10, 8)}
               </span>
@@ -445,16 +449,7 @@ const RenderPlaylistMemoirs = ({ memoirs }: { memoirs: MemoirInterface[] }) => {
   );
 };
 
-const RenderMemoirs = ({
-  anthologySkin,
-  order,
-  anthologyOwner,
-  memoirs,
-  contractAddr,
-  currentUser,
-  dispatch,
-  navigate,
-}: {
+interface RenderMemoirsProps {
   anthologySkin: SkinType;
   order: OrderType;
   anthologyOwner: string;
@@ -462,7 +457,18 @@ const RenderMemoirs = ({
   contractAddr: string;
   currentUser: string;
   dispatch: AppDispatch;
-  navigate: NavigateFunction;
+  setActiveView: (newActiveView: ActiveView) => void;
+}
+
+const RenderMemoirs: React.FC<RenderMemoirsProps> = ({
+  anthologySkin,
+  order,
+  anthologyOwner,
+  memoirs,
+  contractAddr,
+  currentUser,
+  dispatch,
+  setActiveView,
 }) => {
   const orderedMemoirs = orderMemoirs({
     memoirs,
@@ -481,7 +487,7 @@ const RenderMemoirs = ({
           currentUser,
           orderMap: orderedMemoirs.map((_, i) => i), //Not working -> iframe refetching
           dispatch,
-          navigate,
+          setActiveView,
         });
       case "text":
         return RenderTextMemoirs({
@@ -490,7 +496,7 @@ const RenderMemoirs = ({
           memoirs: orderedMemoirs,
           currentUser,
           dispatch,
-          navigate,
+          setActiveView,
         });
       case "list":
         return RenderListMemoirs({
@@ -508,7 +514,7 @@ const RenderMemoirs = ({
           memoirs: orderedMemoirs,
           currentUser,
           dispatch,
-          navigate,
+          setActiveView,
         });
       //throw new Error(`Unsupported skin type: ${memoirSkin}`);
     }
@@ -551,20 +557,24 @@ const orderMemoirs = ({
   }
 };
 
-export const Memoirs = ({
-  contractAddr,
-  skin,
-  order,
-}: {
+interface MemoirsProps {
   contractAddr: string;
   skin: SkinType;
   order: OrderType;
+  setActiveView: (newActiveView: ActiveView) => void;
+}
+
+export const Memoirs: React.FC<MemoirsProps> = ({
+  contractAddr,
+  skin,
+  order,
+  setActiveView,
 }) => {
   const anthology = useAppSelector((state) =>
     contractAddr ? state.anthology[contractAddr] : undefined
   );
   const { userAddr } = useAppSelector((state) => state.user);
-  const navigate = useNavigate();
+
   const dispatch = useAppDispatch();
 
   return (
@@ -591,7 +601,7 @@ export const Memoirs = ({
           memoirs: anthology.memoirs,
           currentUser: userAddr,
           dispatch,
-          navigate,
+          setActiveView,
         })}
     </div>
   );

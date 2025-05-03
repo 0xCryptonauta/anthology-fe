@@ -14,7 +14,9 @@
       "@abi/*": ["src/abi/*"],
       "@components/*": ["src/components/*"],
       "@contract-functions/*": ["src/contract-functions/*"],
+      "@hooks/*": ["src/hooks/*"],
       "@store/*": ["src/store/*"],
+      "@types/*": ["src/types/*"],
       "@utils/*": ["src/utils/*"],
       "@views/*": ["src/views/*"]
     }
