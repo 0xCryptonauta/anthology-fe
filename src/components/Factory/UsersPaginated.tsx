@@ -1,7 +1,8 @@
 //import { useNavigate } from "react-router-dom";
 import { shortenAddress } from "@utils/shortenAddress";
-import { useAppSelector } from "@store/utils/hooks";
+import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
 import { ActiveView } from "@src/types/common";
+import { syncUserContractsToStore } from "@src/store/utils/thunks";
 interface Contract {
   address: string;
   title: string;
@@ -76,6 +77,8 @@ export const UsersPaginated: React.FC<UsersPaginantedProps> = ({
     return { categories, uncategorized };
   };
 
+  const dispatch = useAppDispatch();
+
   const handleOnClick = (newActiveView: ActiveView) => {
     setActiveView(newActiveView); // Update local state
 
@@ -112,13 +115,16 @@ export const UsersPaginated: React.FC<UsersPaginantedProps> = ({
           return (
             <div key={userIndex}>
               <div>
+                <span onClick={() => dispatch(syncUserContractsToStore(user))}>
+                  👤
+                </span>{" "}
                 <span
                   style={{ fontSize: "20px", cursor: "pointer" }}
                   onClick={() => {
                     handleOnClick(`user/${user}`);
                   }}
                 >
-                  👤 {shortenAddress(user, 12, 9)}
+                  {shortenAddress(user, 12, 9)}
                 </span>
                 <div style={{ marginTop: "30px" }}>
                   {Object.entries(categories).map(
@@ -126,7 +132,7 @@ export const UsersPaginated: React.FC<UsersPaginantedProps> = ({
                       <div key={category}>
                         <h3 className="text-lg font-semibold">{category}</h3>
                         <ul className="ml-4">
-                          {items.map(({ address, title, originalIndex }) => (
+                          {items.map(({ address, title }) => (
                             <li key={address}>
                               <span
                                 style={{ cursor: "pointer" }}
@@ -148,20 +154,18 @@ export const UsersPaginated: React.FC<UsersPaginantedProps> = ({
                             >
                               <h5 className="text-md font-medium">{sub}</h5>
                               <ul className="ml-12">
-                                {subItems.map(
-                                  ({ address, title, originalIndex }) => (
-                                    <li key={address}>
-                                      <span
-                                        style={{ cursor: "pointer" }}
-                                        onClick={() => {
-                                          handleOnClick(`contract/${address}`);
-                                        }}
-                                      >
-                                        {title}
-                                      </span>
-                                    </li>
-                                  )
-                                )}
+                                {subItems.map(({ address, title }) => (
+                                  <li key={address}>
+                                    <span
+                                      style={{ cursor: "pointer" }}
+                                      onClick={() => {
+                                        handleOnClick(`contract/${address}`);
+                                      }}
+                                    >
+                                      {title}
+                                    </span>
+                                  </li>
+                                ))}
                               </ul>
                             </div>
                           )
@@ -174,22 +178,20 @@ export const UsersPaginated: React.FC<UsersPaginantedProps> = ({
                     <div>
                       <h3 className="text-lg font-semibold">Other</h3>
                       <ul className="ml-4">
-                        {uncategorized.map(
-                          ({ address, title, originalIndex }) => (
-                            <li key={address}>
-                              <span
-                                style={{ cursor: "pointer" }}
-                                onClick={() => {
-                                  handleOnClick(`contract/${address}`);
-                                }}
-                              >
-                                {title.trim()
-                                  ? title
-                                  : shortenAddress(address, 12, 9)}
-                              </span>
-                            </li>
-                          )
-                        )}
+                        {uncategorized.map(({ address, title }) => (
+                          <li key={address}>
+                            <span
+                              style={{ cursor: "pointer" }}
+                              onClick={() => {
+                                handleOnClick(`contract/${address}`);
+                              }}
+                            >
+                              {title.trim()
+                                ? title
+                                : shortenAddress(address, 12, 9)}
+                            </span>
+                          </li>
+                        ))}
                       </ul>
                     </div>
                   )}

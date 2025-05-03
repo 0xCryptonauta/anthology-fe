@@ -81,11 +81,9 @@ export const AnthologyView: React.FC<AnthologyViewProps> = ({
   const [sudoMode, setSudoMode] = useState(false);
 
   const [currentSkin, setCurrentSkin] = useState<SkinType>(
-    anthology
-      ? anthology?.anthologyState?.skin === "\0default\0" //TODO: Fix this -> comes from contract encoding
-        ? "text"
-        : anthology?.anthologyState.skin
-      : "text"
+    anthology?.anthologyState?.skin === "\0default\0" //TODO: Fix this -> comes from contract encoding
+      ? "media"
+      : anthology?.anthologyState.skin ?? "media"
   );
   const [currentOrder, setCurrentOrder] = useState<OrderType>("Newer");
 

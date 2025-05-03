@@ -18,7 +18,7 @@ export const IndexView = () => {
 
   useEffect(() => {
     // Handle browser back/forward navigation
-    const handlePopState = (event) => {
+    const handlePopState = (event: PopStateEvent) => {
       if (event.state && event.state.activeView) {
         setActiveView(event.state.activeView); // Restore component from history.state
       } else {
