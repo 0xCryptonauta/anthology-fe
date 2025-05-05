@@ -4,6 +4,7 @@ import { clearAnthologyStore } from "@store/slices/anthologySlice";
 import { clearFactoryStore } from "@store/slices/factorySlice";
 import { useState } from "react";
 import { useToast } from "@components/Layout/Toast";
+import InstallPWAButton from "@src/components/Layout/InstallPWAButton";
 export const AboutView = () => {
   const dispatch = useAppDispatch();
 
@@ -79,14 +80,8 @@ export const AboutView = () => {
           CLEAN STORE
         </button>
       </div>
-      {/*       {showToast && (
-        <Toast
-          title="Redux Store Size"
-          content={reduxSize + " KB"}
-          variant="success"
-          onClose={() => console.log("Toast closed")}
-        />
-      )} */}
+
+      <InstallPWAButton />
     </div>
   );
 };

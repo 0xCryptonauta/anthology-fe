@@ -21,9 +21,12 @@ export const userSlice = createSlice({
     updateWalletId: (state, action: PayloadAction<string>) => {
       state.walletId = action.payload;
     },
+    resetUser: () => {
+      return initialState;
+    },
   },
 });
 
-export const { updateUserAddr, updateWalletId } = userSlice.actions;
+export const { updateUserAddr, updateWalletId, resetUser } = userSlice.actions;
 
 export default userSlice.reducer;

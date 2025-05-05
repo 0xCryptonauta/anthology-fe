@@ -1,13 +1,14 @@
 import { useAppSelector } from "@store/utils/hooks";
-
-import { callDeployAnthology } from "@contract-functions/FactoryFunctions";
+import { useToast } from "@components/Layout/Toast";
 import "./index.css";
+import { writeFactory } from "@src/contract-functions/FactoryFunctions";
 
 export const DeployButton = () => {
   const { userAddr } = useAppSelector((state) => state.user);
   const { whitelistEnabled, whitelistedUsers } = useAppSelector(
     (state) => state.factory
   );
+  const { addToast } = useToast();
 
   return (
     !whitelistEnabled ||
@@ -15,8 +16,16 @@ export const DeployButton = () => {
       <button
         className="btn-rocket"
         onClick={async () => {
-          const txHash = await callDeployAnthology();
+          const txHash = await writeFactory("deployAnthology"); // can add title here as argument
           console.log("txHash: ", txHash);
+          if (txHash) {
+            addToast({
+              title: "New Anthology was created",
+              content: "TxHash: " + txHash,
+              variant: "success",
+              delay: 5000,
+            });
+          }
         }}
       >
         <svg

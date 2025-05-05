@@ -3,13 +3,32 @@ import Offcanvas from "react-bootstrap/Offcanvas";
 import { Link } from "react-router-dom";
 
 import { useAppSelector } from "@store/utils/hooks";
+//import { updateActiveView } from "@src/store/slices/userSlice";
+import { ActiveView } from "@src/types/common";
+interface HeaderProps {
+  activeView: ActiveView;
+  setActiveView: (newActiveView: ActiveView) => void;
+}
 
-export const SidePanel = () => {
+export const SidePanel: React.FC<HeaderProps> = ({ setActiveView }) => {
   const { userAddr } = useAppSelector((state) => state.user);
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const handleOnClick = (newActiveView: ActiveView) => {
+    setActiveView(newActiveView); // Update local state
+
+    // Push new history entry without changing URL
+    window.history.pushState(
+      { activeView: newActiveView }, // Store component name in history.state
+      "", // Unused title
+      window.location.pathname // Keep URL as `/`
+    );
+
+    handleClose();
+  };
 
   return (
     <>
@@ -44,7 +63,9 @@ export const SidePanel = () => {
           <Link
             className="navbar-brand"
             to="/"
-            onClick={handleClose}
+            onClick={() => {
+              handleOnClick(`factory`);
+            }}
             style={{ display: "flex", alignItems: "center" }}
           >
             <img
@@ -76,11 +97,37 @@ export const SidePanel = () => {
             </div> */}
             {userAddr && (
               <div style={{ margin: "20px 0px" }}>
-                <Link to="/account" onClick={handleClose}>
+                <Link
+                  to="/"
+                  style={{ cursor: "pointer", margin: "10px 0px" }}
+                  onClick={() => {
+                    handleOnClick(`user/${userAddr}`);
+                  }}
+                >
                   My anthologies
+                </Link>
+                <br />
+                <Link
+                  to="/"
+                  style={{ cursor: "pointer", margin: "10px 0px" }}
+                  onClick={() => {
+                    handleOnClick(`deploy`);
+                  }}
+                >
+                  Deploy
                 </Link>
               </div>
             )}
+            <br />
+            <Link
+              to="/"
+              style={{ cursor: "pointer", margin: "10px 0px" }}
+              onClick={() => {
+                handleOnClick(`factory`);
+              }}
+            >
+              Factory
+            </Link>
           </div>
           <div
             style={{

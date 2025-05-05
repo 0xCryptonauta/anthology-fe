@@ -1,6 +1,6 @@
 import { useAppDispatch } from "@store/utils/hooks";
 import { useAppSelector } from "@store/utils/hooks";
-import { useParams } from "react-router-dom";
+//import { useParams } from "react-router-dom";
 
 import { useEffect, useState } from "react";
 import {
@@ -32,24 +32,45 @@ import {
   OrderSelector,
   OrderType,
 } from "@components/Anthology/Memoirs/OrderSelector";
+import { ActiveView } from "@src/types/common";
 
-export const AnthologyView = () => {
+const formatTitle = (title?: string): string => {
+  if (!title) return ""; // Handle undefined case
+
+  const match = title.match(/\[(.*?)\](?:\[(.*?)\])?\s*(.*)/);
+  if (!match) return title; // Return original title if no match
+
+  const [, category, subcategory, item] = match;
+  return [category, subcategory, item].filter(Boolean).join(" > ");
+};
+
+interface AnthologyViewProps {
+  activeView: ActiveView;
+  setActiveView: (newActiveView: ActiveView) => void;
+}
+
+export const AnthologyView: React.FC<AnthologyViewProps> = ({
+  activeView,
+  setActiveView,
+}) => {
   const dispatch = useAppDispatch();
-  const { userContracts } = useAppSelector((state) => state.factory);
+  //const { userContracts } = useAppSelector((state) => state.factory);
 
-  const { ethAddr, id } = useParams();
+  //const { ethAddr, } = useParams();
 
-  let contractAddr = "";
+  //let contractAddr = "";
+  const contractAddr = activeView.split("/")[1];
 
-  if (JSON.stringify(userContracts) != "{}") {
+  /*   if (JSON.stringify(userContracts) != "{}") {
     try {
       contractAddr = userContracts[ethAddr as string][Number(id)];
     } catch (error) {
       console.error("Error getting userContracts:", error);
     }
-  }
+  } */
 
   const { userAddr } = useAppSelector((state) => state.user);
+
   const anthology = useAppSelector((state) =>
     contractAddr ? state.anthology[contractAddr] : undefined
   );
@@ -60,21 +81,17 @@ export const AnthologyView = () => {
   const [sudoMode, setSudoMode] = useState(false);
 
   const [currentSkin, setCurrentSkin] = useState<SkinType>(
-    anthology
-      ? anthology?.anthologyState?.skin === "\0default\0" //TODO: Fix this -> comes from contract encoding
-        ? "text"
-        : anthology?.anthologyState.skin
-      : "text"
+    anthology?.anthologyState?.skin === "\0default\0" //TODO: Fix this -> comes from contract encoding
+      ? "media"
+      : anthology?.anthologyState.skin ?? "media"
   );
   const [currentOrder, setCurrentOrder] = useState<OrderType>("Newer");
 
-  console.log("Changing from AnthologyView to:", currentOrder);
-
   useEffect(() => {
-    console.log("useEffect AnthologyView");
+    //console.log("useEffect AnthologyView");
 
     const setupAnthology = async () => {
-      console.log("useEffect callAnthology");
+      //console.log("useEffect callAnthology");
 
       //const anthologyInfo = await fetchAnthologyInfo(contractAddr);
 
@@ -82,7 +99,7 @@ export const AnthologyView = () => {
       let whitelistCP;
       let memoirBufferCP;
 
-      if (ethAddr && contractAddr) {
+      if (contractAddr) {
         if (anthology) {
           memoirsCP = await readAnthology(contractAddr, "memoirsCP");
 
@@ -221,7 +238,7 @@ export const AnthologyView = () => {
       }}
     >
       <h3>
-        <AddMemoir contractAddr={contractAddr} /> {contractTitle}
+        <AddMemoir contractAddr={contractAddr} /> {formatTitle(contractTitle)}
       </h3>
 
       <div style={{ display: "flex" }}>
@@ -295,7 +312,7 @@ export const AnthologyView = () => {
               </>
             ) : (
               <>
-                <AnthologyState />
+                <AnthologyState contractAddr={contractAddr} />
                 {anthology?.anthologyState.whitelistEnabled && (
                   <AnthologyWhitelistedUsers contractAddr={contractAddr} />
                 )}
@@ -310,6 +327,7 @@ export const AnthologyView = () => {
             contractAddr={contractAddr}
             skin={currentSkin}
             order={currentOrder}
+            setActiveView={setActiveView}
           />
         </>
       )}

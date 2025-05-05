@@ -28,38 +28,22 @@ type readFactoryFunctions =
   | "getUserContracts"
   | "getWhitelistedUsers"
   | "isWhitelisted"
-  | "getUserContracts"
   | "getContractTitle"
   | "isDeployedContract"
-  //| "getUserContractsWithTitles"
+  | "getUserContractsWithTitles"
   | "getUsersContractsWithTitles";
 
-type writeFactoryFunctions = "cleanWhitelist" | "cleanUsers";
-
-export const callSetAnthologyPrice = async (_newValue: bigint) => {
-  const result = await writeContract(config, {
-    abi: AnthologyFactoryABI,
-    address: AnthologyFactoryAddress,
-    functionName: "setAnthologyPrice",
-    args: [_newValue],
-    chainId: chain.id,
-  });
-
-  return result;
-};
-
-export const callSetUseERC20 = async (_newValue: boolean) => {
-  console.log("res.erc20:", chain.id);
-  const result = await writeContract(config, {
-    abi: AnthologyFactoryABI,
-    address: AnthologyFactoryAddress,
-    functionName: "setUseERC20",
-    args: [_newValue],
-    chainId: chain.id,
-  });
-
-  return result;
-};
+type writeFactoryFunctions =
+  | "deployAnthology"
+  | "setAnthologyPrice"
+  | "setUseERC20"
+  | "cleanWhitelist"
+  | "cleanUsers"
+  | "setIsFrozen"
+  | "addToWhitelist"
+  | "removeFromWhitelist"
+  | "enableWhitelist"
+  | "setERC20Token";
 
 export const readFactory = async (
   _functionName: readFactoryFunctions,
@@ -101,104 +85,6 @@ export const writeFactory = async (
     console.log("Error writing:", _functionName);
     console.log("error:", error);
   }
-
-  return result;
-};
-
-export const readTitles = async (_args: unknown[]) => {
-  const result = await readContract(config, {
-    abi: AnthologyFactoryABI,
-    address: AnthologyFactoryAddress,
-    functionName: "getContractTitle",
-    chainId: chain.id,
-    args: _args,
-  });
-
-  return result as string[];
-};
-
-// Remove and use readFactory
-export const callGetUserContracts = async (_args: unknown[]) => {
-  const result = await readContract(config, {
-    abi: AnthologyFactoryABI,
-    address: AnthologyFactoryAddress,
-    functionName: "getUserContracts",
-    chainId: chain.id,
-    args: _args,
-  });
-
-  return result as string[];
-};
-
-export const callDeployAnthology = async () => {
-  const result = await writeContract(config, {
-    abi: AnthologyFactoryABI,
-    address: AnthologyFactoryAddress,
-    functionName: "deployAnthology",
-    args: [],
-    chainId: chain.id,
-  });
-
-  return result;
-};
-// ---------------------------- Owner only ---------------------------------
-
-export const callSetIsFrozen = async (_newValue: boolean) => {
-  const result = await writeContract(config, {
-    abi: AnthologyFactoryABI,
-    address: AnthologyFactoryAddress,
-    functionName: "setIsFrozen",
-    args: [_newValue],
-    chainId: chain.id,
-  });
-
-  return result;
-};
-
-export const callAddToWhitelist = async (_address: string) => {
-  const result = await writeContract(config, {
-    abi: AnthologyFactoryABI,
-    address: AnthologyFactoryAddress,
-    functionName: "addToWhitelist",
-    args: [_address],
-    chainId: chain.id,
-  });
-
-  return result;
-};
-
-export const callRemoveFromWhitelist = async (_address: string) => {
-  const result = await writeContract(config, {
-    abi: AnthologyFactoryABI,
-    address: AnthologyFactoryAddress,
-    functionName: "removeFromWhitelist",
-    args: [_address],
-    chainId: chain.id,
-  });
-
-  return result;
-};
-
-export const callEnableWhitelist = async (_newValue: boolean) => {
-  const result = await writeContract(config, {
-    abi: AnthologyFactoryABI,
-    address: AnthologyFactoryAddress,
-    functionName: "enableWhitelist",
-    args: [_newValue],
-    chainId: chain.id,
-  });
-
-  return result;
-};
-
-export const callSetERC20Token = async (_newTokenAddr: string) => {
-  const result = await writeContract(config, {
-    abi: AnthologyFactoryABI,
-    address: AnthologyFactoryAddress,
-    functionName: "setERC20Token",
-    args: [_newTokenAddr],
-    chainId: chain.id,
-  });
 
   return result;
 };

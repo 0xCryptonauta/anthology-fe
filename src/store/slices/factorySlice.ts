@@ -108,13 +108,17 @@ export const factorySlice = createSlice({
       state,
       action: PayloadAction<{ [key: string]: string[] }>
     ) => {
-      //state.userContracts = action.payload;
       state.userContracts = Object.keys(action.payload).reduce((acc, key) => {
+        const newContracts = action.payload[key];
+
         if (acc[key]) {
-          acc[key] = [...acc[key], ...action.payload[key]];
+          // Merge and deduplicate
+          acc[key] = [...new Set([...acc[key], ...newContracts])];
         } else {
-          acc[key] = action.payload[key];
+          // Deduplicate new array before assigning
+          acc[key] = [...new Set(newContracts)];
         }
+
         return acc;
       }, state.userContracts);
     },

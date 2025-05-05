@@ -1,74 +1,203 @@
-import { useNavigate } from "react-router-dom";
-import { copyToClipboard } from "@utils/copyToClipboard";
+//import { useNavigate } from "react-router-dom";
 import { shortenAddress } from "@utils/shortenAddress";
+import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
+import { ActiveView } from "@src/types/common";
+import { syncUserContractsToStore } from "@src/store/utils/thunks";
+interface Contract {
+  address: string;
+  title: string;
+  originalIndex: number;
+}
 
-import { useAppSelector } from "@store/utils/hooks";
+interface Categories {
+  [category: string]: {
+    items: Contract[];
+    subcategories: { [subcategory: string]: Contract[] };
+  };
+}
 
-export const UsersPaginated = () => {
-  const navigate = useNavigate();
+interface UsersPaginantedProps {
+  setActiveView: (newActiveView: ActiveView) => void;
+}
+
+export const UsersPaginated: React.FC<UsersPaginantedProps> = ({
+  setActiveView,
+}) => {
+  //const navigate = useNavigate();
+
   const { users, userContracts, contractsTitles } = useAppSelector(
     (state) => state.factory
   );
 
-  /*   const pageSize = 50;
-  const page = 1; */
+  const parseContracts = (
+    contracts: Contract[]
+  ): { categories: Categories; uncategorized: Contract[] } => {
+    const categories: Categories = {};
+    const uncategorized: Contract[] = [];
 
-  //- useSelector is rerendering beacuse its fetching data in the backgo
+    contracts?.forEach(({ address, title, originalIndex }) => {
+      if (!title.trim()) {
+        uncategorized.push({ address, title, originalIndex });
+        return;
+      }
+
+      const match =
+        title.match(/\[(.*?)\](?:\[(.*?)\])?\s*(.*)$/) ||
+        title.match(/^([^[]+)$/);
+
+      if (match) {
+        const [, category, subcategory, item] =
+          match.length === 4 ? match : [null, null, null, match[1]];
+
+        const contractData = {
+          address,
+          title: item?.trim() || title,
+          originalIndex,
+        };
+
+        if (category) {
+          if (!categories[category]) {
+            categories[category] = { items: [], subcategories: {} };
+          }
+
+          if (subcategory) {
+            if (!categories[category].subcategories[subcategory]) {
+              categories[category].subcategories[subcategory] = [];
+            }
+            categories[category].subcategories[subcategory].push(contractData);
+          } else {
+            categories[category].items.push(contractData);
+          }
+        } else {
+          uncategorized.push(contractData);
+        }
+      }
+    });
+
+    return { categories, uncategorized };
+  };
+
+  const dispatch = useAppDispatch();
+
+  const handleOnClick = (newActiveView: ActiveView) => {
+    setActiveView(newActiveView); // Update local state
+
+    // Push new history entry without changing URL
+    window.history.pushState(
+      { activeView: newActiveView }, // Store component name in history.state
+      "", // Unused title
+      window.location.pathname // Keep URL as `/`
+    );
+  };
 
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
-        //border: "1px solid white",
-        width: "350px",
         padding: "7px",
         borderRadius: "7px",
         margin: "5px",
       }}
     >
-      {/* <h3>Total users: {userCount?.toString()}</h3> */}
-      {/*       <span>
-        Page: {page} Page size: {pageSize}
-      </span>
-      <span>Users paginated: {users?.length}</span> */}
-      <br />
       <div style={{ margin: "5px" }}>
-        {users?.map((user, index) => {
-          //console.log("userContracts[user]", userContracts[user]);
+        {users?.map((user, userIndex) => {
+          const userTitles: Contract[] = userContracts[user]?.map(
+            (contractAddr: string, index: number) => ({
+              address: contractAddr,
+              title: contractsTitles[contractAddr] || "",
+              originalIndex: index,
+            })
+          );
+
+          const { categories, uncategorized } = parseContracts(userTitles);
+
           return (
-            <div key={index}>
+            <div key={userIndex}>
               <div>
                 <span
-                  style={{ fontSize: "20px", cursor: "pointer" }}
-                  onClick={() => navigate("/" + user)}
+                  style={{ cursor: "pointer", marginRight: "5px" }}
+                  onClick={() => dispatch(syncUserContractsToStore(user))}
                 >
-                  👤 {shortenAddress(user, 12, 9)}
+                  👤
+                </span>{" "}
+                <span
+                  style={{ fontSize: "20px", cursor: "pointer" }}
+                  onClick={() => {
+                    handleOnClick(`user/${user}`);
+                  }}
+                >
+                  {shortenAddress(user, 12, 9)}
                 </span>
-                <div style={{ marginLeft: "30px" }}>
-                  {userContracts[user]?.map((contractAddr, index) => {
-                    const contractTitle = contractsTitles[contractAddr];
-
-                    return (
-                      <div key={index}>
-                        <span>💾 </span>
-                        <span
-                          style={{ fontSize: "14px", cursor: "pointer" }}
-                          onClick={() => navigate("/" + user + "/" + index)}
-                        >
-                          {contractTitle
-                            ? contractTitle
-                            : shortenAddress(contractAddr, 10, 8)}
-                        </span>
-                        <span
-                          style={{ marginLeft: "5px", cursor: "pointer" }}
-                          onClick={() => copyToClipboard(contractAddr)}
-                        >
-                          🔗
-                        </span>
+                <div style={{ marginTop: "30px" }}>
+                  {Object.entries(categories).map(
+                    ([category, { items, subcategories }], index, arr) => (
+                      <div key={category}>
+                        <h3 className="text-lg font-semibold">{category}</h3>
+                        <ul className="ml-4">
+                          {items.map(({ address, title }) => (
+                            <li key={address}>
+                              <span
+                                style={{ cursor: "pointer" }}
+                                onClick={() => {
+                                  handleOnClick(`contract/${address}`);
+                                }}
+                              >
+                                {title}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                        {Object.entries(subcategories).map(
+                          ([sub, subItems]) => (
+                            <div
+                              key={sub}
+                              className="ml-12"
+                              style={{ marginLeft: "1em" }}
+                            >
+                              <h5 className="text-md font-medium">{sub}</h5>
+                              <ul className="ml-12">
+                                {subItems.map(({ address, title }) => (
+                                  <li key={address}>
+                                    <span
+                                      style={{ cursor: "pointer" }}
+                                      onClick={() => {
+                                        handleOnClick(`contract/${address}`);
+                                      }}
+                                    >
+                                      {title}
+                                    </span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )
+                        )}
+                        {index < arr.length - 1 && <hr className="my-2" />}
                       </div>
-                    );
-                  })}
+                    )
+                  )}
+                  {uncategorized.length > 0 && (
+                    <div>
+                      <h3 className="text-lg font-semibold">Other</h3>
+                      <ul className="ml-4">
+                        {uncategorized.map(({ address, title }) => (
+                          <li key={address}>
+                            <span
+                              style={{ cursor: "pointer" }}
+                              onClick={() => {
+                                handleOnClick(`contract/${address}`);
+                              }}
+                            >
+                              {title.trim()
+                                ? title
+                                : shortenAddress(address, 12, 9)}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
               </div>
               <br />

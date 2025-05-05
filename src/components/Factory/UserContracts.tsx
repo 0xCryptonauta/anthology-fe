@@ -1,18 +1,32 @@
-import { useNavigate } from "react-router-dom";
 import { copyToClipboard } from "@utils/copyToClipboard";
 import { shortenAddress } from "@utils/shortenAddress";
 
-import { useAppSelector } from "@store/utils/hooks";
+import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
+import { syncUserContractsToStore } from "@src/store/utils/thunks";
+import { ActiveView } from "@src/types/common";
+interface UserContractsProps {
+  setActiveView: (newActiveView: ActiveView) => void;
+}
 
-export const UserContracts = () => {
-  const navigate = useNavigate();
+export const UserContracts: React.FC<UserContractsProps> = ({
+  setActiveView,
+}) => {
+  const dispatch = useAppDispatch();
   const { userContracts, contractsTitles } = useAppSelector(
     (state) => state.factory
   );
   const { userAddr } = useAppSelector((state) => state.user);
 
-  /* const pageSize = 50;
-  const page = 1; */
+  const handleOnClick = (newActiveView: ActiveView) => {
+    setActiveView(newActiveView); // Update local state
+
+    // Push new history entry without changing URL
+    window.history.pushState(
+      { activeView: newActiveView }, // Store component name in history.state
+      "", // Unused title
+      window.location.pathname // Keep URL as `/`
+    );
+  };
 
   return (
     <div
@@ -27,16 +41,16 @@ export const UserContracts = () => {
         margin: "5px",
       }}
     >
-      {/*       <h3>
-        {" "}
-        {ethAddr?.length > 20 ? shortenAddress(ethAddr, 10, 8) : ethAddr}:
-        <span>Anthologies from:</span>
-      </h3> */}
-      <h4>{shortenAddress(userAddr, 10, 8)}</h4>
+      <div>
+        <span
+          style={{ cursor: "pointer", margin: "0px 10px" }}
+          onClick={() => dispatch(syncUserContractsToStore(userAddr))}
+        >
+          🔄
+        </span>
+        <span>{shortenAddress(userAddr, 10, 8)}</span>
+      </div>
 
-      {/*       <span>
-        Total: {page} Page size: {pageSize}
-      </span> */}
       <br />
       <div style={{ margin: "5px" }}>
         {userContracts[userAddr]?.map((contractAddr, index) => {
@@ -47,7 +61,9 @@ export const UserContracts = () => {
               <span>💾 </span>
               <span
                 style={{ fontSize: "14px", cursor: "pointer" }}
-                onClick={() => navigate("/" + userAddr + "/" + index)}
+                onClick={() => {
+                  handleOnClick(`contract/${contractAddr}`);
+                }}
               >
                 {contractTitle
                   ? contractTitle

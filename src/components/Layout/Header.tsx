@@ -1,18 +1,35 @@
 import { Link } from "react-router-dom";
 import { SidePanel } from "./SidePanel";
 import { WalletConnector } from "./WalletConnector";
-/* import { WalletConnector } from "./WalletConnector"; */
+import { ActiveView } from "@src/types/common";
+interface HeaderProps {
+  activeView: ActiveView;
+  setActiveView: (newActiveView: ActiveView) => void;
+}
 
-export const Header = () => {
+export const Header: React.FC<HeaderProps> = ({
+  activeView,
+  setActiveView,
+}) => {
+  const handleOnClick = (newActiveView: ActiveView) => {
+    setActiveView(newActiveView); // Update local state
+
+    // Push new history entry without changing URL
+    window.history.pushState(
+      { activeView: newActiveView }, // Store component name in history.state
+      "", // Unused title
+      window.location.pathname // Keep URL as `/`
+    );
+  };
+
   return (
-    <nav
-      //className="navbar bg-primary"
-      //data-bs-theme="dark"
-      className="navbar bg-dark"
-      data-bs-theme="dark"
-    >
+    <nav className="navbar bg-dark" data-bs-theme="dark">
       <div className="container-fluid">
-        <Link className="navbar-brand" to="/">
+        <Link
+          className="navbar-brand"
+          to="/"
+          onClick={() => handleOnClick("factory")}
+        >
           <img
             src="/IB_icon.png"
             alt="Logo"
@@ -21,9 +38,6 @@ export const Header = () => {
             className="d-inline-block align-text-top"
             style={{ marginLeft: "5px" }}
           />
-          {/* <span style={{ marginLeft: "10px", fontSize: "25px" }}>
-            Anthology
-          </span> */}
         </Link>
 
         <div
@@ -34,7 +48,7 @@ export const Header = () => {
           }}
         >
           <WalletConnector />
-          <SidePanel />
+          <SidePanel activeView={activeView} setActiveView={setActiveView} />
         </div>
       </div>
     </nav>

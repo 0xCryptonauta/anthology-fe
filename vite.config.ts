@@ -1,71 +1,31 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 //import { viteSingleFile } from "vite-plugin-singlefile";
-import { VitePWA } from "vite-plugin-pwa";
+import { VitePWA, type ManifestOptions } from "vite-plugin-pwa";
 import path from "path";
+
+import manifest from "./src/manifest.json";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: "/",
+  //base: "/anthology-fe/",
+  build: {
+    outDir: "dist",
+  },
   plugins: [
     react(),
     /* viteSingleFile(), */
     VitePWA({
-      //registerType: "autoUpdate",
-
+      registerType: "autoUpdate", // || prompt
       devOptions: {
         enabled: false,
       },
-
-      includeAssets: ["/IB_icon.png"],
-      manifest: {
-        name: "Anthology",
-        short_name: "Memory",
-        description: "Recording the collective memory",
-        theme_color: "#242424",
-        id: "/",
-        icons: [
-          {
-            src: "pwa-192x192.png",
-            sizes: "192x192",
-            type: "image/png",
-          },
-          {
-            src: "pwa-512x512.png",
-            sizes: "512x512",
-            type: "image/png",
-          },
-          {
-            src: "pwa-512x512.png",
-            sizes: "512x512",
-            type: "image/png",
-            purpose: "any",
-          },
-          {
-            src: "/pwa-192x192.png",
-            sizes: "192x192",
-            type: "image/png",
-            purpose: "apple touch icon",
-          },
-          {
-            src: "pwa-512x512.png",
-            sizes: "512x512",
-            type: "image/png",
-            purpose: "maskable",
-          },
-        ],
-        display: "standalone",
-        display_override: ["window-controls-overlay"],
-        scope: "/",
-        start_url: "/",
-        orientation: "portrait",
-      },
+      includeAssets: ["/IB_icon.png", "/pwa-192x192.png", "/pwa-512x512.png"],
+      manifest: manifest as ManifestOptions,
     }),
   ],
-  //base: "/anthology-fe/",
-  base: "/",
-  build: {
-    outDir: "dist",
-  },
+
   resolve: {
     alias: {
       "@src": path.resolve(__dirname, "src"),
@@ -75,7 +35,9 @@ export default defineConfig({
         __dirname,
         "./src/contract-functions"
       ),
+      "@hooks": path.resolve(__dirname, "src/hooks"),
       "@store": path.resolve(__dirname, "src/store"),
+      "@types": path.resolve(__dirname, "src/types"),
       "@utils": path.resolve(__dirname, "src/utils"),
       "@views": path.resolve(__dirname, "src/views"),
     },
