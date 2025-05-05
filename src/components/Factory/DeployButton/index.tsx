@@ -1,7 +1,7 @@
 import { useAppSelector } from "@store/utils/hooks";
 import { useToast } from "@components/Layout/Toast";
-import { callDeployAnthology } from "@contract-functions/FactoryFunctions";
 import "./index.css";
+import { writeFactory } from "@src/contract-functions/FactoryFunctions";
 
 export const DeployButton = () => {
   const { userAddr } = useAppSelector((state) => state.user);
@@ -16,7 +16,7 @@ export const DeployButton = () => {
       <button
         className="btn-rocket"
         onClick={async () => {
-          const txHash = await callDeployAnthology();
+          const txHash = await writeFactory("deployAnthology"); // can add title here as argument
           console.log("txHash: ", txHash);
           if (txHash) {
             addToast({

@@ -1,14 +1,5 @@
 import { useState } from "react";
-import {
-  callAddToWhitelist,
-  callSetIsFrozen,
-  callSetUseERC20,
-  callEnableWhitelist,
-  callRemoveFromWhitelist,
-  callSetERC20Token,
-  callSetAnthologyPrice,
-  writeFactory,
-} from "@contract-functions/FactoryFunctions";
+import { writeFactory } from "@contract-functions/FactoryFunctions";
 import { parseEther } from "viem";
 
 import { useAppSelector, useAppDispatch } from "@store/utils/hooks";
@@ -85,9 +76,9 @@ export const OnlyOwner = () => {
           onClick={async () => {
             try {
               //Check first if users include address before call
-              const txHash = await callSetAnthologyPrice(
-                parseEther(anthologyPrice)
-              );
+              const txHash = await writeFactory("setAnthologyPrice", [
+                parseEther(anthologyPrice),
+              ]);
               if (txHash) {
                 addToast({
                   title: "New anthology price:",
@@ -118,7 +109,7 @@ export const OnlyOwner = () => {
         <button
           onClick={async () => {
             try {
-              const txHash = await callSetUseERC20(!useErc20);
+              const txHash = await writeFactory("setUseERC20", [!useErc20]);
               if (txHash) {
                 addToast({
                   title: "Anthology now uses",
@@ -178,7 +169,9 @@ export const OnlyOwner = () => {
           onClick={async () => {
             //Check first if users include address before call
             try {
-              const txHash = await callSetERC20Token(erc20TokenAddr);
+              const txHash = await writeFactory("setERC20Token", [
+                erc20TokenAddr,
+              ]);
               if (txHash) {
                 addToast({
                   title: "New ERC20 address",
@@ -209,13 +202,15 @@ export const OnlyOwner = () => {
         <button
           onClick={async () => {
             try {
-              const txHash = await callEnableWhitelist(!whitelistEnabled);
+              const txHash = await writeFactory("enableWhitelist", [
+                !whitelistEnabled,
+              ]);
               if (txHash) {
                 addToast({
                   title: "Whitelist has been:",
                   content: !whitelistEnabled
-                    ? "Disabled"
-                    : "Activated" + "\n\n TxHash: " + txHash,
+                    ? "Activated"
+                    : "Disabled" + "\n\n TxHash: " + txHash,
                   variant: "success",
                   delay: 5000,
                 });
@@ -267,7 +262,9 @@ export const OnlyOwner = () => {
           onClick={async () => {
             //Check first if users include address before call
             try {
-              const txHash = await callAddToWhitelist(addressToAdd);
+              const txHash = await writeFactory("addToWhitelist", [
+                addressToAdd,
+              ]);
               if (txHash) {
                 addToast({
                   title: "Address added to whitelist",
@@ -322,7 +319,9 @@ export const OnlyOwner = () => {
           style={{ marginLeft: "7px", cursor: "pointer" }}
           onClick={async () => {
             try {
-              const txHash = await callRemoveFromWhitelist(addressToRemove);
+              const txHash = await writeFactory("removeFromWhitelist", [
+                addressToRemove,
+              ]);
               if (txHash) {
                 addToast({
                   title: "Address removed from whitelist",
@@ -355,7 +354,7 @@ export const OnlyOwner = () => {
             const _newValue = !isFrozen;
 
             try {
-              const txHash = await callSetIsFrozen(_newValue);
+              const txHash = await writeFactory("setIsFrozen", [_newValue]);
               if (txHash) {
                 addToast({
                   title: "Factory is",

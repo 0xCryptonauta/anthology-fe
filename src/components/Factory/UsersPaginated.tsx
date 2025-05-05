@@ -115,7 +115,10 @@ export const UsersPaginated: React.FC<UsersPaginantedProps> = ({
           return (
             <div key={userIndex}>
               <div>
-                <span onClick={() => dispatch(syncUserContractsToStore(user))}>
+                <span
+                  style={{ cursor: "pointer", marginRight: "5px" }}
+                  onClick={() => dispatch(syncUserContractsToStore(user))}
+                >
                   👤
                 </span>{" "}
                 <span
