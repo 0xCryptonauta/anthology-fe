@@ -1,21 +1,33 @@
-import { copyToClipboard } from "@utils/copyToClipboard";
 import { shortenAddress } from "@utils/shortenAddress";
-
-import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
+import { useAppDispatch } from "@store/utils/hooks";
 import { syncUserContractsToStore } from "@src/store/utils/thunks";
 import { ActiveView } from "@src/types/common";
+import { parseContractsCategories } from "@src/utils/parseContractsCategories";
+
+export interface Contract {
+  address: string;
+  title: string;
+  originalIndex: number;
+}
+
+export interface Categories {
+  [category: string]: {
+    items: Contract[];
+    subcategories: { [subcategory: string]: Contract[] };
+  };
+}
 interface UserContractsProps {
+  userAddr: string;
+  userTitles: Contract[];
   setActiveView: (newActiveView: ActiveView) => void;
 }
 
 export const UserContracts: React.FC<UserContractsProps> = ({
   setActiveView,
+  userAddr,
+  userTitles,
 }) => {
   const dispatch = useAppDispatch();
-  const { userContracts, contractsTitles } = useAppSelector(
-    (state) => state.factory
-  );
-  const { userAddr } = useAppSelector((state) => state.user);
 
   const handleOnClick = (newActiveView: ActiveView) => {
     setActiveView(newActiveView); // Update local state
@@ -27,6 +39,8 @@ export const UserContracts: React.FC<UserContractsProps> = ({
       window.location.pathname // Keep URL as `/`
     );
   };
+
+  const { categories, uncategorized } = parseContractsCategories(userTitles);
 
   return (
     <div
@@ -41,43 +55,89 @@ export const UserContracts: React.FC<UserContractsProps> = ({
         margin: "5px",
       }}
     >
-      <div>
-        <span
-          style={{ cursor: "pointer", margin: "0px 10px" }}
-          onClick={() => dispatch(syncUserContractsToStore(userAddr))}
-        >
-          🔄
-        </span>
-        <span>{shortenAddress(userAddr, 10, 8)}</span>
-      </div>
-
-      <br />
       <div style={{ margin: "5px" }}>
-        {userContracts[userAddr]?.map((contractAddr, index) => {
-          const contractTitle = contractsTitles[contractAddr];
-
-          return (
-            <div key={index}>
-              <span>💾 </span>
-              <span
-                style={{ fontSize: "14px", cursor: "pointer" }}
-                onClick={() => {
-                  handleOnClick(`contract/${contractAddr}`);
-                }}
-              >
-                {contractTitle
-                  ? contractTitle
-                  : shortenAddress(contractAddr, 10, 8)}
-              </span>
-              <span
-                style={{ marginLeft: "5px", cursor: "pointer" }}
-                onClick={() => copyToClipboard(contractAddr)}
-              >
-                🔗
-              </span>
-            </div>
-          );
-        })}
+        <div>
+          <span
+            style={{ cursor: "pointer", marginRight: "5px" }}
+            onClick={() => dispatch(syncUserContractsToStore(userAddr))}
+          >
+            👤
+          </span>{" "}
+          <span
+            style={{ fontSize: "20px", cursor: "pointer" }}
+            onClick={() => {
+              handleOnClick(`user/${userAddr}`);
+            }}
+          >
+            {shortenAddress(userAddr, 12, 9)}
+          </span>
+          <div style={{ marginTop: "30px" }}>
+            {Object.entries(categories).map(
+              ([category, { items, subcategories }], index, arr) => (
+                <div key={category}>
+                  <h3 className="text-lg font-semibold">{category}</h3>
+                  <ul className="ml-4">
+                    {items.map(({ address, title }) => (
+                      <li key={address}>
+                        <span
+                          style={{ cursor: "pointer" }}
+                          onClick={() => {
+                            handleOnClick(`contract/${address}`);
+                          }}
+                        >
+                          {title}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                  {Object.entries(subcategories).map(([sub, subItems]) => (
+                    <div
+                      key={sub}
+                      className="ml-12"
+                      style={{ marginLeft: "1em" }}
+                    >
+                      <h5 className="text-md font-medium">{sub}</h5>
+                      <ul className="ml-12">
+                        {subItems.map(({ address, title }) => (
+                          <li key={address}>
+                            <span
+                              style={{ cursor: "pointer" }}
+                              onClick={() => {
+                                handleOnClick(`contract/${address}`);
+                              }}
+                            >
+                              {title}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                  {index < arr.length - 1 && <hr className="my-2" />}
+                </div>
+              )
+            )}
+            {uncategorized.length > 0 && (
+              <div>
+                <h3 className="text-lg font-semibold">Other</h3>
+                <ul className="ml-4">
+                  {uncategorized.map(({ address, title }) => (
+                    <li key={address}>
+                      <span
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          handleOnClick(`contract/${address}`);
+                        }}
+                      >
+                        {title.trim() ? title : shortenAddress(address, 12, 9)}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
