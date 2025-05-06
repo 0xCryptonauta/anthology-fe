@@ -34,7 +34,7 @@ export const FactoryUsersContracts: React.FC<FactoryUsersContractsProps> = ({
             })
           );
           return (
-            <div id={"user-" + userIndex}>
+            <div key={"user-" + userIndex}>
               <UserContracts
                 setActiveView={setActiveView}
                 userAddr={user}

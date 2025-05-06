@@ -1,6 +1,4 @@
-import { reconnect } from "@wagmi/core";
 import { readFactory } from "@contract-functions/FactoryFunctions";
-import { config } from "@src/config";
 import { readAnthology } from "@contract-functions/AnthologyFunctions";
 
 export const fetchContractData = async () => {
@@ -21,18 +19,6 @@ export const fetchContractData = async () => {
     userCount: Number(contractInfo.userCount),
     usersCP: Number(contractInfo.usersCP),
   };
-};
-
-export const reconnectWallet = async () => {
-  const recWallets = await reconnect(config);
-  console.log("reconnected wallet:", recWallets);
-
-  if (recWallets.length > 0) {
-    return {
-      currentAddr: recWallets[0].accounts[0],
-      walletId: recWallets[0].connector.id,
-    };
-  }
 };
 
 function hexToString(hex: string) {

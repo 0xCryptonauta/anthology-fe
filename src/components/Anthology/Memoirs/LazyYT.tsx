@@ -6,7 +6,7 @@ type LazyYTProps = {
 };
 
 export const LazyYT: React.FC<LazyYTProps> = ({ videoId }) => {
-  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.5 });
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0 });
   const [isPlayerActive, setIsPlayerActive] = useState(false);
 
   const width = 350;

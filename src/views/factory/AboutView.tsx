@@ -5,6 +5,7 @@ import { clearFactoryStore } from "@store/slices/factorySlice";
 import { useState } from "react";
 import { useToast } from "@components/Layout/Toast";
 import InstallPWAButton from "@src/components/Layout/InstallPWAButton";
+
 export const AboutView = () => {
   const dispatch = useAppDispatch();
 
