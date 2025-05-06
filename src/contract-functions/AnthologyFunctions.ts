@@ -9,7 +9,7 @@ import {
 import { arbitrum as chain } from "@wagmi/core/chains";
 //import { parseEther } from "viem";
 import { AnthologyABI } from "@abi/AnthologyABI";
-import { config } from "@src/config";
+import { config } from "@src/wagmiConfig";
 
 type readFunctions =
   | "owner"

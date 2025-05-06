@@ -23,7 +23,7 @@ concurrency:
   #Allow repo secrets
 env:
   VITE_FACTORY_ARBITRUM: ${{secrets.VITE_FACTORY_ARBITRUM}}
-  VITE_LAVA_PROJECT_ID: ${{secrets.VITE_WC_PROJECT_ID}}
+  VITE_LAVA_PROJECT_ID: ${{secrets.VITE_LAVA_PROJECT_ID}}
   VITE_WC_PROJECT_ID: ${{secrets.VITE_WC_PROJECT_ID}}
 
 jobs:

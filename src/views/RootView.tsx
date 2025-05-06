@@ -1,13 +1,11 @@
 import { Outlet } from "react-router-dom";
 import { Header } from "@components/Layout/Header";
 import { Footer } from "@components/Layout/Footer";
-import { useReconnectWallet } from "@hooks/useReconnectWallet";
 import { useGetFactoryInfo } from "@src/hooks/useGetFactoryInfo";
 import { useEffect, useState } from "react";
 import { ActiveView } from "@src/types/common";
 
 export const RootView = () => {
-  useReconnectWallet();
   useGetFactoryInfo();
 
   const [activeView, setActiveView] = useState<ActiveView>(() => {

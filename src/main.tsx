@@ -13,6 +13,7 @@ import { FactoryStateView } from "@views/factory/FactoryStateView.tsx";
 import { AboutView } from "@views/factory/AboutView.tsx";
 import { IndexView } from "@views/IndexView.tsx";
 import { AnthologyShareView } from "@views/anthology/AnthologyShareView";
+import { ContextWagmiProvider } from "./components/Layout/ContextWagmiProvider";
 
 const router = createBrowserRouter([
   {
@@ -33,18 +34,22 @@ createRoot(document.getElementById("root")!).render(
   import.meta.env.VITE_ENV === "development" ? (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <ToastProvider>
-          <RouterProvider router={router} />
-        </ToastProvider>
+        <ContextWagmiProvider>
+          <ToastProvider>
+            <RouterProvider router={router} />
+          </ToastProvider>
+        </ContextWagmiProvider>
       </PersistGate>
     </Provider>
   ) : (
     <StrictMode>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <ToastProvider>
-            <RouterProvider router={router} />
-          </ToastProvider>
+          <ContextWagmiProvider>
+            <ToastProvider>
+              <RouterProvider router={router} />
+            </ToastProvider>
+          </ContextWagmiProvider>
         </PersistGate>
       </Provider>
     </StrictMode>
