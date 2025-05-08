@@ -14,11 +14,32 @@ export default defineConfig({
   //base: "/anthology-fe/",
   build: {
     outDir: "dist",
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules/@reown/appkit-wallet")) {
+            return "reown-appkit-wallet";
+          }
+          if (id.includes("node_modules/@remix-run/router/dist/router.js")) {
+            return "remix-run-router";
+          }
+          if (id.includes("node_modules/react-dom")) {
+            return "react-dom";
+          }
+          if (id.includes("node_modules/@walletconnect")) {
+            return "walletconnect";
+          }
+        },
+      },
+    },
   },
   plugins: [
     react(),
-    visualizer({ open: true }),
-    /* viteSingleFile(), */
+    visualizer({
+      open: true,
+      gzipSize: true,
+      brotliSize: true,
+    }),
     VitePWA({
       registerType: "autoUpdate", // || prompt
       devOptions: {
