@@ -136,13 +136,22 @@ export const SidePanel: React.FC<HeaderProps> = ({ setActiveView }) => {
               alignItems: "center",
             }}
           >
-            <Link to="/info" onClick={handleClose}>
-              Factory Info
-            </Link>
-            <br />
-            <Link to="about" onClick={handleClose}>
-              About
-            </Link>
+            <div
+              style={{
+                margin: "20px 0px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Link to="about" onClick={handleClose}>
+                About
+              </Link>
+              <br />
+              <Link to="/info" onClick={handleClose}>
+                Factory Info
+              </Link>
+            </div>
           </div>
         </Offcanvas.Body>
       </Offcanvas>

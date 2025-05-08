@@ -9,7 +9,7 @@ import {
 import { arbitrum as chain } from "@wagmi/core/chains";
 //import { parseEther } from "viem";
 import { AnthologyFactoryABI } from "@abi/AnthologyFactoryABI";
-import { config } from "@src/config";
+import { config } from "@src/wagmiConfig";
 
 //const AnthologyFactoryAddress = import.meta.env.VITE_FACTORY_CONTRACT_ADDRESS; //Optimism
 const AnthologyFactoryAddress = import.meta.env.VITE_FACTORY_ARBITRUM; //Arbitrum

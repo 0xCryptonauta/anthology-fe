@@ -1,4 +1,4 @@
-import { UsersPaginated } from "@src/components/Factory/UsersPaginated";
+import { FactoryUsersContracts } from "@src/components/Factory/FactoryUsersContracts";
 import { useAppSelector } from "@src/store/utils/hooks";
 
 //import { GetUserContracts } from "./GetUserContracts";
@@ -26,7 +26,7 @@ export const FactoryView: React.FC<FactoryViewProps> = ({ setActiveView }) => {
     >
       {/* <GetUserContracts /> */}
       {users ? (
-        <UsersPaginated setActiveView={setActiveView} />
+        <FactoryUsersContracts setActiveView={setActiveView} />
       ) : (
         <div> Loading users </div>
       )}

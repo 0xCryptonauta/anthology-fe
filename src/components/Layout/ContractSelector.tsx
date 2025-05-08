@@ -1,27 +1,14 @@
 import { shortenAddress } from "@src/utils/shortenAddress";
 import React, { useState, useMemo } from "react";
-
-interface Contract {
-  address: string;
-  title: string;
-  originalIndex: number;
-}
-
-interface Categories {
-  [category: string]: {
-    items: Contract[];
-    subcategories: { [subcategory: string]: Contract[] };
-  };
-}
-
-interface Props {
+import { Contract, Categories } from "@src/components/Factory/UserContracts";
+interface ContractSelectorProps {
   users: string[];
   userContracts: Record<string, string[]>;
   contractsTitles: Record<string, string>;
   setSelectedContract: (addr: string) => void;
 }
 
-const ContractSelector: React.FC<Props> = ({
+const ContractSelector: React.FC<ContractSelectorProps> = ({
   users,
   userContracts,
   contractsTitles,

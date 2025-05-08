@@ -1,12 +1,13 @@
 import { useAppSelector } from "@src/store/utils/hooks";
 import { DeployView } from "./factory/DeployView";
 import { FactoryView } from "./factory/FactoryView";
-import { AccountView } from "./factory/AccountView";
+import { CurrentUserView } from "./factory/CurrentUserView";
 import { AnthologyView } from "./anthology/AnthologyView";
 
 import { useOutletContext } from "react-router-dom";
 import { useEffect } from "react";
 import { ActiveView } from "@src/types/common";
+import { UserView } from "./factory/UserView";
 
 export const IndexView = () => {
   const { userAddr } = useAppSelector((state) => state.user);
@@ -30,7 +31,7 @@ export const IndexView = () => {
 
     // Clean up listener
     return () => window.removeEventListener("popstate", handlePopState);
-  }, []);
+  }, [setActiveView]);
 
   return (
     <div
@@ -41,9 +42,12 @@ export const IndexView = () => {
       ) : activeView === "factory" ? (
         <FactoryView setActiveView={setActiveView} />
       ) : activeView === `user/${userAddr}` ? (
-        <AccountView setActiveView={setActiveView} />
+        <CurrentUserView setActiveView={setActiveView} />
       ) : activeView.startsWith(`user/`) ? (
-        <div>Other user view</div>
+        <UserView
+          setActiveView={setActiveView}
+          userAddr={activeView.split("/")[1]}
+        />
       ) : activeView.startsWith(`contract/`) ? (
         <AnthologyView activeView={activeView} setActiveView={setActiveView} />
       ) : (
