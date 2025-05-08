@@ -1,16 +1,14 @@
 import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
-
-import { useAppKit } from "@reown/appkit/react";
 import { shortenAddress } from "@src/utils/shortenAddress";
 import { useAccount, useDisconnect } from "wagmi";
 import { useEffect } from "react";
 import { updateUserAddr } from "@src/store/slices/userSlice";
+import { WalletOptions } from "./WalletOptions";
 
 export const WalletConnector = () => {
   const { userAddr } = useAppSelector((state) => state.user);
   const { disconnect } = useDisconnect();
   const dispatch = useAppDispatch();
-  const { open } = useAppKit();
 
   const { address, isConnected } = useAccount();
 
@@ -19,13 +17,19 @@ export const WalletConnector = () => {
     dispatch(updateUserAddr(""));
   };
 
+  /*   const { reconnect, connectors } = useReconnect();
+
+  useEffect(() => {
+    reconnect({ connectors });
+  }, []); */
+
   useEffect(() => {
     if (isConnected && address) {
       dispatch(updateUserAddr(address));
     }
   }, [address, isConnected, dispatch]);
 
-  return userAddr ? (
+  return isConnected ? (
     <div
       style={{
         display: "flex",
@@ -65,22 +69,7 @@ export const WalletConnector = () => {
       }}
     >
       <div style={{ display: "flex", alignItems: "center" }}>
-        {!isConnected ? (
-          <div
-            style={{ display: "flex", alignItems: "center", margin: "10px" }}
-          >
-            <img
-              src="./icons/WalletConnectIcon.svg"
-              width="30"
-              height="30"
-              alt="WalletConnect Logo"
-              onClick={() => open()}
-              style={{ cursor: "pointer" }}
-            />
-          </div>
-        ) : (
-          <w3m-network-button />
-        )}
+        <WalletOptions />
       </div>
     </div>
   );
