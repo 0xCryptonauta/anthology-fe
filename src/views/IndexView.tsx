@@ -5,9 +5,9 @@ import { CurrentUserView } from "./factory/CurrentUserView";
 import { AnthologyView } from "./anthology/AnthologyView";
 
 import { useOutletContext } from "react-router-dom";
-import { useEffect } from "react";
 import { ActiveView } from "@src/types/common";
 import { UserView } from "./factory/UserView";
+import { useHistoryState } from "@src/hooks/useHistoryState";
 
 export const IndexView = () => {
   const { userAddr } = useAppSelector((state) => state.user);
@@ -17,21 +17,7 @@ export const IndexView = () => {
     setActiveView: (newActiveView: ActiveView) => void;
   }>();
 
-  useEffect(() => {
-    // Handle browser back/forward navigation
-    const handlePopState = (event: PopStateEvent) => {
-      if (event.state && event.state.activeView) {
-        setActiveView(event.state.activeView); // Restore component from history.state
-      } else {
-        setActiveView("factory"); // Default state if no history entry
-      }
-    };
-
-    window.addEventListener("popstate", handlePopState);
-
-    // Clean up listener
-    return () => window.removeEventListener("popstate", handlePopState);
-  }, [setActiveView]);
+  useHistoryState(setActiveView);
 
   return (
     <div
