@@ -152,10 +152,6 @@ export const SidePanel: React.FC<HeaderProps> = ({ setActiveView }) => {
                 Factory Info
               </Link>
             </div>
-
-            <div onClick={handleClose}>
-              <w3m-network-button />
-            </div>
           </div>
         </Offcanvas.Body>
       </Offcanvas>
