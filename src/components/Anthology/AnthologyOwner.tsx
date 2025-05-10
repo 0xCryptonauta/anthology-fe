@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { parseEther } from "viem";
-import { writeAnthology } from "@contract-functions/AnthologyFunctions";
+import { writeAnthology } from "@src/contract-functions/anthologyFunctions";
 //import { ChangeAnthologyTitle } from "./ChangeAnthologyTitle";
 import { useToast } from "@components/Layout/Toast";
 
@@ -13,8 +13,9 @@ import {
 } from "@store/slices/anthologySlice";
 
 import { updateOneContractTitle } from "@store/slices/factorySlice";
+import { Address } from "@src/types/common";
 
-export const AnthologyOwner = ({ contractAddr }: { contractAddr: string }) => {
+export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
   const { addToast } = useToast();
 
   const anthologyState = useAppSelector((state) =>

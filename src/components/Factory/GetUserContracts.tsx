@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { readFactory } from "@contract-functions/FactoryFunctions";
+import { readFactory } from "@src/contract-functions/factoryFunctions";
 import { transformData } from "@utils/transformData";
 
 export const GetUserContracts = () => {

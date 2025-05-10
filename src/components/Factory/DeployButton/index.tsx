@@ -1,7 +1,7 @@
 import { useAppSelector } from "@store/utils/hooks";
 import { useToast } from "@components/Layout/Toast";
 import "./index.css";
-import { writeFactory } from "@src/contract-functions/FactoryFunctions";
+import { writeFactory } from "@src/contract-functions/factoryFunctions";
 
 export const DeployButton = () => {
   const { userAddr } = useAppSelector((state) => state.user);

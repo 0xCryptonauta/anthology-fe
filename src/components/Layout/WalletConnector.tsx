@@ -24,10 +24,11 @@ export const WalletConnector = () => {
   }, []); */
 
   useEffect(() => {
-    if (isConnected && address) {
+    if (isConnected && address && !userAddr) {
       dispatch(updateUserAddr(address));
+      console.log("User address updated:", address);
     }
-  }, [address, isConnected, dispatch]);
+  }, [userAddr, address, isConnected, dispatch]);
 
   return isConnected ? (
     <div

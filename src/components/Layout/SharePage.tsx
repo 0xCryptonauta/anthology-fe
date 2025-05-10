@@ -1,8 +1,8 @@
 import { useAppSelector } from "@src/store/utils/hooks";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import ContractSelector from "./ContractSelector";
-import { AddMemoir } from "../Anthology/AddMemoir";
+import { AddMemoir } from "@components/Anthology/AddMemoir";
 
 /* 
   users: string[]; // Array of user addresses
@@ -17,22 +17,6 @@ export const SharePage = () => {
   const [searchParams] = useSearchParams();
 
   const [selectedContract, setSelectedContract] = useState("");
-
-  console.log("Users:", users);
-  console.log("userContracts:", userContracts);
-  console.log("contractsTitles:", contractsTitles);
-
-  useEffect(() => {
-    const title = searchParams.get("title");
-    const text = searchParams.get("text");
-    const url = searchParams.get("url");
-
-    console.log("Title:", title);
-    console.log("Text:", text);
-    console.log("URL:", url);
-
-    // You can now use this data in your UI
-  }, [searchParams]);
 
   const title = searchParams.get("title") || undefined;
   const text = searchParams.get("text") || undefined;
@@ -51,19 +35,6 @@ export const SharePage = () => {
         margin: "5px",
       }}
     >
-      {/*       <h1>Shared Content</h1>
-      <p>Title: {title || "No title provided"}</p>
-      <p>Text: {text || "No text provided"}</p>
-      <p>
-        URL:{" "}
-        {url ? (
-          <a href={url} target="_blank" rel="noopener noreferrer">
-            {url}
-          </a>
-        ) : (
-          "No URL provided"
-        )}
-      </p> */}
       <ContractSelector
         users={users}
         userContracts={userContracts}

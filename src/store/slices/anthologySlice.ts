@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-type Address = string;
+type Address = `0x${string}`;
 
 export type SkinType =
   | "media"
@@ -19,7 +19,7 @@ export interface MemoirInterface {
 }
 
 export interface AnthologyInfoInterface {
-  owner: string;
+  owner: Address;
   title: string;
   skin: SkinType;
   totalCreatedMemoirs: number;
@@ -45,7 +45,7 @@ export interface AnthologyInterface {
 }
 
 export interface Anthologies {
-  [key: string]: AnthologyInterface;
+  [key: Address]: AnthologyInterface;
 }
 
 const initialState: Anthologies = {};
@@ -57,7 +57,7 @@ export const anthologySlice = createSlice({
     addAnthology: (
       state,
       action: PayloadAction<{
-        contract: string;
+        contract: Address;
         anthologyInfo: AnthologyInfoInterface;
       }>
     ) => {
@@ -74,7 +74,7 @@ export const anthologySlice = createSlice({
     updateAnthologyState: (
       state,
       action: PayloadAction<{
-        contract: string;
+        contract: Address;
         anthologyInfo: AnthologyInfoInterface;
       }>
     ) => {
@@ -86,7 +86,7 @@ export const anthologySlice = createSlice({
     updateAnthologyCP: (
       state,
       action: PayloadAction<{
-        contract: string;
+        contract: Address;
         memoirsCP: number;
       }>
     ) => {
@@ -98,7 +98,7 @@ export const anthologySlice = createSlice({
     updateAnthologyWhitelistCP: (
       state,
       action: PayloadAction<{
-        contract: string;
+        contract: Address;
         whitelistCP: number;
       }>
     ) => {
@@ -110,7 +110,7 @@ export const anthologySlice = createSlice({
     updateAnthologyBufferCP: (
       state,
       action: PayloadAction<{
-        contract: string;
+        contract: Address;
         memoirBufferCP: number;
       }>
     ) => {
@@ -122,7 +122,7 @@ export const anthologySlice = createSlice({
     updateMemoirs: (
       state,
       action: PayloadAction<{
-        contract: string;
+        contract: Address;
         memoirs: MemoirInterface[];
       }>
     ) => {
@@ -134,7 +134,7 @@ export const anthologySlice = createSlice({
     removeOneFromMemoirs: (
       state,
       action: PayloadAction<{
-        contract: string;
+        contract: Address;
         memoirIndex: number;
       }>
     ) => {
@@ -151,7 +151,7 @@ export const anthologySlice = createSlice({
     updateMemoirBuffer: (
       state,
       action: PayloadAction<{
-        contract: string;
+        contract: Address;
         memoirBuffer: MemoirInterface[];
       }>
     ) => {
@@ -163,7 +163,7 @@ export const anthologySlice = createSlice({
     removeOneFromBuffer: (
       state,
       action: PayloadAction<{
-        contract: string;
+        contract: Address;
         memoirIndex: number;
       }>
     ) => {
@@ -180,7 +180,7 @@ export const anthologySlice = createSlice({
     updateWhitelist: (
       state,
       action: PayloadAction<{
-        contract: string;
+        contract: Address;
         whitelistedUsers: Address[];
       }>
     ) => {
@@ -198,7 +198,7 @@ export const anthologySlice = createSlice({
     updateAnthologyTitle: (
       state,
       action: PayloadAction<{
-        contract: string;
+        contract: Address;
         title: string;
       }>
     ) => {
@@ -210,7 +210,7 @@ export const anthologySlice = createSlice({
     updateUseBuffer: (
       state,
       action: PayloadAction<{
-        contract: string;
+        contract: Address;
         useBuffer: boolean;
       }>
     ) => {
@@ -222,7 +222,7 @@ export const anthologySlice = createSlice({
     updateUseErc20: (
       state,
       action: PayloadAction<{
-        contract: string;
+        contract: Address;
         useERC20: boolean;
       }>
     ) => {
@@ -234,7 +234,7 @@ export const anthologySlice = createSlice({
     updateWhitelistEnabled: (
       state,
       action: PayloadAction<{
-        contract: string;
+        contract: Address;
         whitelistEnabled: boolean;
       }>
     ) => {

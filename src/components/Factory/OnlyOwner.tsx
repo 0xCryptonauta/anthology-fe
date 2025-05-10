@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { writeFactory } from "@contract-functions/FactoryFunctions";
+import { writeFactory } from "@src/contract-functions/factoryFunctions";
 import { parseEther } from "viem";
 
 import { useAppSelector, useAppDispatch } from "@store/utils/hooks";
