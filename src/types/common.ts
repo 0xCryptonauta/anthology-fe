@@ -4,3 +4,5 @@ export type ActiveView =
   | `user/${string}`
   | `contract/${string}`
   | "";
+
+export type Address = `0x${string}`;

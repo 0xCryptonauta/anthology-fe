@@ -34,6 +34,12 @@ a:hover {
   min-height: 100vh;
 } */
 
+body,
+html {
+  overflow: auto;
+  height: auto;
+}
+
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
