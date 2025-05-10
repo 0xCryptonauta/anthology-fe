@@ -16,16 +16,16 @@ const metadata = {
   icons: ["/IB_icon.png"],
 };
 
-/* const arbitrum_custom = {
+const arbitrum_custom = {
   ...arbitrum,
   rpcUrls: {
     default: {
       http: [chainRpc],
     },
   },
-}; */
+};
 
-/* export const networks = [arbitrum_custom]; */
+export const networks = [arbitrum_custom];
 
 export const config = createConfig({
   chains: [arbitrum],
@@ -43,6 +43,6 @@ export const config = createConfig({
   ],
   transports: {
     //[mainnet.id]: http(),
-    [arbitrum.id]: http(chainRpc),
+    [arbitrum.id]: http(),
   },
 });

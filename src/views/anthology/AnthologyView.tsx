@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import {
   readAnthology,
   //writeAnthology,
-} from "@contract-functions/AnthologyFunctions";
+} from "@src/contract-functions/anthologyFunctions";
 
 import {
   addAnthology,
@@ -20,7 +20,7 @@ import {
   updateAnthologyBufferCP,
   SkinType,
 } from "@store/slices/anthologySlice";
-import { fetchAnthologyInfo } from "@utils/initialStateUpdate";
+import { fetchAnthologyInfo } from "@src/contract-functions/fetchContractInfo";
 import { Memoirs } from "@components/Anthology/Memoirs";
 import { AddMemoir } from "@components/Anthology/AddMemoir";
 import { AnthologyState } from "@components/Anthology/AnthologyState";
@@ -59,7 +59,7 @@ export const AnthologyView: React.FC<AnthologyViewProps> = ({
   //const { ethAddr, } = useParams();
 
   //let contractAddr = "";
-  const contractAddr = activeView.split("/")[1];
+  const contractAddr = activeView.split("/")[1] as `0x${string}`;
 
   /*   if (JSON.stringify(userContracts) != "{}") {
     try {

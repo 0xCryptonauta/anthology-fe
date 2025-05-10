@@ -1,15 +1,12 @@
-// @ts-nocheck
-
 import {
   readContract,
   //watchContractEvent,
   writeContract,
 } from "@wagmi/core";
-//import { hardhat as chain } from "@wagmi/core/chains";
-import { arbitrum as chain } from "@wagmi/core/chains";
 //import { parseEther } from "viem";
 import { AnthologyFactoryABI } from "@abi/AnthologyFactoryABI";
-import { config } from "@src/wagmiConfig";
+import { config, networks } from "@src/wagmiConfig";
+import { retryWithBackoff } from "@utils/retryWithBackoff";
 
 //const AnthologyFactoryAddress = import.meta.env.VITE_FACTORY_CONTRACT_ADDRESS; //Optimism
 const AnthologyFactoryAddress = import.meta.env.VITE_FACTORY_ARBITRUM; //Arbitrum
@@ -45,48 +42,51 @@ type writeFactoryFunctions =
   | "enableWhitelist"
   | "setERC20Token";
 
-export const readFactory = async (
-  _functionName: readFactoryFunctions,
-  _args?: unknown[]
-) => {
-  let result;
-  console.log("Reading factory: ", _functionName);
-  try {
-    result = await readContract(config, {
-      abi: AnthologyFactoryABI,
-      address: AnthologyFactoryAddress,
-      functionName: _functionName,
-      chainId: chain.id,
-      args: _args,
-    });
-  } catch (error) {
-    console.log("Error reading:", _functionName);
-    console.log("error:", error);
-  }
+const chain = networks[0];
 
-  return result;
+export const readFactory = async <T = unknown>(
+  functionName: readFactoryFunctions,
+  args?: unknown[]
+): Promise<T | undefined> => {
+  try {
+    const result = await retryWithBackoff(() =>
+      readContract(config, {
+        abi: AnthologyFactoryABI,
+        address: AnthologyFactoryAddress,
+        functionName,
+        chainId: chain.id,
+        args,
+      })
+    );
+    return result as T;
+  } catch (error) {
+    console.warn(`[readFactory] Failed: ${functionName}`);
+    console.error(error);
+    return undefined;
+  }
 };
 
-export const writeFactory = async (
-  _functionName: writeFactoryFunctions,
-  _args?: unknown[]
-) => {
-  let result;
-  console.log("writing to factory");
+export const writeFactory = async <T = unknown>(
+  functionName: writeFactoryFunctions,
+  args?: unknown[]
+): Promise<T | undefined> => {
   try {
-    result = await writeContract(config, {
-      abi: AnthologyFactoryABI,
-      address: AnthologyFactoryAddress,
-      functionName: _functionName,
-      chainId: chain.id,
-      args: _args,
-    });
-  } catch (error) {
-    console.log("Error writing:", _functionName);
-    console.log("error:", error);
-  }
+    const result = await retryWithBackoff(() =>
+      writeContract(config, {
+        abi: AnthologyFactoryABI,
+        address: AnthologyFactoryAddress,
+        functionName,
+        args,
+        chainId: chain.id,
+      })
+    );
 
-  return result;
+    return result as T;
+  } catch (error) {
+    console.warn(`[writeAnthology] Failed: ${functionName}`);
+    console.error(error);
+    return undefined;
+  }
 };
 
 /* 

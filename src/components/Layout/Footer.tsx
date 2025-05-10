@@ -6,11 +6,11 @@ export const Footer = () => {
         display: "flex",
         flexDirection: "row",
         justifyContent: "center",
-        color: "white",
+        color: "#222222",
         height: "50px",
       }}
     >
-      {/* Recording the collective memory */}
+      Recording the collective memory
     </div>
   );
 };

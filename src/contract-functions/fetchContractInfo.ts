@@ -1,7 +1,7 @@
-import { readFactory } from "@contract-functions/FactoryFunctions";
-import { readAnthology } from "@contract-functions/AnthologyFunctions";
+import { readAnthology } from "@src/contract-functions/anthologyFunctions";
+import { readFactory } from "@src/contract-functions/factoryFunctions";
 
-export const fetchContractData = async () => {
+export const fetchFactoryInfo = async () => {
   const contractInfo = (await readFactory("getContractInfo")) as {
     owner: string;
     isFrozen: boolean;
@@ -29,28 +29,36 @@ function hexToString(hex: string) {
   return str;
 }
 
-export const fetchAnthologyInfo = async (contractAddr: string) => {
-  const anthologyInfo = (await readAnthology(
+interface AnthologyInfoProps {
+  owner: string;
+  title: string;
+  skin: string;
+  totalCreatedMemoirs: bigint;
+  currentMemoirCount: number;
+  maxMemoirs: number;
+  memoirPrice: number;
+  whitelistEnabled: boolean;
+  //isFrozen: boolean;      // add
+  useBuffer: boolean;
+  useERC20: boolean;
+  erc20Token: string;
+  memoirsCP: number;
+  memoirBufferCP: number;
+  whitelistCP: number;
+}
+
+export const fetchAnthologyInfo = async (contractAddr: `0x${string}`) => {
+  const anthologyInfo = await readAnthology<AnthologyInfoProps>(
     contractAddr,
     "getAnthologyInfo"
-  )) as {
-    owner: string;
-    title: string;
-    skin: string;
-    totalCreatedMemoirs: bigint;
-    currentMemoirCount: number;
-    maxMemoirs: number;
-    memoirPrice: number;
-    whitelistEnabled: boolean;
-    //isFrozen: boolean;      // add
-    useBuffer: boolean;
-    useERC20: boolean;
-    erc20Token: string;
-    memoirsCP: number;
-    memoirBufferCP: number;
-    whitelistCP: number;
-  };
+  );
 
+  if (!anthologyInfo) {
+    console.warn(
+      `[fetchAnthologyInfo] Failed: getAnthologyInfo @ ${contractAddr}`
+    );
+    return undefined;
+  }
   return {
     ...anthologyInfo,
     skin: hexToString(anthologyInfo.skin),

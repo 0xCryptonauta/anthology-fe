@@ -2,7 +2,7 @@ import { useAppDispatch } from "@store/utils/hooks";
 import { useAppSelector } from "@store/utils/hooks";
 import { shortenAddress } from "@utils/shortenAddress";
 import { AppDispatch } from "@store/redux";
-import { writeAnthology } from "@contract-functions/AnthologyFunctions";
+import { writeAnthology } from "@src/contract-functions/anthologyFunctions";
 import { removeOneFromMemoirs } from "@store/slices/anthologySlice";
 import { formatUnixTime } from "@utils/formatUnixTime";
 import { SkinType } from "@store/slices/anthologySlice";

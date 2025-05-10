@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { parseEther } from "viem";
-import { writeAnthology } from "@contract-functions/AnthologyFunctions";
+import { writeAnthology } from "@src/contract-functions/anthologyFunctions";
 //import { ChangeAnthologyTitle } from "./ChangeAnthologyTitle";
 import { useToast } from "@components/Layout/Toast";
 
