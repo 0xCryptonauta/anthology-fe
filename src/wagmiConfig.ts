@@ -4,7 +4,7 @@ import { arbitrum } from "viem/chains";
 import memoize from "lodash.memoize";
 
 const wcProjectId = import.meta.env.VITE_WC_PROJECT_ID;
-const chainRpc = "https://arbitrum.lava.build:443"; //import.meta.env.VITE_FACTORY_RPC;
+const chainRpc = import.meta.env.VITE_FACTORY_RPC;
 
 const metadataUrl = "https://memory.inbytes.xyz";
 

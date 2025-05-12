@@ -9,8 +9,7 @@ import { networks } from "@src/wagmiConfig";
 import { retryWithBackoff } from "@utils/retryWithBackoff";
 import { getCurrentConfig } from "./helpers";
 
-//const AnthologyFactoryAddress = import.meta.env.VITE_FACTORY_CONTRACT_ADDRESS; //Optimism
-const AnthologyFactoryAddress = import.meta.env.VITE_FACTORY_ARBITRUM; //Arbitrum
+const AnthologyFactoryAddress = import.meta.env.VITE_FACTORY_CONTRACT;
 
 type readFactoryFunctions =
   | "getContractInfo"

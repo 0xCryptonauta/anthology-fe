@@ -1,54 +1,46 @@
 # Anthology
 
-needs .env file
+Needs .env file
 
-> .env
->
-> > FACTORY_CONTRACT_ADDRESS = "FACTORY_CONTRACT"
-> >
-> > LAVA_PROJECT_ID = "LAVA PROJECT ID"
-> > WC_PROJECT_ID = "WC PROJECT ID"
-> > VITE_ENV = "development" || "production"
+```js
+// .env file
+VITE_WC_PROJECT_ID = "WalletConnect Project ID";
+VITE_FACTORY_CONTRACT = "Factory Contract Address";
+VITE_FACTORY_RPC = "Factory RPC - http";
+VITE_ENV = "development" | "any";
+```
 
 How to run this project
 
 ```
-    npm run dev
-```
+bun install
 
----
+run dev
+```
 
 ---
 
 ## Git merge Example Workflow
 
-### 1. Create a feature branch:
-
-```
+```js
+//1. Create a feature branch:
 git checkout -b feature/add-search dev
-```
 
-### 2. Make changes and commit:
-
-```
+//2. Make changes and commit:
 git commit -m "Add search functionality"
-```
 
-### 3. Merge into dev with a commit:
-
-```
+//3. Merge into dev with a commit:
 git checkout dev
+
+// --no-ff -> its going to keep branch flow topology
 git merge --no-ff feature/add-search -m "Merged 'feature/add-search' into dev"
+
+// --no-edit -> makes the "Merged 'feature/add-search' into dev" by default
 git merge --no-ff --no-edit <BRANCH NAME>
-```
 
-### 4. Delete the feature branch:
-
-```
+//4. Delete the feature branch:
 git branch -d feature/add-search
 ```
-
----
 
 ---
 
@@ -64,60 +56,29 @@ git branch -d feature/add-search
 
 ---
 
----
-
 ### Commit Message Guidelines
 
-#### For clear and consistent commit messages, follow this format:
-
+```js
+//For clear and consistent commit messages, follow this format:
+git commit -m "<type>(<scope>): <message>"
 ```
-<type>(<scope>): <message>
-```
 
-#### Types:
-
-```
+```js
+//Types:
 feat: → New feature
-
 fix: → Bug fix
-
 chore: → Maintenance, cleanup, etc.
-
 refactor: → Code improvements without changing functionality
-
 docs: → Documentation updates
-
 style: → Code style (e.g., formatting)
-
 test: → Adding or updating tests
-```
 
-#### Versioning Results:
-
-```
-
+//Versioning Results:
 feat: → Bumps Minor version
-
 fix: → Bumps Patch version
-
 BREAKING CHANGE: → Bumps Major version
-
 No relevant commits? → No version change
 ```
-
-#### Examples:
-
-```
-feat(auth): add OAuth login support
-
-fix(ui): resolve alignment issues on mobile
-
-chore: update dependencies
-
-docs: improve README instructions
-```
-
----
 
 ### Git commit template
 
@@ -129,53 +90,12 @@ docs: improve README instructions
 > git commit -> without -m flag
 ```
 
-#### Template
-
-```
-# -----------------------------------------------------------------------------
-# -----------------------------------------------------------------------------
-<type>[optional scope]: <description>
-# |<----  Using a Maximum Of 50 Characters  ---->|
-
-<body>
-# |<----   Try To Limit Each Line to a Maximum Of 72 Characters   ---->|
-# Explain how the commit addresses the issue
-#
-# BREAKING CHANGE: <explanation> (optional -> bumps major version)
-# -----------------------------------------------------------------------------
-# -----------------------------------------------------------------------------
-#
-# ------------------------------ COMMIT TYPE ----------------------------------
-# Type can be
-#   feat     (new feature -> Bumps Minor version)
-#   fix      (bug fix -> Bumps Patch version)
-#   refactor (refactoring production code)
-#   style    (formatting, missing semi colons, etc; no code change)
-#   docs     (changes to documentation)
-#   test     (adding or refactoring tests; no production code change)
-#   chore    (updating grunt tasks etc; no production code change)
-#   wip      (work in progress commit to be squashed -- do not push!)**
-# -----------------------------------------------------------------------------
-#
-# Remember to
-#   - Capitalize the subject line
-#   - Use the imperative mood in the subject line
-#   - Do not end the subject line with a period
-#   - Separate subject from body with a blank line
-#   - Use the body to explain what and why vs. how
-#   - Can use multiple lines with "-" for bullet points in body.
-```
-
 ### Pushing to main
 
-only on main
-
-```
+```js
+//only on main
 npm run release
-```
 
-Push tags with
-
-```
-git push --follow-tags origin main.
+//Push tags with
+git push --follow-tags origin main
 ```

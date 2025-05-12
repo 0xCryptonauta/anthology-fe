@@ -2,7 +2,7 @@ import { store } from "@src/store/redux";
 import { createWagmiConfig } from "@src/wagmiConfig";
 import { Config } from "wagmi";
 
-const chainiRpc = "https://arbitrum.lava.build:443"; //import.meta.env.VITE_FACTORY_RPC;
+const chainiRpc = import.meta.env.VITE_FACTORY_RPC;
 
 export const getCurrentConfig = () => {
   const state = store.getState();
