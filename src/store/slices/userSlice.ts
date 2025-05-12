@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
+type Address = `0x${string}`;
 export interface UserState {
-  userAddr: string;
+  userAddr: Address | "";
   walletId: string;
 }
 
@@ -15,10 +16,10 @@ export const userSlice = createSlice({
   name: "factory",
   initialState,
   reducers: {
-    updateUserAddr: (state, action: PayloadAction<string>) => {
+    updateUserAddr: (state, action: PayloadAction<Address | "">) => {
       state.userAddr = action.payload;
     },
-    updateWalletId: (state, action: PayloadAction<string>) => {
+    updateWalletId: (state, action: PayloadAction<Address>) => {
       state.walletId = action.payload;
     },
     resetUser: () => {

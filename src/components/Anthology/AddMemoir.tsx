@@ -1,16 +1,17 @@
 import { useState } from "react";
-import { writeAnthology } from "@contract-functions/AnthologyFunctions";
+import { writeAnthology } from "@src/contract-functions/anthologyFunctions";
 import { Offcanvas } from "react-bootstrap";
 import "./style.css";
 import { useToast } from "@components/Layout/Toast";
 import { useAppSelector } from "@store/utils/hooks";
+import { Address } from "@src/types/common";
 
 export const AddMemoir = ({
   contractAddr,
   title = "",
   content = "",
 }: {
-  contractAddr: string;
+  contractAddr: Address;
   title?: string;
   content?: string;
 }) => {
@@ -33,6 +34,7 @@ export const AddMemoir = ({
   const { addToast } = useToast();
 
   return (
+    userAddr &&
     (!whitelistEnabled ||
       whitelist.includes(userAddr) ||
       owner === userAddr) && (

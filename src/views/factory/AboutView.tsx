@@ -5,7 +5,6 @@ import { clearFactoryStore } from "@store/slices/factorySlice";
 import { useState } from "react";
 import { useToast } from "@components/Layout/Toast";
 import InstallPWAButton from "@src/components/Layout/InstallPWAButton";
-import { WalletOptions } from "@src/components/Layout/WalletOptions";
 
 export const AboutView = () => {
   const dispatch = useAppDispatch();
@@ -28,8 +27,6 @@ export const AboutView = () => {
       }}
     >
       <span>Some description about this project</span>
-
-      <WalletOptions />
 
       <div
         style={{

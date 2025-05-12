@@ -1,15 +1,9 @@
-// @ts-nocheck
-
-import {
-  readContract,
-  //watchContractEvent,
-  writeContract,
-} from "@wagmi/core";
-//import { hardhat as chain } from "@wagmi/core/chains";
-import { arbitrum as chain } from "@wagmi/core/chains";
+import { readContract, writeContract } from "@wagmi/core";
 //import { parseEther } from "viem";
 import { AnthologyABI } from "@abi/AnthologyABI";
-import { config } from "@src/wagmiConfig";
+import { networks } from "@src/wagmiConfig";
+import { retryWithBackoff } from "@utils/retryWithBackoff";
+import { getCurrentConfig } from "./helpers";
 
 type readFunctions =
   | "owner"
@@ -43,50 +37,56 @@ type writeFunctions =
   | "cleanWhitelist"
   | "deleteMemoir";
 
-export const readAnthology = async (
-  _contractAddr: string,
-  _functionName: readFunctions,
-  _args?: unknown[]
-) => {
-  let result;
-  try {
-    result = await readContract(config, {
-      abi: AnthologyABI,
-      address: _contractAddr,
-      functionName: _functionName,
-      chainId: chain.id,
-      args: _args,
-    });
-  } catch (error) {
-    //result = undefined;
-    console.log("ERROR calling:", _functionName);
-    console.log("FOR:", _contractAddr);
-    console.log("EEOR:", error);
-  }
+const chain = networks[0];
 
-  return result;
+export const readAnthology = async <T = unknown>(
+  contractAddr: `0x${string}`,
+  functionName: readFunctions,
+  args?: unknown[]
+): Promise<T | undefined> => {
+  try {
+    const config = getCurrentConfig();
+
+    const result = await retryWithBackoff(() =>
+      readContract(config, {
+        abi: AnthologyABI,
+        address: contractAddr,
+        functionName,
+        chainId: chain.id,
+        args,
+      })
+    );
+    return result as T;
+  } catch (error) {
+    console.warn(`[readAnthology] Failed: ${functionName} @ ${contractAddr}`);
+    console.error(error);
+    return undefined;
+  }
 };
 
-export const writeAnthology = async (
-  _contractAddr: string,
-  _functionName: writeFunctions,
-  _args?: unknown[]
-) => {
+export const writeAnthology = async <T = unknown>(
+  contractAddr: `0x${string}`,
+  functionName: writeFunctions,
+  args?: unknown[]
+): Promise<T | undefined> => {
   try {
-    const result = await writeContract(config, {
-      abi: AnthologyABI,
-      address: _contractAddr,
-      functionName: _functionName,
-      args: _args,
-      chainId: chain.id,
-    });
+    const config = getCurrentConfig();
 
-    return result;
+    const result = await retryWithBackoff(() =>
+      writeContract(config, {
+        abi: AnthologyABI,
+        address: contractAddr,
+        functionName,
+        args,
+        chainId: chain.id,
+      })
+    );
+
+    return result as T;
   } catch (error) {
-    //result = undefined;
-    console.log("ERROR calling:", _functionName);
-    console.log("FOR:", _contractAddr);
-    console.log("EEOR:", error);
+    console.warn(`[writeAnthology] Failed: ${functionName} @ ${contractAddr}`);
+    console.error(error);
+    return undefined;
   }
 };
 

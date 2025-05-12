@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useState } from "react";
+// ToastContext.tsx
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useRef,
+  useEffect,
+} from "react";
 import { Toast as BootstrapToast, ToastContainer } from "react-bootstrap";
 
 export type ToastVariantType =
@@ -12,7 +19,7 @@ export type ToastVariantType =
   | "dark";
 
 interface ToastProps {
-  id: string; // Unique identifier
+  id: string;
   title: string;
   content: string;
   delay?: number;
@@ -31,23 +38,44 @@ export const useToast = () => {
   return context;
 };
 
+const generateId = () =>
+  `${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 9)}`;
+
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [toasts, setToasts] = useState<ToastProps[]>([]);
+  const timeouts = useRef<Map<string, NodeJS.Timeout>>(new Map());
+  const defaultDelay = 5000;
+
+  const removeToast = (id: string) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+    const timeout = timeouts.current.get(id);
+    if (timeout) clearTimeout(timeout);
+    timeouts.current.delete(id);
+  };
 
   const addToast = (toast: Omit<ToastProps, "id">) => {
-    console.log("Adding toast:", toast);
-    const newToast = {
+    const id = generateId();
+    const newToast: ToastProps = {
       ...toast,
-      id: Math.floor(Math.random() * 100000).toString(),
-    }; // Unique ID for tracking
+      id,
+      delay: toast.delay ?? defaultDelay,
+    };
     setToasts((prev) => [...prev, newToast]);
 
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== newToast.id));
-    }, newToast.delay || 30000);
+    const timeout = setTimeout(() => {
+      removeToast(id);
+    }, newToast.delay);
+    timeouts.current.set(id, timeout);
   };
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      timeouts.current.forEach((timeout) => clearTimeout(timeout));
+    };
+  }, []);
 
   return (
     <ToastContext.Provider value={{ addToast }}>
@@ -60,15 +88,14 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
         {toasts.map((toast) => (
           <BootstrapToast
             key={toast.id}
-            className={`bg-${toast.variant}`}
-            onClose={() =>
-              setToasts((prev) => prev.filter((t) => t.id !== toast.id))
-            }
-            delay={toast.delay || 3000}
+            className={`bg-${toast.variant} text-white`}
+            onClose={() => removeToast(toast.id)}
+            delay={toast.delay}
+            style={{ width: "300px" }}
             autohide
           >
-            <BootstrapToast.Header closeButton={false}>
-              <strong className="mr-auto">{toast.title}</strong>
+            <BootstrapToast.Header closeButton>
+              <strong className="me-auto">{toast.title}</strong>
             </BootstrapToast.Header>
             <BootstrapToast.Body>{toast.content}</BootstrapToast.Body>
           </BootstrapToast>

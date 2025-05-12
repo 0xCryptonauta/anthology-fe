@@ -2,7 +2,7 @@ import { useAppDispatch } from "@store/utils/hooks";
 import { useAppSelector } from "@store/utils/hooks";
 import { shortenAddress } from "@utils/shortenAddress";
 import { AppDispatch } from "@store/redux";
-import { writeAnthology } from "@contract-functions/AnthologyFunctions";
+import { writeAnthology } from "@src/contract-functions/anthologyFunctions";
 import { removeOneFromMemoirs } from "@store/slices/anthologySlice";
 import { formatUnixTime } from "@utils/formatUnixTime";
 import { SkinType } from "@store/slices/anthologySlice";
@@ -16,6 +16,8 @@ import RedditEmbed from "./RedditEmbed";
 import FacebookEmbed from "./facebookEmbed";
 import InstagramEmbed from "./InstagramEmbed";
 import { ActiveView } from "@src/types/common";
+import { orderMemoirs } from "@src/utils/orderMemoirs";
+import { useEffect } from "react";
 
 const youtubeRegex =
   /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?(?:.*?v=)?|embed\/|shorts\/)|youtu\.be\/)(.{11})$/i;
@@ -47,7 +49,7 @@ const handleDelete = async ({
   dispatch,
   addToast,
 }: {
-  contractAddr: string;
+  contractAddr: `0x${string}`;
   index: number;
   dispatch: AppDispatch;
   addToast: ({
@@ -87,9 +89,9 @@ const handleDelete = async ({
 };
 
 interface RenderMediaMemoirsProps {
-  contractAddr: string;
-  currentUser: string;
-  anthologyOwner: string;
+  contractAddr: `0x${string}`;
+  currentUser: `0x${string}` | "";
+  anthologyOwner: `0x${string}`;
   memoirs: MemoirInterface[];
   orderMap: number[];
   dispatch: AppDispatch;
@@ -278,9 +280,9 @@ const RenderJsonMemoirs = ({ memoirs }: { memoirs: MemoirInterface[] }) => {
 };
 
 interface RenderTextMemoirsProps {
-  contractAddr: string;
-  currentUser: string;
-  anthologyOwner: string;
+  contractAddr: `0x${string}`;
+  currentUser: `0x${string}` | "";
+  anthologyOwner: `0x${string}`;
   memoirs: MemoirInterface[];
   dispatch: AppDispatch;
   setActiveView: (newActiveView: ActiveView) => void;
@@ -452,10 +454,10 @@ const RenderPlaylistMemoirs = ({ memoirs }: { memoirs: MemoirInterface[] }) => {
 interface RenderMemoirsProps {
   anthologySkin: SkinType;
   order: OrderType;
-  anthologyOwner: string;
+  anthologyOwner: `0x${string}`;
   memoirs: MemoirInterface[];
-  contractAddr: string;
-  currentUser: string;
+  contractAddr: `0x${string}`;
+  currentUser: `0x${string}` | "";
   dispatch: AppDispatch;
   setActiveView: (newActiveView: ActiveView) => void;
 }
@@ -480,42 +482,44 @@ const RenderMemoirs: React.FC<RenderMemoirsProps> = ({
       case "json":
         return RenderJsonMemoirs({ memoirs });
       case "media":
-        return RenderMediaMemoirs({
-          contractAddr,
-          anthologyOwner,
-          memoirs,
-          currentUser,
-          orderMap: orderedMemoirs.map((_, i) => i), //Not working -> iframe refetching
-          dispatch,
-          setActiveView,
-        });
+        return (
+          <RenderMediaMemoirs
+            contractAddr={contractAddr}
+            anthologyOwner={anthologyOwner}
+            memoirs={memoirs}
+            orderMap={orderedMemoirs.map((_, i) => i)}
+            currentUser={currentUser}
+            dispatch={dispatch}
+            setActiveView={setActiveView}
+          />
+        );
       case "text":
-        return RenderTextMemoirs({
-          contractAddr,
-          anthologyOwner,
-          memoirs: orderedMemoirs,
-          currentUser,
-          dispatch,
-          setActiveView,
-        });
+        return (
+          <RenderTextMemoirs
+            contractAddr={contractAddr}
+            anthologyOwner={anthologyOwner}
+            memoirs={orderedMemoirs}
+            currentUser={currentUser}
+            dispatch={dispatch}
+            setActiveView={setActiveView}
+          />
+        );
       case "list":
-        return RenderListMemoirs({
-          memoirs: orderedMemoirs,
-        });
+        return <RenderListMemoirs memoirs={orderedMemoirs} />;
 
       case "playlist":
-        return RenderPlaylistMemoirs({
-          memoirs: orderedMemoirs,
-        });
+        return <RenderPlaylistMemoirs memoirs={orderedMemoirs} />;
       default:
-        return RenderTextMemoirs({
-          contractAddr,
-          anthologyOwner,
-          memoirs: orderedMemoirs,
-          currentUser,
-          dispatch,
-          setActiveView,
-        });
+        return (
+          <RenderTextMemoirs
+            contractAddr={contractAddr}
+            anthologyOwner={anthologyOwner}
+            memoirs={orderedMemoirs}
+            currentUser={currentUser}
+            dispatch={dispatch}
+            setActiveView={setActiveView}
+          />
+        );
       //throw new Error(`Unsupported skin type: ${memoirSkin}`);
     }
   } catch (error) {
@@ -524,41 +528,8 @@ const RenderMemoirs: React.FC<RenderMemoirsProps> = ({
   }
 };
 
-const orderMemoirs = ({
-  memoirs,
-  order,
-}: {
-  memoirs: MemoirInterface[];
-  order: OrderType;
-}) => {
-  try {
-    switch (order) {
-      case "Newer":
-        return memoirs.sort(
-          (a, b) => Number(b.timestamp) - Number(a.timestamp)
-        );
-      case "Older":
-        return memoirs.sort(
-          (a, b) => Number(a.timestamp) - Number(b.timestamp)
-        );
-      case "Random":
-        return [...memoirs].sort(() => Math.random() - 0.5);
-      case "A -> Z":
-        return memoirs.sort((a, b) => a.title.localeCompare(b.title));
-      case "Z -> A":
-        return memoirs.sort((a, b) => b.title.localeCompare(a.title));
-      default:
-        throw new Error(`Unsupported skin type: ${order}`);
-        return memoirs;
-    }
-  } catch (error) {
-    console.error("Error ordering memoirs:", error);
-    return memoirs;
-  }
-};
-
 interface MemoirsProps {
-  contractAddr: string;
+  contractAddr: `0x${string}`;
   skin: SkinType;
   order: OrderType;
   setActiveView: (newActiveView: ActiveView) => void;
@@ -577,6 +548,10 @@ export const Memoirs: React.FC<MemoirsProps> = ({
 
   const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div
       style={{
@@ -592,17 +567,18 @@ export const Memoirs: React.FC<MemoirsProps> = ({
         position: "relative",
       }}
     >
-      {anthology &&
-        RenderMemoirs({
-          anthologySkin: skin,
-          order,
-          contractAddr,
-          anthologyOwner: anthology.anthologyState.owner,
-          memoirs: anthology.memoirs,
-          currentUser: userAddr,
-          dispatch,
-          setActiveView,
-        })}
+      {anthology && (
+        <RenderMemoirs
+          anthologySkin={skin}
+          order={order}
+          contractAddr={contractAddr}
+          anthologyOwner={anthology.anthologyState.owner}
+          memoirs={anthology.memoirs}
+          currentUser={userAddr}
+          dispatch={dispatch}
+          setActiveView={setActiveView}
+        />
+      )}
     </div>
   );
 };

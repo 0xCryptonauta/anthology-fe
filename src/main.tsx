@@ -34,22 +34,22 @@ createRoot(document.getElementById("root")!).render(
   import.meta.env.VITE_ENV === "development" ? (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <ContextWagmiProvider>
-          <ToastProvider>
+        <ToastProvider>
+          <ContextWagmiProvider>
             <RouterProvider router={router} />
-          </ToastProvider>
-        </ContextWagmiProvider>
+          </ContextWagmiProvider>
+        </ToastProvider>
       </PersistGate>
     </Provider>
   ) : (
     <StrictMode>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <ContextWagmiProvider>
-            <ToastProvider>
+          <ToastProvider>
+            <ContextWagmiProvider>
               <RouterProvider router={router} />
-            </ToastProvider>
-          </ContextWagmiProvider>
+            </ContextWagmiProvider>
+          </ToastProvider>
         </PersistGate>
       </Provider>
     </StrictMode>

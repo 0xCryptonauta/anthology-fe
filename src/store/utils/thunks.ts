@@ -1,10 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { readFactory } from "@src/contract-functions/FactoryFunctions";
+import { readFactory } from "@src/contract-functions/factoryFunctions";
 import { transformData } from "@src/utils/transformData";
 import {
   updateContractTitles,
   updateUserContracts,
-} from "../slices/factorySlice";
+} from "@store/slices/factorySlice";
 
 export const syncUserContractsToStore = createAsyncThunk(
   "userContracts/syncUserContractsToStore",

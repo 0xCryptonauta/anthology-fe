@@ -7,8 +7,8 @@ import {
   updateUsersCP,
   updateWhitelistedUsers,
 } from "@store/slices/factorySlice";
-import { readFactory } from "@contract-functions/FactoryFunctions";
-import { fetchContractData } from "@utils/initialStateUpdate";
+import { readFactory } from "@src/contract-functions/factoryFunctions";
+import { fetchFactoryInfo } from "@src/contract-functions/fetchContractInfo";
 import { useAppSelector } from "@src/store/utils/hooks";
 
 export const useGetFactoryInfo = () => {
@@ -23,7 +23,7 @@ export const useGetFactoryInfo = () => {
         dispatch(updateUsersCP(CP));
       } else {
         // Fetch basic factory info
-        const contractInfo = await fetchContractData();
+        const contractInfo = await fetchFactoryInfo();
         dispatch(updateFactoryBasicInfo(contractInfo));
         CP = contractInfo.usersCP;
 

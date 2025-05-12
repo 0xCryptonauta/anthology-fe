@@ -1,11 +1,10 @@
 import { walletConnect, injected } from "@wagmi/connectors";
-import { createConfig, http } from "wagmi";
+import { Config, createConfig, http } from "wagmi";
 import { arbitrum } from "viem/chains";
+import memoize from "lodash.memoize";
 
 const wcProjectId = import.meta.env.VITE_WC_PROJECT_ID;
-const lavaId = import.meta.env.VITE_LAVA_PROJECT_ID;
-
-const chainRpc = `https://g.w.lavanet.xyz:443/gateway/arb1/rpc-http/${lavaId}`;
+const chainRpc = import.meta.env.VITE_FACTORY_RPC;
 
 const metadataUrl = "https://memory.inbytes.xyz";
 
@@ -16,33 +15,49 @@ const metadata = {
   icons: ["/IB_icon.png"],
 };
 
-/* const arbitrum_custom = {
+const arbitrumCustom = {
   ...arbitrum,
   rpcUrls: {
     default: {
       http: [chainRpc],
     },
   },
-}; */
+};
 
-/* export const networks = [arbitrum_custom]; */
+export const networks = [arbitrumCustom];
 
-export const config = createConfig({
-  chains: [arbitrum],
-  connectors: [
-    injected(),
-    walletConnect({
-      projectId: wcProjectId,
-      isNewChainsStale: false,
-      showQrModal: true,
-      qrModalOptions: {
-        themeMode: "dark",
+export const createWagmiConfig = memoize((rpcUrl: string) => {
+  const finalRpc = rpcUrl ? rpcUrl : chainRpc;
+
+  console.log("used RPC", finalRpc.slice(0, 25) + "...");
+
+  const arbitrumCustom = {
+    ...arbitrum,
+    rpcUrls: {
+      default: {
+        http: [finalRpc],
       },
-      metadata: metadata,
-    }),
-  ],
-  transports: {
-    //[mainnet.id]: http(),
-    [arbitrum.id]: http(chainRpc),
-  },
+    },
+  };
+
+  return createConfig({
+    chains: [arbitrumCustom],
+    connectors: [
+      injected(),
+      walletConnect({
+        projectId: wcProjectId,
+        isNewChainsStale: false,
+        showQrModal: true,
+        qrModalOptions: {
+          themeMode: "dark",
+        },
+        metadata,
+      }),
+    ],
+    transports: {
+      [arbitrumCustom.id]: http(finalRpc),
+    },
+  }) as Config;
 });
+
+//export const config = createWagmiConfig(chainRpc);

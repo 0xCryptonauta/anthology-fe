@@ -8,7 +8,7 @@ import { useAppSelector } from "@store/utils/hooks";
 import { WhitelistedUsers } from "./WhitelistedUsers";
 import { Card } from "react-bootstrap";
 
-const AnthologyFactoryAddress = import.meta.env.VITE_FACTORY_ARBITRUM; //Arbitrum
+const AnthologyFactoryAddress = import.meta.env.VITE_FACTORY_CONTRACT;
 
 export const ContractState: React.FC = () => {
   const {

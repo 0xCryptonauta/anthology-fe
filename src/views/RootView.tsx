@@ -18,11 +18,17 @@ export const RootView = () => {
   }, [activeView]);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <div
+      style={{
+        display: "grid",
+        minHeight: "100dvh",
+        gridTemplateRows: "auto 1fr auto",
+      }}
+    >
       <Header activeView={activeView} setActiveView={setActiveView} />
       <div
         className="bg-dark"
-        style={{ minHeight: "calc(100svh - 60px)", color: "white" }} // -64 of the Header height
+        style={{ color: "white" }} // -64 of the Header height
       >
         <Outlet context={{ activeView, setActiveView }} />
       </div>
