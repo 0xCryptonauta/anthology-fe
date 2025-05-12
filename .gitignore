@@ -25,3 +25,6 @@ dist-ssr
 
 # Environments
 .env
+
+# stats
+stats.html
