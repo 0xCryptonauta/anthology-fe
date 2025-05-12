@@ -1,8 +1,9 @@
 import { useAppSelector } from "@src/store/utils/hooks";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import ContractSelector from "./ContractSelector";
+import { ContractSelector } from "./ContractSelector";
 import { AddMemoir } from "@components/Anthology/AddMemoir";
+import { Address } from "@src/types/common";
 
 /* 
   users: string[]; // Array of user addresses
@@ -16,7 +17,7 @@ export const SharePage = () => {
   );
   const [searchParams] = useSearchParams();
 
-  const [selectedContract, setSelectedContract] = useState("");
+  const [selectedContract, setSelectedContract] = useState<Address | "">();
 
   const title = searchParams.get("title") || undefined;
   const text = searchParams.get("text") || undefined;

@@ -5,8 +5,9 @@ import {
 } from "@wagmi/core";
 //import { parseEther } from "viem";
 import { AnthologyFactoryABI } from "@abi/AnthologyFactoryABI";
-import { config, networks } from "@src/wagmiConfig";
+import { networks } from "@src/wagmiConfig";
 import { retryWithBackoff } from "@utils/retryWithBackoff";
+import { getCurrentConfig } from "./helpers";
 
 //const AnthologyFactoryAddress = import.meta.env.VITE_FACTORY_CONTRACT_ADDRESS; //Optimism
 const AnthologyFactoryAddress = import.meta.env.VITE_FACTORY_ARBITRUM; //Arbitrum
@@ -49,6 +50,8 @@ export const readFactory = async <T = unknown>(
   args?: unknown[]
 ): Promise<T | undefined> => {
   try {
+    const config = getCurrentConfig();
+
     const result = await retryWithBackoff(() =>
       readContract(config, {
         abi: AnthologyFactoryABI,
@@ -71,6 +74,8 @@ export const writeFactory = async <T = unknown>(
   args?: unknown[]
 ): Promise<T | undefined> => {
   try {
+    const config = getCurrentConfig();
+
     const result = await retryWithBackoff(() =>
       writeContract(config, {
         abi: AnthologyFactoryABI,

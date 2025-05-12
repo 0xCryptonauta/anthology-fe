@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { parseEther } from "viem";
 import { writeAnthology } from "@src/contract-functions/anthologyFunctions";
 //import { ChangeAnthologyTitle } from "./ChangeAnthologyTitle";

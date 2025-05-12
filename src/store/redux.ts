@@ -2,6 +2,7 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import factoryReducer from "./slices/factorySlice";
 import userReducer from "./slices/userSlice";
 import anthologyReducer from "./slices/anthologySlice";
+import dappReducer from "./slices/dappSlice";
 import storage from "redux-persist/lib/storage";
 
 import {
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   factory: factoryReducer,
   user: userReducer,
   anthology: anthologyReducer,
+  dapp: dappReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useAppSelector } from "@store/utils/hooks";
 //import { updateActiveView } from "@src/store/slices/userSlice";
 import { ActiveView } from "@src/types/common";
+import { NetworkSettings } from "./NetworkSettings";
 interface HeaderProps {
   activeView: ActiveView;
   setActiveView: (newActiveView: ActiveView) => void;
@@ -151,6 +152,10 @@ export const SidePanel: React.FC<HeaderProps> = ({ setActiveView }) => {
               <Link to="/info" onClick={handleClose}>
                 Factory Info
               </Link>
+              <br />
+              <div>
+                <NetworkSettings />
+              </div>
             </div>
           </div>
         </Offcanvas.Body>
