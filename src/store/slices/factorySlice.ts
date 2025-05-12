@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { Address } from "@src/types/common";
 
 export interface FactoryBaseState {
   owner: string;
@@ -22,10 +23,10 @@ export interface FactoryState {
   userCount: number;
   usersCP: number;
 
-  whitelistedUsers: string[];
-  users: string[]; // Array of user addresses
-  userContracts: { [key: string]: string[] }; // Mapping of user addresses to arrays of contract addresses
-  contractsTitles: { [key: string]: string }; // Mapping of contract addresses to contract details (e.g., title)
+  whitelistedUsers: Address[];
+  users: Address[]; // Array of user addresses
+  userContracts: { [key: Address]: Address[] }; // Mapping of user addresses to arrays of contract addresses
+  contractsTitles: { [key: Address]: string }; // Mapping of contract addresses to contract details (e.g., title)
 }
 
 const initialState: FactoryState = {
@@ -78,10 +79,10 @@ export const factorySlice = createSlice({
     ) => {
       return { ...state, ...action.payload };
     },
-    updateWhitelistedUsers: (state, action: PayloadAction<string[]>) => {
+    updateWhitelistedUsers: (state, action: PayloadAction<Address[]>) => {
       state.whitelistedUsers = action.payload;
     },
-    updateAddToWhitelist: (state, action: PayloadAction<string>) => {
+    updateAddToWhitelist: (state, action: PayloadAction<Address>) => {
       state.whitelistedUsers.push(action.payload);
     },
     updateRemoveFromWhitelist: (state, action: PayloadAction<string>) => {
@@ -104,24 +105,30 @@ export const factorySlice = createSlice({
       const data = action.payload;
       state.users.push(...data);
     },
+
     updateUserContracts: (
       state,
-      action: PayloadAction<{ [key: string]: string[] }>
+      action: PayloadAction<{ [key: Address]: Address[] }>
     ) => {
-      state.userContracts = Object.keys(action.payload).reduce((acc, key) => {
-        const newContracts = action.payload[key];
+      state.userContracts = Object.keys(action.payload).reduce(
+        (acc, key) => {
+          const addressKey = key as Address;
+          const newContracts = action.payload[addressKey];
 
-        if (acc[key]) {
-          // Merge and deduplicate
-          acc[key] = [...new Set([...acc[key], ...newContracts])];
-        } else {
-          // Deduplicate new array before assigning
-          acc[key] = [...new Set(newContracts)];
-        }
+          if (acc[addressKey]) {
+            acc[addressKey] = [
+              ...new Set([...acc[addressKey], ...newContracts]),
+            ];
+          } else {
+            acc[addressKey] = [...new Set(newContracts)];
+          }
 
-        return acc;
-      }, state.userContracts);
+          return acc;
+        },
+        { ...state.userContracts } as { [key: Address]: Address[] }
+      );
     },
+
     updateContractTitles: (
       state,
       action: PayloadAction<{ [key: string]: string }>
@@ -130,7 +137,7 @@ export const factorySlice = createSlice({
     },
     updateOneContractTitle: (
       state,
-      action: PayloadAction<{ contract: string; title: string }>
+      action: PayloadAction<{ contract: Address; title: string }>
     ) => {
       state.contractsTitles[action.payload.contract] = action.payload.title;
     },

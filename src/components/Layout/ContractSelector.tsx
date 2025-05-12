@@ -1,71 +1,24 @@
 import { shortenAddress } from "@src/utils/shortenAddress";
 import React, { useState, useMemo } from "react";
-import { Contract, Categories } from "@src/components/Factory/UserContracts";
+import { parseContractsCategories } from "@src/utils/parseContractsCategories";
+import { Address } from "@src/types/common";
 interface ContractSelectorProps {
-  users: string[];
-  userContracts: Record<string, string[]>;
-  contractsTitles: Record<string, string>;
-  setSelectedContract: (addr: string) => void;
+  users: Address[];
+  userContracts: Record<Address, Address[]>;
+  contractsTitles: Record<Address, string>;
+  setSelectedContract: (addr: Address) => void;
 }
 
-const ContractSelector: React.FC<ContractSelectorProps> = ({
+export const ContractSelector: React.FC<ContractSelectorProps> = ({
   users,
   userContracts,
   contractsTitles,
   setSelectedContract,
 }) => {
-  const [selectedUser, setSelectedUser] = useState<string>(users[0] || "");
+  const [selectedUser, setSelectedUser] = useState<Address>(users[0] || "");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
   const [selectedAddress, setSelectedAddress] = useState<string>("");
-
-  const parseContracts = (
-    contracts: Contract[]
-  ): { categories: Categories; uncategorized: Contract[] } => {
-    const categories: Categories = {};
-    const uncategorized: Contract[] = [];
-
-    contracts.forEach(({ address, title, originalIndex }) => {
-      if (!title.trim()) {
-        uncategorized.push({ address, title, originalIndex });
-        return;
-      }
-
-      const match =
-        title.match(/\[(.*?)\](?:\[(.*?)\])?\s*(.*)$/) ||
-        title.match(/^([^[]+)$/);
-
-      if (match) {
-        const [, category, subcategory, item] =
-          match.length === 4 ? match : [null, null, null, match[1]];
-
-        const contractData = {
-          address,
-          title: item?.trim() || title,
-          originalIndex,
-        };
-
-        if (category) {
-          if (!categories[category]) {
-            categories[category] = { items: [], subcategories: {} };
-          }
-
-          if (subcategory) {
-            if (!categories[category].subcategories[subcategory]) {
-              categories[category].subcategories[subcategory] = [];
-            }
-            categories[category].subcategories[subcategory].push(contractData);
-          } else {
-            categories[category].items.push(contractData);
-          }
-        } else {
-          uncategorized.push(contractData);
-        }
-      }
-    });
-
-    return { categories, uncategorized };
-  };
 
   const userContractsList = useMemo(() => {
     const contracts = (userContracts[selectedUser] || []).map(
@@ -75,7 +28,7 @@ const ContractSelector: React.FC<ContractSelectorProps> = ({
         originalIndex: index,
       })
     );
-    return parseContracts(contracts);
+    return parseContractsCategories(contracts);
   }, [selectedUser, userContracts, contractsTitles]);
 
   const categoryOptions = useMemo(() => {
@@ -107,13 +60,13 @@ const ContractSelector: React.FC<ContractSelectorProps> = ({
     setSelectedCategory(e.target.value);
     setSelectedSubcategory("");
     setSelectedAddress("");
-    setSelectedContract("");
+    setSelectedContract("0x");
   };
 
   const handleSubcategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedSubcategory(e.target.value);
     setSelectedAddress("");
-    setSelectedContract("");
+    setSelectedContract("0x");
   };
 
   return (
@@ -132,11 +85,11 @@ const ContractSelector: React.FC<ContractSelectorProps> = ({
         value={selectedUser}
         style={{ minHeight: "30px" }}
         onChange={(e) => {
-          setSelectedUser(e.target.value);
+          setSelectedUser(e.target.value as Address);
           setSelectedCategory("");
           setSelectedSubcategory("");
           setSelectedAddress("");
-          setSelectedContract("");
+          setSelectedContract("0x");
         }}
       >
         {users.map((user) => (
@@ -203,7 +156,7 @@ const ContractSelector: React.FC<ContractSelectorProps> = ({
               key={contract.address}
               onClick={() => {
                 setSelectedAddress(contract.address);
-                setSelectedContract(contract.address);
+                setSelectedContract(contract.address as Address);
               }}
               style={{
                 cursor: "pointer",
@@ -238,5 +191,3 @@ const ContractSelector: React.FC<ContractSelectorProps> = ({
     </div>
   );
 };
-
-export default ContractSelector;

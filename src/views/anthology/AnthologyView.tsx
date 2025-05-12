@@ -32,7 +32,7 @@ import {
   OrderSelector,
   OrderType,
 } from "@components/Anthology/Memoirs/OrderSelector";
-import { ActiveView } from "@src/types/common";
+import { ActiveView, Address } from "@src/types/common";
 
 const formatTitle = (title?: string): string => {
   if (!title) return ""; // Handle undefined case
@@ -149,7 +149,7 @@ export const AnthologyView: React.FC<AnthologyViewProps> = ({
               dispatch(
                 updateWhitelist({
                   contract: contractAddr,
-                  whitelistedUsers: whitelistedUsers as string[],
+                  whitelistedUsers: whitelistedUsers as Address[],
                 })
               );
             }
@@ -193,7 +193,7 @@ export const AnthologyView: React.FC<AnthologyViewProps> = ({
         } else {
           console.log("New anthology added");
           const anthologyInfo = await fetchAnthologyInfo(contractAddr);
-          console.log("RAW:", anthologyInfo.skin);
+          console.log("RAW:", anthologyInfo?.skin);
           dispatch(
             addAnthology({
               contract: contractAddr,

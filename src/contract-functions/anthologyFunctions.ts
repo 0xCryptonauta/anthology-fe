@@ -1,8 +1,9 @@
 import { readContract, writeContract } from "@wagmi/core";
 //import { parseEther } from "viem";
 import { AnthologyABI } from "@abi/AnthologyABI";
-import { config, networks } from "@src/wagmiConfig";
+import { networks } from "@src/wagmiConfig";
 import { retryWithBackoff } from "@utils/retryWithBackoff";
+import { getCurrentConfig } from "./helpers";
 
 type readFunctions =
   | "owner"
@@ -44,6 +45,8 @@ export const readAnthology = async <T = unknown>(
   args?: unknown[]
 ): Promise<T | undefined> => {
   try {
+    const config = getCurrentConfig();
+
     const result = await retryWithBackoff(() =>
       readContract(config, {
         abi: AnthologyABI,
@@ -67,6 +70,8 @@ export const writeAnthology = async <T = unknown>(
   args?: unknown[]
 ): Promise<T | undefined> => {
   try {
+    const config = getCurrentConfig();
+
     const result = await retryWithBackoff(() =>
       writeContract(config, {
         abi: AnthologyABI,
