@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useInView } from "react-intersection-observer";
 
-type LazyYTProps = {
+type YoutubeEmbedProps = {
   videoId: string;
 };
 
-export const LazyYT: React.FC<LazyYTProps> = ({ videoId }) => {
+export const YoutubeEmbed: React.FC<YoutubeEmbedProps> = ({ videoId }) => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0 });
   const [isPlayerActive, setIsPlayerActive] = useState(false);
 
