@@ -72,8 +72,11 @@ export const UserContracts: React.FC<UserContractsProps> = ({
             {shortenAddress(userAddr, 12, 9)}
           </span>
           <div style={{ marginTop: "30px" }}>
-            {Object.entries(categories).map(
-              ([category, { items, subcategories }], index, arr) => (
+            {Object.entries(categories)
+              .sort(([categoryA], [categoryB]) =>
+                categoryA.localeCompare(categoryB)
+              )
+              .map(([category, { items, subcategories }], index, arr) => (
                 <div key={category}>
                   <h3 className="text-lg font-semibold">{category}</h3>
                   <ul className="ml-4">
@@ -115,8 +118,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                   ))}
                   {index < arr.length - 1 && <hr className="my-2" />}
                 </div>
-              )
-            )}
+              ))}
             {uncategorized.length > 0 && (
               <div>
                 <h3 className="text-lg font-semibold">Other</h3>
