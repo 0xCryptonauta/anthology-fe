@@ -28,7 +28,7 @@ export const Header: React.FC<HeaderProps> = ({
         <Link
           className="navbar-brand"
           to="/"
-          onClick={() => handleOnClick("factory")}
+          onClick={() => handleOnClick("user/My Memoirs")}
         >
           <img
             src="/IB_icon.png"

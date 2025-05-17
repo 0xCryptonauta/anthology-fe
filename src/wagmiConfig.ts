@@ -1,5 +1,5 @@
 import { walletConnect, injected } from "@wagmi/connectors";
-import { Config, createConfig, http } from "wagmi";
+import { Config, createConfig, createStorage, http } from "wagmi";
 import { arbitrum } from "viem/chains";
 import memoize from "lodash.memoize";
 
@@ -42,6 +42,7 @@ export const createWagmiConfig = memoize((rpcUrl: string) => {
 
   return createConfig({
     chains: [arbitrumCustom],
+    storage: createStorage({ storage: window.localStorage }),
     connectors: [
       injected(),
       walletConnect({

@@ -1,6 +1,6 @@
 import { useAppSelector } from "@src/store/utils/hooks";
 import { DeployView } from "./factory/DeployView";
-import { FactoryView } from "./factory/FactoryView";
+//import { FactoryUsersView } from "./factory/FactoryUsersView";
 import { CurrentUserView } from "./factory/CurrentUserView";
 import { AnthologyView } from "./anthology/AnthologyView";
 
@@ -25,11 +25,14 @@ export const IndexView = () => {
     >
       {activeView === "deploy" ? (
         <DeployView />
-      ) : activeView === "factory" ? (
-        <FactoryView setActiveView={setActiveView} />
-      ) : activeView === `user/${userAddr}` ? (
-        <CurrentUserView setActiveView={setActiveView} />
-      ) : activeView.startsWith(`user/`) ? (
+      ) : /*       ) : activeView === "factory" ? (
+        <FactoryUsersView setActiveView={setActiveView} /> */
+      activeView === `user/${userAddr}` ? (
+        <CurrentUserView setActiveView={setActiveView} /> //add local memoirs?
+      ) : activeView === "user/My Memoirs" ? (
+        <div> Only local Memoirs </div>
+      ) : //<LocalUserView setActiveView={setActiveView} /> //Only local memoirs
+      activeView.startsWith(`user/`) ? (
         <UserView
           setActiveView={setActiveView}
           userAddr={activeView.split("/")[1]}

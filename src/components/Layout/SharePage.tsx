@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { ContractSelector } from "./ContractSelector";
 import { AddMemoir } from "@components/Anthology/AddMemoir";
 import { Address } from "@src/types/common";
+import { ShouldAddToBlockchain } from "./ShouldAddToBlockchain";
 
 /* 
   users: string[]; // Array of user addresses
@@ -42,6 +43,7 @@ export const SharePage = () => {
         contractsTitles={contractsTitles}
         setSelectedContract={setSelectedContract}
       />
+      <ShouldAddToBlockchain />
       {selectedContract && (
         <AddMemoir
           contractAddr={selectedContract}

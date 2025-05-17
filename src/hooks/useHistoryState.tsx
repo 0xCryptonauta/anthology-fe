@@ -2,16 +2,16 @@ import { ActiveView } from "@src/types/common";
 import { useEffect } from "react";
 import { useAccount } from "wagmi";
 
-const DEFAULT_ACTIVE_VIEW = "factory";
+const DEFAULT_ACTIVE_VIEW = "user/My Memoirs";
 
 export const useHistoryState = (
   setActiveView: (activeView: ActiveView) => void
 ) => {
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
 
   let defaultView = DEFAULT_ACTIVE_VIEW as ActiveView;
 
-  if (address) {
+  if (isConnected) {
     defaultView = `user/${address}`;
   }
 

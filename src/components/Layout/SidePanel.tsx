@@ -6,6 +6,7 @@ import { useAppSelector } from "@store/utils/hooks";
 //import { updateActiveView } from "@src/store/slices/userSlice";
 import { ActiveView } from "@src/types/common";
 import { NetworkSettings } from "./NetworkSettings";
+import { useAccount } from "wagmi";
 interface HeaderProps {
   activeView: ActiveView;
   setActiveView: (newActiveView: ActiveView) => void;
@@ -14,6 +15,8 @@ interface HeaderProps {
 export const SidePanel: React.FC<HeaderProps> = ({ setActiveView }) => {
   const { userAddr } = useAppSelector((state) => state.user);
   const [show, setShow] = useState(false);
+
+  const { isConnected } = useAccount();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -96,18 +99,20 @@ export const SidePanel: React.FC<HeaderProps> = ({ setActiveView }) => {
                 e-Brain
               </Link>
             </div> */}
-            {userAddr && (
-              <div style={{ margin: "20px 0px" }}>
-                <Link
-                  to="/"
-                  style={{ cursor: "pointer", margin: "10px 0px" }}
-                  onClick={() => {
-                    handleOnClick(`user/${userAddr}`);
-                  }}
-                >
-                  My anthologies
-                </Link>
-                <br />
+
+            <div style={{ margin: "20px 0px" }}>
+              <Link
+                to="/"
+                style={{ cursor: "pointer", margin: "10px 0px" }}
+                onClick={() => {
+                  handleOnClick(
+                    isConnected ? `user/${userAddr}` : `user/My Memoirs`
+                  );
+                }}
+              >
+                My anthologies
+              </Link>
+              {/*                 <br />
                 <Link
                   to="/"
                   style={{ cursor: "pointer", margin: "10px 0px" }}
@@ -116,10 +121,10 @@ export const SidePanel: React.FC<HeaderProps> = ({ setActiveView }) => {
                   }}
                 >
                   Deploy
-                </Link>
-              </div>
-            )}
-            <br />
+                </Link> */}
+            </div>
+
+            {/*             <br />
             <Link
               to="/"
               style={{ cursor: "pointer", margin: "10px 0px" }}
@@ -127,8 +132,8 @@ export const SidePanel: React.FC<HeaderProps> = ({ setActiveView }) => {
                 handleOnClick(`factory`);
               }}
             >
-              Factory
-            </Link>
+              Factory Users
+            </Link> */}
           </div>
           <div
             style={{
