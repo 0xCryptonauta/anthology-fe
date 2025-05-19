@@ -4,6 +4,7 @@ import { clearAnthologyStore } from "@store/slices/anthologySlice";
 import { clearFactoryStore } from "@store/slices/factorySlice";
 import { useToast } from "@components/Layout/Toast";
 import InstallPWAButton from "@src/components/Layout/InstallPWAButton";
+import { NetworkSettings } from "@src/components/Layout/NetworkSettings";
 
 export const AboutView = () => {
   const dispatch = useAppDispatch();
@@ -79,6 +80,7 @@ export const AboutView = () => {
       </div>
 
       <InstallPWAButton />
+      <NetworkSettings />
     </div>
   );
 };

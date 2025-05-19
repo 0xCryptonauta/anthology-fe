@@ -8,6 +8,9 @@ import { useOutletContext } from "react-router-dom";
 import { ActiveView } from "@src/types/common";
 import { UserView } from "./factory/UserView";
 import { useHistoryState } from "@src/hooks/useHistoryState";
+import { LOCAL_ANTOLOGY_PATH } from "@src/utils/constants";
+import { LocalUserView } from "./factory/LocalUserView";
+import { LocalAnthologyView } from "./anthology/LocalAnthologyView";
 
 export const IndexView = () => {
   const { userAddr } = useAppSelector((state) => state.user);
@@ -29,16 +32,25 @@ export const IndexView = () => {
         <FactoryUsersView setActiveView={setActiveView} /> */
       activeView === `user/${userAddr}` ? (
         <CurrentUserView setActiveView={setActiveView} /> //add local memoirs?
-      ) : activeView === "user/My Memoirs" ? (
-        <div> Only local Memoirs </div>
-      ) : //<LocalUserView setActiveView={setActiveView} /> //Only local memoirs
-      activeView.startsWith(`user/`) ? (
+      ) : activeView === LOCAL_ANTOLOGY_PATH ? (
+        <LocalUserView setActiveView={setActiveView} />
+      ) : activeView.startsWith(`user/`) ? (
         <UserView
           setActiveView={setActiveView}
           userAddr={activeView.split("/")[1]}
         />
       ) : activeView.startsWith(`contract/`) ? (
-        <AnthologyView activeView={activeView} setActiveView={setActiveView} />
+        activeView.split("/")[1].length === 22 ? (
+          <LocalAnthologyView
+            activeView={activeView}
+            setActiveView={setActiveView}
+          />
+        ) : (
+          <AnthologyView
+            activeView={activeView}
+            setActiveView={setActiveView}
+          />
+        )
       ) : (
         <div>Default View</div>
       )}

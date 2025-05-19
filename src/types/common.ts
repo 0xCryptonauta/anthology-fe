@@ -6,3 +6,11 @@ export type ActiveView =
   | "";
 
 export type Address = `0x${string}`;
+
+export type SkinType =
+  | "media"
+  | "json"
+  | "text"
+  | "playlist"
+  | "list"
+  | "\0default\0";

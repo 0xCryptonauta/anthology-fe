@@ -12,6 +12,7 @@ import FacebookEmbed from "./thirdPartyEmbeds/facebookEmbed";
 import InstagramEmbed from "./thirdPartyEmbeds/InstagramEmbed"; */
 import { ActiveView, Address } from "@src/types/common";
 import { isValidURL } from "@src/utils/isValidURL";
+import { LOCAL_USER_ADDR } from "@src/utils/constants";
 
 interface TextMemoirSkinProps {
   contractAddr: `0x${string}`;
@@ -124,7 +125,9 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
               <span>{formatUnixTime(Number(memoir.timestamp))}</span>
             </div>
           </div>
-          {(currentUser == anthologyOwner || currentUser == memoir.sender) && (
+          {(currentUser == anthologyOwner ||
+            anthologyOwner === LOCAL_USER_ADDR ||
+            currentUser == memoir.sender) && (
             <span
               style={{
                 cursor: "pointer",

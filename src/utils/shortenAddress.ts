@@ -3,7 +3,7 @@ export function shortenAddress(
   initlen: number = 6,
   endlen: number = 4
 ): string {
-  if (address.length <= 12) {
+  if (address.length <= 20) {
     return address;
   }
   return `${address?.substring(0, initlen)}...${address?.substring(

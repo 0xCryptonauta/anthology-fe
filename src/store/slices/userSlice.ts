@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { INTERNAL_USER_ADDR } from "@src/utils/constants";
+import { LOCAL_USER_ADDR } from "@src/utils/constants";
 
 type Address = `0x${string}`;
 export interface UserState {
@@ -9,7 +9,7 @@ export interface UserState {
 }
 
 const initialState: UserState = {
-  userAddr: INTERNAL_USER_ADDR,
+  userAddr: LOCAL_USER_ADDR,
   walletId: "",
 };
 

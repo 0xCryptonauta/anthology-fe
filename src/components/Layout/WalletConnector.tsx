@@ -7,19 +7,26 @@ import { WalletOptions } from "./WalletOptions";
 
 export const WalletConnector = () => {
   const { userAddr } = useAppSelector((state) => state.user);
-  const { disconnect } = useDisconnect();
+  const { disconnect } = useDisconnect({
+    mutation: {
+      onSuccess: () => {
+        console.log("Disconnected successfully");
+        dispatch(resetUser());
+      },
+    },
+  });
   const dispatch = useAppDispatch();
 
   const { address, isConnected, connector } = useAccount();
 
   const handleDisconnect = () => {
+    //dispatch(resetUser());
     disconnect();
-    dispatch(resetUser());
     console.log("disconnected");
   };
 
   useEffect(() => {
-    if (isConnected && address) {
+    if (isConnected && address && address !== userAddr) {
       dispatch(updateUserAddr(address));
       console.log("User address updated:", address);
     }

@@ -5,8 +5,10 @@ import "./style.css";
 import { useToast } from "@components/Layout/Toast";
 import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
 import { Address } from "@src/types/common";
-import { addMemoirToLocalAnthology } from "@src/store/slices/localAnthologySlice";
+//import { addUserLocalAnthology } from "@src/store/slices/localAnthologySlice";
 import { ShouldAddToBlockchain } from "../Layout/ShouldAddToBlockchain";
+import { addMemoirToUserLocalAnthology } from "@src/store/slices/localAnthologySlice";
+import { LOCAL_USER_ADDR } from "@src/utils/constants";
 
 export const AddMemoir = ({
   contractAddr,
@@ -50,20 +52,33 @@ export const AddMemoir = ({
         <Offcanvas
           show={show}
           onHide={handleClose}
-          placement="bottom"
-          style={{ height: "350px", backgroundColor: "none !important" }}
+          onClick={handleClose}
+          placement={window.innerHeight > window.innerWidth ? "top" : "bottom"}
+          //className="bg-dark"
+          style={{
+            height: "390px",
+            backgroundColor: "transparent",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "flex-end",
+          }}
         >
           {/* <Offcanvas.Header closeButton>
           <Offcanvas.Title>Add new memoir</Offcanvas.Title>
         </Offcanvas.Header> */}
           <Offcanvas.Body
+            //onClick={handleClose}
             style={{
               display: "flex",
               alignItems: "center",
               flexDirection: "column",
+              backgroundColor: "transparent !important",
             }}
           >
             <div
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
               style={{
                 backgroundColor: "white",
                 display: "flex",
@@ -119,12 +134,15 @@ export const AddMemoir = ({
                     }
                   } else {
                     dispatch(
-                      addMemoirToLocalAnthology({
-                        userAddr: owner,
-                        contractAddr,
+                      addMemoirToUserLocalAnthology({
+                        contract: contractAddr,
                         memoir: {
+                          sender: LOCAL_USER_ADDR,
                           title: anthologyTitle,
                           content: anthologyContent,
+                          timestamp: String(
+                            Math.floor(new Date().getTime() / 1000)
+                          ),
                         },
                       })
                     );

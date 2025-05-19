@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { SidePanel } from "./SidePanel";
 import { WalletConnector } from "./WalletConnector";
 import { ActiveView } from "@src/types/common";
+import { useAccount } from "wagmi";
+import { LOCAL_ANTOLOGY_PATH } from "@src/utils/constants";
 interface HeaderProps {
   activeView: ActiveView;
   setActiveView: (newActiveView: ActiveView) => void;
@@ -11,6 +13,7 @@ export const Header: React.FC<HeaderProps> = ({
   activeView,
   setActiveView,
 }) => {
+  const { isConnected, address } = useAccount();
   const handleOnClick = (newActiveView: ActiveView) => {
     setActiveView(newActiveView); // Update local state
 
@@ -28,7 +31,9 @@ export const Header: React.FC<HeaderProps> = ({
         <Link
           className="navbar-brand"
           to="/"
-          onClick={() => handleOnClick("user/My Memoirs")}
+          onClick={() =>
+            handleOnClick(isConnected ? `user/${address}` : LOCAL_ANTOLOGY_PATH)
+          }
         >
           <img
             src="/IB_icon.png"

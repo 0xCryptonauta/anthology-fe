@@ -1,24 +1,25 @@
 import { shortenAddress } from "@utils/shortenAddress";
 import { useAppDispatch } from "@store/utils/hooks";
 import { syncUserContractsToStore } from "@src/store/utils/thunks";
-import { ActiveView } from "@src/types/common";
+import { ActiveView, Address } from "@src/types/common";
 import { parseContractsCategories } from "@src/utils/parseContractsCategories";
+import { DeployButton } from "./DeployButton";
 
-export interface Contract {
-  address: string;
+export interface MemoirContent {
+  address: Address;
   title: string;
   originalIndex: number;
 }
 
 export interface Categories {
   [category: string]: {
-    items: Contract[];
-    subcategories: { [subcategory: string]: Contract[] };
+    items: MemoirContent[];
+    subcategories: { [subcategory: string]: MemoirContent[] };
   };
 }
 interface UserContractsProps {
-  userAddr: string;
-  userTitles: Contract[];
+  userAddr: Address;
+  userTitles: MemoirContent[];
   setActiveView: (newActiveView: ActiveView) => void;
 }
 
@@ -65,12 +66,11 @@ export const UserContracts: React.FC<UserContractsProps> = ({
           </span>{" "}
           <span
             style={{ fontSize: "20px", cursor: "pointer" }}
-            onClick={() => {
-              handleOnClick(`user/${userAddr}`);
-            }}
+            onClick={() => {}}
           >
             {shortenAddress(userAddr, 12, 9)}
           </span>
+          <DeployButton />
           <div style={{ marginTop: "30px" }}>
             {Object.entries(categories)
               .sort(([categoryA], [categoryB]) =>

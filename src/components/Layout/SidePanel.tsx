@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 import { useAppSelector } from "@store/utils/hooks";
 //import { updateActiveView } from "@src/store/slices/userSlice";
 import { ActiveView } from "@src/types/common";
-import { NetworkSettings } from "./NetworkSettings";
 import { useAccount } from "wagmi";
+import { LOCAL_ANTOLOGY_PATH } from "@src/utils/constants";
 interface HeaderProps {
   activeView: ActiveView;
   setActiveView: (newActiveView: ActiveView) => void;
@@ -55,7 +55,7 @@ export const SidePanel: React.FC<HeaderProps> = ({ setActiveView }) => {
 
       <Offcanvas
         placement="end"
-        className="bg-warning"
+        className="bg-dark"
         data-bs-theme="dark"
         show={show}
         onHide={handleClose}
@@ -99,18 +99,42 @@ export const SidePanel: React.FC<HeaderProps> = ({ setActiveView }) => {
                 e-Brain
               </Link>
             </div> */}
-
+            {isConnected && (
+              <div style={{ margin: "20px 0px" }}>
+                <Link
+                  to="/"
+                  style={{ cursor: "pointer", margin: "10px 0px" }}
+                  onClick={() => {
+                    handleOnClick(`user/${userAddr}`);
+                  }}
+                >
+                  My Anthologies
+                </Link>
+                {/*                 <br />
+                <Link
+                  to="/"
+                  style={{ cursor: "pointer", margin: "10px 0px" }}
+                  onClick={() => {
+                    handleOnClick(`deploy`);
+                  }}
+                >
+                  Deploy
+                </Link> */}
+              </div>
+            )}
             <div style={{ margin: "20px 0px" }}>
               <Link
                 to="/"
-                style={{ cursor: "pointer", margin: "10px 0px" }}
+                style={{
+                  cursor: "pointer",
+                  margin: "10px 0px",
+                  color: "#ff8383",
+                }}
                 onClick={() => {
-                  handleOnClick(
-                    isConnected ? `user/${userAddr}` : `user/My Memoirs`
-                  );
+                  handleOnClick(LOCAL_ANTOLOGY_PATH);
                 }}
               >
-                My anthologies
+                Draft Anthologies
               </Link>
               {/*                 <br />
                 <Link
@@ -157,10 +181,6 @@ export const SidePanel: React.FC<HeaderProps> = ({ setActiveView }) => {
               <Link to="/info" onClick={handleClose}>
                 Factory Info
               </Link>
-              <br />
-              <div>
-                <NetworkSettings />
-              </div>
             </div>
           </div>
         </Offcanvas.Body>

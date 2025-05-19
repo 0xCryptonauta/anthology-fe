@@ -71,8 +71,9 @@ export const NetworkSettings = () => {
         <Offcanvas
           show={show}
           onHide={handleClose}
+          onClick={handleClose}
           placement="bottom"
-          style={{ height: "350px", backgroundColor: "none !important" }}
+          style={{ height: "350px", backgroundColor: "transparent" }}
         >
           {/*           <Offcanvas.Header closeButton>
             <Offcanvas.Title>Network Settings</Offcanvas.Title>
@@ -85,6 +86,9 @@ export const NetworkSettings = () => {
             }}
           >
             <div
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
               style={{
                 backgroundColor: "#222222",
                 display: "flex",

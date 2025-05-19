@@ -3,10 +3,9 @@ import { OrderType } from "@src/components/Layout/OrderSelector";
 import {
   MemoirInterface,
   removeOneFromMemoirs,
-  SkinType,
 } from "@src/store/slices/anthologySlice";
 import { AppDispatch } from "@src/store/redux";
-import { ActiveView } from "@src/types/common";
+import { ActiveView, SkinType } from "@src/types/common";
 import { writeAnthology } from "@src/contract-functions/anthologyFunctions";
 import { ToastVariantType } from "@src/components/Layout/Toast";
 import {
@@ -16,6 +15,8 @@ import {
   ListMemoirSkin,
   PlaylistMemoirSkin,
 } from "./memoirSkins";
+import { isLocalAnthology } from "@src/utils/isLocalAnthology";
+import { deleteMemoirFromUserLocalAnthology } from "@src/store/slices/localAnthologySlice";
 
 interface RenderMemoirsProps {
   anthologySkin: SkinType;
@@ -62,31 +63,54 @@ export const MemoirRenderer: React.FC<RenderMemoirsProps> = ({
       variant: ToastVariantType;
     }) => void;
   }) => {
-    try {
-      const txHash = await writeAnthology(contractAddr, "deleteMemoir", [
-        index,
-      ]);
-      console.log("Deleting TxHash:", txHash);
-      dispatch(
-        removeOneFromMemoirs({
-          contract: contractAddr,
-          memoirIndex: index,
-        })
-      );
-      if (txHash) {
+    if (isLocalAnthology(contractAddr)) {
+      try {
+        dispatch(
+          deleteMemoirFromUserLocalAnthology({
+            contract: contractAddr,
+            memoir: memoirs[index],
+          })
+        );
         addToast({
           title: "Memoir deleted",
-          content: "TxHash: " + txHash,
+          content: "From local storage",
+          variant: "success",
+        });
+      } catch (error) {
+        console.log("Error deleting memoir from local anthology:", error);
+        addToast({
+          title: "Error deleting memoir",
+          content: "Error deleting memoir",
           variant: "danger",
         });
       }
-    } catch (error) {
-      console.error("Error deleting memoir:", error);
-      addToast({
-        title: "Error deleting memoir",
-        content: "Error deleting memoir",
-        variant: "danger",
-      });
+    } else {
+      try {
+        const txHash = await writeAnthology(contractAddr, "deleteMemoir", [
+          index,
+        ]);
+        console.log("Deleting TxHash:", txHash);
+        dispatch(
+          removeOneFromMemoirs({
+            contract: contractAddr,
+            memoirIndex: index,
+          })
+        );
+        if (txHash) {
+          addToast({
+            title: "Memoir deleted",
+            content: "TxHash: " + txHash,
+            variant: "danger",
+          });
+        }
+      } catch (error) {
+        console.error("Error deleting memoir:", error);
+        addToast({
+          title: "Error deleting memoir",
+          content: "Error deleting memoir",
+          variant: "danger",
+        });
+      }
     }
   };
 
