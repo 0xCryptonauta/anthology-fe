@@ -1,9 +1,14 @@
-import { UserContracts, Contract } from "@src/components/Factory/UserContracts";
+import { UserContracts } from "@src/components/Factory/UserContracts";
 import { useAppSelector } from "@src/store/utils/hooks";
-import { ActiveView } from "@src/types/common";
+import { ActiveView, Address } from "@src/types/common";
 
+interface Contract {
+  address: Address;
+  title: string;
+  originalIndex: number;
+}
 interface UserViewProps {
-  userAddr: string;
+  userAddr: Address;
   setActiveView: (newActiveView: ActiveView) => void;
 }
 
@@ -16,7 +21,7 @@ export const UserView: React.FC<UserViewProps> = ({
   );
 
   const userTitles: Contract[] = userContracts[userAddr]?.map(
-    (contractAddr: string, index: number) => ({
+    (contractAddr: Address, index: number) => ({
       address: contractAddr,
       title: contractsTitles[contractAddr] || "",
       originalIndex: index,
@@ -28,7 +33,6 @@ export const UserView: React.FC<UserViewProps> = ({
       className="bg-dark"
       style={{
         //width: "100svh",
-        height: "100svh",
         color: "white",
         //border: "1px solid white",
         display: "flex",

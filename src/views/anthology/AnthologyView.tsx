@@ -226,7 +226,6 @@ export const AnthologyView: React.FC<AnthologyViewProps> = ({
       className="bg-dark"
       style={{
         color: "white",
-        //height: "100svh",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",

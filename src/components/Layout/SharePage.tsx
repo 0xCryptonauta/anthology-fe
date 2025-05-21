@@ -1,4 +1,3 @@
-import { useAppSelector } from "@src/store/utils/hooks";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ContractSelector } from "./ContractSelector";
@@ -13,16 +12,13 @@ import { ShouldAddToBlockchain } from "./ShouldAddToBlockchain";
 */
 
 export const SharePage = () => {
-  const { users, userContracts, contractsTitles } = useAppSelector(
-    (state) => state.factory
-  );
   const [searchParams] = useSearchParams();
 
   const [selectedContract, setSelectedContract] = useState<Address | "">();
 
   const title = searchParams.get("title") || undefined;
   const text = searchParams.get("text") || undefined;
-  console.log("selected:", selectedContract);
+
   return (
     <div
       style={{
@@ -37,12 +33,7 @@ export const SharePage = () => {
         margin: "5px",
       }}
     >
-      <ContractSelector
-        users={users}
-        userContracts={userContracts}
-        contractsTitles={contractsTitles}
-        setSelectedContract={setSelectedContract}
-      />
+      <ContractSelector setSelectedContract={setSelectedContract} />
       <ShouldAddToBlockchain />
       {selectedContract && (
         <AddMemoir

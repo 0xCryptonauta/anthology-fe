@@ -8,14 +8,13 @@ import { LOCAL_USER_ADDR, MAX_TITLE_LENGTH } from "@src/utils/constants";
 import { useAccount } from "wagmi";
 import { addUserLocalAnthology } from "@src/store/slices/localAnthologySlice";
 import { generateLocalContractAddr } from "@src/utils/generateLocalContractAddr";
-
-interface CheckboxChangeEvent {
-  target: {
-    checked: boolean;
-  };
+interface DeployButtonProps {
+  isLocal?: boolean;
 }
 
-export const DeployButton = () => {
+export const DeployButton: React.FC<DeployButtonProps> = ({
+  isLocal = false,
+}) => {
   const [anthologyTitle, setAnthologyTitle] = useState("");
   const [show, setShow] = useState(false);
   const { userAddr } = useAppSelector((state) => state.user || "");
@@ -31,23 +30,6 @@ export const DeployButton = () => {
   const { addToast } = useToast();
 
   const { isConnected } = useAccount();
-
-  const [localChecked, setLocalChecked] = useState(true);
-  const [blockchainChecked, setBlockchainChecked] = useState(false);
-
-  const handleLocalChange = (e: CheckboxChangeEvent) => {
-    setLocalChecked(e.target.checked);
-    if (e.target.checked) {
-      setBlockchainChecked(false);
-    }
-  };
-
-  const handleBlockchainChange = (e: CheckboxChangeEvent): void => {
-    setBlockchainChecked(e.target.checked);
-    if (e.target.checked) {
-      setLocalChecked(false);
-    }
-  };
 
   return (
     <>
@@ -87,10 +69,13 @@ export const DeployButton = () => {
             onClick={(e) => {
               e.stopPropagation();
             }}
+            className="bg-dark"
             style={{
-              backgroundColor: "white",
+              //backgroundColor: "white",
+              width: "250px",
               display: "flex",
               flexDirection: "column",
+              alignItems: "center",
               border: "1px solid black",
               padding: "5px",
               borderRadius: "7px",
@@ -99,10 +84,20 @@ export const DeployButton = () => {
               //width: "fit-content",
             }}
           >
-            <span>New Anthology Title:</span>
+            <span
+              style={{
+                color: "white",
+                margin: "10px 0px",
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "column",
+              }}
+            >
+              New Anthology Title:
+            </span>
             <textarea
               value={anthologyTitle}
-              placeholder="[Category][Subcategory]Title"
+              placeholder="[Category][Subcat]Title"
               style={{
                 height: "120px",
                 minHeight: "120px",
@@ -126,32 +121,8 @@ export const DeployButton = () => {
               whitelistedUsers.includes(userAddr) ||
               owner === userAddr ? (
                 <>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "space-around",
-                    }}
-                  >
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={localChecked}
-                        onChange={handleLocalChange}
-                      />{" "}
-                      Local
-                    </label>
-                    <label>
-                      <input
-                        type="checkbox"
-                        checked={blockchainChecked}
-                        onChange={handleBlockchainChange}
-                      />{" "}
-                      Blockchain
-                    </label>
-                  </div>
                   <br />
-                  {blockchainChecked ? (
+                  {!isLocal ? (
                     <div>
                       <button
                         className="btn-rocket"
@@ -249,7 +220,10 @@ export const DeployButton = () => {
                       fill="currentColor"
                     ></path>
                   </svg>
-                  <span style={{ color: "#FF8383" }}> Draft Anthology</span>
+                  <span style={{ color: "#FF8383", marginLeft: "10px" }}>
+                    {" "}
+                    Draft Anthology
+                  </span>
                 </button>
               )
             ) : (
@@ -276,6 +250,7 @@ export const DeployButton = () => {
                   width="24"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
+                  color="#FF8383"
                 >
                   <path d="M0 0h24v24H0z" fill="none"></path>
                   <path
@@ -283,9 +258,13 @@ export const DeployButton = () => {
                     fill="currentColor"
                   ></path>
                 </svg>
-                <span style={{ color: "#FF8383" }}> Draft Anthology</span>
+                <span style={{ color: "#FF8383", marginLeft: "10px" }}>
+                  {" "}
+                  Draft Anthology
+                </span>
               </button>
             )}
+            <br />
           </div>
         </Offcanvas.Body>
       </Offcanvas>

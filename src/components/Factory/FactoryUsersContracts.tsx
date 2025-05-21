@@ -1,10 +1,16 @@
 //import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "@store/utils/hooks";
-import { ActiveView } from "@src/types/common";
-import { UserContracts, Contract } from "./UserContracts";
+import { ActiveView, Address } from "@src/types/common";
+import { UserContracts } from "./UserContracts";
 
 interface FactoryUsersContractsProps {
   setActiveView: (newActiveView: ActiveView) => void;
+}
+
+interface Contract {
+  address: Address;
+  title: string;
+  originalIndex: number;
 }
 
 export const FactoryUsersContracts: React.FC<FactoryUsersContractsProps> = ({
@@ -27,7 +33,7 @@ export const FactoryUsersContracts: React.FC<FactoryUsersContractsProps> = ({
       <div style={{ margin: "5px" }}>
         {users?.map((user, userIndex) => {
           const userTitles: Contract[] = userContracts[user]?.map(
-            (contractAddr: string, index: number) => ({
+            (contractAddr: Address, index: number) => ({
               address: contractAddr,
               title: contractsTitles[contractAddr] || "",
               originalIndex: index,

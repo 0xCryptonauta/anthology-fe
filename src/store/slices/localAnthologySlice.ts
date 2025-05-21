@@ -42,10 +42,30 @@ export const localAnthologySlice = createSlice({
       }>
     ) {
       const { user, contract, title } = action.payload;
+
+      // Initialize top-level objects if needed
+      if (!state.users) {
+        state.users = [];
+      }
+      if (!state.userContracts) {
+        state.userContracts = {};
+      }
+      if (!state.contractsTitles) {
+        state.contractsTitles = {};
+      }
+      if (!state.anthologies) {
+        state.anthologies = {};
+      }
+
       if (!state.users.includes(user)) {
         state.users.push(user);
         state.userContracts[user] = [];
       }
+
+      if (!Array.isArray(state.userContracts[user])) {
+        state.userContracts[user] = [];
+      }
+
       if (!state.userContracts[user].includes(contract)) {
         state.userContracts[user].push(contract);
         state.contractsTitles[contract] = title;

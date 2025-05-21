@@ -55,7 +55,6 @@ export const LocalAnthologyView: React.FC<LocalAnthologyViewProps> = ({
       className="bg-dark"
       style={{
         color: "white",
-        //height: "100svh",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",

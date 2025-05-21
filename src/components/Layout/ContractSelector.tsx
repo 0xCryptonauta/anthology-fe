@@ -2,34 +2,55 @@ import { shortenAddress } from "@src/utils/shortenAddress";
 import React, { useState, useMemo } from "react";
 import { parseContractsCategories } from "@src/utils/parseContractsCategories";
 import { Address } from "@src/types/common";
+import { LOCAL_USER_ADDR } from "@src/utils/constants";
+import { useAppSelector } from "@src/store/utils/hooks";
 interface ContractSelectorProps {
-  users: Address[];
-  userContracts: Record<Address, Address[]>;
-  contractsTitles: Record<Address, string>;
   setSelectedContract: (addr: Address) => void;
 }
 
 export const ContractSelector: React.FC<ContractSelectorProps> = ({
-  users,
-  userContracts,
-  contractsTitles,
   setSelectedContract,
 }) => {
-  const [selectedUser, setSelectedUser] = useState<Address>(users[0] || "");
+  const [selectedUser, setSelectedUser] = useState<Address>(
+    LOCAL_USER_ADDR || ""
+  );
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
   const [selectedAddress, setSelectedAddress] = useState<string>("");
 
+  const { users, userContracts, contractsTitles } = useAppSelector(
+    (state) => state.factory
+  );
+
+  const localContracts = useAppSelector(
+    (state) => state.localAnthology.userContracts[LOCAL_USER_ADDR]
+  );
+  const localTitles = useAppSelector(
+    (state) => state.localAnthology.contractsTitles
+  );
+  const isLocalUser = selectedUser === LOCAL_USER_ADDR;
+
   const userContractsList = useMemo(() => {
-    const contracts = (userContracts[selectedUser] || []).map(
-      (address, index) => ({
-        address,
-        title: contractsTitles[address] || "Untitled",
-        originalIndex: index,
-      })
-    );
+    const currentContracts = isLocalUser
+      ? localContracts
+      : userContracts[selectedUser] || [];
+
+    const contracts = currentContracts.map((address, index) => ({
+      address,
+      title: isLocalUser
+        ? localTitles[address]
+        : contractsTitles[address] || "Untitled",
+      originalIndex: index,
+    }));
     return parseContractsCategories(contracts);
-  }, [selectedUser, userContracts, contractsTitles]);
+  }, [
+    contractsTitles,
+    localTitles,
+    localContracts,
+    isLocalUser,
+    userContracts,
+    selectedUser,
+  ]);
 
   const categoryOptions = useMemo(() => {
     return ["Other", ...Object.keys(userContractsList.categories)];
@@ -92,8 +113,11 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
           setSelectedContract("0x");
         }}
       >
+        <option key={"localUser"} value={LOCAL_USER_ADDR}>
+          Local User
+        </option>
         {users.map((user) => (
-          <option key={user} value={shortenAddress(user, 10, 10)}>
+          <option key={user} value={user}>
             {shortenAddress(user, 10, 10)}
           </option>
         ))}
@@ -105,12 +129,18 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
         onChange={handleCategoryChange}
         style={{ minHeight: "30px" }}
       >
-        <option value="">No Category</option>
-        {categoryOptions.map((category) => (
-          <option key={category} value={category}>
-            {category}
-          </option>
-        ))}
+        {/* <option value="">No Category</option> */}
+        {selectedUser === LOCAL_USER_ADDR
+          ? categoryOptions.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))
+          : categoryOptions.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
       </select>
 
       <div
