@@ -1,17 +1,18 @@
+import { useAppSelector } from "@src/store/utils/hooks";
 import { ActiveView } from "@src/types/common";
+import { LOCAL_ANTOLOGY_PATH } from "@src/utils/constants";
 import { useEffect } from "react";
 import { useAccount } from "wagmi";
-
-const DEFAULT_ACTIVE_VIEW = "factory";
 
 export const useHistoryState = (
   setActiveView: (activeView: ActiveView) => void
 ) => {
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
+  const { isIconToLocal } = useAppSelector((state) => state.dapp);
 
-  let defaultView = DEFAULT_ACTIVE_VIEW as ActiveView;
+  let defaultView = LOCAL_ANTOLOGY_PATH as ActiveView;
 
-  if (address) {
+  if (isConnected && !isIconToLocal) {
     defaultView = `user/${address}`;
   }
 

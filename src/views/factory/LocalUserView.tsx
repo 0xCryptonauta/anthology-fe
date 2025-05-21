@@ -1,32 +1,30 @@
-import { UserContracts } from "@components/Factory/UserContracts";
+import {
+  UserContracts,
+  MemoirContent,
+} from "@components/Factory/UserContracts";
 import { useAppSelector } from "@src/store/utils/hooks";
 import { ActiveView, Address } from "@src/types/common";
+import { LOCAL_USER_ADDR } from "@src/utils/constants";
 
-interface Contract {
-  address: Address;
-  title: string;
-  originalIndex: number;
-}
-interface CurrentUserViewProps {
+interface LocalUserViewProps {
   setActiveView: (newActiveView: ActiveView) => void;
 }
 
-export const CurrentUserView: React.FC<CurrentUserViewProps> = ({
+export const LocalUserView: React.FC<LocalUserViewProps> = ({
   setActiveView,
 }) => {
   const { userContracts, contractsTitles } = useAppSelector(
-    (state) => state.factory
+    (state) => state.localAnthology
   );
 
-  const { userAddr } = useAppSelector((state) => state.user);
-
-  const userTitles: Contract[] = userContracts[userAddr]?.map(
-    (contractAddr: Address, index: number) => ({
-      address: contractAddr,
-      title: contractsTitles[contractAddr] || "",
-      originalIndex: index,
-    })
-  );
+  const userTitles: MemoirContent[] =
+    userContracts?.[LOCAL_USER_ADDR]?.map(
+      (contractAddr: Address, index: number) => ({
+        address: contractAddr,
+        title: contractsTitles[contractAddr] || "",
+        originalIndex: index,
+      })
+    ) || []; // Provide a default value if userTitles is undefined
 
   return (
     <div
@@ -43,7 +41,7 @@ export const CurrentUserView: React.FC<CurrentUserViewProps> = ({
     >
       <UserContracts
         setActiveView={setActiveView}
-        userAddr={userAddr}
+        userAddr={LOCAL_USER_ADDR}
         userTitles={userTitles}
       />
     </div>

@@ -1,4 +1,4 @@
-import { OrderType } from "@src/components/Anthology/Memoirs/OrderSelector";
+import { OrderType } from "@src/components/Layout/OrderSelector";
 import { MemoirInterface } from "@src/store/slices/anthologySlice";
 
 export const orderMemoirs = ({

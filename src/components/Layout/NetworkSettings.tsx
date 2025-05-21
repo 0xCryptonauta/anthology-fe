@@ -4,9 +4,12 @@ import { isValidRpc } from "@src/utils/isValidRpc";
 import { useState } from "react";
 import { Offcanvas } from "react-bootstrap";
 import { useToast } from "./Toast";
+import { useAccount } from "wagmi";
 
 export const NetworkSettings = () => {
   const { factoryRpc } = useAppSelector((state) => state.dapp);
+
+  const { isConnected } = useAccount();
 
   const { addToast } = useToast();
 
@@ -50,110 +53,116 @@ export const NetworkSettings = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "space-around",
-        border: "1px solid white",
-        width: "fit-content",
-        padding: "7px",
-        borderRadius: "7px",
-        margin: "5px",
-      }}
-    >
-      {!show ? (
-        <div onClick={handleShow} style={{ cursor: "pointer" }}>
-          Network Settings
-        </div>
-      ) : (
-        <Offcanvas
-          show={show}
-          onHide={handleClose}
-          placement="bottom"
-          style={{ height: "350px", backgroundColor: "none !important" }}
-        >
-          {/*           <Offcanvas.Header closeButton>
+    isConnected && (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "space-around",
+          border: "1px solid white",
+          width: "fit-content",
+          padding: "7px",
+          borderRadius: "7px",
+          margin: "5px",
+        }}
+      >
+        {!show ? (
+          <div onClick={handleShow} style={{ cursor: "pointer" }}>
+            Network Settings
+          </div>
+        ) : (
+          <Offcanvas
+            show={show}
+            onHide={handleClose}
+            onClick={handleClose}
+            placement="bottom"
+            style={{ height: "350px", backgroundColor: "transparent" }}
+          >
+            {/*           <Offcanvas.Header closeButton>
             <Offcanvas.Title>Network Settings</Offcanvas.Title>
           </Offcanvas.Header> */}
-          <Offcanvas.Body
-            style={{
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
-            }}
-          >
-            <div
+            <Offcanvas.Body
               style={{
-                backgroundColor: "#222222",
                 display: "flex",
-                flexDirection: "column",
                 alignItems: "center",
-                border: "1px solid black",
-                padding: "5px",
-                borderRadius: "7px",
-                margin: "3px",
-                width: "300px",
-                height: "400px",
+                flexDirection: "column",
               }}
             >
               <div
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
                 style={{
+                  backgroundColor: "#222222",
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
-                  justifyContent: "space-around",
-                  //border: "1px solid white",
-                  color: "white",
-                  width: "fit-content",
-                  padding: "7px",
+                  border: "1px solid black",
+                  padding: "5px",
                   borderRadius: "7px",
-                  margin: "5px",
-                  height: "100%",
+                  margin: "3px",
+                  width: "300px",
+                  height: "400px",
                 }}
               >
                 <div
                   style={{
                     display: "flex",
-                    alignItems: "center",
                     flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "space-around",
+                    //border: "1px solid white",
+                    color: "white",
+                    width: "fit-content",
+                    padding: "7px",
+                    borderRadius: "7px",
+                    margin: "5px",
+                    height: "100%",
                   }}
                 >
-                  <span style={{ marginBottom: "10px" }}>Set new RPC</span>
-                  <textarea
-                    value={newFactoryRpc}
-                    placeholder="https://..."
+                  <div
                     style={{
-                      height: "120px",
-                      minHeight: "120px",
-                      maxHeight: "150px",
-                      //backgroundColor: "white",
-                      color: "white",
-                      borderRadius: "5px",
-                      width: "220px",
-                      textAlign: "center",
-                      alignContent: "center",
+                      display: "flex",
+                      alignItems: "center",
+                      flexDirection: "column",
                     }}
-                    maxLength={255}
-                    onChange={(event) => {
-                      setNewFactoryRpc(event.target.value);
+                  >
+                    <span style={{ marginBottom: "10px" }}>Set new RPC</span>
+                    <textarea
+                      value={newFactoryRpc}
+                      placeholder="https://..."
+                      style={{
+                        height: "120px",
+                        minHeight: "120px",
+                        maxHeight: "150px",
+                        //backgroundColor: "white",
+                        color: "white",
+                        borderRadius: "5px",
+                        width: "220px",
+                        textAlign: "center",
+                        alignContent: "center",
+                      }}
+                      maxLength={255}
+                      onChange={(event) => {
+                        setNewFactoryRpc(event.target.value);
+                      }}
+                    ></textarea>
+                  </div>
+                  <button
+                    style={{ margin: "10px 0px", cursor: "pointer" }}
+                    onClick={async () => {
+                      handleRpcChange();
                     }}
-                  ></textarea>
+                  >
+                    Update RPC 🔄
+                  </button>
                 </div>
-                <button
-                  style={{ margin: "10px 0px", cursor: "pointer" }}
-                  onClick={async () => {
-                    handleRpcChange();
-                  }}
-                >
-                  Update RPC 🔄
-                </button>
               </div>
-            </div>
-          </Offcanvas.Body>
-        </Offcanvas>
-      )}
-    </div>
+            </Offcanvas.Body>
+          </Offcanvas>
+        )}
+      </div>
+    )
   );
 };

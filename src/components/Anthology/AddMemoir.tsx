@@ -3,8 +3,11 @@ import { writeAnthology } from "@src/contract-functions/anthologyFunctions";
 import { Offcanvas } from "react-bootstrap";
 import "./style.css";
 import { useToast } from "@components/Layout/Toast";
-import { useAppSelector } from "@store/utils/hooks";
+import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
 import { Address } from "@src/types/common";
+import { addMemoirToUserLocalAnthology } from "@src/store/slices/localAnthologySlice";
+import { LOCAL_USER_ADDR } from "@src/utils/constants";
+import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 
 export const AddMemoir = ({
   contractAddr,
@@ -28,16 +31,16 @@ export const AddMemoir = ({
     (state) => state.anthology[contractAddr]?.whitelist
   );
 
+  const dispatch = useAppDispatch();
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const { addToast } = useToast();
 
   return (
-    userAddr &&
     (!whitelistEnabled ||
       whitelist.includes(userAddr) ||
-      owner === userAddr) && (
+      userAddr === owner) && (
       <>
         <span onClick={handleShow} className="addMemoirButton">
           📝
@@ -45,20 +48,33 @@ export const AddMemoir = ({
         <Offcanvas
           show={show}
           onHide={handleClose}
-          placement="bottom"
-          style={{ height: "350px", backgroundColor: "none !important" }}
+          onClick={handleClose}
+          placement={window.innerHeight > window.innerWidth ? "top" : "bottom"}
+          //className="bg-dark"
+          style={{
+            height: "390px",
+            backgroundColor: "transparent",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "flex-end",
+          }}
         >
           {/* <Offcanvas.Header closeButton>
           <Offcanvas.Title>Add new memoir</Offcanvas.Title>
         </Offcanvas.Header> */}
           <Offcanvas.Body
+            //onClick={handleClose}
             style={{
               display: "flex",
               alignItems: "center",
               flexDirection: "column",
+              backgroundColor: "transparent !important",
             }}
           >
             <div
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
               style={{
                 backgroundColor: "white",
                 display: "flex",
@@ -90,25 +106,50 @@ export const AddMemoir = ({
                   setAnthologyContent(e.target.value);
                 }}
               ></textarea>
+
               <button
                 style={{ marginTop: "15px" }}
                 onClick={async () => {
-                  const txHash_setTitle = await writeAnthology(
-                    contractAddr,
-                    "createMemoir",
-                    [anthologyTitle, anthologyContent]
-                  );
-                  console.log("txHash created", txHash_setTitle);
-                  if (txHash_setTitle) {
+                  if (isLocalAnthology(contractAddr)) {
+                    dispatch(
+                      addMemoirToUserLocalAnthology({
+                        contract: contractAddr,
+                        memoir: {
+                          sender: LOCAL_USER_ADDR,
+                          title: anthologyTitle,
+                          content: anthologyContent,
+                          timestamp: String(
+                            Math.floor(new Date().getTime() / 1000)
+                          ),
+                        },
+                      })
+                    );
                     setAnthologyContent("");
                     setAnthologyTitle("");
                     addToast({
                       title: "Memoir Added",
-                      content: "TxHash: " + txHash_setTitle,
+                      content: "Memoir added locally, not on blockchain yet",
                       variant: "success",
                       delay: 5000,
                     });
+                  } else {
+                    const txHash_setTitle = await writeAnthology(
+                      contractAddr,
+                      "createMemoir",
+                      [anthologyTitle, anthologyContent]
+                    );
+                    if (txHash_setTitle) {
+                      setAnthologyContent("");
+                      setAnthologyTitle("");
+                      addToast({
+                        title: "Memoir Added",
+                        content: "TxHash: " + txHash_setTitle,
+                        variant: "success",
+                        delay: 5000,
+                      });
+                    }
                   }
+                  handleClose();
                 }}
               >
                 Add Memoir

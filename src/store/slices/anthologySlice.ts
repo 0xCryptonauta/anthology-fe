@@ -1,15 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-
-type Address = `0x${string}`;
-
-export type SkinType =
-  | "media"
-  | "json"
-  | "text"
-  | "playlist"
-  | "list"
-  | "\0default\0";
+import { Address, SkinType } from "@src/types/common";
 
 export interface MemoirInterface {
   sender: Address;
@@ -242,6 +233,9 @@ export const anthologySlice = createSlice({
       const _whitelistEnabled = action.payload.whitelistEnabled;
       state[_contract].anthologyState.whitelistEnabled = _whitelistEnabled;
     },
+    resetAnthologyStore: () => {
+      return initialState;
+    },
   },
 });
 
@@ -262,6 +256,7 @@ export const {
   updateUseBuffer,
   updateUseErc20,
   updateWhitelistEnabled,
+  resetAnthologyStore,
 } = anthologySlice.actions;
 
 export default anthologySlice.reducer;

@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { readFactory } from "@src/contract-functions/factoryFunctions";
+import { Address } from "@src/types/common";
 import { transformData } from "@src/utils/transformData";
 import {
   updateContractTitles,
@@ -8,11 +9,11 @@ import {
 
 export const syncUserContractsToStore = createAsyncThunk(
   "userContracts/syncUserContractsToStore",
-  async (user: string, { dispatch }) => {
+  async (user: Address, { dispatch }) => {
     const userDB = await readFactory("getUsersContractsWithTitles", [[user]]);
     const { userContracts, titles } = transformData(
-      userDB as string[][][],
-      [user] as string[]
+      userDB as Address[][][],
+      [user] as Address[]
     );
     console.log("userDB", userDB);
     dispatch(updateContractTitles(titles));
@@ -26,8 +27,8 @@ export const syncUsersContractsToStore = createAsyncThunk(
     const userDB = await readFactory("getUsersContractsWithTitles", [users]);
     console.log("userDB", userDB);
     const { userContracts, titles } = transformData(
-      userDB as string[][][],
-      users as string[]
+      userDB as Address[][][],
+      users as Address[]
     );
 
     dispatch(updateContractTitles(titles));

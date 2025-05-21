@@ -4,10 +4,12 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 
 export interface dappState {
   factoryRpc: string;
+  isIconToLocal: boolean;
 }
 
 const initialState: dappState = {
   factoryRpc: "",
+  isIconToLocal: true,
 };
 
 export const dappSlice = createSlice({
@@ -17,12 +19,16 @@ export const dappSlice = createSlice({
     updateFactoryRpc: (state, action: PayloadAction<string>) => {
       state.factoryRpc = action.payload;
     },
-    resetUser: () => {
+    toggleIsIconToLocal: (state) => {
+      state.isIconToLocal = !state.isIconToLocal;
+    },
+    resetDappStore: () => {
       return initialState;
     },
   },
 });
 
-export const { updateFactoryRpc, resetUser } = dappSlice.actions;
+export const { updateFactoryRpc, toggleIsIconToLocal, resetDappStore } =
+  dappSlice.actions;
 
 export default dappSlice.reducer;

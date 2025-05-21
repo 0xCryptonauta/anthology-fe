@@ -1,17 +1,19 @@
 import { useAppDispatch } from "@store/utils/hooks";
-import { store } from "@store/redux";
-import { clearAnthologyStore } from "@store/slices/anthologySlice";
-import { clearFactoryStore } from "@store/slices/factorySlice";
-import { useState } from "react";
+import { persistor, store } from "@store/redux";
+import { resetAnthologyStore } from "@store/slices/anthologySlice";
+import { resetFactoryStore } from "@store/slices/factorySlice";
 import { useToast } from "@components/Layout/Toast";
 import InstallPWAButton from "@src/components/Layout/InstallPWAButton";
+import { NetworkSettings } from "@src/components/Layout/NetworkSettings";
+import { IconPathSwitcher } from "@src/components/Layout/IconPathSwitcher";
+import { resetDappStore } from "@src/store/slices/dappSlice";
+import { resetUserStore } from "@src/store/slices/userSlice";
+import { resetLocalAnthologyStore } from "@src/store/slices/localAnthologySlice";
 
 export const AboutView = () => {
   const dispatch = useAppDispatch();
 
   const { addToast } = useToast();
-
-  const [reduxSize, setReduxSize] = useState(0);
 
   return (
     <div
@@ -48,34 +50,36 @@ export const AboutView = () => {
         >
           <button
             onClick={() => {
-              console.log(
-                "The redux store size is: ",
-                JSON.stringify(store.getState()).length / 1000,
-                "KB"
-              );
-              setReduxSize(JSON.stringify(store.getState()).length / 1000);
-              //setShowToast(true);
+              const currentStoreSize =
+                JSON.stringify(store.getState()).length / 1000;
               addToast({
-                title: "Redux Store Size",
-                content: reduxSize + " KB",
+                title: "Your memory size:",
+                content: currentStoreSize + " KB",
                 variant: "success",
               });
             }}
           >
-            Calculate size of storage
+            Memory being used
           </button>
-          <span>{reduxSize} KB</span>
         </div>
 
         <button
-          onClick={() => {
-            dispatch(clearAnthologyStore());
-            dispatch(clearFactoryStore());
-            setReduxSize(JSON.stringify(store.getState()).length / 1000);
+          onClick={async () => {
+            dispatch(resetAnthologyStore());
+            dispatch(resetFactoryStore());
+            dispatch(resetDappStore());
+            dispatch(resetUserStore());
+            dispatch(resetLocalAnthologyStore());
+
+            await persistor.purge();
+            setTimeout(() => {
+              window.location.reload();
+            }, 3000);
+
             addToast({
               title: "Redux Store Cleaned",
-              content: "The store has been cleaned",
-              variant: "warning",
+              content: "The store has been cleaned, reloading in 3 seconds...",
+              variant: "info",
             });
           }}
         >
@@ -84,6 +88,8 @@ export const AboutView = () => {
       </div>
 
       <InstallPWAButton />
+      <NetworkSettings />
+      <IconPathSwitcher />
     </div>
   );
 };

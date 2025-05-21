@@ -4,9 +4,10 @@ import { useAppSelector } from "@store/utils/hooks";
 
 //import { useParams } from "react-router-dom";
 import "./style.css";
+import { Address } from "@src/types/common";
 
 interface AnthologyStateProps {
-  contractAddr: string;
+  contractAddr: Address;
 }
 
 export const AnthologyState: React.FC<AnthologyStateProps> = ({

@@ -18,7 +18,6 @@ import {
   updateAnthologyCP,
   updateAnthologyWhitelistCP,
   updateAnthologyBufferCP,
-  SkinType,
 } from "@store/slices/anthologySlice";
 import { fetchAnthologyInfo } from "@src/contract-functions/fetchContractInfo";
 import { Memoirs } from "@components/Anthology/Memoirs";
@@ -27,12 +26,9 @@ import { AnthologyState } from "@components/Anthology/AnthologyState";
 import { AnthologyOwner } from "@components/Anthology/AnthologyOwner";
 import { MemoirBuffer } from "@components/Anthology/MemoirBuffer";
 import { AnthologyWhitelistedUsers } from "@components/Anthology/AnthologyWhitelistedUsers";
-import { SkinSelector } from "@components/Anthology/Memoirs/SkinSelector";
-import {
-  OrderSelector,
-  OrderType,
-} from "@components/Anthology/Memoirs/OrderSelector";
-import { ActiveView, Address } from "@src/types/common";
+import { SkinSelector } from "@src/components/Layout/SkinSelector";
+import { OrderSelector, OrderType } from "@src/components/Layout/OrderSelector";
+import { ActiveView, Address, SkinType } from "@src/types/common";
 
 const formatTitle = (title?: string): string => {
   if (!title) return ""; // Handle undefined case
@@ -59,7 +55,7 @@ export const AnthologyView: React.FC<AnthologyViewProps> = ({
   //const { ethAddr, } = useParams();
 
   //let contractAddr = "";
-  const contractAddr = activeView.split("/")[1] as `0x${string}`;
+  const contractAddr = activeView.split("/")[1] as Address;
 
   /*   if (JSON.stringify(userContracts) != "{}") {
     try {
@@ -230,7 +226,6 @@ export const AnthologyView: React.FC<AnthologyViewProps> = ({
       className="bg-dark"
       style={{
         color: "white",
-        //height: "100svh",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",

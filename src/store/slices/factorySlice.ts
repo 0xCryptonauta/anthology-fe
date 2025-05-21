@@ -141,7 +141,7 @@ export const factorySlice = createSlice({
     ) => {
       state.contractsTitles[action.payload.contract] = action.payload.title;
     },
-    clearFactoryStore: () => {
+    resetFactoryStore: () => {
       return initialState;
     },
   },
@@ -163,7 +163,7 @@ export const {
   updateUsers,
   updateUserContracts,
   updateContractTitles,
-  clearFactoryStore,
+  resetFactoryStore,
   updateUsersCP,
   updateOneContractTitle,
 } = factorySlice.actions;

@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import { SidePanel } from "./SidePanel";
 import { WalletConnector } from "./WalletConnector";
 import { ActiveView } from "@src/types/common";
+import { useAccount } from "wagmi";
+import { LOCAL_ANTOLOGY_PATH } from "@src/utils/constants";
+import { useAppSelector } from "@src/store/utils/hooks";
 interface HeaderProps {
   activeView: ActiveView;
   setActiveView: (newActiveView: ActiveView) => void;
@@ -11,6 +14,9 @@ export const Header: React.FC<HeaderProps> = ({
   activeView,
   setActiveView,
 }) => {
+  const { isConnected, address } = useAccount();
+  const { isIconToLocal } = useAppSelector((state) => state.dapp);
+
   const handleOnClick = (newActiveView: ActiveView) => {
     setActiveView(newActiveView); // Update local state
 
@@ -28,7 +34,13 @@ export const Header: React.FC<HeaderProps> = ({
         <Link
           className="navbar-brand"
           to="/"
-          onClick={() => handleOnClick("factory")}
+          onClick={() => {
+            if (isConnected && !isIconToLocal) {
+              handleOnClick(`user/${address}`);
+            } else {
+              handleOnClick(LOCAL_ANTOLOGY_PATH);
+            }
+          }}
         >
           <img
             src="/IB_icon.png"

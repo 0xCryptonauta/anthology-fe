@@ -3,6 +3,7 @@ import factoryReducer from "./slices/factorySlice";
 import userReducer from "./slices/userSlice";
 import anthologyReducer from "./slices/anthologySlice";
 import dappReducer from "./slices/dappSlice";
+import localAnthologyReducer from "./slices/localAnthologySlice";
 import storage from "redux-persist/lib/storage";
 
 import {
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
   user: userReducer,
   anthology: anthologyReducer,
   dapp: dappReducer,
+  localAnthology: localAnthologyReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
