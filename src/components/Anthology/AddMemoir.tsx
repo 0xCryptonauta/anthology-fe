@@ -41,10 +41,9 @@ export const AddMemoir = ({
   const { addToast } = useToast();
 
   return (
-    userAddr &&
     (!whitelistEnabled ||
       whitelist.includes(userAddr) ||
-      owner === userAddr) && (
+      userAddr === owner) && (
       <>
         <span onClick={handleShow} className="addMemoirButton">
           📝
