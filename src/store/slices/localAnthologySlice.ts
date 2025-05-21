@@ -135,7 +135,7 @@ export const localAnthologySlice = createSlice({
       }
     },
 
-    resetUser: () => {
+    resetLocalAnthologyStore: () => {
       return initialState;
     },
   },
@@ -147,7 +147,7 @@ export const {
   addMemoirToUserLocalAnthology,
   deleteMemoirFromUserLocalAnthology,
   updateUserLocalAnthologyTitle,
-  resetUser,
+  resetLocalAnthologyStore,
 } = localAnthologySlice.actions;
 
 export default localAnthologySlice.reducer;

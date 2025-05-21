@@ -2,7 +2,7 @@ import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
 import { shortenAddress } from "@src/utils/shortenAddress";
 import { useAccount, useDisconnect } from "wagmi";
 import { useEffect } from "react";
-import { resetUser, updateUserAddr } from "@src/store/slices/userSlice";
+import { resetUserStore, updateUserAddr } from "@src/store/slices/userSlice";
 import { WalletOptions } from "./WalletOptions";
 
 export const WalletConnector = () => {
@@ -11,7 +11,7 @@ export const WalletConnector = () => {
     mutation: {
       onSuccess: () => {
         console.log("Disconnected successfully");
-        dispatch(resetUser());
+        dispatch(resetUserStore());
       },
     },
   });
@@ -20,7 +20,7 @@ export const WalletConnector = () => {
   const { address, isConnected, connector } = useAccount();
 
   const handleDisconnect = () => {
-    //dispatch(resetUser());
+    //dispatch(resetUserStore());
     disconnect();
     console.log("disconnected");
   };
