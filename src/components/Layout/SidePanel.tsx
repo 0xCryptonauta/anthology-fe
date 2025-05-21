@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 import { useAppSelector } from "@store/utils/hooks";
 //import { updateActiveView } from "@src/store/slices/userSlice";
 import { ActiveView } from "@src/types/common";
-import { NetworkSettings } from "./NetworkSettings";
+import { useAccount } from "wagmi";
+import { LOCAL_ANTOLOGY_PATH } from "@src/utils/constants";
 interface HeaderProps {
   activeView: ActiveView;
   setActiveView: (newActiveView: ActiveView) => void;
@@ -14,6 +15,8 @@ interface HeaderProps {
 export const SidePanel: React.FC<HeaderProps> = ({ setActiveView }) => {
   const { userAddr } = useAppSelector((state) => state.user);
   const [show, setShow] = useState(false);
+
+  const { isConnected } = useAccount();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -52,7 +55,7 @@ export const SidePanel: React.FC<HeaderProps> = ({ setActiveView }) => {
 
       <Offcanvas
         placement="end"
-        className="bg-warning"
+        className="bg-dark"
         data-bs-theme="dark"
         show={show}
         onHide={handleClose}
@@ -96,7 +99,7 @@ export const SidePanel: React.FC<HeaderProps> = ({ setActiveView }) => {
                 e-Brain
               </Link>
             </div> */}
-            {userAddr && (
+            {isConnected && (
               <div style={{ margin: "20px 0px" }}>
                 <Link
                   to="/"
@@ -105,9 +108,9 @@ export const SidePanel: React.FC<HeaderProps> = ({ setActiveView }) => {
                     handleOnClick(`user/${userAddr}`);
                   }}
                 >
-                  My anthologies
+                  My Anthologies
                 </Link>
-                <br />
+                {/*                 <br />
                 <Link
                   to="/"
                   style={{ cursor: "pointer", margin: "10px 0px" }}
@@ -116,10 +119,36 @@ export const SidePanel: React.FC<HeaderProps> = ({ setActiveView }) => {
                   }}
                 >
                   Deploy
-                </Link>
+                </Link> */}
               </div>
             )}
-            <br />
+            <div style={{ margin: "20px 0px" }}>
+              <Link
+                to="/"
+                style={{
+                  cursor: "pointer",
+                  margin: "10px 0px",
+                  color: "#ff8383",
+                }}
+                onClick={() => {
+                  handleOnClick(LOCAL_ANTOLOGY_PATH);
+                }}
+              >
+                Draft Anthologies
+              </Link>
+              {/*                 <br />
+                <Link
+                  to="/"
+                  style={{ cursor: "pointer", margin: "10px 0px" }}
+                  onClick={() => {
+                    handleOnClick(`deploy`);
+                  }}
+                >
+                  Deploy
+                </Link> */}
+            </div>
+
+            {/*             <br />
             <Link
               to="/"
               style={{ cursor: "pointer", margin: "10px 0px" }}
@@ -127,8 +156,8 @@ export const SidePanel: React.FC<HeaderProps> = ({ setActiveView }) => {
                 handleOnClick(`factory`);
               }}
             >
-              Factory
-            </Link>
+              Factory Users
+            </Link> */}
           </div>
           <div
             style={{
@@ -152,10 +181,6 @@ export const SidePanel: React.FC<HeaderProps> = ({ setActiveView }) => {
               <Link to="/info" onClick={handleClose}>
                 Factory Info
               </Link>
-              <br />
-              <div>
-                <NetworkSettings />
-              </div>
             </div>
           </div>
         </Offcanvas.Body>

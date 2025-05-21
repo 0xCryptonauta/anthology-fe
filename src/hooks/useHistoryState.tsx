@@ -1,17 +1,16 @@
 import { ActiveView } from "@src/types/common";
+import { LOCAL_ANTOLOGY_PATH } from "@src/utils/constants";
 import { useEffect } from "react";
 import { useAccount } from "wagmi";
-
-const DEFAULT_ACTIVE_VIEW = "factory";
 
 export const useHistoryState = (
   setActiveView: (activeView: ActiveView) => void
 ) => {
-  const { address } = useAccount();
+  const { address, isConnected } = useAccount();
 
-  let defaultView = DEFAULT_ACTIVE_VIEW as ActiveView;
+  let defaultView = LOCAL_ANTOLOGY_PATH as ActiveView;
 
-  if (address) {
+  if (isConnected) {
     defaultView = `user/${address}`;
   }
 

@@ -1,10 +1,11 @@
 import { useAppDispatch } from "@store/utils/hooks";
 import { useAppSelector } from "@store/utils/hooks";
-import { SkinType } from "@store/slices/anthologySlice";
 import { OrderType } from "../../Layout/OrderSelector";
-import { ActiveView } from "@src/types/common";
+import { ActiveView, SkinType } from "@src/types/common";
 import { useEffect } from "react";
 import { MemoirRenderer } from "./MemoirRenderer";
+import { LOCAL_USER_ADDR } from "@src/utils/constants";
+import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 interface MemoirsProps {
   contractAddr: `0x${string}`;
   skin: SkinType;
@@ -19,8 +20,13 @@ export const Memoirs: React.FC<MemoirsProps> = ({
   setActiveView,
 }) => {
   const anthology = useAppSelector((state) =>
-    contractAddr ? state.anthology[contractAddr] : undefined
+    contractAddr.length !== 22 ? state.anthology[contractAddr] : undefined
   );
+
+  const localAnthology = useAppSelector(
+    (state) => state.localAnthology.anthologies[contractAddr]
+  );
+
   const { userAddr } = useAppSelector((state) => state.user);
 
   const dispatch = useAppDispatch();
@@ -44,13 +50,25 @@ export const Memoirs: React.FC<MemoirsProps> = ({
         position: "relative",
       }}
     >
-      {anthology && (
+      {anthology && !isLocalAnthology(contractAddr) && (
         <MemoirRenderer
           anthologySkin={skin}
           order={order}
           contractAddr={contractAddr}
           anthologyOwner={anthology.anthologyState.owner}
           memoirs={anthology.memoirs}
+          currentUser={userAddr}
+          dispatch={dispatch}
+          setActiveView={setActiveView}
+        />
+      )}
+      {isLocalAnthology(contractAddr) && (
+        <MemoirRenderer
+          anthologySkin={skin}
+          order={order}
+          contractAddr={contractAddr}
+          anthologyOwner={LOCAL_USER_ADDR}
+          memoirs={localAnthology}
           currentUser={userAddr}
           dispatch={dispatch}
           setActiveView={setActiveView}

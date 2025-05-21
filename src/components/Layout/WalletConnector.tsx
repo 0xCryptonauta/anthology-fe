@@ -2,29 +2,31 @@ import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
 import { shortenAddress } from "@src/utils/shortenAddress";
 import { useAccount, useDisconnect } from "wagmi";
 import { useEffect } from "react";
-import { updateUserAddr } from "@src/store/slices/userSlice";
+import { resetUser, updateUserAddr } from "@src/store/slices/userSlice";
 import { WalletOptions } from "./WalletOptions";
 
 export const WalletConnector = () => {
   const { userAddr } = useAppSelector((state) => state.user);
-  const { disconnect } = useDisconnect();
+  const { disconnect } = useDisconnect({
+    mutation: {
+      onSuccess: () => {
+        console.log("Disconnected successfully");
+        dispatch(resetUser());
+      },
+    },
+  });
   const dispatch = useAppDispatch();
 
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, connector } = useAccount();
 
   const handleDisconnect = () => {
+    //dispatch(resetUser());
     disconnect();
-    dispatch(updateUserAddr(""));
+    console.log("disconnected");
   };
 
-  /*   const { reconnect, connectors } = useReconnect();
-
   useEffect(() => {
-    reconnect({ connectors });
-  }, []); */
-
-  useEffect(() => {
-    if (isConnected && address && !userAddr) {
+    if (isConnected && address && address !== userAddr) {
       dispatch(updateUserAddr(address));
       console.log("User address updated:", address);
     }
@@ -45,7 +47,9 @@ export const WalletConnector = () => {
     >
       <span>{shortenAddress(userAddr)}</span>
       <img
-        src={"./icons/WalletConnectIcon.svg"}
+        //src={"./icons/WalletConnectIcon.svg"}
+        src={connector?.icon}
+        alt={connector?.name + " icon"}
         width={25}
         height={25}
         style={{ marginLeft: "5px" }}

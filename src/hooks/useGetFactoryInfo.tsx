@@ -10,6 +10,7 @@ import {
 import { readFactory } from "@src/contract-functions/factoryFunctions";
 import { fetchFactoryInfo } from "@src/contract-functions/fetchContractInfo";
 import { useAppSelector } from "@src/store/utils/hooks";
+import { Address } from "@src/types/common";
 
 export const useGetFactoryInfo = () => {
   const dispatch = useDispatch();
@@ -30,14 +31,14 @@ export const useGetFactoryInfo = () => {
         // If whitelist is enabled, fetch whitelisted addresses
         if (contractInfo.whitelistEnabled) {
           const whitelistedUsers = await readFactory("getWhitelistedUsers");
-          dispatch(updateWhitelistedUsers(whitelistedUsers as string[]));
+          dispatch(updateWhitelistedUsers(whitelistedUsers as Address[]));
         }
       }
 
       if (CP !== usersCP) {
         // Fetch all registered users
         const users = await readFactory("getUsers", [usersCP, CP]);
-        console.log("USERS:", users);
+        console.log("Factory Users:", users);
         dispatch(updateUsers(users as []));
       }
     };

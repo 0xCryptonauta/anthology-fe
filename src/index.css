@@ -13,9 +13,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.offcanvas {
+/* .offcanvas {
   background-color: transparent !important;
-}
+} */
 
 a {
   font-weight: 500;

@@ -1,17 +1,15 @@
 import { useAppDispatch } from "@store/utils/hooks";
-import { store } from "@store/redux";
+import { persistor, store } from "@store/redux";
 import { clearAnthologyStore } from "@store/slices/anthologySlice";
 import { clearFactoryStore } from "@store/slices/factorySlice";
-import { useState } from "react";
 import { useToast } from "@components/Layout/Toast";
 import InstallPWAButton from "@src/components/Layout/InstallPWAButton";
+import { NetworkSettings } from "@src/components/Layout/NetworkSettings";
 
 export const AboutView = () => {
   const dispatch = useAppDispatch();
 
   const { addToast } = useToast();
-
-  const [reduxSize, setReduxSize] = useState(0);
 
   return (
     <div
@@ -48,33 +46,31 @@ export const AboutView = () => {
         >
           <button
             onClick={() => {
-              console.log(
-                "The redux store size is: ",
-                JSON.stringify(store.getState()).length / 1000,
-                "KB"
-              );
-              setReduxSize(JSON.stringify(store.getState()).length / 1000);
-              //setShowToast(true);
+              const currentStoreSize =
+                JSON.stringify(store.getState()).length / 1000;
               addToast({
                 title: "Redux Store Size",
-                content: reduxSize + " KB",
+                content: currentStoreSize + " KB",
                 variant: "success",
               });
             }}
           >
             Calculate size of storage
           </button>
-          <span>{reduxSize} KB</span>
         </div>
 
         <button
-          onClick={() => {
+          onClick={async () => {
             dispatch(clearAnthologyStore());
             dispatch(clearFactoryStore());
-            setReduxSize(JSON.stringify(store.getState()).length / 1000);
+            await persistor.purge();
+            setTimeout(() => {
+              window.location.reload();
+            }, 5000);
+
             addToast({
               title: "Redux Store Cleaned",
-              content: "The store has been cleaned",
+              content: "The store has been cleaned, reloading in 5seconds...",
               variant: "warning",
             });
           }}
@@ -84,6 +80,7 @@ export const AboutView = () => {
       </div>
 
       <InstallPWAButton />
+      <NetworkSettings />
     </div>
   );
 };

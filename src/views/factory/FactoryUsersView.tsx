@@ -8,7 +8,9 @@ interface FactoryViewProps {
   setActiveView: (newActiveView: ActiveView) => void;
 }
 
-export const FactoryView: React.FC<FactoryViewProps> = ({ setActiveView }) => {
+export const FactoryUsersView: React.FC<FactoryViewProps> = ({
+  setActiveView,
+}) => {
   const { users } = useAppSelector((state) => state.factory);
 
   return (

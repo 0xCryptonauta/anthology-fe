@@ -1,15 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-
-type Address = `0x${string}`;
-
-export type SkinType =
-  | "media"
-  | "json"
-  | "text"
-  | "playlist"
-  | "list"
-  | "\0default\0";
+import { Address, SkinType } from "@src/types/common";
 
 export interface MemoirInterface {
   sender: Address;

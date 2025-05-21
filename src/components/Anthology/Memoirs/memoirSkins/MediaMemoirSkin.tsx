@@ -21,6 +21,7 @@ import {
   TWITTER_REGEX,
   YOUTUBE_REGEX,
 } from "@src/utils/regex";
+import { LOCAL_USER_ADDR } from "@src/utils/constants";
 
 interface MediaMemoirSkinProps {
   contractAddr: `0x${string}`;
@@ -182,6 +183,7 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
               </div>
 
               {(currentUser === anthologyOwner ||
+                anthologyOwner === LOCAL_USER_ADDR ||
                 currentUser === memoir.sender) && (
                 <span
                   style={{
