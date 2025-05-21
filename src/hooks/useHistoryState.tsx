@@ -1,3 +1,4 @@
+import { useAppSelector } from "@src/store/utils/hooks";
 import { ActiveView } from "@src/types/common";
 import { LOCAL_ANTOLOGY_PATH } from "@src/utils/constants";
 import { useEffect } from "react";
@@ -7,10 +8,11 @@ export const useHistoryState = (
   setActiveView: (activeView: ActiveView) => void
 ) => {
   const { address, isConnected } = useAccount();
+  const { isIconToLocal } = useAppSelector((state) => state.dapp);
 
   let defaultView = LOCAL_ANTOLOGY_PATH as ActiveView;
 
-  if (isConnected) {
+  if (isConnected && !isIconToLocal) {
     defaultView = `user/${address}`;
   }
 

@@ -14,9 +14,10 @@ interface HeaderProps {
 
 export const SidePanel: React.FC<HeaderProps> = ({ setActiveView }) => {
   const { userAddr } = useAppSelector((state) => state.user);
+  const { isIconToLocal } = useAppSelector((state) => state.dapp);
   const [show, setShow] = useState(false);
 
-  const { isConnected } = useAccount();
+  const { isConnected, address } = useAccount();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -68,7 +69,11 @@ export const SidePanel: React.FC<HeaderProps> = ({ setActiveView }) => {
             className="navbar-brand"
             to="/"
             onClick={() => {
-              handleOnClick(`factory`);
+              if (isConnected && !isIconToLocal) {
+                handleOnClick(`user/${address}`);
+              } else {
+                handleOnClick(LOCAL_ANTOLOGY_PATH);
+              }
             }}
             style={{ display: "flex", alignItems: "center" }}
           >
@@ -177,10 +182,15 @@ export const SidePanel: React.FC<HeaderProps> = ({ setActiveView }) => {
               <Link to="about" onClick={handleClose}>
                 About
               </Link>
-              <br />
-              <Link to="/info" onClick={handleClose}>
-                Factory Info
-              </Link>
+
+              {isConnected && (
+                <>
+                  <br />
+                  <Link to="/info" onClick={handleClose}>
+                    Factory Info
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </Offcanvas.Body>

@@ -5,7 +5,7 @@ import { CurrentUserView } from "./factory/CurrentUserView";
 import { AnthologyView } from "./anthology/AnthologyView";
 
 import { useOutletContext } from "react-router-dom";
-import { ActiveView } from "@src/types/common";
+import { ActiveView, Address } from "@src/types/common";
 import { UserView } from "./factory/UserView";
 import { useHistoryState } from "@src/hooks/useHistoryState";
 import { LOCAL_ANTOLOGY_PATH } from "@src/utils/constants";
@@ -37,7 +37,7 @@ export const IndexView = () => {
       ) : activeView.startsWith(`user/`) ? (
         <UserView
           setActiveView={setActiveView}
-          userAddr={activeView.split("/")[1]}
+          userAddr={activeView.split("/")[1] as Address}
         />
       ) : activeView.startsWith(`contract/`) ? (
         activeView.split("/")[1].length === 22 ? (

@@ -4,12 +4,12 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 
 export interface dappState {
   factoryRpc: string;
-  shouldAddToBlockchain: boolean;
+  isIconToLocal: boolean;
 }
 
 const initialState: dappState = {
   factoryRpc: "",
-  shouldAddToBlockchain: false,
+  isIconToLocal: true,
 };
 
 export const dappSlice = createSlice({
@@ -19,16 +19,16 @@ export const dappSlice = createSlice({
     updateFactoryRpc: (state, action: PayloadAction<string>) => {
       state.factoryRpc = action.payload;
     },
-    toggleShouldAddToBlockchain: (state) => {
-      state.shouldAddToBlockchain = !state.shouldAddToBlockchain;
+    toggleIsIconToLocal: (state) => {
+      state.isIconToLocal = !state.isIconToLocal;
     },
-    resetUser: () => {
+    resetDappStore: () => {
       return initialState;
     },
   },
 });
 
-export const { updateFactoryRpc, toggleShouldAddToBlockchain, resetUser } =
+export const { updateFactoryRpc, toggleIsIconToLocal, resetDappStore } =
   dappSlice.actions;
 
 export default dappSlice.reducer;

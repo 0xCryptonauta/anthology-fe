@@ -233,6 +233,9 @@ export const anthologySlice = createSlice({
       const _whitelistEnabled = action.payload.whitelistEnabled;
       state[_contract].anthologyState.whitelistEnabled = _whitelistEnabled;
     },
+    resetAnthologyStore: () => {
+      return initialState;
+    },
   },
 });
 
@@ -253,6 +256,7 @@ export const {
   updateUseBuffer,
   updateUseErc20,
   updateWhitelistEnabled,
+  resetAnthologyStore,
 } = anthologySlice.actions;
 
 export default anthologySlice.reducer;

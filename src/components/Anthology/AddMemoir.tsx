@@ -5,10 +5,9 @@ import "./style.css";
 import { useToast } from "@components/Layout/Toast";
 import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
 import { Address } from "@src/types/common";
-//import { addUserLocalAnthology } from "@src/store/slices/localAnthologySlice";
-import { ShouldAddToBlockchain } from "../Layout/ShouldAddToBlockchain";
 import { addMemoirToUserLocalAnthology } from "@src/store/slices/localAnthologySlice";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
+import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 
 export const AddMemoir = ({
   contractAddr,
@@ -31,8 +30,6 @@ export const AddMemoir = ({
   const whitelist = useAppSelector(
     (state) => state.anthology[contractAddr]?.whitelist
   );
-
-  const { shouldAddToBlockchain } = useAppSelector((state) => state.dapp);
 
   const dispatch = useAppDispatch();
   const handleClose = () => setShow(false);
@@ -110,28 +107,10 @@ export const AddMemoir = ({
                 }}
               ></textarea>
 
-              <ShouldAddToBlockchain />
-
               <button
                 style={{ marginTop: "15px" }}
                 onClick={async () => {
-                  if (shouldAddToBlockchain) {
-                    const txHash_setTitle = await writeAnthology(
-                      contractAddr,
-                      "createMemoir",
-                      [anthologyTitle, anthologyContent]
-                    );
-                    if (txHash_setTitle) {
-                      setAnthologyContent("");
-                      setAnthologyTitle("");
-                      addToast({
-                        title: "Memoir Added",
-                        content: "TxHash: " + txHash_setTitle,
-                        variant: "success",
-                        delay: 5000,
-                      });
-                    }
-                  } else {
+                  if (isLocalAnthology(contractAddr)) {
                     dispatch(
                       addMemoirToUserLocalAnthology({
                         contract: contractAddr,
@@ -153,6 +132,22 @@ export const AddMemoir = ({
                       variant: "success",
                       delay: 5000,
                     });
+                  } else {
+                    const txHash_setTitle = await writeAnthology(
+                      contractAddr,
+                      "createMemoir",
+                      [anthologyTitle, anthologyContent]
+                    );
+                    if (txHash_setTitle) {
+                      setAnthologyContent("");
+                      setAnthologyTitle("");
+                      addToast({
+                        title: "Memoir Added",
+                        content: "TxHash: " + txHash_setTitle,
+                        variant: "success",
+                        delay: 5000,
+                      });
+                    }
                   }
                   handleClose();
                 }}
