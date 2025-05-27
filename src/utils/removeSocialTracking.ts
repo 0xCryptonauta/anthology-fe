@@ -1,13 +1,14 @@
 import { isValidURL } from "./isValidURL";
 
 /**
- * Removes the &SI parameter from a given YouTube URL.
+ * Removes known social tracking parameters from URLs.
  *
- * @param {string} url The YouTube URL to process.
- * @returns {string} The URL with the &SI parameter removed.
+ * Supports YouTube, Instagram, Facebook, Twitter/X, Reddit.
+ *
+ * @param {string} url The URL to clean.
+ * @returns {string} The cleaned URL.
  */
 export const removeSocialTracking = (url: string): string => {
-  // Check if the input is a string (TypeScript will enforce this at compile-time)
   if (typeof url !== "string") {
     throw new Error("Input must be a string");
   }
@@ -18,25 +19,58 @@ export const removeSocialTracking = (url: string): string => {
   }
 
   try {
-    // Use URL API to break down the URL into its components
     const urlObject = new URL(url);
+    const hostname = urlObject.hostname.toLowerCase();
 
-    // Check if the URL is a YouTube URL
-    if (["www.youtube.com", "youtu.be"].includes(urlObject.hostname)) {
-      // Get the query parameters
+    const socialHostnames = [
+      "youtube.com",
+      "youtu.be",
+      "instagram.com",
+      "facebook.com",
+      "twitter.com",
+      "x.com",
+      "reddit.com",
+      "redd.it",
+    ];
+
+    const trackingParams = [
+      // YouTube
+      "si",
+
+      // Instagram
+      "igshid",
+
+      // Facebook
+      "fbclid",
+
+      // Twitter/X
+      "t",
+      "s",
+
+      // Reddit
+      "utm_source",
+      "utm_medium",
+      "utm_name",
+      "context",
+      "ref_source",
+
+      // Generic UTM
+      "utm_campaign",
+      "utm_term",
+      "utm_content",
+    ];
+
+    const isSocialHost = socialHostnames.some((host) =>
+      hostname.endsWith(host)
+    );
+
+    if (isSocialHost) {
       const params = urlObject.searchParams;
 
-      // Remove the SI parameter if it exists
-      params.delete("si");
+      trackingParams.forEach((param) => params.delete(param));
 
-      // Reconstruct the URL without the SI parameter
-      if (params.toString() === "") {
-        urlObject.search = ""; // Remove the '?' character if there are no query parameters
-      } else {
-        urlObject.search = "?" + params.toString();
-      }
+      urlObject.search = params.toString() ? "?" + params.toString() : "";
 
-      // Return the updated URL
       return urlObject.href;
     }
 

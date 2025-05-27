@@ -110,26 +110,31 @@ export const AddMemoir = ({
               <br />
               <span>Content:</span>
               <div style={{ position: "relative", width: "100%" }}>
+                {/* Overlay with highlighted diffs */}
                 <div
                   style={{
-                    whiteSpace: "pre-wrap",
-                    wordWrap: "break-word",
-                    color: "transparent", // to avoid blinking text when syncing
                     position: "absolute",
                     top: 0,
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    pointerEvents: "none",
                     zIndex: 1,
-                    fontFamily: "inherit",
-                    fontSize: "inherit",
-                    padding: "8px",
+                    pointerEvents: "none",
+                    whiteSpace: "pre-wrap",
+                    wordBreak: "break-word",
+                    color: "transparent",
+                    fontSize: "0.875rem", // = 14px if root is 16px
+                    fontFamily: "monospace", // or your custom font
+                    lineHeight: "1.5",
+                    padding: "0.6rem", // = 8px
+                    boxSizing: "border-box",
                   }}
                   aria-hidden="true"
                 >
                   {HighlightDifferences(anthologyContent, filteredContent)}
                 </div>
+
+                {/* Underlying textarea */}
                 <textarea
                   value={
                     shouldFilterTracking ? filteredContent : anthologyContent
@@ -138,15 +143,19 @@ export const AddMemoir = ({
                   onChange={(e) => setAnthologyContent(e.target.value)}
                   style={{
                     position: "relative",
-                    background: "transparent",
                     zIndex: 2,
                     width: "100%",
-                    height: "150px",
+                    minHeight: "7rem", // 48px
+                    maxHeight: "12.5rem", // 200px
+                    overflowY: "auto",
                     resize: "none",
-                    padding: "8px",
-                    fontFamily: "inherit",
-                    fontSize: "inherit",
+                    padding: "0.5rem",
+                    fontSize: "0.875rem",
+                    fontFamily: "monospace", // match overlay exactly
+                    lineHeight: "1.5",
                     color: "black",
+                    backgroundColor: "transparent",
+                    boxSizing: "border-box",
                   }}
                 />
               </div>
