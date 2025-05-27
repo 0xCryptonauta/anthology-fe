@@ -57,7 +57,15 @@ export const WalletOptions = () => {
               console.log("res2:", currentUser);
             }}
           >
-            <img src={connector?.icon} height={25} width={25} />
+            <img
+              src={
+                connector?.icon
+                  ? connector?.icon
+                  : "icons/WalletConnectIcon.svg"
+              }
+              height={25}
+              width={25}
+            />
           </div>
         );
       })}

@@ -3,7 +3,7 @@ import { AppDispatch } from "@store/redux";
 import { formatUnixTime } from "@utils/formatUnixTime";
 import { MemoirInterface } from "@store/slices/anthologySlice";
 import { ToastVariantType, useToast } from "@components/Layout/Toast";
-import { ActiveView, Address } from "@src/types/common";
+import { Address } from "@src/types/common";
 import { isValidURL } from "@src/utils/isValidURL";
 // Media memoir skins
 import {
@@ -22,6 +22,7 @@ import {
   YOUTUBE_REGEX,
 } from "@src/utils/regex";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
+import { updateCurrentPath } from "@src/store/slices/userSlice";
 
 interface MediaMemoirSkinProps {
   contractAddr: `0x${string}`;
@@ -30,7 +31,6 @@ interface MediaMemoirSkinProps {
   memoirs: MemoirInterface[];
   orderMap: number[];
   dispatch: AppDispatch;
-  setActiveView: (newActiveView: ActiveView) => void;
   handleDelete: (object: HandleDeleteProps) => void;
 }
 
@@ -56,7 +56,6 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
   orderMap,
   currentUser,
   dispatch,
-  setActiveView,
   handleDelete,
 }) => {
   const { addToast } = useToast();
@@ -173,7 +172,9 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
               >
                 <span
                   style={{ fontSize: "12px", cursor: "pointer" }}
-                  onClick={() => setActiveView(`user/${memoir.sender}`)}
+                  onClick={() =>
+                    dispatch(updateCurrentPath(`user/${memoir.sender}`))
+                  }
                 >
                   {shortenAddress(memoir.sender, 10, 8)}
                 </span>

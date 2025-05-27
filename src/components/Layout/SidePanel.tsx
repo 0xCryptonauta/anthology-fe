@@ -2,32 +2,30 @@ import { useState } from "react";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { Link } from "react-router-dom";
 
-import { useAppSelector } from "@store/utils/hooks";
-//import { updateActiveView } from "@src/store/slices/userSlice";
-import { ActiveView } from "@src/types/common";
+import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
 import { useAccount } from "wagmi";
 import { LOCAL_ANTOLOGY_PATH } from "@src/utils/constants";
-interface HeaderProps {
-  activeView: ActiveView;
-  setActiveView: (newActiveView: ActiveView) => void;
-}
+import { updateCurrentPath } from "@src/store/slices/userSlice";
+import { CurrentPaths } from "@src/types/common";
 
-export const SidePanel: React.FC<HeaderProps> = ({ setActiveView }) => {
+export const SidePanel = () => {
   const { userAddr } = useAppSelector((state) => state.user);
   const { isIconToLocal } = useAppSelector((state) => state.dapp);
   const [show, setShow] = useState(false);
 
   const { isConnected, address } = useAccount();
 
+  const dispatch = useAppDispatch();
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const handleOnClick = (newActiveView: ActiveView) => {
-    setActiveView(newActiveView); // Update local state
+  const handleOnClick = (newCurrentPath: CurrentPaths) => {
+    dispatch(updateCurrentPath(newCurrentPath));
 
     // Push new history entry without changing URL
     window.history.pushState(
-      { activeView: newActiveView }, // Store component name in history.state
+      { currentPath: newCurrentPath }, // Store component name in history.state
       "", // Unused title
       window.location.pathname // Keep URL as `/`
     );

@@ -46,7 +46,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [toasts, setToasts] = useState<ToastProps[]>([]);
   const timeouts = useRef<Map<string, NodeJS.Timeout>>(new Map());
-  const defaultDelay = 5000;
+  const defaultDelay = 3000;
 
   const removeToast = (id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));

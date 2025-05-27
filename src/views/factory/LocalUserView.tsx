@@ -3,16 +3,10 @@ import {
   MemoirContent,
 } from "@components/Factory/UserContracts";
 import { useAppSelector } from "@src/store/utils/hooks";
-import { ActiveView, Address } from "@src/types/common";
+import { Address } from "@src/types/common";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
 
-interface LocalUserViewProps {
-  setActiveView: (newActiveView: ActiveView) => void;
-}
-
-export const LocalUserView: React.FC<LocalUserViewProps> = ({
-  setActiveView,
-}) => {
+export const LocalUserView = () => {
   const { userContracts, contractsTitles } = useAppSelector(
     (state) => state.localAnthology
   );
@@ -39,11 +33,7 @@ export const LocalUserView: React.FC<LocalUserViewProps> = ({
         flexWrap: "wrap",
       }}
     >
-      <UserContracts
-        setActiveView={setActiveView}
-        userAddr={LOCAL_USER_ADDR}
-        userTitles={userTitles}
-      />
+      <UserContracts userAddr={LOCAL_USER_ADDR} userTitles={userTitles} />
     </div>
   );
 };
