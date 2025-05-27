@@ -28,7 +28,7 @@ import { MemoirBuffer } from "@components/Anthology/MemoirBuffer";
 import { AnthologyWhitelistedUsers } from "@components/Anthology/AnthologyWhitelistedUsers";
 import { SkinSelector } from "@src/components/Layout/SkinSelector";
 import { OrderSelector, OrderType } from "@src/components/Layout/OrderSelector";
-import { ActiveView, Address, SkinType } from "@src/types/common";
+import { Address, SkinType } from "@src/types/common";
 
 const formatTitle = (title?: string): string => {
   if (!title) return ""; // Handle undefined case
@@ -40,22 +40,14 @@ const formatTitle = (title?: string): string => {
   return [category, subcategory, item].filter(Boolean).join(" > ");
 };
 
-interface AnthologyViewProps {
-  activeView: ActiveView;
-  setActiveView: (newActiveView: ActiveView) => void;
-}
-
-export const AnthologyView: React.FC<AnthologyViewProps> = ({
-  activeView,
-  setActiveView,
-}) => {
+export const AnthologyView = () => {
   const dispatch = useAppDispatch();
-  //const { userContracts } = useAppSelector((state) => state.factory);
+  const { currentPath } = useAppSelector((state) => state.user);
 
   //const { ethAddr, } = useParams();
 
   //let contractAddr = "";
-  const contractAddr = activeView.split("/")[1] as Address;
+  const contractAddr = currentPath.split("/")[1] as Address;
 
   /*   if (JSON.stringify(userContracts) != "{}") {
     try {
@@ -322,7 +314,6 @@ export const AnthologyView: React.FC<AnthologyViewProps> = ({
             contractAddr={contractAddr}
             skin={currentSkin}
             order={currentOrder}
-            setActiveView={setActiveView}
           />
         </>
       )}

@@ -8,6 +8,10 @@ import { Address } from "@src/types/common";
 import { addMemoirToUserLocalAnthology } from "@src/store/slices/localAnthologySlice";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
+import { updateCurrentPath } from "@src/store/slices/userSlice";
+import { useNavigate } from "react-router-dom";
+import { removeSocialTracking } from "@src/utils/removeSocialTracking";
+import { HighlightDifferences } from "../Layout/HighlightDifferences";
 
 export const AddMemoir = ({
   contractAddr,
@@ -22,8 +26,9 @@ export const AddMemoir = ({
   const [anthologyContent, setAnthologyContent] = useState(content);
 
   const [show, setShow] = useState(false);
+  const [shouldFilterTracking, setShouldFilterTracking] = useState(true);
 
-  const { userAddr } = useAppSelector((state) => state.user || "");
+  const { userAddr, currentPath } = useAppSelector((state) => state.user);
   const { whitelistEnabled, owner } = useAppSelector(
     (state) => state.anthology[contractAddr]?.anthologyState || ""
   );
@@ -32,10 +37,15 @@ export const AddMemoir = ({
   );
 
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const { addToast } = useToast();
+
+  const filteredContent = shouldFilterTracking
+    ? removeSocialTracking(anthologyContent)
+    : anthologyContent;
 
   return (
     (!whitelistEnabled ||
@@ -92,20 +102,84 @@ export const AddMemoir = ({
                 placeholder=""
                 value={anthologyTitle}
                 maxLength={50}
+                style={{ backgroundColor: "white", color: "black" }}
                 onChange={(e) => {
                   setAnthologyTitle(e.target.value);
                 }}
               ></input>
               <br />
               <span>Content:</span>
-              <textarea
-                value={anthologyContent}
-                style={{ height: "100px" }}
-                maxLength={255}
-                onChange={(e) => {
-                  setAnthologyContent(e.target.value);
-                }}
-              ></textarea>
+              <div style={{ position: "relative", width: "100%" }}>
+                {/* Overlay with highlighted diffs */}
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    zIndex: 1,
+                    pointerEvents: "none",
+                    whiteSpace: "pre-wrap",
+                    wordBreak: "break-word",
+                    color: "transparent",
+                    fontSize: "0.875rem", // = 14px if root is 16px
+                    fontFamily: "monospace", // or your custom font
+                    lineHeight: "1.5",
+                    padding: "0.6rem", // = 8px
+                    boxSizing: "border-box",
+                  }}
+                  aria-hidden="true"
+                >
+                  {HighlightDifferences(anthologyContent, filteredContent)}
+                </div>
+
+                {/* Underlying textarea */}
+                <textarea
+                  value={
+                    shouldFilterTracking ? filteredContent : anthologyContent
+                  }
+                  maxLength={255}
+                  onChange={(e) => setAnthologyContent(e.target.value)}
+                  style={{
+                    position: "relative",
+                    zIndex: 2,
+                    width: "100%",
+                    minHeight: "7rem", // 48px
+                    maxHeight: "12.5rem", // 200px
+                    overflowY: "auto",
+                    resize: "none",
+                    padding: "0.5rem",
+                    fontSize: "0.875rem",
+                    fontFamily: "monospace", // match overlay exactly
+                    lineHeight: "1.5",
+                    color: "black",
+                    backgroundColor: "transparent",
+                    boxSizing: "border-box",
+                  }}
+                />
+              </div>
+
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <input
+                  type="checkbox"
+                  checked={shouldFilterTracking}
+                  onChange={() =>
+                    setShouldFilterTracking(!shouldFilterTracking)
+                  }
+                ></input>
+                <span
+                  style={{
+                    marginLeft: "5px",
+                    cursor: "pointer",
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                  onClick={() => setShouldFilterTracking(!shouldFilterTracking)}
+                >
+                  Remove Tracking from URL
+                </span>
+              </div>
 
               <button
                 style={{ marginTop: "15px" }}
@@ -117,7 +191,7 @@ export const AddMemoir = ({
                         memoir: {
                           sender: LOCAL_USER_ADDR,
                           title: anthologyTitle,
-                          content: anthologyContent,
+                          content: filteredContent,
                           timestamp: String(
                             Math.floor(new Date().getTime() / 1000)
                           ),
@@ -136,7 +210,7 @@ export const AddMemoir = ({
                     const txHash_setTitle = await writeAnthology(
                       contractAddr,
                       "createMemoir",
-                      [anthologyTitle, anthologyContent]
+                      [anthologyTitle, filteredContent]
                     );
                     if (txHash_setTitle) {
                       setAnthologyContent("");
@@ -149,6 +223,12 @@ export const AddMemoir = ({
                       });
                     }
                   }
+                  if (currentPath !== `contract/${contractAddr}`) {
+                    dispatch(updateCurrentPath(`contract/${contractAddr}`));
+                    navigate("/");
+                    console.log("GO.");
+                  }
+
                   handleClose();
                 }}
               >

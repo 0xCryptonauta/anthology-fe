@@ -48,7 +48,9 @@ export const WalletConnector = () => {
       <span>{shortenAddress(userAddr)}</span>
       <img
         //src={"./icons/WalletConnectIcon.svg"}
-        src={connector?.icon}
+        src={
+          connector?.icon ? connector?.icon : "./icons/WalletConnectIcon.svg"
+        }
         alt={connector?.name + " icon"}
         width={25}
         height={25}

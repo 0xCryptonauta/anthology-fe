@@ -10,9 +10,10 @@ import { LazyYT } from "./thirdPartyEmbeds/LazyYT";
 import RedditEmbed from "./thirdPartyEmbeds/RedditEmbed";
 import FacebookEmbed from "./thirdPartyEmbeds/facebookEmbed";
 import InstagramEmbed from "./thirdPartyEmbeds/InstagramEmbed"; */
-import { ActiveView, Address } from "@src/types/common";
+import { Address } from "@src/types/common";
 import { isValidURL } from "@src/utils/isValidURL";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
+import { updateCurrentPath } from "@src/store/slices/userSlice";
 
 interface TextMemoirSkinProps {
   contractAddr: `0x${string}`;
@@ -20,7 +21,6 @@ interface TextMemoirSkinProps {
   anthologyOwner: `0x${string}`;
   memoirs: MemoirInterface[];
   dispatch: AppDispatch;
-  setActiveView: (newActiveView: ActiveView) => void;
   handleDelete: (object: HandleDeleteProps) => void;
 }
 
@@ -45,7 +45,6 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
   memoirs,
   currentUser,
   dispatch,
-  setActiveView,
   handleDelete,
 }) => {
   const { addToast } = useToast();
@@ -115,7 +114,9 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
             <div>
               <span
                 style={{ fontSize: "12px", cursor: "pointer" }}
-                onClick={() => setActiveView(`user/${memoir.sender}`)}
+                onClick={() =>
+                  dispatch(updateCurrentPath(`user/${memoir.sender}`))
+                }
               >
                 {shortenAddress(memoir.sender, 10, 8)}
               </span>

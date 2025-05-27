@@ -1,16 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { Address, CurrentPaths } from "@src/types/common";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
-
-type Address = `0x${string}`;
 export interface UserState {
   userAddr: Address;
   walletId: string;
+  currentPath: CurrentPaths;
 }
 
 const initialState: UserState = {
   userAddr: LOCAL_USER_ADDR,
   walletId: "",
+  currentPath: `user/${LOCAL_USER_ADDR}`,
 };
 
 export const userSlice = createSlice({
@@ -23,13 +24,20 @@ export const userSlice = createSlice({
     updateWalletId: (state, action: PayloadAction<Address>) => {
       state.walletId = action.payload;
     },
+    updateCurrentPath: (state, action: PayloadAction<CurrentPaths>) => {
+      state.currentPath = action.payload;
+    },
     resetUserStore: () => {
       return initialState;
     },
   },
 });
 
-export const { updateUserAddr, updateWalletId, resetUserStore } =
-  userSlice.actions;
+export const {
+  updateUserAddr,
+  updateWalletId,
+  updateCurrentPath,
+  resetUserStore,
+} = userSlice.actions;
 
 export default userSlice.reducer;

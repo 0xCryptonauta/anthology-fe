@@ -1,10 +1,11 @@
 import { shortenAddress } from "@utils/shortenAddress";
 import { useAppDispatch } from "@store/utils/hooks";
 import { syncUserContractsToStore } from "@src/store/utils/thunks";
-import { ActiveView, Address } from "@src/types/common";
+import { Address, CurrentPaths } from "@src/types/common";
 import { parseContractsCategories } from "@src/utils/parseContractsCategories";
 import { DeployButton } from "./DeployButton";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
+import { updateCurrentPath } from "@src/store/slices/userSlice";
 
 export interface MemoirContent {
   address: Address;
@@ -21,22 +22,20 @@ export interface Categories {
 interface UserContractsProps {
   userAddr: Address;
   userTitles: MemoirContent[];
-  setActiveView: (newActiveView: ActiveView) => void;
 }
 
 export const UserContracts: React.FC<UserContractsProps> = ({
-  setActiveView,
   userAddr,
   userTitles,
 }) => {
   const dispatch = useAppDispatch();
 
-  const handleOnClick = (newActiveView: ActiveView) => {
-    setActiveView(newActiveView); // Update local state
+  const handleOnClick = (newCurrentPath: CurrentPaths) => {
+    dispatch(updateCurrentPath(newCurrentPath)); // Update local state
 
     // Push new history entry without changing URL
     window.history.pushState(
-      { activeView: newActiveView }, // Store component name in history.state
+      { currentPath: newCurrentPath }, // Store component name in history.state
       "", // Unused title
       window.location.pathname // Keep URL as `/`
     );

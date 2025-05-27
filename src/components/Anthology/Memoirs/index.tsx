@@ -1,7 +1,7 @@
 import { useAppDispatch } from "@store/utils/hooks";
 import { useAppSelector } from "@store/utils/hooks";
 import { OrderType } from "../../Layout/OrderSelector";
-import { ActiveView, SkinType } from "@src/types/common";
+import { SkinType } from "@src/types/common";
 import { useEffect } from "react";
 import { MemoirRenderer } from "./MemoirRenderer";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
@@ -10,14 +10,12 @@ interface MemoirsProps {
   contractAddr: `0x${string}`;
   skin: SkinType;
   order: OrderType;
-  setActiveView: (newActiveView: ActiveView) => void;
 }
 
 export const Memoirs: React.FC<MemoirsProps> = ({
   contractAddr,
   skin,
   order,
-  setActiveView,
 }) => {
   const anthology = useAppSelector((state) =>
     contractAddr.length !== 22 ? state.anthology[contractAddr] : undefined
@@ -59,7 +57,6 @@ export const Memoirs: React.FC<MemoirsProps> = ({
           memoirs={anthology.memoirs}
           currentUser={userAddr}
           dispatch={dispatch}
-          setActiveView={setActiveView}
         />
       )}
       {isLocalAnthology(contractAddr) && (
@@ -71,7 +68,6 @@ export const Memoirs: React.FC<MemoirsProps> = ({
           memoirs={localAnthology}
           currentUser={userAddr}
           dispatch={dispatch}
-          setActiveView={setActiveView}
         />
       )}
     </div>

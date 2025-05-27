@@ -2,15 +2,8 @@ import { FactoryUsersContracts } from "@src/components/Factory/FactoryUsersContr
 import { useAppSelector } from "@src/store/utils/hooks";
 
 //import { GetUserContracts } from "./GetUserContracts";
-import { ActiveView } from "@src/types/common";
 
-interface FactoryViewProps {
-  setActiveView: (newActiveView: ActiveView) => void;
-}
-
-export const FactoryUsersView: React.FC<FactoryViewProps> = ({
-  setActiveView,
-}) => {
+export const FactoryUsersView = () => {
   const { users } = useAppSelector((state) => state.factory);
 
   return (
@@ -27,11 +20,7 @@ export const FactoryUsersView: React.FC<FactoryViewProps> = ({
       }}
     >
       {/* <GetUserContracts /> */}
-      {users ? (
-        <FactoryUsersContracts setActiveView={setActiveView} />
-      ) : (
-        <div> Loading users </div>
-      )}
+      {users ? <FactoryUsersContracts /> : <div> Loading users </div>}
     </div>
   );
 };

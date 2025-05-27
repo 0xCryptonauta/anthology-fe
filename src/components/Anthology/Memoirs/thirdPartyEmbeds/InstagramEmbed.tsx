@@ -14,66 +14,82 @@ declare global {
   }
 }
 
-// Regex for Instagram posts and reels
 const isInstagramReelOrPost = (url: string) =>
   /instagram\.com\/(p|reel|tv)\/[a-zA-Z0-9_-]+/i.test(url);
 
 const InstagramEmbed: React.FC<InstagramEmbedProps> = ({ postUrl }) => {
   const embedRef = useRef<HTMLDivElement>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const scriptRef = useRef<HTMLScriptElement | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+
+  // Lazy loading with IntersectionObserver
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.disconnect(); // Only trigger once
+        }
+      },
+      { threshold: 0.25 }
+    );
+
+    if (embedRef.current) {
+      observer.observe(embedRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
-    const timeout = setTimeout(() => setHasError(true), 5000); // Error after 5s if embed fails
+    if (!isInView || !isInstagramReelOrPost(postUrl)) return;
 
-    const loadScript = () => {
+    setIsLoading(true);
+    const timeout = setTimeout(() => setHasError(true), 5000);
+
+    const isScriptPresent = !!document.querySelector(
+      'script[src="https://www.instagram.com/embed.js"]'
+    );
+
+    if (!window.instgrm && !isScriptPresent) {
       const script = document.createElement("script");
       script.src = "https://www.instagram.com/embed.js";
       script.async = true;
 
       script.onload = () => {
-        setIsLoading(false);
         clearTimeout(timeout);
+        setIsLoading(false);
         window.instgrm?.Embeds.process();
       };
 
       script.onerror = () => {
+        clearTimeout(timeout);
         setHasError(true);
         setIsLoading(false);
       };
 
       document.body.appendChild(script);
-
-      return () => {
-        document.body.removeChild(script);
-      };
-    };
-
-    if (!window.instgrm) {
-      loadScript();
+      scriptRef.current = script;
     } else {
+      clearTimeout(timeout);
       setIsLoading(false);
-      window.instgrm.Embeds.process();
+      window.instgrm?.Embeds.process();
     }
 
-    return () => clearTimeout(timeout);
-  }, []);
-
-  if (hasError) {
-    return (
-      <div style={errorStyle}>
-        Failed to load Instagram content.{" "}
-        <a
-          href={postUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={linkStyle}
-        >
-          View on Instagram
-        </a>
-      </div>
-    );
-  }
+    return () => {
+      clearTimeout(timeout);
+      const currentScript = scriptRef.current;
+      if (
+        currentScript &&
+        currentScript.parentNode &&
+        currentScript.parentNode.contains(currentScript)
+      ) {
+        currentScript.parentNode.removeChild(currentScript);
+      }
+    };
+  }, [isInView, postUrl]);
 
   if (!isInstagramReelOrPost(postUrl)) {
     return (
@@ -91,27 +107,46 @@ const InstagramEmbed: React.FC<InstagramEmbedProps> = ({ postUrl }) => {
     );
   }
 
+  if (hasError) {
+    return (
+      <div style={errorStyle}>
+        Failed to load Instagram content.{" "}
+        <a
+          href={postUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={linkStyle}
+        >
+          View on Instagram
+        </a>
+      </div>
+    );
+  }
+
   return (
     <div ref={embedRef} style={containerStyle}>
       {isLoading && <div style={spinnerStyle}>Loading...</div>}
-      <blockquote
-        className="instagram-media"
-        data-instgrm-permalink={postUrl}
-        data-instgrm-version="14"
-        style={blockquoteStyle}
-      ></blockquote>
+      {isInView && (
+        <blockquote
+          className="instagram-media"
+          data-instgrm-permalink={postUrl}
+          data-instgrm-version="14"
+          style={blockquoteStyle}
+        ></blockquote>
+      )}
     </div>
   );
 };
 
+// Styles
 const containerStyle: React.CSSProperties = {
   position: "relative",
-  //backgroundColor: "#f6f7f8",
   borderRadius: "12px",
   padding: "16px",
   boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
   display: "flex",
   justifyContent: "center",
+  minHeight: "200px",
 };
 
 const spinnerStyle: React.CSSProperties = {
