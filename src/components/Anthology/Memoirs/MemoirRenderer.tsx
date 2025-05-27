@@ -5,7 +5,7 @@ import {
   removeOneFromMemoirs,
 } from "@src/store/slices/anthologySlice";
 import { AppDispatch } from "@src/store/redux";
-import { ActiveView, SkinType } from "@src/types/common";
+import { SkinType } from "@src/types/common";
 import { writeAnthology } from "@src/contract-functions/anthologyFunctions";
 import { ToastVariantType } from "@src/components/Layout/Toast";
 import {
@@ -26,7 +26,6 @@ interface RenderMemoirsProps {
   contractAddr: `0x${string}`;
   currentUser: `0x${string}` | "";
   dispatch: AppDispatch;
-  setActiveView: (newActiveView: ActiveView) => void;
 }
 
 export const MemoirRenderer: React.FC<RenderMemoirsProps> = ({
@@ -37,7 +36,6 @@ export const MemoirRenderer: React.FC<RenderMemoirsProps> = ({
   contractAddr,
   currentUser,
   dispatch,
-  setActiveView,
 }) => {
   const orderedMemoirs = orderMemoirs({
     memoirs,
@@ -127,7 +125,6 @@ export const MemoirRenderer: React.FC<RenderMemoirsProps> = ({
             orderMap={orderedMemoirs.map((_, i) => i)}
             currentUser={currentUser}
             dispatch={dispatch}
-            setActiveView={setActiveView}
             handleDelete={handleDelete}
           />
         );
@@ -139,7 +136,6 @@ export const MemoirRenderer: React.FC<RenderMemoirsProps> = ({
             memoirs={orderedMemoirs}
             currentUser={currentUser}
             dispatch={dispatch}
-            setActiveView={setActiveView}
             handleDelete={handleDelete}
           />
         );
@@ -156,7 +152,6 @@ export const MemoirRenderer: React.FC<RenderMemoirsProps> = ({
             memoirs={orderedMemoirs}
             currentUser={currentUser}
             dispatch={dispatch}
-            setActiveView={setActiveView}
             handleDelete={handleDelete}
           />
         );

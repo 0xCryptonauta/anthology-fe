@@ -8,6 +8,8 @@ import { Address } from "@src/types/common";
 import { addMemoirToUserLocalAnthology } from "@src/store/slices/localAnthologySlice";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
+import { updateCurrentPath } from "@src/store/slices/userSlice";
+import { useNavigate } from "react-router-dom";
 
 export const AddMemoir = ({
   contractAddr,
@@ -23,7 +25,7 @@ export const AddMemoir = ({
 
   const [show, setShow] = useState(false);
 
-  const { userAddr } = useAppSelector((state) => state.user || "");
+  const { userAddr, currentPath } = useAppSelector((state) => state.user);
   const { whitelistEnabled, owner } = useAppSelector(
     (state) => state.anthology[contractAddr]?.anthologyState || ""
   );
@@ -32,6 +34,7 @@ export const AddMemoir = ({
   );
 
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -149,6 +152,12 @@ export const AddMemoir = ({
                       });
                     }
                   }
+                  if (currentPath !== `contract/${contractAddr}`) {
+                    dispatch(updateCurrentPath(`contract/${contractAddr}`));
+                    navigate("/");
+                    console.log("GO.");
+                  }
+
                   handleClose();
                 }}
               >

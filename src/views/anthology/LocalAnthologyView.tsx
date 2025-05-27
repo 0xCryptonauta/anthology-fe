@@ -8,7 +8,7 @@ import { Memoirs } from "@components/Anthology/Memoirs";
 import { AddMemoir } from "@components/Anthology/AddMemoir";
 import { SkinSelector } from "@src/components/Layout/SkinSelector";
 import { OrderSelector, OrderType } from "@src/components/Layout/OrderSelector";
-import { ActiveView, Address, SkinType } from "@src/types/common";
+import { Address, SkinType } from "@src/types/common";
 
 import { LocalAnthologyOwner } from "@src/components/Anthology/LocalAnthologyOwner";
 import { LocalAnthologyState } from "@src/components/Anthology/LocalAnthologyState";
@@ -23,22 +23,14 @@ const formatTitle = (title?: string): string => {
   return [category, subcategory, item].filter(Boolean).join(" > ");
 };
 
-interface LocalAnthologyViewProps {
-  activeView: ActiveView;
-  setActiveView: (newActiveView: ActiveView) => void;
-}
-
-export const LocalAnthologyView: React.FC<LocalAnthologyViewProps> = ({
-  activeView,
-  setActiveView,
-}) => {
+export const LocalAnthologyView = () => {
   //const dispatch = useAppDispatch();
-  //const { userContracts } = useAppSelector((state) => state.factory);
+  const { currentPath } = useAppSelector((state) => state.user);
 
   //const { ethAddr, } = useParams();
 
   //let contractAddr = "";
-  const contractAddr = activeView.split("/")[1] as Address;
+  const contractAddr = currentPath.split("/")[1] as Address;
 
   const { contractsTitles } = useAppSelector((state) => state.localAnthology);
 
@@ -145,7 +137,6 @@ export const LocalAnthologyView: React.FC<LocalAnthologyViewProps> = ({
             contractAddr={contractAddr}
             skin={currentSkin}
             order={currentOrder}
-            setActiveView={setActiveView}
           />
         </>
       )}

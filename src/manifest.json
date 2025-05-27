@@ -8,7 +8,6 @@
   "display_override": ["window-controls-overlay"],
   "scope": "/",
   "start_url": "/",
-  "orientation": "any",
   "share_target": {
     "action": "/share",
     "method": "GET",

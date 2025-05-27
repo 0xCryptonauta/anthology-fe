@@ -1,19 +1,14 @@
 import { UserContracts } from "@components/Factory/UserContracts";
 import { useAppSelector } from "@src/store/utils/hooks";
-import { ActiveView, Address } from "@src/types/common";
+import { Address } from "@src/types/common";
 
 interface Contract {
   address: Address;
   title: string;
   originalIndex: number;
 }
-interface CurrentUserViewProps {
-  setActiveView: (newActiveView: ActiveView) => void;
-}
 
-export const CurrentUserView: React.FC<CurrentUserViewProps> = ({
-  setActiveView,
-}) => {
+export const CurrentUserView = () => {
   const { userContracts, contractsTitles } = useAppSelector(
     (state) => state.factory
   );
@@ -41,11 +36,7 @@ export const CurrentUserView: React.FC<CurrentUserViewProps> = ({
         flexWrap: "wrap",
       }}
     >
-      <UserContracts
-        setActiveView={setActiveView}
-        userAddr={userAddr}
-        userTitles={userTitles}
-      />
+      <UserContracts userAddr={userAddr} userTitles={userTitles} />
     </div>
   );
 };

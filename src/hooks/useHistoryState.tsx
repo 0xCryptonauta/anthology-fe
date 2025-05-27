@@ -1,34 +1,36 @@
-import { useAppSelector } from "@src/store/utils/hooks";
-import { ActiveView } from "@src/types/common";
-import { LOCAL_ANTOLOGY_PATH } from "@src/utils/constants";
+import { updateCurrentPath } from "@src/store/slices/userSlice";
+import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
+/* import { CurrentPaths } from "@src/types/common";
+import { LOCAL_ANTOLOGY_PATH } from "@src/utils/constants"; */
 import { useEffect } from "react";
 import { useAccount } from "wagmi";
 
-export const useHistoryState = (
-  setActiveView: (activeView: ActiveView) => void
-) => {
+export const useHistoryState = () => {
   const { address, isConnected } = useAccount();
   const { isIconToLocal } = useAppSelector((state) => state.dapp);
+  const { currentPath } = useAppSelector((state) => state.user);
 
-  let defaultView = LOCAL_ANTOLOGY_PATH as ActiveView;
+  const dispatch = useAppDispatch();
+
+  /*   let defaultCurrentPath = LOCAL_ANTOLOGY_PATH as CurrentPaths;
 
   if (isConnected && !isIconToLocal) {
-    defaultView = `user/${address}`;
-  }
+    defaultCurrentPath = `user/${address}`;
+  } */
 
   useEffect(() => {
     const resetHistoryState = () => {
-      window.history.replaceState({ activeView: defaultView }, "");
-      setActiveView(defaultView);
+      window.history.replaceState({ currentPath: currentPath }, "");
+      dispatch(updateCurrentPath(currentPath));
     };
 
     resetHistoryState();
 
     const handlePopState = (event: PopStateEvent) => {
-      if (event.state && event.state.activeView) {
-        setActiveView(event.state.activeView);
+      if (event.state && event.state.currentPath) {
+        dispatch(updateCurrentPath(event.state.currentPath));
       } else {
-        setActiveView(defaultView);
+        dispatch(updateCurrentPath(currentPath));
       }
     };
 
@@ -45,5 +47,5 @@ export const useHistoryState = (
       window.removeEventListener("popstate", handlePopState);
       window.removeEventListener("pageshow", handlePageShow as EventListener);
     };
-  }, [setActiveView, defaultView]);
+  }, [currentPath, dispatch, address, isConnected, isIconToLocal]);
 };

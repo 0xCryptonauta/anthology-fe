@@ -1,28 +1,24 @@
 import { Link } from "react-router-dom";
 import { SidePanel } from "./SidePanel";
 import { WalletConnector } from "./WalletConnector";
-import { ActiveView } from "@src/types/common";
 import { useAccount } from "wagmi";
 import { LOCAL_ANTOLOGY_PATH } from "@src/utils/constants";
-import { useAppSelector } from "@src/store/utils/hooks";
-interface HeaderProps {
-  activeView: ActiveView;
-  setActiveView: (newActiveView: ActiveView) => void;
-}
+import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
+import { CurrentPaths } from "@src/types/common";
+import { updateCurrentPath } from "@src/store/slices/userSlice";
 
-export const Header: React.FC<HeaderProps> = ({
-  activeView,
-  setActiveView,
-}) => {
+export const Header = () => {
   const { isConnected, address } = useAccount();
   const { isIconToLocal } = useAppSelector((state) => state.dapp);
 
-  const handleOnClick = (newActiveView: ActiveView) => {
-    setActiveView(newActiveView); // Update local state
+  const dispatch = useAppDispatch();
+
+  const handleOnClick = (newCurrentPath: CurrentPaths) => {
+    dispatch(updateCurrentPath(newCurrentPath));
 
     // Push new history entry without changing URL
     window.history.pushState(
-      { activeView: newActiveView }, // Store component name in history.state
+      { currentPath: newCurrentPath }, // Store component name in history.state
       "", // Unused title
       window.location.pathname // Keep URL as `/`
     );
@@ -60,7 +56,7 @@ export const Header: React.FC<HeaderProps> = ({
           }}
         >
           <WalletConnector />
-          <SidePanel activeView={activeView} setActiveView={setActiveView} />
+          <SidePanel />
         </div>
       </div>
     </nav>
