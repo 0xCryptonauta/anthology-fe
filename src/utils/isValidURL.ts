@@ -1,4 +1,6 @@
 export const isValidURL = (str: string) => {
-  const regex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(\/[\w.-]*)*\/?$/;
+  // Improved regex to account for query parameters and URL fragments
+  const regex =
+    /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,})(\/[\w.-]*)?(\?[\w=&.-]*)?(#[\w.-]*)?$/;
   return regex.test(str);
 };

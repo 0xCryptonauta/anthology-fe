@@ -10,6 +10,8 @@ import { LOCAL_USER_ADDR } from "@src/utils/constants";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
 import { useNavigate } from "react-router-dom";
+import { removeSocialTracking } from "@src/utils/removeSocialTracking";
+import { HighlightDifferences } from "../Layout/HighlightDifferences";
 
 export const AddMemoir = ({
   contractAddr,
@@ -24,6 +26,7 @@ export const AddMemoir = ({
   const [anthologyContent, setAnthologyContent] = useState(content);
 
   const [show, setShow] = useState(false);
+  const [shouldFilterTracking, setShouldFilterTracking] = useState(true);
 
   const { userAddr, currentPath } = useAppSelector((state) => state.user);
   const { whitelistEnabled, owner } = useAppSelector(
@@ -39,6 +42,10 @@ export const AddMemoir = ({
   const handleShow = () => setShow(true);
 
   const { addToast } = useToast();
+
+  const filteredContent = shouldFilterTracking
+    ? removeSocialTracking(anthologyContent)
+    : anthologyContent;
 
   return (
     (!whitelistEnabled ||
@@ -95,20 +102,75 @@ export const AddMemoir = ({
                 placeholder=""
                 value={anthologyTitle}
                 maxLength={50}
+                style={{ backgroundColor: "white", color: "black" }}
                 onChange={(e) => {
                   setAnthologyTitle(e.target.value);
                 }}
               ></input>
               <br />
               <span>Content:</span>
-              <textarea
-                value={anthologyContent}
-                style={{ height: "100px" }}
-                maxLength={255}
-                onChange={(e) => {
-                  setAnthologyContent(e.target.value);
-                }}
-              ></textarea>
+              <div style={{ position: "relative", width: "100%" }}>
+                <div
+                  style={{
+                    whiteSpace: "pre-wrap",
+                    wordWrap: "break-word",
+                    color: "transparent", // to avoid blinking text when syncing
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    pointerEvents: "none",
+                    zIndex: 1,
+                    fontFamily: "inherit",
+                    fontSize: "inherit",
+                    padding: "8px",
+                  }}
+                  aria-hidden="true"
+                >
+                  {HighlightDifferences(anthologyContent, filteredContent)}
+                </div>
+                <textarea
+                  value={
+                    shouldFilterTracking ? filteredContent : anthologyContent
+                  }
+                  maxLength={255}
+                  onChange={(e) => setAnthologyContent(e.target.value)}
+                  style={{
+                    position: "relative",
+                    background: "transparent",
+                    zIndex: 2,
+                    width: "100%",
+                    height: "150px",
+                    resize: "none",
+                    padding: "8px",
+                    fontFamily: "inherit",
+                    fontSize: "inherit",
+                    color: "black",
+                  }}
+                />
+              </div>
+
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <input
+                  type="checkbox"
+                  checked={shouldFilterTracking}
+                  onChange={() =>
+                    setShouldFilterTracking(!shouldFilterTracking)
+                  }
+                ></input>
+                <span
+                  style={{
+                    marginLeft: "5px",
+                    cursor: "pointer",
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                  onClick={() => setShouldFilterTracking(!shouldFilterTracking)}
+                >
+                  Remove Tracking from URL
+                </span>
+              </div>
 
               <button
                 style={{ marginTop: "15px" }}
@@ -120,7 +182,7 @@ export const AddMemoir = ({
                         memoir: {
                           sender: LOCAL_USER_ADDR,
                           title: anthologyTitle,
-                          content: anthologyContent,
+                          content: filteredContent,
                           timestamp: String(
                             Math.floor(new Date().getTime() / 1000)
                           ),
@@ -139,7 +201,7 @@ export const AddMemoir = ({
                     const txHash_setTitle = await writeAnthology(
                       contractAddr,
                       "createMemoir",
-                      [anthologyTitle, anthologyContent]
+                      [anthologyTitle, filteredContent]
                     );
                     if (txHash_setTitle) {
                       setAnthologyContent("");
