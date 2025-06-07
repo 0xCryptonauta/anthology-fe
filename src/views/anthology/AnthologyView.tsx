@@ -68,11 +68,9 @@ export const AnthologyView = () => {
   const [showInfo, setShowInfo] = useState(false);
   const [sudoMode, setSudoMode] = useState(false);
 
-  const [currentSkin, setCurrentSkin] = useState<SkinType>(
-    anthology?.anthologyState?.skin === "\0default\0" //TODO: Fix this -> comes from contract encoding
-      ? "media"
-      : anthology?.anthologyState.skin ?? "media"
-  );
+  const initialSkin: SkinType = anthology?.anthologyState?.skin ?? "media";
+  const [currentSkin, setCurrentSkin] = useState<SkinType>(initialSkin);
+
   const [currentOrder, setCurrentOrder] = useState<OrderType>("Newer");
 
   useEffect(() => {

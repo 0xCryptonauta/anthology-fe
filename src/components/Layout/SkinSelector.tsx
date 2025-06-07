@@ -1,5 +1,5 @@
+import { SkinType } from "@src/types/common";
 import React from "react";
-import { SkinType } from "@store/slices/anthologySlice";
 
 // Define the component props interface
 interface SelectorProps {

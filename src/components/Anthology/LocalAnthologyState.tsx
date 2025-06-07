@@ -20,7 +20,9 @@ export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
   const anthology = useAppSelector(
     (state) => state.localAnthology.anthologies[contractAddr]
   );
-
+  const defaultSkin = useAppSelector(
+    (state) => state.localAnthology.defaultSkin[contractAddr]
+  );
   return (
     <div
       style={{
@@ -67,6 +69,12 @@ export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
         <Card.Body className="cardBodyStyle">
           <Card.Title>maxMemoirs </Card.Title>
           <Card.Text>{100}</Card.Text>
+        </Card.Body>
+      </Card>
+      <Card className="cardStyle">
+        <Card.Body className="cardBodyStyle">
+          <Card.Title>Default Skin </Card.Title>
+          <Card.Text>{defaultSkin}</Card.Text>
         </Card.Body>
       </Card>
     </div>

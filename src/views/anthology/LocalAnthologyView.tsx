@@ -33,13 +33,18 @@ export const LocalAnthologyView = () => {
   const contractAddr = currentPath.split("/")[1] as Address;
 
   const { contractsTitles } = useAppSelector((state) => state.localAnthology);
+  const defaultSkin = useAppSelector(
+    (state) => state.localAnthology.defaultSkin[contractAddr]
+  );
 
   const contractTitle = contractsTitles[contractAddr] || "";
 
   const [showInfo, setShowInfo] = useState(false);
   const [sudoMode, setSudoMode] = useState(false);
 
-  const [currentSkin, setCurrentSkin] = useState<SkinType>("media");
+  const [currentSkin, setCurrentSkin] = useState<SkinType>(
+    defaultSkin ? defaultSkin : "media"
+  );
   const [currentOrder, setCurrentOrder] = useState<OrderType>("Newer");
 
   return (

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { Address } from "@src/types/common";
+import { Address, SkinType } from "@src/types/common";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
 import { MemoirInterface } from "./anthologySlice";
 
@@ -9,6 +9,7 @@ interface localAnthologyState {
   userContracts: { [key: Address]: Address[] }; // Mapping of user addresses to arrays of contract addresses
   contractsTitles: { [key: Address]: string }; // Mapping of contract addresses to contract details (e.g., title)
   anthologies: { [key: Address]: MemoirInterface[] };
+  defaultSkin: { [key: Address]: SkinType };
 }
 
 const initialState: localAnthologyState = {
@@ -27,6 +28,7 @@ const initialState: localAnthologyState = {
       },
     ],
   },
+  defaultSkin: { ["0x11111111111111111111"]: "media" },
 };
 
 export const localAnthologySlice = createSlice({
@@ -134,6 +136,21 @@ export const localAnthologySlice = createSlice({
         state.contractsTitles[contract] = newTitle;
       }
     },
+    setDefaultSkin: (
+      state,
+      action: PayloadAction<{
+        contract: Address;
+        newDefaultSkin: SkinType;
+      }>
+    ) => {
+      const { contract, newDefaultSkin } = action.payload;
+
+      if (!state.defaultSkin) {
+        state.defaultSkin = {};
+      }
+
+      state.defaultSkin[contract] = newDefaultSkin;
+    },
 
     resetLocalAnthologyStore: () => {
       return initialState;
@@ -147,6 +164,7 @@ export const {
   addMemoirToUserLocalAnthology,
   deleteMemoirFromUserLocalAnthology,
   updateUserLocalAnthologyTitle,
+  setDefaultSkin,
   resetLocalAnthologyStore,
 } = localAnthologySlice.actions;
 

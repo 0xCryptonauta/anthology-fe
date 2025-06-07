@@ -21,6 +21,7 @@ type readFunctions =
 
 type writeFunctions =
   | "setTitle"
+  | "setSkin"
   | "createMemoir"
   | "setMemoirPrice"
   | "setUseERC20"

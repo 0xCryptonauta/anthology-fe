@@ -11,6 +11,8 @@ import { Address } from "@src/types/common";
 import { updateUserLocalAnthologyTitle } from "@src/store/slices/localAnthologySlice";
 import { MAX_TITLE_LENGTH } from "@src/utils/constants";
 
+import { ChangeAnthologyDefaultSkin } from "./ChangeAnthologyDefaultSkin";
+
 export const LocalAnthologyOwner = ({
   contractAddr,
 }: {
@@ -108,6 +110,8 @@ export const LocalAnthologyOwner = ({
           </button>
         </div>
       </div>
+      <br />
+      <ChangeAnthologyDefaultSkin contractAddr={contractAddr} />
 
       {/* ----------------------------------- cleanMemoirs ------------------------------------ */}
 

@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { Address, SkinType } from "@src/types/common";
+import { removePadding } from "@src/utils/removePadding";
 
 export interface MemoirInterface {
   sender: Address;
@@ -55,7 +56,10 @@ export const anthologySlice = createSlice({
       const _contract = action.payload.contract;
       const _anthologyInfo = action.payload.anthologyInfo;
       state[_contract] = {
-        anthologyState: _anthologyInfo,
+        anthologyState: {
+          ..._anthologyInfo,
+          skin: removePadding(_anthologyInfo.skin) as SkinType,
+        },
         memoirs: [],
         memoirBuffer: [],
         whitelist: [],
@@ -71,7 +75,10 @@ export const anthologySlice = createSlice({
     ) => {
       const _contract = action.payload.contract;
       const _anthologyInfo = action.payload.anthologyInfo;
-      state[_contract].anthologyState = _anthologyInfo;
+      state[_contract].anthologyState = {
+        ..._anthologyInfo,
+        skin: removePadding(_anthologyInfo.skin) as SkinType,
+      };
     },
 
     updateAnthologyCP: (
