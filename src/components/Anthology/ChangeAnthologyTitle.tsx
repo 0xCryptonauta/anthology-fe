@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { writeAnthology } from "@src/contract-functions/anthologyFunctions";
+import { Address } from "@src/types/common";
 
 export const ChangeAnthologyTitle = ({
   contractAddr,
 }: {
-  contractAddr: string;
+  contractAddr: Address;
 }) => {
   const [newTitle, setNewTitle] = useState("");
 
