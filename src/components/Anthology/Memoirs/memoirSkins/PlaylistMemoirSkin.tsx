@@ -1,5 +1,6 @@
 import { MemoirInterface } from "@src/store/slices/anthologySlice";
 import { YOUTUBE_REGEX } from "@src/utils/regex";
+import { ListMemoirSkin } from "./ListMemoirSkin";
 
 export const PlaylistMemoirSkin = ({
   memoirs,
@@ -16,11 +17,13 @@ export const PlaylistMemoirSkin = ({
   const youtubeIds = extractYoutubeIds(memoirs);
   const nonEmptyYoutubeIds = youtubeIds.filter((str) => str !== "");
 
-  const playlistUrl = `https://www.youtube.com/embed/${
-    nonEmptyYoutubeIds[0]
-  }?playlist=${nonEmptyYoutubeIds.slice(1).join(",")}`;
+  const playlistUrl = `https://www.youtube.com/embed/?playlist=${nonEmptyYoutubeIds.join(
+    ","
+  )}`;
 
-  return (
+  console.log("playlist:", nonEmptyYoutubeIds);
+
+  return nonEmptyYoutubeIds.length > 0 ? (
     <div
       style={{
         width: "90vw",
@@ -38,6 +41,13 @@ export const PlaylistMemoirSkin = ({
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
       />
+    </div>
+  ) : (
+    <div style={{ margin: "30px" }}>
+      <div style={{ display: "flex", justifyContent: "center", color: "red" }}>
+        Youtube videos not found
+      </div>
+      <ListMemoirSkin memoirs={memoirs} />
     </div>
   );
 };

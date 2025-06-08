@@ -11,13 +11,6 @@ interface ContractSelectorProps {
 export const ContractSelector: React.FC<ContractSelectorProps> = ({
   setSelectedContract,
 }) => {
-  const [selectedUser, setSelectedUser] = useState<Address>(
-    LOCAL_USER_ADDR || ""
-  );
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
-  const [selectedAddress, setSelectedAddress] = useState<string>("");
-
   const { users, userContracts, contractsTitles } = useAppSelector(
     (state) => state.factory
   );
@@ -28,6 +21,11 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
   const localTitles = useAppSelector(
     (state) => state.localAnthology.contractsTitles
   );
+
+  const [selectedUser, setSelectedUser] = useState<Address>(
+    LOCAL_USER_ADDR || ""
+  );
+
   const isLocalUser = selectedUser === LOCAL_USER_ADDR;
 
   const userContractsList = useMemo(() => {
@@ -52,9 +50,19 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
     selectedUser,
   ]);
 
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    userContractsList.uncategorized.length > 0 ? "Other" : ""
+  );
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
+  const [selectedAddress, setSelectedAddress] = useState<string>("");
+
   const categoryOptions = useMemo(() => {
-    return ["Other", ...Object.keys(userContractsList.categories)];
-  }, [userContractsList.categories]);
+    if (userContractsList.uncategorized.length > 0) {
+      return ["Other", ...Object.keys(userContractsList.categories)];
+    }
+
+    return ["Select Category", ...Object.keys(userContractsList.categories)];
+  }, [userContractsList.categories, userContractsList.uncategorized]);
 
   const subcategoryOptions = useMemo(() => {
     if (selectedCategory === "Other") return [];

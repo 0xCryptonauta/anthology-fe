@@ -5,7 +5,6 @@ import { MemoirInterface } from "@store/slices/anthologySlice";
 import { ToastVariantType, useToast } from "@components/Layout/Toast";
 import { Address } from "@src/types/common";
 import { isValidURL } from "@src/utils/isValidURL";
-// Media memoir skins
 import {
   TwitterEmbed,
   YoutubeEmbed,
@@ -61,7 +60,16 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
   const { addToast } = useToast();
 
   return (
-    <>
+    <div
+      style={{
+        //maxWidth: "90vw",
+        padding: "20px 16px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        color: "black",
+      }}
+    >
       {memoirs.map((memoir, index) => {
         const youtubeMatch = YOUTUBE_REGEX.exec(memoir.content);
         const spotifyMatch = SPOTIFY_REGEX.exec(memoir.content);
@@ -81,7 +89,6 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
             );
           if (redditMatch) {
             if (redditMatch[2]) return <RedditEmbed postUrl={memoir.content} />;
-            // THIS RETURN is temporal -> Depends on  /s/ reddit links (no post id or username)
             return (
               <div style={{ overflowWrap: "break-word" }}>
                 <a
@@ -95,11 +102,9 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
             );
           }
           if (facebookMatch) {
-            console.log("facebookMatch:", facebookMatch);
             return <FacebookEmbed postUrl={memoir.content} />;
           }
           if (instagramMatch) {
-            console.log("instagramMatch:", instagramMatch);
             return <InstagramEmbed postUrl={memoir.content} />;
           }
           if (spotifyMatch)
@@ -116,7 +121,12 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
             );
 
           return isValidURL(memoir.content) ? (
-            <a href={memoir.content} target="_blank" rel="noopener noreferrer">
+            <a
+              href={memoir.content}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "#666" }}
+            >
               {memoir.content}
             </a>
           ) : (
@@ -128,13 +138,14 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
           <div
             key={index}
             style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              maxWidth: "360px",
-              padding: "5px",
-              borderRadius: "7px",
-              margin: "15px 5px",
+              width: "100%",
+              maxWidth: "350px",
+              marginBottom: "1.5rem",
+              padding: "1rem",
+              borderRadius: "8px",
+              backgroundColor: "#f9f9f9",
+              boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+              boxSizing: "border-box",
               position: "relative",
               order: orderMap.indexOf(index),
             }}
@@ -142,68 +153,66 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
             <div
               style={{
                 textAlign: "center",
-                maxWidth: "350px",
-                overflowWrap: "break-word",
+                wordBreak: "break-word",
+                marginBottom: "0.5rem",
+                fontWeight: "600",
+                color: "#333",
               }}
             >
-              <b>{memoir.title}</b>
+              {memoir.title || "Untitled"}
             </div>
 
             <div
               style={{
                 textAlign: "center",
-                maxWidth: "350px",
-                padding: "5px",
-                margin: "0 5px",
-                overflowWrap: "break-word",
+                wordBreak: "break-word",
+                marginBottom: "0.5rem",
               }}
             >
               {renderContent()}
             </div>
 
-            <div>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  margin: "0 40px",
-                }}
+            <div
+              style={{
+                display: "flex",
+                width: "300px",
+                flexDirection: "column",
+                alignItems: "center",
+                fontSize: "12px",
+                color: "#666",
+              }}
+            >
+              <span
+                style={{ cursor: "pointer" }}
+                onClick={() =>
+                  dispatch(updateCurrentPath(`user/${memoir.sender}`))
+                }
               >
-                <span
-                  style={{ fontSize: "12px", cursor: "pointer" }}
-                  onClick={() =>
-                    dispatch(updateCurrentPath(`user/${memoir.sender}`))
-                  }
-                >
-                  {shortenAddress(memoir.sender, 10, 8)}
-                </span>
-                <span style={{ fontSize: "12px", marginLeft: "7px" }}>
-                  {formatUnixTime(Number(memoir.timestamp))}
-                </span>
-              </div>
-
-              {(currentUser === anthologyOwner ||
-                anthologyOwner === LOCAL_USER_ADDR ||
-                currentUser === memoir.sender) && (
-                <span
-                  style={{
-                    cursor: "pointer",
-                    position: "absolute",
-                    right: "10px",
-                    bottom: "5px",
-                  }}
-                  onClick={() => {
-                    handleDelete({ contractAddr, index, dispatch, addToast });
-                  }}
-                >
-                  ❌
-                </span>
-              )}
+                {shortenAddress(memoir.sender, 10, 8)}
+              </span>
+              <span>{formatUnixTime(Number(memoir.timestamp))}</span>
             </div>
+
+            {(currentUser === anthologyOwner ||
+              anthologyOwner === LOCAL_USER_ADDR ||
+              currentUser === memoir.sender) && (
+              <span
+                style={{
+                  cursor: "pointer",
+                  position: "absolute",
+                  right: "10px",
+                  bottom: "10px",
+                }}
+                onClick={() =>
+                  handleDelete({ contractAddr, index, dispatch, addToast })
+                }
+              >
+                ❌
+              </span>
+            )}
           </div>
         );
       })}
-    </>
+    </div>
   );
 };
