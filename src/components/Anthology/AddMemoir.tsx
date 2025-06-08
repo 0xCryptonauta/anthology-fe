@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { writeAnthology } from "@src/contract-functions/anthologyFunctions";
 import { Offcanvas } from "react-bootstrap";
 import "./style.css";
@@ -26,7 +26,7 @@ export const AddMemoir = ({
   const [anthologyContent, setAnthologyContent] = useState(content);
 
   const [show, setShow] = useState(false);
-  const [shouldFilterTracking, setShouldFilterTracking] = useState(true);
+  const [shouldFilterTracking, setShouldFilterTracking] = useState(false);
 
   const { userAddr, currentPath } = useAppSelector((state) => state.user);
   const { whitelistEnabled, owner } = useAppSelector(
@@ -43,9 +43,66 @@ export const AddMemoir = ({
 
   const { addToast } = useToast();
 
-  const filteredContent = shouldFilterTracking
-    ? removeSocialTracking(anthologyContent)
-    : anthologyContent;
+  const filteredContent = useMemo(() => {
+    return shouldFilterTracking
+      ? removeSocialTracking(anthologyContent)
+      : anthologyContent;
+  }, [shouldFilterTracking, anthologyContent]);
+
+  const offcanvasRef = useRef<HTMLDivElement>(null);
+
+  const mouseDownRef = useRef(false);
+
+  useEffect(() => {
+    const handleMouseDown = (e: MouseEvent) => {
+      mouseDownRef.current =
+        !!offcanvasRef.current &&
+        !offcanvasRef.current.contains(e.target as Node);
+    };
+
+    const handleMouseUp = (e: MouseEvent) => {
+      const selection = window.getSelection();
+      const isSelectingText =
+        selection &&
+        selection.type === "Range" &&
+        selection.toString().length > 0;
+
+      if (
+        mouseDownRef.current &&
+        !isSelectingText &&
+        offcanvasRef.current &&
+        !offcanvasRef.current.contains(e.target as Node)
+      ) {
+        handleClose();
+      }
+      mouseDownRef.current = false;
+    };
+
+    document.addEventListener("mousedown", handleMouseDown);
+    document.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      document.removeEventListener("mousedown", handleMouseDown);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, []);
+
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    const overlay = overlayRef.current;
+    if (!textarea || !overlay) return;
+
+    const handleScroll = () => {
+      overlay.scrollTop = textarea.scrollTop;
+      overlay.scrollLeft = textarea.scrollLeft;
+    };
+
+    textarea.addEventListener("scroll", handleScroll);
+    return () => textarea.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     (!whitelistEnabled ||
@@ -58,7 +115,7 @@ export const AddMemoir = ({
         <Offcanvas
           show={show}
           onHide={handleClose}
-          onClick={handleClose}
+          //onClick={handleClose}
           placement={window.innerHeight > window.innerWidth ? "top" : "bottom"}
           //className="bg-dark"
           style={{
@@ -82,6 +139,7 @@ export const AddMemoir = ({
             }}
           >
             <div
+              ref={offcanvasRef}
               onClick={(e) => {
                 e.stopPropagation();
               }}
@@ -112,6 +170,7 @@ export const AddMemoir = ({
               <div style={{ position: "relative", width: "100%" }}>
                 {/* Overlay with highlighted diffs */}
                 <div
+                  ref={overlayRef}
                   style={{
                     position: "absolute",
                     top: 0,
@@ -119,14 +178,17 @@ export const AddMemoir = ({
                     right: 0,
                     bottom: 0,
                     zIndex: 1,
+                    height: "10.5rem",
+                    overflowY: "auto", // Force scroll to match textarea behavior
                     pointerEvents: "none",
                     whiteSpace: "pre-wrap",
                     wordBreak: "break-word",
                     color: "transparent",
-                    fontSize: "0.875rem", // = 14px if root is 16px
-                    fontFamily: "monospace", // or your custom font
+                    fontSize: "0.875rem",
+                    fontFamily: "monospace",
                     lineHeight: "1.5",
-                    padding: "0.6rem", // = 8px
+                    letterSpacing: "normal",
+                    padding: "0.5rem",
                     boxSizing: "border-box",
                   }}
                   aria-hidden="true"
@@ -136,6 +198,7 @@ export const AddMemoir = ({
 
                 {/* Underlying textarea */}
                 <textarea
+                  ref={textareaRef}
                   value={
                     shouldFilterTracking ? filteredContent : anthologyContent
                   }
@@ -145,14 +208,14 @@ export const AddMemoir = ({
                     position: "relative",
                     zIndex: 2,
                     width: "100%",
-                    minHeight: "7rem", // 48px
-                    maxHeight: "12.5rem", // 200px
-                    overflowY: "auto",
+                    height: "10.5rem",
+                    overflowY: shouldFilterTracking ? "scroll" : "auto",
                     resize: "none",
                     padding: "0.5rem",
                     fontSize: "0.875rem",
-                    fontFamily: "monospace", // match overlay exactly
+                    fontFamily: "monospace",
                     lineHeight: "1.5",
+                    letterSpacing: "normal",
                     color: "black",
                     backgroundColor: "transparent",
                     boxSizing: "border-box",

@@ -12,7 +12,7 @@ export const removeSocialTracking = (url: string): string => {
   }
 
   if (!isValidURL(url)) {
-    console.log("Invalid URL:", url);
+    //console.log("Invalid URL:", url);
     return url;
   }
 

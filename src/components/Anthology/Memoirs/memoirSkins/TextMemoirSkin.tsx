@@ -2,14 +2,7 @@ import { shortenAddress } from "@utils/shortenAddress";
 import { AppDispatch } from "@store/redux";
 import { formatUnixTime } from "@utils/formatUnixTime";
 import { MemoirInterface } from "@store/slices/anthologySlice";
-
 import { ToastVariantType, useToast } from "@components/Layout/Toast";
-// Media memoir skins
-/* import { TwitterEmbed } from "./thirdPartyEmbeds/TwitterEmbed";
-import { LazyYT } from "./thirdPartyEmbeds/LazyYT";
-import RedditEmbed from "./thirdPartyEmbeds/RedditEmbed";
-import FacebookEmbed from "./thirdPartyEmbeds/facebookEmbed";
-import InstagramEmbed from "./thirdPartyEmbeds/InstagramEmbed"; */
 import { Address } from "@src/types/common";
 import { isValidURL } from "@src/utils/isValidURL";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
@@ -49,105 +42,124 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
 }) => {
   const { addToast } = useToast();
 
-  try {
-    return memoirs.map((memoir: MemoirInterface, index: number) => {
-      return (
-        <div
-          key={index}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            border: "1px solid white",
-            width: "360px",
-            padding: "5px",
-            borderRadius: "7px",
-            margin: "15px 5px",
-            position: "relative",
-          }}
-        >
-          <div
-            style={{
-              textAlign: "center",
-              maxWidth: "350px",
-              overflowWrap: "break-word",
-            }}
-          >
-            <span style={{ marginTop: "5px" }}>
-              <b>{memoir.title}</b>
-            </span>
-          </div>
-          <br />
-          <div
-            style={{
-              textAlign: "center",
-              maxWidth: "350px",
-              overflowWrap: "break-word",
-              padding: "5px",
-              margin: "0px 5px",
-            }}
-          >
-            {isValidURL(memoir.content) ? (
-              <a
-                href={memoir.content}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ textDecoration: "underline" }}
-              >
-                {memoir.content}
-              </a>
-            ) : (
-              <span>{memoir.content}</span>
-            )}
-          </div>
-          <br />
+  if (!memoirs?.length) {
+    return (
+      <div style={{ margin: "2rem", textAlign: "center" }}>
+        No memoirs found.
+      </div>
+    );
+  }
 
+  return (
+    <>
+      {memoirs.map((memoir, index) => {
+        const isDeletable =
+          currentUser === anthologyOwner ||
+          anthologyOwner === LOCAL_USER_ADDR ||
+          currentUser === memoir.sender;
+
+        return (
           <div
+            key={index}
             style={{
               display: "flex",
-              flexWrap: "wrap",
               flexDirection: "column",
               alignItems: "center",
-              margin: "0px 40px",
+              border: "1px solid #ccc",
+              borderRadius: "8px",
+              backgroundColor: "#f9f9f9",
+              padding: "12px",
+              margin: "15px 10px",
+              width: "360px",
+              position: "relative",
+              boxShadow: "0 1px 4px rgba(0, 0, 0, 0.05)",
             }}
           >
-            <div>
+            {/* Title */}
+            <div
+              style={{
+                textAlign: "center",
+                fontWeight: 600,
+                fontSize: "1rem",
+                marginBottom: "6px",
+                wordBreak: "break-word",
+                maxWidth: "340px",
+                color: "black",
+              }}
+            >
+              {memoir.title || "Untitled"}
+            </div>
+
+            {/* Content */}
+            <div
+              style={{
+                textAlign: "center",
+                padding: "6px 0",
+                margin: "0 5px",
+                fontSize: "0.95rem",
+                wordBreak: "break-word",
+                maxWidth: "340px",
+                color: "black",
+              }}
+            >
+              {isValidURL(memoir.content) ? (
+                <a
+                  href={memoir.content}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ textDecoration: "underline", color: "#1a0dab" }}
+                >
+                  {memoir.content}
+                </a>
+              ) : (
+                <span>{memoir.content || "(No content provided)"}</span>
+              )}
+            </div>
+
+            {/* Meta */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                fontSize: "12px",
+                color: "black",
+                marginTop: "8px",
+              }}
+            >
               <span
-                style={{ fontSize: "12px", cursor: "pointer" }}
+                style={{ cursor: "pointer" }}
                 onClick={() =>
                   dispatch(updateCurrentPath(`user/${memoir.sender}`))
                 }
               >
                 {shortenAddress(memoir.sender, 10, 8)}
               </span>
-            </div>
-
-            <div style={{ fontSize: "12px", marginLeft: "7px" }}>
               <span>{formatUnixTime(Number(memoir.timestamp))}</span>
             </div>
+
+            {/* Delete Button */}
+            {isDeletable && (
+              <span
+                title="Delete memoir"
+                style={{
+                  cursor: "pointer",
+                  position: "absolute",
+                  right: "10px",
+                  bottom: "10px",
+                  fontSize: "16px",
+                  color: "#cc0000",
+                }}
+                onClick={() =>
+                  handleDelete({ contractAddr, index, dispatch, addToast })
+                }
+              >
+                ❌
+              </span>
+            )}
           </div>
-          {(currentUser == anthologyOwner ||
-            anthologyOwner === LOCAL_USER_ADDR ||
-            currentUser == memoir.sender) && (
-            <span
-              style={{
-                cursor: "pointer",
-                position: "absolute",
-                right: "10px",
-                bottom: "5px",
-              }}
-              onClick={() =>
-                handleDelete({ contractAddr, index, dispatch, addToast })
-              }
-            >
-              ❌
-            </span>
-          )}
-        </div>
-      );
-    });
-  } catch (error) {
-    console.error("Error rendering RenderMemoirsMedia:", error);
-    return <div>Error rendering RenderMemoirsMedia</div>;
-  }
+        );
+      })}
+    </>
+  );
 };

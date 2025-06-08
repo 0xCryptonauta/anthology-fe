@@ -5,20 +5,27 @@ export const JsonMemoirSkin = ({ memoirs }: { memoirs: MemoirInterface[] }) => {
     <div
       style={{
         width: "100%",
-        overflowX: "auto",
+        maxWidth: "100vw",
+        maxHeight: "100%", // adjust as needed
+        overflowY: "auto",
         color: "#ffffff",
         padding: "10px",
         borderRadius: "8px",
-        whiteSpace: "pre-wrap",
-        wordBreak: "break-word",
-        fontSize: window.innerWidth < 768 ? "12px" : "14px", // Responsive font size
+        whiteSpace: "pre-wrap", // enable wrapping and preserve line breaks
+        wordBreak: "break-word", // break long words to avoid horizontal scroll
+        fontSize: window.innerWidth < 768 ? "12px" : "14px",
         lineHeight: "1.4",
         boxSizing: "border-box",
-        display: "flex",
-        justifyContent: "center",
+        fontFamily: "monospace",
+        margin: "10px",
       }}
     >
-      <pre>
+      <pre
+        style={{
+          margin: 0,
+          whiteSpace: "inherit", // inherit pre-wrap to keep indentation + wrap
+        }}
+      >
         <code>{JSON.stringify(memoirs, null, 2)}</code>
       </pre>
     </div>
