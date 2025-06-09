@@ -47,7 +47,7 @@ export const PlaylistMemoirSkin = ({
       />
     </div>
   ) : (
-    <div style={{ margin: "30px" }}>
+    <div style={{ marginTop: "30px" }}>
       <div style={{ display: "flex", justifyContent: "center", color: "red" }}>
         Youtube videos not found
       </div>
