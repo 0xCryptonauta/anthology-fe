@@ -29,6 +29,8 @@ import { AnthologyWhitelistedUsers } from "@components/Anthology/AnthologyWhitel
 import { SkinSelector } from "@src/components/Layout/SkinSelector";
 import { OrderSelector, OrderType } from "@src/components/Layout/OrderSelector";
 import { Address, SkinType } from "@src/types/common";
+import { removePadding } from "@src/utils/removePadding";
+import { DEFAULT_SKIN } from "@src/utils/constants";
 
 const formatTitle = (title?: string): string => {
   if (!title) return ""; // Handle undefined case
@@ -68,7 +70,7 @@ export const AnthologyView = () => {
   const [showInfo, setShowInfo] = useState(false);
   const [sudoMode, setSudoMode] = useState(false);
 
-  const initialSkin: SkinType = anthology?.anthologyState?.skin ?? "media";
+  const initialSkin: SkinType = anthology?.anthologyState?.skin ?? DEFAULT_SKIN;
   const [currentSkin, setCurrentSkin] = useState<SkinType>(initialSkin);
 
   const [currentOrder, setCurrentOrder] = useState<OrderType>("Newer");
@@ -180,6 +182,9 @@ export const AnthologyView = () => {
           console.log("New anthology added");
           const anthologyInfo = await fetchAnthologyInfo(contractAddr);
           console.log("RAW:", anthologyInfo?.skin);
+          if (anthologyInfo?.skin) {
+            setCurrentSkin(removePadding(anthologyInfo?.skin) as SkinType);
+          }
           dispatch(
             addAnthology({
               contract: contractAddr,

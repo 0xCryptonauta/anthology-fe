@@ -12,6 +12,7 @@ import { Address, SkinType } from "@src/types/common";
 
 import { LocalAnthologyOwner } from "@src/components/Anthology/LocalAnthologyOwner";
 import { LocalAnthologyState } from "@src/components/Anthology/LocalAnthologyState";
+import { DEFAULT_SKIN } from "@src/utils/constants";
 
 const formatTitle = (title?: string): string => {
   if (!title) return ""; // Handle undefined case
@@ -43,7 +44,7 @@ export const LocalAnthologyView = () => {
   const [sudoMode, setSudoMode] = useState(false);
 
   const [currentSkin, setCurrentSkin] = useState<SkinType>(
-    defaultSkin ? defaultSkin : "media"
+    defaultSkin ? defaultSkin : DEFAULT_SKIN
   );
   const [currentOrder, setCurrentOrder] = useState<OrderType>("Newer");
 
