@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { Address } from "@src/types/common";
-import { LOCAL_USER_ADDR } from "@src/utils/constants";
+import { Address, SkinType } from "@src/types/common";
+import { DEFAULT_SKIN, LOCAL_USER_ADDR } from "@src/utils/constants";
 import { MemoirInterface } from "./anthologySlice";
 
 interface localAnthologyState {
@@ -9,24 +9,26 @@ interface localAnthologyState {
   userContracts: { [key: Address]: Address[] }; // Mapping of user addresses to arrays of contract addresses
   contractsTitles: { [key: Address]: string }; // Mapping of contract addresses to contract details (e.g., title)
   anthologies: { [key: Address]: MemoirInterface[] };
+  defaultSkin: { [key: Address]: SkinType };
 }
 
 const initialState: localAnthologyState = {
   users: [LOCAL_USER_ADDR],
   userContracts: { [LOCAL_USER_ADDR]: ["0x11111111111111111111"] },
   contractsTitles: {
-    ["0x11111111111111111111"]: "[Category][Subcat]Default Title",
+    ["0x11111111111111111111"]: "[Category][Subcat]Default Anthology Title",
   },
   anthologies: {
     ["0x11111111111111111111"]: [
       {
         sender: LOCAL_USER_ADDR,
-        title: "Default Memoir",
-        content: "This is a default memoir.",
+        title: "Default Memoir Title",
+        content: "This is a default memoir content.",
         timestamp: String(Math.floor(new Date().getTime() / 1000)),
       },
     ],
   },
+  defaultSkin: { ["0x11111111111111111111"]: DEFAULT_SKIN },
 };
 
 export const localAnthologySlice = createSlice({
@@ -134,6 +136,21 @@ export const localAnthologySlice = createSlice({
         state.contractsTitles[contract] = newTitle;
       }
     },
+    setDefaultSkin: (
+      state,
+      action: PayloadAction<{
+        contract: Address;
+        newDefaultSkin: SkinType;
+      }>
+    ) => {
+      const { contract, newDefaultSkin } = action.payload;
+
+      if (!state.defaultSkin) {
+        state.defaultSkin = {};
+      }
+
+      state.defaultSkin[contract] = newDefaultSkin;
+    },
 
     resetLocalAnthologyStore: () => {
       return initialState;
@@ -147,6 +164,7 @@ export const {
   addMemoirToUserLocalAnthology,
   deleteMemoirFromUserLocalAnthology,
   updateUserLocalAnthologyTitle,
+  setDefaultSkin,
   resetLocalAnthologyStore,
 } = localAnthologySlice.actions;
 

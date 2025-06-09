@@ -14,6 +14,7 @@ import {
 
 import { updateOneContractTitle } from "@store/slices/factorySlice";
 import { Address } from "@src/types/common";
+import { ChangeAnthologyDefaultSkin } from "./ChangeAnthologyDefaultSkin";
 
 export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
   const { addToast } = useToast();
@@ -544,6 +545,10 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
           💰
         </span>
       </div>
+
+      {/* ------------------------------- setDefaultSkin ------------------------------ */}
+
+      <ChangeAnthologyDefaultSkin contractAddr={contractAddr} />
 
       {/* ----------------------------------- cleanMemoirs ------------------------------------ */}
 

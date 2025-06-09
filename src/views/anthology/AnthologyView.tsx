@@ -29,16 +29,9 @@ import { AnthologyWhitelistedUsers } from "@components/Anthology/AnthologyWhitel
 import { SkinSelector } from "@src/components/Layout/SkinSelector";
 import { OrderSelector, OrderType } from "@src/components/Layout/OrderSelector";
 import { Address, SkinType } from "@src/types/common";
-
-const formatTitle = (title?: string): string => {
-  if (!title) return ""; // Handle undefined case
-
-  const match = title.match(/\[(.*?)\](?:\[(.*?)\])?\s*(.*)/);
-  if (!match) return title; // Return original title if no match
-
-  const [, category, subcategory, item] = match;
-  return [category, subcategory, item].filter(Boolean).join(" > ");
-};
+import { removePadding } from "@src/utils/removePadding";
+import { DEFAULT_SKIN } from "@src/utils/constants";
+import { FormatAnthologyTitle } from "@src/utils/FormatAnthologyTitle";
 
 export const AnthologyView = () => {
   const dispatch = useAppDispatch();
@@ -68,11 +61,9 @@ export const AnthologyView = () => {
   const [showInfo, setShowInfo] = useState(false);
   const [sudoMode, setSudoMode] = useState(false);
 
-  const [currentSkin, setCurrentSkin] = useState<SkinType>(
-    anthology?.anthologyState?.skin === "\0default\0" //TODO: Fix this -> comes from contract encoding
-      ? "media"
-      : anthology?.anthologyState.skin ?? "media"
-  );
+  const initialSkin: SkinType = anthology?.anthologyState?.skin ?? DEFAULT_SKIN;
+  const [currentSkin, setCurrentSkin] = useState<SkinType>(initialSkin);
+
   const [currentOrder, setCurrentOrder] = useState<OrderType>("Newer");
 
   useEffect(() => {
@@ -182,6 +173,9 @@ export const AnthologyView = () => {
           console.log("New anthology added");
           const anthologyInfo = await fetchAnthologyInfo(contractAddr);
           console.log("RAW:", anthologyInfo?.skin);
+          if (anthologyInfo?.skin) {
+            setCurrentSkin(removePadding(anthologyInfo?.skin) as SkinType);
+          }
           dispatch(
             addAnthology({
               contract: contractAddr,
@@ -224,9 +218,12 @@ export const AnthologyView = () => {
         justifyContent: "flex-start",
       }}
     >
-      <h3>
-        <AddMemoir contractAddr={contractAddr} /> {formatTitle(contractTitle)}
-      </h3>
+      <div style={{ display: "flex", margin: "20px" }}>
+        <h3 style={{ marginRight: "7px" }}>
+          <AddMemoir contractAddr={contractAddr} />
+        </h3>
+        {FormatAnthologyTitle(contractTitle)}
+      </div>
 
       <div style={{ display: "flex" }}>
         <div

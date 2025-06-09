@@ -40,7 +40,7 @@ export const Memoirs: React.FC<MemoirsProps> = ({
         padding: "5px",
         borderRadius: "7px",
         margin: "3px",
-        width: "100%",
+        width: "95%",
         display: "flex",
         flexWrap: "wrap",
         alignItems: "center",

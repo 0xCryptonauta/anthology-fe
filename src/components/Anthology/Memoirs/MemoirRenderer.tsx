@@ -1,4 +1,4 @@
-import { orderMemoirs } from "@src/utils/orderMemoirs";
+import { orderMemoirIndexes } from "@src/utils/orderMemoirs";
 import { OrderType } from "@src/components/Layout/OrderSelector";
 import {
   MemoirInterface,
@@ -17,6 +17,7 @@ import {
 } from "./memoirSkins";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 import { deleteMemoirFromUserLocalAnthology } from "@src/store/slices/localAnthologySlice";
+import { useMemo } from "react";
 
 interface RenderMemoirsProps {
   anthologySkin: SkinType;
@@ -37,10 +38,14 @@ export const MemoirRenderer: React.FC<RenderMemoirsProps> = ({
   currentUser,
   dispatch,
 }) => {
-  const orderedMemoirs = orderMemoirs({
-    memoirs,
-    order,
-  });
+  const orderedMemoirsIndexes = useMemo(
+    () =>
+      orderMemoirIndexes({
+        memoirs,
+        order,
+      }),
+    [memoirs, order]
+  );
 
   const handleDelete = async ({
     contractAddr,
@@ -115,14 +120,19 @@ export const MemoirRenderer: React.FC<RenderMemoirsProps> = ({
   try {
     switch (anthologySkin) {
       case "json":
-        return <JsonMemoirSkin memoirs={memoirs} />; //RenderJsonMemoirs({ memoirs });
+        return (
+          <JsonMemoirSkin
+            memoirs={memoirs}
+            orderedMemoirsIndexes={orderedMemoirsIndexes}
+          />
+        ); //RenderJsonMemoirs({ memoirs });
       case "media":
         return (
           <MediaMemoirSkin
             contractAddr={contractAddr}
             anthologyOwner={anthologyOwner}
             memoirs={memoirs}
-            orderMap={orderedMemoirs.map((_, i) => i)}
+            orderedMemoirsIndexes={orderedMemoirsIndexes}
             currentUser={currentUser}
             dispatch={dispatch}
             handleDelete={handleDelete}
@@ -133,23 +143,35 @@ export const MemoirRenderer: React.FC<RenderMemoirsProps> = ({
           <TextMemoirSkin
             contractAddr={contractAddr}
             anthologyOwner={anthologyOwner}
-            memoirs={orderedMemoirs}
+            memoirs={memoirs}
+            orderedMemoirsIndexes={orderedMemoirsIndexes}
             currentUser={currentUser}
             dispatch={dispatch}
             handleDelete={handleDelete}
           />
         );
       case "list":
-        return <ListMemoirSkin memoirs={orderedMemoirs} />;
+        return (
+          <ListMemoirSkin
+            memoirs={memoirs}
+            orderedMemoirsIndexes={orderedMemoirsIndexes}
+          />
+        );
 
       case "playlist":
-        return <PlaylistMemoirSkin memoirs={orderedMemoirs} />;
+        return (
+          <PlaylistMemoirSkin
+            memoirs={memoirs}
+            orderedMemoirsIndexes={orderedMemoirsIndexes}
+          />
+        );
       default:
         return (
-          <TextMemoirSkin
+          <MediaMemoirSkin
             contractAddr={contractAddr}
             anthologyOwner={anthologyOwner}
-            memoirs={orderedMemoirs}
+            memoirs={memoirs}
+            orderedMemoirsIndexes={orderedMemoirsIndexes}
             currentUser={currentUser}
             dispatch={dispatch}
             handleDelete={handleDelete}

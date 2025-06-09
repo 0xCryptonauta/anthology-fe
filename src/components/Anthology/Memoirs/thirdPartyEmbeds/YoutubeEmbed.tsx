@@ -9,8 +9,8 @@ export const YoutubeEmbed: React.FC<YoutubeEmbedProps> = ({ videoId }) => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0 });
   const [isPlayerActive, setIsPlayerActive] = useState(false);
 
-  const width = 350;
-  const height = 197; // 16:9 aspect ratio
+  const width = 315;
+  const height = 170; // 16:9 aspect ratio
 
   return (
     <div

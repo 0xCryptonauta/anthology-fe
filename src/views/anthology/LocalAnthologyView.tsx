@@ -12,16 +12,8 @@ import { Address, SkinType } from "@src/types/common";
 
 import { LocalAnthologyOwner } from "@src/components/Anthology/LocalAnthologyOwner";
 import { LocalAnthologyState } from "@src/components/Anthology/LocalAnthologyState";
-
-const formatTitle = (title?: string): string => {
-  if (!title) return ""; // Handle undefined case
-
-  const match = title.match(/\[(.*?)\](?:\[(.*?)\])?\s*(.*)/);
-  if (!match) return title; // Return original title if no match
-
-  const [, category, subcategory, item] = match;
-  return [category, subcategory, item].filter(Boolean).join(" > ");
-};
+import { DEFAULT_SKIN } from "@src/utils/constants";
+import { FormatAnthologyTitle } from "@src/utils/FormatAnthologyTitle";
 
 export const LocalAnthologyView = () => {
   //const dispatch = useAppDispatch();
@@ -33,13 +25,18 @@ export const LocalAnthologyView = () => {
   const contractAddr = currentPath.split("/")[1] as Address;
 
   const { contractsTitles } = useAppSelector((state) => state.localAnthology);
+  const defaultSkin = useAppSelector(
+    (state) => state.localAnthology.defaultSkin[contractAddr]
+  );
 
   const contractTitle = contractsTitles[contractAddr] || "";
 
   const [showInfo, setShowInfo] = useState(false);
   const [sudoMode, setSudoMode] = useState(false);
 
-  const [currentSkin, setCurrentSkin] = useState<SkinType>("media");
+  const [currentSkin, setCurrentSkin] = useState<SkinType>(
+    defaultSkin ? defaultSkin : DEFAULT_SKIN
+  );
   const [currentOrder, setCurrentOrder] = useState<OrderType>("Newer");
 
   return (
@@ -53,9 +50,12 @@ export const LocalAnthologyView = () => {
         justifyContent: "flex-start",
       }}
     >
-      <h3>
-        <AddMemoir contractAddr={contractAddr} /> {formatTitle(contractTitle)}
-      </h3>
+      <div style={{ display: "flex", margin: "20px" }}>
+        <h3 style={{ marginRight: "7px" }}>
+          <AddMemoir contractAddr={contractAddr} />
+        </h3>
+        {FormatAnthologyTitle(contractTitle)}
+      </div>
 
       <div style={{ display: "flex" }}>
         <div

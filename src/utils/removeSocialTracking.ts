@@ -3,10 +3,8 @@ import { isValidURL } from "./isValidURL";
 /**
  * Removes known social tracking parameters from URLs.
  *
- * Supports YouTube, Instagram, Facebook, Twitter/X, Reddit.
+ * Supports YouTube, Instagram, Facebook, Twitter/X, Reddit, Spotify.
  *
- * @param {string} url The URL to clean.
- * @returns {string} The cleaned URL.
  */
 export const removeSocialTracking = (url: string): string => {
   if (typeof url !== "string") {
@@ -14,7 +12,7 @@ export const removeSocialTracking = (url: string): string => {
   }
 
   if (!isValidURL(url)) {
-    console.log("Invalid URL:", url);
+    //console.log("Invalid URL:", url);
     return url;
   }
 
@@ -31,14 +29,15 @@ export const removeSocialTracking = (url: string): string => {
       "x.com",
       "reddit.com",
       "redd.it",
+      "spotify.com",
     ];
 
     const trackingParams = [
-      // YouTube
+      // YouTube - Spotify
       "si",
 
       // Instagram
-      "igshid",
+      "igsh",
 
       // Facebook
       "fbclid",
