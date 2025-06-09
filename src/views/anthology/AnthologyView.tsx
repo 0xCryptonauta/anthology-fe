@@ -31,16 +31,7 @@ import { OrderSelector, OrderType } from "@src/components/Layout/OrderSelector";
 import { Address, SkinType } from "@src/types/common";
 import { removePadding } from "@src/utils/removePadding";
 import { DEFAULT_SKIN } from "@src/utils/constants";
-
-const formatTitle = (title?: string): string => {
-  if (!title) return ""; // Handle undefined case
-
-  const match = title.match(/\[(.*?)\](?:\[(.*?)\])?\s*(.*)/);
-  if (!match) return title; // Return original title if no match
-
-  const [, category, subcategory, item] = match;
-  return [category, subcategory, item].filter(Boolean).join(" > ");
-};
+import { FormatAnthologyTitle } from "@src/utils/FormatAnthologyTitle";
 
 export const AnthologyView = () => {
   const dispatch = useAppDispatch();
@@ -227,9 +218,12 @@ export const AnthologyView = () => {
         justifyContent: "flex-start",
       }}
     >
-      <h3>
-        <AddMemoir contractAddr={contractAddr} /> {formatTitle(contractTitle)}
-      </h3>
+      <div style={{ display: "flex", margin: "20px" }}>
+        <h3 style={{ marginRight: "7px" }}>
+          <AddMemoir contractAddr={contractAddr} />
+        </h3>
+        {FormatAnthologyTitle(contractTitle)}
+      </div>
 
       <div style={{ display: "flex" }}>
         <div

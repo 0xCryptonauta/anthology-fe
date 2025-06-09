@@ -119,7 +119,7 @@ export const AddMemoir = ({
           placement={window.innerHeight > window.innerWidth ? "top" : "bottom"}
           //className="bg-dark"
           style={{
-            height: "390px",
+            height: "450px",
             backgroundColor: "transparent",
             display: "flex",
             flexDirection: "row",

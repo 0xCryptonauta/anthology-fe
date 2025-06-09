@@ -28,7 +28,7 @@ interface MediaMemoirSkinProps {
   currentUser: `0x${string}` | "";
   anthologyOwner: `0x${string}`;
   memoirs: MemoirInterface[];
-  orderMap: number[];
+  orderedMemoirsIndexes: number[]; // renamed from orderMap for clarity
   dispatch: AppDispatch;
   handleDelete: (object: HandleDeleteProps) => void;
 }
@@ -52,7 +52,7 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
   contractAddr,
   anthologyOwner,
   memoirs,
-  orderMap,
+  orderedMemoirsIndexes,
   currentUser,
   dispatch,
   handleDelete,
@@ -62,15 +62,18 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
   return (
     <div
       style={{
-        //maxWidth: "90vw",
         padding: "20px 16px",
         display: "flex",
-        flexDirection: "column",
+        flexDirection: "row",
         alignItems: "center",
+        flexWrap: "wrap",
+        justifyContent: "space-around",
         color: "black",
       }}
     >
-      {memoirs.map((memoir, index) => {
+      {orderedMemoirsIndexes.map((i) => {
+        const memoir = memoirs[i];
+
         const youtubeMatch = YOUTUBE_REGEX.exec(memoir.content);
         const spotifyMatch = SPOTIFY_REGEX.exec(memoir.content);
         const twitterMatch = TWITTER_REGEX.exec(memoir.content);
@@ -95,18 +98,17 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
                   href={memoir.content}
                   target="_blank"
                   rel="noopener noreferrer"
+                  //style={{ color: "#666" }}
                 >
                   {memoir.content}
                 </a>
               </div>
             );
           }
-          if (facebookMatch) {
-            return <FacebookEmbed postUrl={memoir.content} />;
-          }
-          if (instagramMatch) {
+          if (facebookMatch) return <FacebookEmbed postUrl={memoir.content} />;
+          if (instagramMatch)
             return <InstagramEmbed postUrl={memoir.content} />;
-          }
+
           if (spotifyMatch)
             return (
               <iframe
@@ -136,18 +138,17 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
 
         return (
           <div
-            key={index}
+            key={i}
             style={{
               width: "100%",
-              maxWidth: "350px",
-              marginBottom: "1.5rem",
-              padding: "1rem",
+              maxWidth: "340px",
+              padding: "12px",
+              margin: "15px 0px",
               borderRadius: "8px",
               backgroundColor: "#f9f9f9",
               boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
               boxSizing: "border-box",
               position: "relative",
-              order: orderMap.indexOf(index),
             }}
           >
             <div
@@ -204,7 +205,7 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
                   bottom: "10px",
                 }}
                 onClick={() =>
-                  handleDelete({ contractAddr, index, dispatch, addToast })
+                  handleDelete({ contractAddr, index: i, dispatch, addToast })
                 }
               >
                 ❌

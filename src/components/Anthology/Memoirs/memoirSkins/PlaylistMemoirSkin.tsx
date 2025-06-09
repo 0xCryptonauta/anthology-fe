@@ -4,8 +4,10 @@ import { ListMemoirSkin } from "./ListMemoirSkin";
 
 export const PlaylistMemoirSkin = ({
   memoirs,
+  orderedMemoirsIndexes,
 }: {
   memoirs: MemoirInterface[];
+  orderedMemoirsIndexes: number[];
 }) => {
   const extractYoutubeIds = (videoLinks: MemoirInterface[]) => {
     return videoLinks.map((vlink) => {
@@ -14,7 +16,9 @@ export const PlaylistMemoirSkin = ({
     });
   };
 
-  const youtubeIds = extractYoutubeIds(memoirs);
+  const orderedMemoirs = orderedMemoirsIndexes.map((i) => memoirs[i]);
+
+  const youtubeIds = extractYoutubeIds(orderedMemoirs);
   const nonEmptyYoutubeIds = youtubeIds.filter((str) => str !== "");
 
   const playlistUrl = `https://www.youtube.com/embed/?playlist=${nonEmptyYoutubeIds.join(
@@ -47,7 +51,10 @@ export const PlaylistMemoirSkin = ({
       <div style={{ display: "flex", justifyContent: "center", color: "red" }}>
         Youtube videos not found
       </div>
-      <ListMemoirSkin memoirs={memoirs} />
+      <ListMemoirSkin
+        memoirs={memoirs}
+        orderedMemoirsIndexes={orderedMemoirsIndexes}
+      />
     </div>
   );
 };
