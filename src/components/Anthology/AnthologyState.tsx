@@ -41,8 +41,6 @@ export const AnthologyState: React.FC<AnthologyStateProps> = ({
     }
   });
 
-  console.log("ANTHO STATE:", anthologyState);
-
   return (
     <div
       style={{

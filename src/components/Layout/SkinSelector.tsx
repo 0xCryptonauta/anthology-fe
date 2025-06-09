@@ -7,7 +7,7 @@ interface SelectorProps {
   onChange: (value: SkinType) => void;
 }
 
-const skinOptions = ["text", "media", "json", "list", "playlist"];
+const skinOptions = ["media", "text", "json", "list", "playlist"];
 
 // Define the component
 export const SkinSelector = ({ value, onChange }: SelectorProps) => {

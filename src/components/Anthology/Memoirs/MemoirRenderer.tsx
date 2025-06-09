@@ -146,10 +146,11 @@ export const MemoirRenderer: React.FC<RenderMemoirsProps> = ({
         return <PlaylistMemoirSkin memoirs={orderedMemoirs} />;
       default:
         return (
-          <TextMemoirSkin
+          <MediaMemoirSkin
             contractAddr={contractAddr}
             anthologyOwner={anthologyOwner}
-            memoirs={orderedMemoirs}
+            memoirs={memoirs}
+            orderMap={orderedMemoirs.map((_, i) => i)}
             currentUser={currentUser}
             dispatch={dispatch}
             handleDelete={handleDelete}
