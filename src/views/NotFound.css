@@ -1,0 +1,61 @@
+.notfound-container {
+  min-height: 100vh;
+  background-color: #0e0e0e;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  text-align: center;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", sans-serif;
+}
+
+.notfound-title {
+  font-size: 6rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #ff7e5f, #feb47b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+}
+
+.notfound-subtitle {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.notfound-message {
+  color: #aaa;
+  max-width: 500px;
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+
+.notfound-link {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #000;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+.notfound-link:hover {
+  background-color: #eaeaea;
+}
+
+.notfound-footer {
+  margin-top: 4rem;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.notfound-quote-attribution {
+  font-size: 0.75rem;
+  color: #555;
+  margin-top: 0.25rem;
+}
