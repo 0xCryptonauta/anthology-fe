@@ -19,11 +19,14 @@
 
 a {
   font-weight: 500;
-  color: white;
-  text-decoration: inherit;
+  color: #666;
+  text-decoration: underline;
 }
 a:hover {
-  color: #8f8fb0;
+  color: #333;
+}
+a:visited {
+  color: #666;
 }
 
 /* body {

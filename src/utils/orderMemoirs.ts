@@ -1,37 +1,40 @@
 import { OrderType } from "@src/components/Layout/OrderSelector";
 import { MemoirInterface } from "@src/store/slices/anthologySlice";
 
-export const orderMemoirs = ({
+export const orderMemoirIndexes = ({
   memoirs,
   order,
 }: {
   memoirs: MemoirInterface[];
   order: OrderType;
-}) => {
+}): number[] => {
   try {
-    const memoirsCopy = [...memoirs];
+    const indexes = memoirs.map((_, i) => i);
 
     switch (order) {
       case "Newer":
-        return memoirsCopy.sort(
-          (a, b) => Number(b.timestamp) - Number(a.timestamp)
+        return indexes.sort(
+          (a, b) => Number(memoirs[b].timestamp) - Number(memoirs[a].timestamp)
         );
       case "Older":
-        return memoirsCopy.sort(
-          (a, b) => Number(a.timestamp) - Number(b.timestamp)
+        return indexes.sort(
+          (a, b) => Number(memoirs[a].timestamp) - Number(memoirs[b].timestamp)
         );
       case "Random":
-        return memoirsCopy.sort(() => Math.random() - 0.5);
+        return indexes.sort(() => Math.random() - 0.5);
       case "A -> Z":
-        return memoirsCopy.sort((a, b) => a.title.localeCompare(b.title));
+        return indexes.sort((a, b) =>
+          memoirs[a].title.localeCompare(memoirs[b].title)
+        );
       case "Z -> A":
-        return memoirsCopy.sort((a, b) => b.title.localeCompare(a.title));
+        return indexes.sort((a, b) =>
+          memoirs[b].title.localeCompare(memoirs[a].title)
+        );
       default:
-        throw new Error(`Unsupported skin type: ${order}`);
-        return memoirsCopy;
+        throw new Error(`Unsupported order type: ${order}`);
     }
   } catch (error) {
-    console.error("Error ordering memoirs:", error);
-    return memoirs;
+    console.error("Error ordering memoir indexes:", error);
+    return memoirs.map((_, i) => i);
   }
 };

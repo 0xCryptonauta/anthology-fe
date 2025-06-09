@@ -1,6 +1,12 @@
 import { MemoirInterface } from "@src/store/slices/anthologySlice";
 
-export const JsonMemoirSkin = ({ memoirs }: { memoirs: MemoirInterface[] }) => {
+export const JsonMemoirSkin = ({
+  memoirs,
+  orderedMemoirsIndexes,
+}: {
+  memoirs: MemoirInterface[];
+  orderedMemoirsIndexes: number[];
+}) => {
   return (
     <div
       style={{
@@ -26,7 +32,13 @@ export const JsonMemoirSkin = ({ memoirs }: { memoirs: MemoirInterface[] }) => {
           whiteSpace: "inherit", // inherit pre-wrap to keep indentation + wrap
         }}
       >
-        <code>{JSON.stringify(memoirs, null, 2)}</code>
+        <code>
+          {JSON.stringify(
+            orderedMemoirsIndexes.map((i) => memoirs[i]),
+            null,
+            2
+          )}
+        </code>
       </pre>
     </div>
   );

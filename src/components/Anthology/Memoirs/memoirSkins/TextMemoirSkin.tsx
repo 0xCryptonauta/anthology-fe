@@ -13,6 +13,7 @@ interface TextMemoirSkinProps {
   currentUser: `0x${string}` | "";
   anthologyOwner: `0x${string}`;
   memoirs: MemoirInterface[];
+  orderedMemoirsIndexes: number[];
   dispatch: AppDispatch;
   handleDelete: (object: HandleDeleteProps) => void;
 }
@@ -36,6 +37,7 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
   contractAddr,
   anthologyOwner,
   memoirs,
+  orderedMemoirsIndexes,
   currentUser,
   dispatch,
   handleDelete,
@@ -52,7 +54,9 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
 
   return (
     <>
-      {memoirs.map((memoir, index) => {
+      {orderedMemoirsIndexes.map((i) => {
+        const memoir = memoirs[i];
+
         const isDeletable =
           currentUser === anthologyOwner ||
           anthologyOwner === LOCAL_USER_ADDR ||
@@ -60,7 +64,7 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
 
         return (
           <div
-            key={index}
+            key={i}
             style={{
               display: "flex",
               flexDirection: "column",
@@ -69,7 +73,7 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
               borderRadius: "8px",
               backgroundColor: "#f9f9f9",
               padding: "12px",
-              margin: "15px 10px",
+              margin: "15px 0px",
               width: "360px",
               position: "relative",
               boxShadow: "0 1px 4px rgba(0, 0, 0, 0.05)",
@@ -107,12 +111,11 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
                   href={memoir.content}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ textDecoration: "underline", color: "#1a0dab" }}
                 >
                   {memoir.content}
                 </a>
               ) : (
-                <span>{memoir.content || "(No content provided)"}</span>
+                <span>{memoir.content}</span>
               )}
             </div>
 
@@ -151,7 +154,7 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
                   color: "#cc0000",
                 }}
                 onClick={() =>
-                  handleDelete({ contractAddr, index, dispatch, addToast })
+                  handleDelete({ contractAddr, index: i, dispatch, addToast })
                 }
               >
                 ❌
