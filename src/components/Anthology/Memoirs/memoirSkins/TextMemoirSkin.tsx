@@ -44,14 +44,6 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
 }) => {
   const { addToast } = useToast();
 
-  if (!memoirs?.length) {
-    return (
-      <div style={{ margin: "2rem", textAlign: "center" }}>
-        No memoirs found.
-      </div>
-    );
-  }
-
   return (
     <>
       {orderedMemoirsIndexes.map((i) => {

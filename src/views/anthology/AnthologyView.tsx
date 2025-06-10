@@ -219,9 +219,9 @@ export const AnthologyView = () => {
       }}
     >
       <div style={{ display: "flex", margin: "20px" }}>
-        <h3 style={{ marginRight: "7px" }}>
+        <span style={{ marginRight: "7px" }}>
           <AddMemoir contractAddr={contractAddr} />
-        </h3>
+        </span>
         {FormatAnthologyTitle(contractTitle)}
       </div>
 
