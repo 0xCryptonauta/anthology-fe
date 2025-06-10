@@ -229,14 +229,20 @@ export const AnthologyView = () => {
         <div
           onClick={() => setShowInfo(!showInfo)}
           style={{
-            border: "1px solid white",
-            padding: "3px",
-            borderRadius: "7px",
+            backgroundColor: "rgb(143 200 129)",
+            color: "#111",
+            padding: "6px",
+            borderRadius: "8px",
+            border: "1px solid rgb(143 200 129)",
+            fontSize: "14px",
+            fontWeight: 500,
             cursor: "pointer",
-            marginRight: "10px",
+            outline: "none",
+            transition: "all 0.2s ease",
+            boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
           }}
         >
-          {showInfo ? "Show memoirs" : "Show Info"}
+          {showInfo ? "Show Anthology" : "Anthology Info"}
         </div>
 
         {!showInfo && (
