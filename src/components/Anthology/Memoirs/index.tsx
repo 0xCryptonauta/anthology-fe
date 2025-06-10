@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { MemoirRenderer } from "./MemoirRenderer";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
+import { Loading } from "@src/components/Layout/Loading";
 interface MemoirsProps {
   contractAddr: `0x${string}`;
   skin: SkinType;
@@ -48,6 +49,20 @@ export const Memoirs: React.FC<MemoirsProps> = ({
         position: "relative",
       }}
     >
+      {!anthology && !localAnthology && (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+            height: "100%",
+          }}
+        >
+          <Loading />
+        </div>
+      )}
       {anthology && !isLocalAnthology(contractAddr) && (
         <MemoirRenderer
           anthologySkin={skin}

@@ -22,17 +22,28 @@ export const SkinSelector = ({ value, onChange }: SelectorProps) => {
       value={value}
       onChange={handleChange}
       style={{
-        border: "1px solid white",
-        padding: "3px",
-        borderRadius: "7px",
+        //appearance: "none",
+        backgroundColor: "#f9f9f9",
+        color: "#111",
+        padding: "6px",
+        borderRadius: "8px",
+        border: "1px solid #e2e2e2",
+        fontSize: "16px",
+        fontWeight: 500,
         cursor: "pointer",
-        marginRight: "10px",
-        backgroundColor: "unset",
-        height: "32px",
+        outline: "none",
+        transition: "all 0.2s ease",
+        boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+        //WebkitAppearance: "none",
+        //MozAppearance: "none",
+        margin: "0px 10px",
+        paddingRight: "0px",
       }}
+      onFocus={(e) => (e.currentTarget.style.borderColor = "#6366f1")}
+      onBlur={(e) => (e.currentTarget.style.borderColor = "#e2e2e2")}
     >
       {skinOptions.map((option) => (
-        <option key={option} value={option}>
+        <option key={option} value={option} style={{ backgroundColor: "#fff" }}>
           {option[0].toUpperCase() + option.slice(1)}
         </option>
       ))}

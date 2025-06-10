@@ -106,7 +106,11 @@ export const SidePanel = () => {
               <div style={{ margin: "20px 0px" }}>
                 <Link
                   to="/"
-                  style={{ cursor: "pointer", margin: "10px 0px" }}
+                  style={{
+                    cursor: "pointer",
+                    margin: "10px 0px",
+                    textDecoration: "none",
+                  }}
                   onClick={() => {
                     handleOnClick(`user/${userAddr}`);
                   }}
@@ -132,6 +136,7 @@ export const SidePanel = () => {
                   cursor: "pointer",
                   margin: "10px 0px",
                   color: "#ff8383",
+                  textDecoration: "none",
                 }}
                 onClick={() => {
                   handleOnClick(LOCAL_ANTOLOGY_PATH);
@@ -177,14 +182,22 @@ export const SidePanel = () => {
                 alignItems: "center",
               }}
             >
-              <Link to="about" onClick={handleClose}>
+              <Link
+                to="about"
+                onClick={handleClose}
+                style={{ textDecoration: "none" }}
+              >
                 About
               </Link>
 
               {isConnected && (
                 <>
                   <br />
-                  <Link to="/info" onClick={handleClose}>
+                  <Link
+                    to="/info"
+                    onClick={handleClose}
+                    style={{ textDecoration: "none" }}
+                  >
                     Factory Info
                   </Link>
                 </>
