@@ -5,6 +5,7 @@ import { useAppSelector } from "@store/utils/hooks";
 //import { useParams } from "react-router-dom";
 import "./style.css";
 import { Address } from "@src/types/common";
+import { CHAIN_SCAN_URL } from "@src/utils/constants";
 
 interface AnthologyStateProps {
   contractAddr: Address;
@@ -56,7 +57,11 @@ export const AnthologyState: React.FC<AnthologyStateProps> = ({
       <Card className="cardStyle">
         <Card.Body>
           <Card.Title style={{ textAlign: "center" }}>Contract Addr</Card.Title>
-          <Card.Text style={{ fontSize: "12px" }}>{contractAddr}</Card.Text>
+          <Card.Text style={{ fontSize: "12px" }}>
+            <a href={CHAIN_SCAN_URL + contractAddr} target="_blank">
+              {contractAddr}
+            </a>
+          </Card.Text>
         </Card.Body>
       </Card>
 

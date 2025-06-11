@@ -9,6 +9,7 @@ import { LOCAL_ANTOLOGY_PATH } from "@src/utils/constants";
 import { LocalUserView } from "./factory/LocalUserView";
 import { LocalAnthologyView } from "./anthology/LocalAnthologyView";
 import { FactoryUsersView } from "./factory/FactoryUsersView";
+import { TelepathyView } from "./factory/TelepathyView";
 
 export const IndexView = () => {
   const { userAddr, currentPath } = useAppSelector((state) => state.user);
@@ -21,6 +22,8 @@ export const IndexView = () => {
     >
       {currentPath === "factory" ? (
         <FactoryUsersView />
+      ) : currentPath === `telepathy` ? (
+        <TelepathyView />
       ) : currentPath === `user/${userAddr}` ? (
         <CurrentUserView /> //add local memoirs?
       ) : currentPath === LOCAL_ANTOLOGY_PATH ? (

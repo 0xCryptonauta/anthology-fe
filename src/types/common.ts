@@ -1,4 +1,8 @@
-export type CurrentPaths = "factory" | `user/${string}` | `contract/${string}`;
+export type CurrentPaths =
+  | "factory"
+  | `user/${string}`
+  | `contract/${string}`
+  | "telepathy";
 
 export type Address = `0x${string}`;
 

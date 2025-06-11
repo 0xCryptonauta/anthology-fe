@@ -16,11 +16,10 @@ export function NotFound() {
 
       <footer className="notfound-footer">
         <em>
-          “If you're not embarrassed by your 404 page, you shipped too late.”
+          “Madness is something rare in individuals — but in groups, parties,
+          peoples, ages it is the rule.”
         </em>
-        <div className="notfound-quote-attribution">
-          – Probably someone at Y Combinator
-        </div>
+        <div className="notfound-quote-attribution">– Friedrich Nietzsche</div>
       </footer>
     </div>
   );
