@@ -232,6 +232,7 @@ export const AnthologyView = () => {
             backgroundColor: "rgb(143 200 129)",
             color: "#111",
             padding: "6px",
+            marginRight: showInfo ? "10px" : "0px",
             borderRadius: "8px",
             border: "1px solid rgb(143 200 129)",
             fontSize: "14px",
@@ -263,14 +264,14 @@ export const AnthologyView = () => {
           <div
             onClick={() => setSudoMode(!sudoMode)}
             style={{
-              border: "1px solid white",
-              padding: "3px",
+              border: "1px solid darkred",
+              padding: "5px",
               borderRadius: "7px",
               cursor: "pointer",
               backgroundColor: "darkred",
             }}
           >
-            {sudoMode ? "Show anthology info" : "Show admin panel"}
+            {sudoMode ? "Anthology info" : "Settings"}
           </div>
         )}
       </div>
