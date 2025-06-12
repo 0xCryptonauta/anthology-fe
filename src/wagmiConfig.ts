@@ -48,7 +48,7 @@ export const createWagmiConfig = memoize((rpcUrl: string) => {
       walletConnect({
         projectId: wcProjectId,
         isNewChainsStale: false,
-        showQrModal: true,
+        showQrModal: false,
         qrModalOptions: {
           themeMode: "dark",
         },

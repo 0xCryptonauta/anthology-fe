@@ -1,10 +1,13 @@
 import { FactoryUsersContracts } from "@src/components/Factory/FactoryUsersContracts";
+import { useGetFactoryUsers } from "@src/hooks/useGetFactoryUsers";
 import { useAppSelector } from "@src/store/utils/hooks";
 
 //import { GetUserContracts } from "./GetUserContracts";
 
 export const FactoryUsersView = () => {
   const { users } = useAppSelector((state) => state.factory);
+
+  useGetFactoryUsers();
 
   return (
     <div
