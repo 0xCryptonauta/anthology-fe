@@ -1,5 +1,5 @@
 import { shortenAddress } from "@utils/shortenAddress";
-import { useAppDispatch } from "@store/utils/hooks";
+import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
 import { syncUserContractsToStore } from "@src/store/utils/thunks";
 import { Address, CurrentPaths } from "@src/types/common";
 import { parseContractsCategories } from "@src/utils/parseContractsCategories";
@@ -29,6 +29,8 @@ export const UserContracts: React.FC<UserContractsProps> = ({
   userTitles,
 }) => {
   const dispatch = useAppDispatch();
+
+  const currentUserAddr = useAppSelector((state) => state.user.userAddr);
 
   const handleOnClick = (newCurrentPath: CurrentPaths) => {
     dispatch(updateCurrentPath(newCurrentPath)); // Update local state
@@ -71,7 +73,9 @@ export const UserContracts: React.FC<UserContractsProps> = ({
             ? "Local User: 0x0000...0000"
             : shortenAddress(userAddr, 12, 9)}
         </span>
-        <DeployButton isLocal={userAddr === LOCAL_USER_ADDR ? true : false} />
+        {(currentUserAddr === userAddr || userAddr === LOCAL_USER_ADDR) && (
+          <DeployButton isLocal={userAddr === LOCAL_USER_ADDR} />
+        )}
         <div style={{ marginTop: "30px" }}>
           {Object.entries(categories)
             .sort(([categoryA], [categoryB]) =>

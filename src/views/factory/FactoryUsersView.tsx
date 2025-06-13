@@ -1,4 +1,5 @@
 import { FactoryUsersContracts } from "@src/components/Factory/FactoryUsersContracts";
+import { Loading } from "@src/components/Layout/Loading";
 import { useGetFactoryUsers } from "@src/hooks/useGetFactoryUsers";
 import { useAppSelector } from "@src/store/utils/hooks";
 
@@ -7,6 +8,7 @@ import { useAppSelector } from "@src/store/utils/hooks";
 export const FactoryUsersView = () => {
   const { users } = useAppSelector((state) => state.factory);
 
+  // sudo mode (?)
   useGetFactoryUsers();
 
   return (
@@ -23,7 +25,7 @@ export const FactoryUsersView = () => {
       }}
     >
       {/* <GetUserContracts /> */}
-      {users ? <FactoryUsersContracts /> : <div> Loading users </div>}
+      {users ? <FactoryUsersContracts /> : <Loading />}
     </div>
   );
 };
