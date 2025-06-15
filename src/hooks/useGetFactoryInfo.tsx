@@ -1,10 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-
 import {
   updateFactoryBasicInfo,
-  updateUsers,
-  updateUsersCP,
   updateWhitelistedUsers,
 } from "@store/slices/factorySlice";
 import { readFactory } from "@src/contract-functions/factoryFunctions";
@@ -14,35 +11,21 @@ import { Address } from "@src/types/common";
 
 export const useGetFactoryInfo = () => {
   const dispatch = useDispatch();
-  const { usersCP } = useAppSelector((state) => state.factory);
+  const { usersCP, owner } = useAppSelector((state) => state.factory);
   useEffect(() => {
     const setupFactory = async () => {
-      let CP = 0;
+      // Fetch basic factory info
+      const contractInfo = await fetchFactoryInfo();
+      dispatch(updateFactoryBasicInfo(contractInfo));
 
-      if (usersCP) {
-        CP = Number(await readFactory("usersCP"));
-        dispatch(updateUsersCP(CP));
-      } else {
-        // Fetch basic factory info
-        const contractInfo = await fetchFactoryInfo();
-        dispatch(updateFactoryBasicInfo(contractInfo));
-        CP = contractInfo.usersCP;
-
-        // If whitelist is enabled, fetch whitelisted addresses
-        if (contractInfo.whitelistEnabled) {
-          const whitelistedUsers = await readFactory("getWhitelistedUsers");
-          dispatch(updateWhitelistedUsers(whitelistedUsers as Address[]));
-        }
-      }
-
-      if (CP !== usersCP) {
-        // Fetch all registered users
-        const users = await readFactory("getUsers", [usersCP, CP]);
-        console.log("Factory Users:", users);
-        dispatch(updateUsers(users as []));
+      // If whitelist is enabled, fetch whitelisted addresses
+      // owner as temp, need to timestamp CPs
+      if (contractInfo.whitelistEnabled && !owner) {
+        const whitelistedUsers = await readFactory("getWhitelistedUsers");
+        dispatch(updateWhitelistedUsers(whitelistedUsers as Address[]));
       }
     };
 
     setupFactory();
-  }, [dispatch, usersCP]);
+  }, [dispatch, usersCP, owner]);
 };

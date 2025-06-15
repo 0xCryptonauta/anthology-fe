@@ -1,11 +1,8 @@
 import { Outlet } from "react-router-dom";
 import { Header } from "@components/Layout/Header";
 import { Footer } from "@components/Layout/Footer";
-import { useGetFactoryInfo } from "@src/hooks/useGetFactoryInfo";
 
 export const RootView = () => {
-  useGetFactoryInfo();
-
   return (
     <div
       style={{

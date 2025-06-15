@@ -1,12 +1,13 @@
 /* global BigInt */
 
-import React, { useEffect } from "react";
+import React from "react";
 
 import { useAppSelector } from "@store/utils/hooks";
 
 //import { IsWhitelisted } from "./IsWhitelisted";
 import { WhitelistedUsers } from "./WhitelistedUsers";
 import { Card } from "react-bootstrap";
+import { CHAIN_SCAN_URL } from "@src/utils/constants";
 
 const AnthologyFactoryAddress = import.meta.env.VITE_FACTORY_CONTRACT;
 
@@ -20,21 +21,6 @@ export const ContractState: React.FC = () => {
     anthologyPrice,
     userCount,
   } = useAppSelector((state) => state.factory);
-
-  useEffect(() => {
-    /* const unwatch = watchContractEvent(config, {
-      address: AnthologyFactoryAddress,
-      abi: AnthologyFactoryABI,
-      eventName: "PaymentMethodUpdated",
-      onLogs(logs) {
-        console.log("New logs!", logs[0]?.args.useERC20);
-        setUseERC20(logs[0].args.useERC20);
-      },
-      chainId: chain.id,
-    }); */
-    //unwatch();
-    //console.log("unwatch:", unwatch);
-  }, []);
 
   return (
     <div
@@ -81,7 +67,12 @@ export const ContractState: React.FC = () => {
                 Contract Addr
               </Card.Title>
               <Card.Text style={{ fontSize: "12px" }}>
-                {AnthologyFactoryAddress}
+                <a
+                  href={CHAIN_SCAN_URL + AnthologyFactoryAddress}
+                  target="_blank"
+                >
+                  {AnthologyFactoryAddress}
+                </a>
               </Card.Text>
             </Card.Body>
           </Card>

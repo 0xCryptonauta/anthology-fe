@@ -103,20 +103,41 @@ export const SidePanel = () => {
               </Link>
             </div> */}
             {isConnected && (
-              <div style={{ margin: "20px 0px" }}>
-                <Link
-                  to="/"
-                  style={{
-                    cursor: "pointer",
-                    margin: "10px 0px",
-                    textDecoration: "none",
-                  }}
-                  onClick={() => {
-                    handleOnClick(`user/${userAddr}`);
-                  }}
-                >
-                  My Anthologies
-                </Link>
+              <div style={{ margin: "0px 0px" }}>
+                <div style={{ margin: "10px 0px" }}>
+                  <Link
+                    to="/"
+                    style={{
+                      cursor: "pointer",
+                      margin: "10px 0px",
+                      fontSize: "18px",
+                      textDecoration: "none",
+                    }}
+                    onClick={() => {
+                      handleOnClick(`user/${userAddr}`);
+                    }}
+                  >
+                    My Anthologies
+                  </Link>
+                </div>
+
+                <div style={{ margin: "10px 0px" }}>
+                  <Link
+                    to="/"
+                    style={{
+                      cursor: "pointer",
+                      margin: "10px 0px",
+                      fontSize: "18px",
+                      textDecoration: "none",
+                    }}
+                    onClick={() => {
+                      handleOnClick(`discover`);
+                    }}
+                  >
+                    Discover
+                  </Link>
+                </div>
+
                 {/*                 <br />
                 <Link
                   to="/"

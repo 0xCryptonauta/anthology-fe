@@ -96,7 +96,7 @@ export const LocalAnthologyView = () => {
           <div
             onClick={() => setSudoMode(!sudoMode)}
             style={{
-              //border: "1px solid white",
+              border: "1px solid darkred",
               padding: "5px",
               borderRadius: "7px",
               cursor: "pointer",

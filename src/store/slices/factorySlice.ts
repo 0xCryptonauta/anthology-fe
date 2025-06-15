@@ -101,9 +101,14 @@ export const factorySlice = createSlice({
 
       state.whitelistedUsers.pop();
     },
-    updateUsers: (state, action: PayloadAction<[]>) => {
+    updateUsers: (state, action: PayloadAction<Address[]>) => {
       const data = action.payload;
-      state.users.push(...data);
+      console.log("User added:", data);
+      data.forEach((address) => {
+        if (!state.users.includes(address)) {
+          state.users.push(address);
+        }
+      });
     },
 
     updateUserContracts: (
