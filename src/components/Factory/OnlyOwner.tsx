@@ -14,6 +14,7 @@ import {
 } from "@store/slices/factorySlice";
 
 import { useToast } from "@components/Layout/Toast";
+import { Address } from "@src/types/common";
 
 export const OnlyOwner = () => {
   const dispatch = useAppDispatch();
@@ -272,7 +273,7 @@ export const OnlyOwner = () => {
                   variant: "success",
                   delay: 5000,
                 });
-                dispatch(updateAddToWhitelist(addressToAdd));
+                dispatch(updateAddToWhitelist(addressToAdd as Address));
               }
             } catch (error) {
               addToast({

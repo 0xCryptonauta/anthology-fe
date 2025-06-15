@@ -23,10 +23,12 @@ type readFactoryFunctions =
   | "getUsers"
   | "usersCP"
   | "getUserContracts"
+  | "userContracts" //default getter
   | "getWhitelistedUsers"
   | "isWhitelisted"
   | "getContractTitle"
-  | "isDeployedContract"
+  | "isDeployedContract" // not in this ABI -
+  | "deployedContracts" // default getter -> Does not work becase the state variable is not public
   | "getUserContractsWithTitles"
   | "getUsersContractsWithTitles";
 

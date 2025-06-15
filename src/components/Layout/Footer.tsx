@@ -1,10 +1,4 @@
-import { updateCurrentPath } from "@src/store/slices/userSlice";
-import { useAppDispatch } from "@src/store/utils/hooks";
-import { useNavigate } from "react-router-dom";
-
 export const Footer = () => {
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   return (
     <div
       className="bg-dark"
@@ -16,15 +10,7 @@ export const Footer = () => {
         height: "50px",
       }}
     >
-      <span>Recording the collective memory</span>
-      <span
-        onClick={() => {
-          dispatch(updateCurrentPath(`factory`));
-          navigate("/");
-        }}
-      >
-        .
-      </span>
+      <span>Recording the collective memory.</span>
     </div>
   );
 };
