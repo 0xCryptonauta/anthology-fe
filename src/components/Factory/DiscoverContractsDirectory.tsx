@@ -8,7 +8,7 @@ interface Contract {
   originalIndex: number;
 }
 
-export const FactoryUsersContracts = () => {
+export const DiscoverContractsDirectory = () => {
   const { users, userContracts, contractsTitles } = useAppSelector(
     (state) => state.factory
   );

@@ -2,7 +2,7 @@ export type CurrentPaths =
   | "factory"
   | `user/${string}`
   | `contract/${string}`
-  | "telepathy";
+  | "discover";
 
 export type Address = `0x${string}`;
 

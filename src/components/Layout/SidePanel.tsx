@@ -131,10 +131,10 @@ export const SidePanel = () => {
                       textDecoration: "none",
                     }}
                     onClick={() => {
-                      handleOnClick(`telepathy`);
+                      handleOnClick(`discover`);
                     }}
                   >
-                    Telepathy
+                    Discover
                   </Link>
                 </div>
 
