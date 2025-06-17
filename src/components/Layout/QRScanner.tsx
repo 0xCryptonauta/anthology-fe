@@ -35,16 +35,10 @@ const QRScanner: React.FC<QRScannerProps> = ({
       const devices = await Html5Qrcode.getCameras();
       if (!devices.length) throw new Error("No camera devices found");
 
-      // Prefer back-facing camera if available
-      const backCamera = devices.find((d) =>
-        d.label.toLowerCase().includes("back")
-      );
-      const cameraId = backCamera?.id || devices[0].id;
-
       if (!isMounted) return;
 
       await html5QrCode.start(
-        cameraId,
+        { facingMode: "environment" }, // ← this triggers rear camera
         {
           fps: 10,
           qrbox: { width: qrboxSize, height: qrboxSize },
