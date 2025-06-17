@@ -70,10 +70,12 @@ export const AnthologyState: React.FC<AnthologyStateProps> = ({
 
       <Card className="cardStyle">
         <Card.Body className="cardBodyStyle">
-          <Card.Title>QR Address</Card.Title>
+          <Card.Title style={{ fontSize: "14px", fontWeight: "bold" }}>
+            Anthology QR Addr
+          </Card.Title>
 
           <QRCodeComponent
-            text={JSON.stringify({ type: "anthology", contractAddr })}
+            text={JSON.stringify({ type: "anthology", address: contractAddr })}
           />
         </Card.Body>
       </Card>

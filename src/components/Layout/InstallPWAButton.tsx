@@ -77,8 +77,6 @@ const InstallPWAButton: React.FC = () => {
       >
         📲
       </span>
-
-      <InstallPWAButton />
     </div>
   );
 };
