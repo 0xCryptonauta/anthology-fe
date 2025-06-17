@@ -1,0 +1,203 @@
+import React, { useEffect, useRef, useState } from "react";
+import { Offcanvas } from "react-bootstrap";
+
+type QRScannerProps = {
+  onScan: (text: string) => void;
+  onError?: (err: string) => void;
+  qrboxSize?: number;
+};
+
+const QRScanner: React.FC<QRScannerProps> = ({
+  onScan,
+  onError,
+  qrboxSize = 250,
+}) => {
+  const scannerRef = useRef<unknown>(null);
+  const elementId = "qr-reader";
+  const [active, setActive] = useState(false);
+
+  const handleClose = () => setActive(false);
+
+  const offcanvasRef = useRef<HTMLDivElement>(null);
+
+  const mouseDownRef = useRef(false);
+
+  useEffect(() => {
+    const handleMouseDown = (e: MouseEvent) => {
+      mouseDownRef.current =
+        !!offcanvasRef.current &&
+        !offcanvasRef.current.contains(e.target as Node);
+    };
+
+    const handleMouseUp = (e: MouseEvent) => {
+      const selection = window.getSelection();
+      const isSelectingText =
+        selection &&
+        selection.type === "Range" &&
+        selection.toString().length > 0;
+
+      if (
+        mouseDownRef.current &&
+        !isSelectingText &&
+        offcanvasRef.current &&
+        !offcanvasRef.current.contains(e.target as Node)
+      ) {
+        handleClose();
+      }
+      mouseDownRef.current = false;
+    };
+
+    document.addEventListener("mousedown", handleMouseDown);
+    document.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      document.removeEventListener("mousedown", handleMouseDown);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!active) return;
+
+    let isMounted = true;
+
+    const startScanner = async () => {
+      const lib = await import("html5-qrcode");
+      const Html5Qrcode = lib.Html5Qrcode;
+
+      const html5QrCode = new Html5Qrcode(elementId);
+      scannerRef.current = html5QrCode;
+
+      try {
+        const devices = await Html5Qrcode.getCameras();
+        if (!devices.length) throw new Error("No camera devices found");
+
+        const cameraId = devices[0].id;
+
+        if (!isMounted) return;
+
+        await html5QrCode.start(
+          cameraId,
+          {
+            fps: 10,
+            qrbox: { width: qrboxSize, height: qrboxSize },
+            aspectRatio: 1,
+          },
+
+          (decodedText) => {
+            onScan(decodedText);
+            // Auto stop after first successful scan
+            html5QrCode.stop().then(() => {
+              html5QrCode.clear();
+              scannerRef.current = null;
+              setActive(false); // auto-close
+            });
+          },
+          (err) => {
+            if (onError) onError(err);
+          }
+        );
+      } catch (err: unknown) {
+        if (onError) onError(err instanceof Error ? err.message : String(err));
+      }
+    };
+
+    startScanner();
+
+    return () => {
+      isMounted = false;
+
+      const scanner = scannerRef.current as {
+        stop: () => Promise<void>;
+        clear: () => Promise<void>;
+        getState: () => number;
+      };
+
+      // RUNNING = 2, PAUSED = 3
+      if (
+        scanner &&
+        typeof scanner.getState === "function" &&
+        [2, 3].includes(scanner.getState())
+      ) {
+        scanner
+          .stop()
+          .then(() => {
+            scanner.clear();
+            scannerRef.current = null;
+          })
+          .catch(console.error);
+      }
+    };
+  }, [active, onScan, onError, qrboxSize]);
+
+  return (
+    <div>
+      <div onClick={() => setActive(true)} style={{ cursor: "pointer" }}>
+        <img src="icons/qrIcon.svg" width="32px" alt="qrIcon" />
+      </div>
+
+      <Offcanvas
+        show={active}
+        onHide={handleClose}
+        //onClick={handleClose}
+        placement={window.innerHeight > window.innerWidth ? "top" : "bottom"}
+        //className="bg-dark"
+        style={{
+          height: "450px",
+          backgroundColor: "transparent",
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "flex-end",
+        }}
+      >
+        <Offcanvas.Body
+          //onClick={handleClose}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
+            backgroundColor: "transparent !important",
+          }}
+        >
+          <div
+            ref={offcanvasRef}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+            style={{
+              backgroundColor: "white",
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "column",
+              border: "1px solid black",
+              padding: "10px",
+              borderRadius: "7px",
+              margin: "3px",
+              maxWidth: "300px",
+              width: "230px",
+            }}
+          >
+            <div>Scan QR Code</div>
+            <div
+              id={elementId}
+              style={{
+                width: "100%",
+                maxWidth: "100%",
+                height: "auto",
+                aspectRatio: "1 / 1",
+                margin: "0 auto",
+                border: "2px solid #ccc",
+                borderRadius: "12px",
+                overflow: "hidden",
+                position: "relative",
+                transform: "scaleX(-1)", // Mirror horizontally
+              }}
+            />
+          </div>
+        </Offcanvas.Body>
+      </Offcanvas>
+    </div>
+  );
+};
+
+export default QRScanner;

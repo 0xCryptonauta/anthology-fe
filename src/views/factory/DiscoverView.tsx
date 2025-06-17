@@ -16,9 +16,8 @@ export const DiscoverView = () => {
       }}
     >
       <AddToDiscover />
-      <div style={{ marginTop: "10px" }}>
-        <DiscoverContractsDirectory />
-      </div>
+
+      <DiscoverContractsDirectory />
     </div>
   );
 };

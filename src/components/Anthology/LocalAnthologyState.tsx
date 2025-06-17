@@ -5,7 +5,6 @@ import { useAppSelector } from "@store/utils/hooks";
 //import { useParams } from "react-router-dom";
 import "./style.css";
 import { Address } from "@src/types/common";
-import { LOCAL_USER_ADDR } from "@src/utils/constants";
 
 interface LocalAnthologyStateProps {
   contractAddr: Address;
@@ -35,20 +34,6 @@ export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
         flexWrap: "wrap",
       }}
     >
-      <Card className="cardStyle">
-        <Card.Body style={{ textAlign: "center" }}>
-          <Card.Title style={{ textAlign: "center" }}>Contract Addr</Card.Title>
-          <Card.Text style={{ fontSize: "12px" }}>{contractAddr}</Card.Text>
-        </Card.Body>
-      </Card>
-
-      <Card className="cardStyle">
-        <Card.Body>
-          <Card.Title style={{ textAlign: "center" }}>Owner</Card.Title>
-          <Card.Text style={{ fontSize: "12px" }}>{LOCAL_USER_ADDR}</Card.Text>
-        </Card.Body>
-      </Card>
-
       <Card className="cardStyle">
         <Card.Body className="cardBodyStyle">
           <Card.Title>Title</Card.Title>

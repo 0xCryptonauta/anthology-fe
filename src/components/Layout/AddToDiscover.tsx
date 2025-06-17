@@ -17,10 +17,15 @@ import {
   AnthologyInfoInterface,
 } from "@src/store/slices/anthologySlice";
 import { readAnthology } from "@src/contract-functions/anthologyFunctions";
+import QRScanner from "./QRScanner";
+import { isQrReturnValid } from "@src/utils/isQrReturnValid";
 
 //import { useNavigate } from "react-router-dom";
 
-const searchOptions = ["Anthology Address", "User Address"];
+const searchOptions = [
+  "Anthology Address",
+  //"User Address"
+];
 
 export const AddToDiscover = () => {
   const [show, setShow] = useState(false);
@@ -139,18 +144,75 @@ export const AddToDiscover = () => {
               margin: "3px",
               maxWidth: "300px",
               //width: "fit-content",
+              position: "relative",
             }}
           >
-            <span
+            <div
               style={{
-                fontSize: "20px",
-                fontWeight: "600",
-                marginBottom: "12px",
-                display: "inline-block",
+                display: "flex",
+                flexDirection: "row",
               }}
             >
-              Discover
-            </span>
+              <span
+                style={{
+                  fontSize: "20px",
+                  fontWeight: "600",
+                  marginBottom: "12px",
+                  display: "inline-block",
+                }}
+              >
+                Discover
+              </span>
+            </div>
+            <div style={{ position: "absolute", top: "10px", right: "10px" }}>
+              <QRScanner
+                onScan={(qrReturn) => {
+                  if (!isQrReturnValid(qrReturn)) {
+                    addToast({
+                      title: "Invalid QR Code",
+                      content: "Please scan a valid QR Code.",
+                      variant: "info",
+                      delay: 3000,
+                    });
+                    return;
+                  }
+                  const { type, address } = JSON.parse(qrReturn);
+                  if (type === "anthology") {
+                    if (!isAddress(address)) {
+                      addToast({
+                        title: "Invalid Anthology Address",
+                        content: "Please scan a valid Anthology address.",
+                        variant: "info",
+                        delay: 3000,
+                      });
+                      return;
+                    }
+                    setAddressToAdd(address);
+                    setSelectedSearchOption("Anthology Address");
+                  } else if (type === "user") {
+                    if (!isAddress(address)) {
+                      addToast({
+                        title: "Invalid User Address",
+                        content: "Please scan a valid User address.",
+                        variant: "info",
+                        delay: 3000,
+                      });
+                      return;
+                    }
+                    setAddressToAdd(address);
+                    setSelectedSearchOption("User Address");
+                  } else {
+                    addToast({
+                      title: "Unknown QR Code Type",
+                      content: "The scanned QR Code is not recognized.",
+                      variant: "info",
+                      delay: 3000,
+                    });
+                    return;
+                  }
+                }}
+              />
+            </div>
 
             <div style={{ marginBottom: "16px" }}>
               <div style={{ display: "flex", flexDirection: "column" }}>

@@ -150,7 +150,7 @@ export const SidePanel = () => {
                 </Link> */}
               </div>
             )}
-            <div style={{ margin: "20px 0px" }}>
+            <div>
               <Link
                 to="/"
                 style={{
