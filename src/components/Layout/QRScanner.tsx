@@ -22,6 +22,49 @@ const QRScanner: React.FC<QRScannerProps> = ({
 
   const mouseDownRef = useRef(false);
 
+  let isMounted = true;
+
+  const startScanner = async () => {
+    const lib = await import("html5-qrcode");
+    const Html5Qrcode = lib.Html5Qrcode;
+
+    const html5QrCode = new Html5Qrcode(elementId);
+    scannerRef.current = html5QrCode;
+
+    try {
+      const devices = await Html5Qrcode.getCameras();
+      if (!devices.length) throw new Error("No camera devices found");
+
+      const cameraId = devices[0].id;
+
+      if (!isMounted) return;
+
+      await html5QrCode.start(
+        cameraId,
+        {
+          fps: 10,
+          qrbox: { width: qrboxSize, height: qrboxSize },
+          aspectRatio: 1,
+        },
+
+        (decodedText) => {
+          onScan(decodedText);
+          // Auto stop after first successful scan
+          html5QrCode.stop().then(() => {
+            html5QrCode.clear();
+            scannerRef.current = null;
+            setActive(false); // auto-close
+          });
+        },
+        (err) => {
+          if (onError) onError(err);
+        }
+      );
+    } catch (err: unknown) {
+      if (onError) onError(err instanceof Error ? err.message : String(err));
+    }
+  };
+
   useEffect(() => {
     const handleMouseDown = (e: MouseEvent) => {
       mouseDownRef.current =
@@ -59,51 +102,6 @@ const QRScanner: React.FC<QRScannerProps> = ({
   useEffect(() => {
     if (!active) return;
 
-    let isMounted = true;
-
-    const startScanner = async () => {
-      const lib = await import("html5-qrcode");
-      const Html5Qrcode = lib.Html5Qrcode;
-
-      const html5QrCode = new Html5Qrcode(elementId);
-      scannerRef.current = html5QrCode;
-
-      try {
-        const devices = await Html5Qrcode.getCameras();
-        if (!devices.length) throw new Error("No camera devices found");
-
-        const cameraId = devices[0].id;
-
-        if (!isMounted) return;
-
-        await html5QrCode.start(
-          cameraId,
-          {
-            fps: 10,
-            qrbox: { width: qrboxSize, height: qrboxSize },
-            aspectRatio: 1,
-          },
-
-          (decodedText) => {
-            onScan(decodedText);
-            // Auto stop after first successful scan
-            html5QrCode.stop().then(() => {
-              html5QrCode.clear();
-              scannerRef.current = null;
-              setActive(false); // auto-close
-            });
-          },
-          (err) => {
-            if (onError) onError(err);
-          }
-        );
-      } catch (err: unknown) {
-        if (onError) onError(err instanceof Error ? err.message : String(err));
-      }
-    };
-
-    startScanner();
-
     return () => {
       isMounted = false;
 
@@ -132,7 +130,13 @@ const QRScanner: React.FC<QRScannerProps> = ({
 
   return (
     <div>
-      <div onClick={() => setActive(true)} style={{ cursor: "pointer" }}>
+      <div
+        onClick={async () => {
+          setActive(true);
+          await startScanner();
+        }}
+        style={{ cursor: "pointer" }}
+      >
         <img src="icons/qrIcon.svg" width="32px" alt="qrIcon" />
       </div>
 
