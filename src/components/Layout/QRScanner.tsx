@@ -192,7 +192,7 @@ const QRScanner: React.FC<QRScannerProps> = ({
                 borderRadius: "12px",
                 overflow: "hidden",
                 position: "relative",
-                transform: "scaleX(-1)", // Mirror horizontally
+                //transform: "scaleX(-1)", // Mirror horizontally
               }}
             />
           </div>
