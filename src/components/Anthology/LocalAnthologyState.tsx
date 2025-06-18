@@ -1,10 +1,9 @@
 import { Card } from "react-bootstrap";
-
 import { useAppSelector } from "@store/utils/hooks";
-
 //import { useParams } from "react-router-dom";
 import "./style.css";
 import { Address } from "@src/types/common";
+import { downloadObjAsJson } from "@src/utils/downloadObjAsJson";
 
 interface LocalAnthologyStateProps {
   contractAddr: Address;
@@ -22,6 +21,20 @@ export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
   const defaultSkin = useAppSelector(
     (state) => state.localAnthology.defaultSkin[contractAddr]
   );
+
+  const downloadLocalAnthology = () => {
+    const anthologyData = {
+      contractAddr: contractAddr,
+      title: currentTitle,
+      anthology: anthology,
+      defaultSkin: defaultSkin,
+    };
+    downloadObjAsJson(
+      anthologyData,
+      `${currentTitle.replace(/\s+/g, "_")}_anthology.json`
+    );
+  };
+
   return (
     <div
       style={{
@@ -60,6 +73,20 @@ export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
         <Card.Body className="cardBodyStyle">
           <Card.Title>Default Skin </Card.Title>
           <Card.Text>{defaultSkin}</Card.Text>
+        </Card.Body>
+      </Card>
+
+      <Card className="cardStyle">
+        <Card.Body className="cardBodyStyle">
+          <Card.Title style={{ fontSize: "13px", fontWeight: "bold" }}>
+            Download Anthology{" "}
+          </Card.Title>
+          <Card.Text
+            style={{ cursor: "pointer" }}
+            onClick={downloadLocalAnthology}
+          >
+            💾
+          </Card.Text>
         </Card.Body>
       </Card>
     </div>
