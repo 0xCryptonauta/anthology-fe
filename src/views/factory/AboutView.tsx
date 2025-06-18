@@ -9,6 +9,7 @@ import { IconPathSwitcher } from "@src/components/Layout/IconPathSwitcher";
 import { resetDappStore } from "@src/store/slices/dappSlice";
 import { resetUserStore } from "@src/store/slices/userSlice";
 import { resetLocalAnthologyStore } from "@src/store/slices/localAnthologySlice";
+import { DownloadReduxStore } from "@src/components/Layout/DownloadReduxStore";
 
 export const AboutView = () => {
   const dispatch = useAppDispatch();
@@ -20,7 +21,7 @@ export const AboutView = () => {
       className="bg-dark"
       style={{
         color: "white",
-        height: "600px",
+        //height: "600px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -32,7 +33,8 @@ export const AboutView = () => {
 
       <div
         style={{
-          height: "250px",
+          //height: "250px",
+          margin: "20px 0px",
           display: "flex",
           flexDirection: "column",
 
@@ -64,6 +66,12 @@ export const AboutView = () => {
         </div>
 
         <button
+          style={{
+            backgroundColor: "red",
+            color: "white",
+            padding: "10px 20px",
+            borderRadius: "5px",
+          }}
           onClick={async () => {
             dispatch(resetAnthologyStore());
             dispatch(resetFactoryStore());
@@ -86,10 +94,22 @@ export const AboutView = () => {
           CLEAN STORE
         </button>
       </div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "10px",
+        }}
+      >
+        <InstallPWAButton />
+        <NetworkSettings />
+        <IconPathSwitcher />
+      </div>
 
-      <InstallPWAButton />
-      <NetworkSettings />
-      <IconPathSwitcher />
+      <div>
+        <DownloadReduxStore />
+      </div>
     </div>
   );
 };
