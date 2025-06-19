@@ -1,7 +1,7 @@
 import { QRCodeSVG } from "qrcode.react";
 import { Modal } from "./Modal";
 
-export const QRCodeComponent = ({ text }: { text: string }) => {
+export const QRCodeGenerator = ({ text }: { text: string }) => {
   return (
     <div>
       <Modal
