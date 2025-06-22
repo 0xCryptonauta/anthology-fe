@@ -1,4 +1,4 @@
-import { Card } from "react-bootstrap";
+import { Card } from "@components/Layout/Card";
 import { useAppSelector } from "@store/utils/hooks";
 //import { useParams } from "react-router-dom";
 import "./style.css";
@@ -47,48 +47,25 @@ export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
         flexWrap: "wrap",
       }}
     >
-      <Card className="cardStyle">
-        <Card.Body className="cardBodyStyle">
-          <Card.Title>Title</Card.Title>
-          <Card.Text>{currentTitle}</Card.Text>
-        </Card.Body>
-      </Card>
+      <Card title="Title" content={currentTitle} />
 
-      <Card className="cardStyle">
-        <Card.Body className="cardBodyStyle">
-          <Card.Title style={{ fontSize: "18px" }}>
-            Anthology length{" "}
-          </Card.Title>
-          <Card.Text>{anthology.length}</Card.Text>
-        </Card.Body>
-      </Card>
+      <Card title="Anthology length" content={anthology.length} />
 
-      <Card className="cardStyle">
-        <Card.Body className="cardBodyStyle">
-          <Card.Title>maxMemoirs </Card.Title>
-          <Card.Text>{100}</Card.Text>
-        </Card.Body>
-      </Card>
-      <Card className="cardStyle">
-        <Card.Body className="cardBodyStyle">
-          <Card.Title>Default Skin </Card.Title>
-          <Card.Text>{defaultSkin}</Card.Text>
-        </Card.Body>
-      </Card>
+      <Card title="maxMemoirs" content="100" />
 
-      <Card className="cardStyle">
-        <Card.Body className="cardBodyStyle">
-          <Card.Title style={{ fontSize: "13px", fontWeight: "bold" }}>
-            Download Anthology{" "}
-          </Card.Title>
-          <Card.Text
-            style={{ cursor: "pointer" }}
+      <Card title="Default Skin" content={defaultSkin} />
+
+      <Card
+        title="Download Anthology"
+        content={
+          <span
+            style={{ cursor: "pointer", fontSize: "20px" }}
             onClick={downloadLocalAnthology}
           >
             💾
-          </Card.Text>
-        </Card.Body>
-      </Card>
+          </span>
+        }
+      />
     </div>
   );
 };

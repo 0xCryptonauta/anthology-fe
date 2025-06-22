@@ -1,4 +1,4 @@
-import { Card } from "react-bootstrap";
+import { Card } from "../Layout/Card";
 
 import { useAppSelector } from "@store/utils/hooks";
 
@@ -15,24 +15,6 @@ interface AnthologyStateProps {
 export const AnthologyState: React.FC<AnthologyStateProps> = ({
   contractAddr,
 }) => {
-  //const { userContracts } = useAppSelector((state) => state.factory);
-
-  //const { ethAddr, id } = useParams();
-
-  /* const anthology = useAppSelector((state) =>
-    contractAddr ? state.anthology[contractAddr] : undefined
-  ); */
-
-  /*   let contractAddr = "";
-
-  if (JSON.stringify(userContracts) != "{}") {
-    try {
-      contractAddr = userContracts[ethAddr as string][Number(id)];
-    } catch (error) {
-      console.error("Error getting userContracts:", error);
-    }
-  } */
-
   const anthologyState = useAppSelector((state) => {
     try {
       if (state.anthology[contractAddr])
@@ -55,119 +37,60 @@ export const AnthologyState: React.FC<AnthologyStateProps> = ({
         flexWrap: "wrap",
       }}
     >
-      <Card className="cardStyle">
-        <Card.Body>
-          <Card.Title style={{ textAlign: "center" }}>
-            Anthology Addr
-          </Card.Title>
-          <Card.Text style={{ fontSize: "12px" }}>
-            <a href={CHAIN_SCAN_URL + contractAddr} target="_blank">
-              {contractAddr}
-            </a>
-          </Card.Text>
-        </Card.Body>
-      </Card>
+      <Card
+        title="Anthology Addr"
+        content={contractAddr}
+        contentHref={CHAIN_SCAN_URL + contractAddr}
+      />
 
-      <Card className="cardStyle">
-        <Card.Body className="cardBodyStyle">
-          <Card.Title style={{ fontSize: "14px", fontWeight: "bold" }}>
-            Anthology QR Addr
-          </Card.Title>
-
+      <Card
+        title="Anthology QR Addr"
+        content={
           <QRCodeGenerator
             text={JSON.stringify({ type: "anthology", address: contractAddr })}
           />
-        </Card.Body>
-      </Card>
+        }
+      />
 
-      <Card className="cardStyle">
-        <Card.Body>
-          <Card.Title style={{ textAlign: "center" }}>Owner</Card.Title>
-          <Card.Text style={{ fontSize: "12px" }}>
-            {anthologyState?.owner.toString()}
-          </Card.Text>
-        </Card.Body>
-      </Card>
+      <Card title="Owner" content={anthologyState?.owner.toString()} />
 
-      <Card className="cardStyle">
-        <Card.Body className="cardBodyStyle">
-          <Card.Title>Title</Card.Title>
-          <Card.Text>{anthologyState?.title}</Card.Text>
-        </Card.Body>
-      </Card>
+      <Card title="Title" content={anthologyState?.title} />
 
-      <Card className="cardStyle">
-        <Card.Body className="cardBodyStyle">
-          <Card.Title style={{ fontSize: "18px" }}>
-            Anthology length{" "}
-          </Card.Title>
-          <Card.Text>{anthologyState?.currentMemoirCount.toString()}</Card.Text>
-        </Card.Body>
-      </Card>
+      <Card
+        title="Anthology length"
+        content={anthologyState?.currentMemoirCount.toString()}
+      />
 
-      <Card className="cardStyle">
-        <Card.Body className="cardBodyStyle">
-          <Card.Title>useERC20 </Card.Title>
-          <Card.Text>{anthologyState?.useERC20.toString()}</Card.Text>
-        </Card.Body>
-      </Card>
+      <Card title="useERC20" content={anthologyState?.useERC20.toString()} />
 
-      <Card className="cardStyle">
-        <Card.Body>
-          <Card.Title style={{ textAlign: "center" }}>
-            ERC20 Address{" "}
-          </Card.Title>
-          <Card.Text style={{ fontSize: "12px" }}>
-            {anthologyState?.erc20Token.toString()}
-          </Card.Text>
-        </Card.Body>
-      </Card>
+      <Card
+        title="ERC20 Address"
+        content={anthologyState?.erc20Token.toString()}
+      />
 
-      <Card className="cardStyle">
-        <Card.Body className="cardBodyStyle">
-          <Card.Title>maxMemoirs </Card.Title>
-          <Card.Text>{anthologyState?.maxMemoirs.toString()}</Card.Text>
-        </Card.Body>
-      </Card>
+      <Card
+        title="maxMemoirs"
+        content={anthologyState?.maxMemoirs.toString()}
+      />
 
-      <Card className="cardStyle">
-        <Card.Body className="cardBodyStyle">
-          <Card.Title>memoirPrice </Card.Title>
-          <Card.Text>{anthologyState?.memoirPrice.toString()}</Card.Text>
-        </Card.Body>
-      </Card>
+      <Card
+        title="memoirPrice"
+        content={anthologyState?.memoirPrice.toString()}
+      />
 
-      <Card className="cardStyle">
-        <Card.Body className="cardBodyStyle">
-          <Card.Title style={{ fontSize: "18px" }}>Created Memoirs </Card.Title>
-          <Card.Text>
-            {anthologyState?.totalCreatedMemoirs.toString()}
-          </Card.Text>
-        </Card.Body>
-      </Card>
+      <Card
+        title="Created Memoirs"
+        content={anthologyState?.totalCreatedMemoirs.toString()}
+      />
 
-      <Card className="cardStyle">
-        <Card.Body className="cardBodyStyle">
-          <Card.Title>useBuffer </Card.Title>
-          <Card.Text>{anthologyState?.useBuffer.toString()}</Card.Text>
-        </Card.Body>
-      </Card>
+      <Card title="useBuffer" content={anthologyState?.useBuffer.toString()} />
 
-      <Card className="cardStyle">
-        <Card.Body className="cardBodyStyle">
-          <Card.Title style={{ fontSize: "18px" }}>
-            whitelistedEnabled
-          </Card.Title>
-          <Card.Text>{anthologyState?.whitelistEnabled.toString()}</Card.Text>
-        </Card.Body>
-      </Card>
+      <Card
+        title="whitelistedEnabled"
+        content={anthologyState?.whitelistEnabled.toString()}
+      />
 
-      <Card className="cardStyle">
-        <Card.Body className="cardBodyStyle">
-          <Card.Title style={{ fontSize: "18px" }}>Skin</Card.Title>
-          <Card.Text>{anthologyState?.skin}</Card.Text>
-        </Card.Body>
-      </Card>
+      <Card title="Skin" content={anthologyState?.skin} />
     </div>
   );
 };
