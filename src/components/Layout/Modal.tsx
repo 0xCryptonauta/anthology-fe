@@ -107,7 +107,7 @@ export const Modal = ({
           backgroundColor: "transparent",
           display: "flex",
           flexDirection: isSidePanel ? "column" : "row",
-          alignItems: isSidePanel ? "flex-start" : "flex-end",
+          alignItems: isSidePanel ? "center" : "flex-end",
         }}
       >
         {header && (
@@ -119,6 +119,7 @@ export const Modal = ({
         <Offcanvas.Body
           style={{
             display: "flex",
+            width: "100%",
             alignItems: "center",
             flexDirection: "column",
             backgroundColor: "transparent",
