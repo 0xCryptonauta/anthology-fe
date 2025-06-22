@@ -70,6 +70,7 @@ export const NetworkSettings = () => {
               borderRadius: "7px",
               padding: "5px 10px",
             }}
+            onClick={() => setShow(true)}
           >
             Network Settings
           </div>

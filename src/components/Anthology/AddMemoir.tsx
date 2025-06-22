@@ -13,6 +13,8 @@ import { removeSocialTracking } from "@src/utils/removeSocialTracking";
 import { HighlightDifferences } from "../Layout/HighlightDifferences";
 import { Modal } from "../Layout/Modal";
 
+// Imports remain the same
+
 export const AddMemoir = ({
   contractAddr,
   title = "",
@@ -24,11 +26,8 @@ export const AddMemoir = ({
 }) => {
   const [anthologyTitle, setAnthologyTitle] = useState(title);
   const [anthologyContent, setAnthologyContent] = useState(content);
-
   const [shouldFilterTracking, setShouldFilterTracking] = useState(false);
-
   const [show, setShow] = useState(false);
-
   const handleClose = () => setShow(false);
 
   const { userAddr, currentPath } = useAppSelector((state) => state.user);
@@ -41,7 +40,6 @@ export const AddMemoir = ({
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
   const { addToast } = useToast();
 
   const filteredContent = useMemo(() => {
@@ -59,12 +57,12 @@ export const AddMemoir = ({
             sender: LOCAL_USER_ADDR,
             title: anthologyTitle,
             content: filteredContent,
-            timestamp: String(Math.floor(new Date().getTime() / 1000)),
+            timestamp: String(Math.floor(Date.now() / 1000)),
           },
         })
       );
-      setAnthologyContent("");
       setAnthologyTitle("");
+      setAnthologyContent("");
       addToast({
         title: "Memoir Added",
         content: "Memoir added locally, not on blockchain yet",
@@ -72,26 +70,25 @@ export const AddMemoir = ({
         delay: 5000,
       });
     } else {
-      const txHash_setTitle = await writeAnthology(
-        contractAddr,
-        "createMemoir",
-        [anthologyTitle, filteredContent]
-      );
-      if (txHash_setTitle) {
-        setAnthologyContent("");
+      const txHash = await writeAnthology(contractAddr, "createMemoir", [
+        anthologyTitle,
+        filteredContent,
+      ]);
+      if (txHash) {
         setAnthologyTitle("");
+        setAnthologyContent("");
         addToast({
           title: "Memoir Added",
-          content: "TxHash: " + txHash_setTitle,
+          content: "TxHash: " + txHash,
           variant: "success",
           delay: 5000,
         });
       }
     }
+
     if (currentPath !== `contract/${contractAddr}`) {
       dispatch(updateCurrentPath(`contract/${contractAddr}`));
       navigate("/");
-      console.log("GO.");
     }
 
     handleClose();
@@ -118,31 +115,44 @@ export const AddMemoir = ({
     (!whitelistEnabled ||
       whitelist.includes(userAddr) ||
       userAddr === owner) && (
-      <>
-        <Modal
-          placement="bottom"
-          show={show}
-          onHide={handleClose}
-          trigger={
-            <span className="addMemoirButton" onClick={() => setShow(true)}>
-              📝
-            </span>
-          }
-        >
-          <span>Title:</span>
+      <Modal
+        placement="bottom"
+        show={show}
+        onHide={handleClose}
+        trigger={
+          <span
+            className="addMemoirButton"
+            style={{
+              fontSize: "2.5rem",
+              cursor: "pointer",
+              padding: "0.25rem 0.75rem",
+            }}
+            onClick={() => setShow(true)}
+          >
+            📝
+          </span>
+        }
+      >
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+          <label style={{ fontWeight: 500, fontSize: "1.2rem" }}>Title</label>
           <input
-            placeholder=""
             value={anthologyTitle}
             maxLength={50}
-            style={{ backgroundColor: "white", color: "black" }}
-            onChange={(e) => {
-              setAnthologyTitle(e.target.value);
+            placeholder="Enter title"
+            onChange={(e) => setAnthologyTitle(e.target.value)}
+            style={{
+              padding: "0.75rem 1rem",
+              borderRadius: "0.75rem",
+              border: "1px solid #d1d5db",
+              fontSize: "0.95rem",
+              color: "#111",
+              backgroundColor: "#fff",
+              outline: "none",
             }}
-          ></input>
-          <br />
-          <span>Content:</span>
+          />
+
+          <label style={{ fontWeight: 500, fontSize: "1.2rem" }}>Content</label>
           <div style={{ position: "relative", width: "100%" }}>
-            {/* Overlay with highlighted diffs */}
             <div
               ref={overlayRef}
               style={{
@@ -153,72 +163,76 @@ export const AddMemoir = ({
                 bottom: 0,
                 zIndex: 1,
                 height: "10.5rem",
-                overflowY: "auto", // Force scroll to match textarea behavior
+                overflowY: "auto",
                 pointerEvents: "none",
                 whiteSpace: "pre-wrap",
                 wordBreak: "break-word",
                 color: "transparent",
                 fontSize: "0.875rem",
                 fontFamily: "monospace",
-                lineHeight: "1.5",
-                letterSpacing: "normal",
                 padding: "0.5rem",
-                boxSizing: "border-box",
               }}
               aria-hidden="true"
             >
               {HighlightDifferences(anthologyContent, filteredContent)}
             </div>
 
-            {/* Underlying textarea */}
             <textarea
               ref={textareaRef}
               value={shouldFilterTracking ? filteredContent : anthologyContent}
-              maxLength={255}
               onChange={(e) => setAnthologyContent(e.target.value)}
+              maxLength={255}
               style={{
                 position: "relative",
                 zIndex: 2,
                 width: "100%",
                 height: "10.5rem",
-                overflowY: shouldFilterTracking ? "scroll" : "auto",
                 resize: "none",
-                padding: "0.5rem",
+                padding: "0.75rem",
                 fontSize: "0.875rem",
                 fontFamily: "monospace",
-                lineHeight: "1.5",
-                letterSpacing: "normal",
-                color: "black",
-                backgroundColor: "transparent",
-                boxSizing: "border-box",
+                backgroundColor: "#fff",
+                color: "#111",
+                border: "1px solid #d1d5db",
+                borderRadius: "0.75rem",
               }}
             />
           </div>
 
-          <div style={{ display: "flex", justifyContent: "center" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <input
               type="checkbox"
               checked={shouldFilterTracking}
               onChange={() => setShouldFilterTracking(!shouldFilterTracking)}
-            ></input>
+            />
             <span
-              style={{
-                marginLeft: "5px",
-                cursor: "pointer",
-                display: "flex",
-                justifyContent: "center",
-              }}
+              style={{ cursor: "pointer", userSelect: "none" }}
               onClick={() => setShouldFilterTracking(!shouldFilterTracking)}
             >
               Remove Tracking from URL
             </span>
           </div>
 
-          <button style={{ marginTop: "15px" }} onClick={handleAddMemoir}>
+          <button
+            onClick={handleAddMemoir}
+            style={{
+              marginTop: "0.5rem",
+              padding: "0.75rem 1.25rem",
+              borderRadius: "0.75rem",
+              fontWeight: 600,
+              fontSize: "0.95rem",
+              backgroundColor: "#111827",
+              color: "#fff",
+              border: "none",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+              cursor: "pointer",
+              transition: "background-color 0.2s ease",
+            }}
+          >
             Add Memoir
           </button>
-        </Modal>
-      </>
+        </div>
+      </Modal>
     )
   );
 };
