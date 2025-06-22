@@ -1,6 +1,6 @@
 import { useAppSelector } from "@store/utils/hooks";
 
-import { ContractState } from "@components/Factory/ContractState";
+import { FactoryState } from "@src/components/Factory/FactoryState";
 import { OnlyOwner } from "@components/Factory/OnlyOwner";
 import { useGetFactoryInfo } from "@src/hooks/useGetFactoryInfo";
 
@@ -22,7 +22,7 @@ export const FactoryStateView = () => {
       }}
     >
       {factoryOwner == userAddr && <OnlyOwner />}
-      <ContractState />
+      <FactoryState />
     </div>
   );
 };
