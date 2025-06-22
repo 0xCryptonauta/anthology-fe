@@ -27,9 +27,8 @@ export const IconPathSwitcher = () => {
     isConnected && (
       <div
         style={{
-          width: "100%",
           maxWidth: "420px",
-          margin: "20px auto",
+          margin: "10px auto",
           padding: "25px 30px",
           borderRadius: "16px",
           backgroundColor: "#ffffff",

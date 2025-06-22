@@ -154,6 +154,13 @@ export const SidePanel = () => {
               Factory Info
             </Link>
           )}
+          <Link
+            to="/settings"
+            onClick={handleClose}
+            style={{ textDecoration: "none", marginTop: "10px" }}
+          >
+            Settings
+          </Link>
         </div>
       </div>
     </Modal>

@@ -14,6 +14,7 @@ import { AboutView } from "@views/factory/AboutView.tsx";
 import { IndexView } from "@views/IndexView.tsx";
 import { AnthologyShareView } from "@views/anthology/AnthologyShareView";
 import { ContextWagmiProvider } from "./components/Layout/ContextWagmiProvider";
+import { SettingsView } from "./views/Settings";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
       { path: "info", element: <FactoryStateView /> },
       { path: "about", element: <AboutView /> },
       { path: "share", element: <AnthologyShareView /> },
+      { path: "settings", element: <SettingsView /> },
     ],
   },
   { path: "*", element: <NotFound /> },

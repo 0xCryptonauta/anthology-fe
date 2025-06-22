@@ -68,7 +68,7 @@ export const NetworkSettings = () => {
               cursor: "pointer",
               border: "1px solid white",
               borderRadius: "7px",
-              padding: "5px 10px",
+              padding: "15px 15px",
             }}
             onClick={() => setShow(true)}
           >
