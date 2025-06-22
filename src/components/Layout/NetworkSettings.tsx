@@ -17,6 +17,9 @@ export const NetworkSettings = () => {
 
   const [newFactoryRpc, setNewFactoryRpc] = useState(factoryRpc);
 
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+
   const handleRpcChange = async () => {
     const isValid = await isValidRpc(newFactoryRpc);
 
@@ -39,6 +42,7 @@ export const NetworkSettings = () => {
           delay: 5000,
         });
       }
+      handleClose();
     } else {
       addToast({
         title: "Error changing RPC",
@@ -52,6 +56,8 @@ export const NetworkSettings = () => {
   return (
     <Modal
       placement="bottom"
+      show={show}
+      onHide={handleClose}
       trigger={
         isConnected ? (
           <div

@@ -30,29 +30,33 @@ export const DeployButton: React.FC<DeployButtonProps> = ({
 
   const { isConnected } = useAccount();
 
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+
   const canCreateOnChain =
     isConnected &&
     (!whitelistEnabled ||
       whitelistedUsers.includes(userAddr) ||
       owner === userAddr);
 
-  console.log("canCreateOnChain:", canCreateOnChain);
-
   const handleDeploy = async () => {
     if (isLocal || !canCreateOnChain) {
+      const localContract = generateLocalContractAddr();
       dispatch(
         addUserLocalAnthology({
           user: LOCAL_USER_ADDR,
-          contract: generateLocalContractAddr(),
+          contract: localContract,
           title: anthologyTitle,
         })
       );
       addToast({
         title: "New Anthology was created",
-        content: "TxHash: ",
+        content: localContract,
         variant: "success",
         delay: 5000,
       });
+      setAnthologyTitle("");
+      handleClose();
     } else {
       const txHash = await writeFactory("deployAnthology");
       console.log("txHash: ", txHash);
@@ -63,6 +67,8 @@ export const DeployButton: React.FC<DeployButtonProps> = ({
           variant: "success",
           delay: 5000,
         });
+        setAnthologyTitle("");
+        handleClose();
       }
     }
   };
@@ -98,10 +104,13 @@ export const DeployButton: React.FC<DeployButtonProps> = ({
   return (
     <Modal
       placement="bottom"
+      show={show}
+      onHide={handleClose}
       trigger={
         isLocal || canCreateOnChain ? (
           <span
             style={{ marginLeft: "10px", fontSize: "20px", cursor: "pointer" }}
+            onClick={() => setShow(true)}
           >
             🆕
           </span>

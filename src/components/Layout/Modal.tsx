@@ -8,36 +8,34 @@ import React, {
 import { Offcanvas } from "react-bootstrap";
 
 type ModalProps = {
-  placement: "top" | "bottom" | "end";
+  placement?: "top" | "bottom" | "end";
   children: React.ReactNode;
   trigger: ReactElement;
+  header?: ReactElement;
   show?: boolean;
   onHide?: () => void;
+  variant?: "modal" | "sidepanel";
 };
 
 export const Modal = ({
-  placement,
+  placement = "bottom",
   children,
   trigger,
+  header,
   show: externalShow,
   onHide,
+  variant = "modal",
 }: ModalProps) => {
-  // Internal state used only if component is uncontrolled
   const [internalShow, setInternalShow] = useState(false);
   const show = externalShow ?? internalShow;
 
   const handleClose = () => {
-    if (onHide) {
-      onHide();
-    } else {
-      setInternalShow(false);
-    }
+    if (onHide) onHide();
+    else setInternalShow(false);
   };
 
   const handleShow = () => {
-    if (!onHide) {
-      setInternalShow(true);
-    }
+    if (!onHide) setInternalShow(true);
   };
 
   const offcanvasRef = useRef<HTMLDivElement>(null);
@@ -78,6 +76,14 @@ export const Modal = ({
     };
   }, [onHide]);
 
+  const isSidePanel = variant === "sidepanel";
+  const resolvedPlacement =
+    placement === "end"
+      ? "end"
+      : window.innerHeight > window.innerWidth
+      ? "top"
+      : "bottom";
+
   return (
     <>
       <div style={{ cursor: "pointer" }}>
@@ -92,21 +98,24 @@ export const Modal = ({
       <Offcanvas
         show={show}
         onHide={handleClose}
-        placement={
-          placement === "end"
-            ? "end"
-            : window.innerHeight > window.innerWidth
-            ? "top"
-            : "bottom"
-        }
+        placement={placement === "end" ? "end" : resolvedPlacement}
+        className={isSidePanel ? "bg-dark" : ""}
+        data-bs-theme={isSidePanel ? "dark" : undefined}
         style={{
-          height: "450px",
+          width: isSidePanel ? "200px" : undefined,
+          height: !isSidePanel && placement !== "end" ? "450px" : undefined,
           backgroundColor: "transparent",
           display: "flex",
-          flexDirection: "row",
-          alignItems: "flex-end",
+          flexDirection: isSidePanel ? "column" : "row",
+          alignItems: isSidePanel ? "flex-start" : "flex-end",
         }}
       >
+        {header && (
+          <Offcanvas.Header style={{ justifyContent: "center" }}>
+            {header}
+          </Offcanvas.Header>
+        )}
+
         <Offcanvas.Body
           style={{
             display: "flex",
@@ -119,15 +128,17 @@ export const Modal = ({
             ref={offcanvasRef}
             onClick={(e) => e.stopPropagation()}
             style={{
-              backgroundColor: "white",
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
-              border: "1px solid black",
-              padding: "10px",
+              backgroundColor: isSidePanel ? "transparent" : "white",
+              border: isSidePanel ? "none" : "1px solid black",
               borderRadius: "7px",
-              margin: "3px",
-              maxWidth: "300px",
+              padding: "10px",
+              margin: isSidePanel ? "0px" : "3px",
+              width: "100%",
+              height: isSidePanel ? "100%" : "unset",
+              maxWidth: isSidePanel ? "100%" : "300px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
             }}
           >
             {children}
