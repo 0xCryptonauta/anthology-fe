@@ -6,7 +6,7 @@ import { useAppSelector } from "@store/utils/hooks";
 import "./style.css";
 import { Address } from "@src/types/common";
 import { CHAIN_SCAN_URL } from "@src/utils/constants";
-import { QRCodeComponent } from "../Layout/QRCodeComponent";
+import { QRCodeGenerator } from "../Layout/QRCodeGenerator";
 
 interface AnthologyStateProps {
   contractAddr: Address;
@@ -74,7 +74,7 @@ export const AnthologyState: React.FC<AnthologyStateProps> = ({
             Anthology QR Addr
           </Card.Title>
 
-          <QRCodeComponent
+          <QRCodeGenerator
             text={JSON.stringify({ type: "anthology", address: contractAddr })}
           />
         </Card.Body>

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Offcanvas } from "react-bootstrap";
+import { Modal } from "./Modal";
 
 type QRScannerProps = {
   onScan: (text: string) => void;
@@ -127,78 +127,38 @@ const QRScanner: React.FC<QRScannerProps> = ({
   }, [active, onScan, onError, qrboxSize]);
 
   return (
-    <div>
-      <div
-        onClick={async () => {
-          setActive(true);
-          await startScanner();
-        }}
-        style={{ cursor: "pointer" }}
-      >
-        <img src="icons/qrIcon.svg" width="32px" alt="qrIcon" />
-      </div>
-
-      <Offcanvas
-        show={active}
-        onHide={handleClose}
-        //onClick={handleClose}
-        placement={window.innerHeight > window.innerWidth ? "top" : "bottom"}
-        //className="bg-dark"
-        style={{
-          height: "450px",
-          backgroundColor: "transparent",
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "flex-end",
-        }}
-      >
-        <Offcanvas.Body
-          //onClick={handleClose}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            flexDirection: "column",
-            backgroundColor: "transparent !important",
+    <Modal
+      placement="bottom"
+      show={active}
+      onHide={handleClose}
+      trigger={
+        <div
+          onClick={async () => {
+            setActive(true);
+            await startScanner();
           }}
+          style={{ cursor: "pointer" }}
         >
-          <div
-            ref={offcanvasRef}
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-            style={{
-              backgroundColor: "white",
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
-              border: "1px solid black",
-              padding: "10px",
-              borderRadius: "7px",
-              margin: "3px",
-              maxWidth: "300px",
-              width: "230px",
-            }}
-          >
-            <div>Scan QR Code</div>
-            <div
-              id={elementId}
-              style={{
-                width: "100%",
-                maxWidth: "100%",
-                height: "auto",
-                aspectRatio: "1 / 1",
-                margin: "0 auto",
-                border: "2px solid #ccc",
-                borderRadius: "12px",
-                overflow: "hidden",
-                position: "relative",
-                //transform: "scaleX(-1)", // Mirror horizontally
-              }}
-            />
-          </div>
-        </Offcanvas.Body>
-      </Offcanvas>
-    </div>
+          <img src="icons/qrIcon.svg" width="32px" alt="qrIcon" />
+        </div>
+      }
+    >
+      <span style={{ marginBottom: "10px" }}>Scan QR Code</span>
+      <div
+        id={elementId}
+        style={{
+          width: "200px",
+          maxWidth: "100%",
+          height: "auto",
+          aspectRatio: "1 / 1",
+          margin: "0 auto",
+          border: "2px solid #ccc",
+          borderRadius: "12px",
+          overflow: "hidden",
+          position: "relative",
+        }}
+      />
+    </Modal>
   );
 };
 

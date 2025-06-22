@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Offcanvas from "react-bootstrap/Offcanvas";
 import { Link } from "react-router-dom";
+import { Modal } from "./Modal";
 
 import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
 import { useAccount } from "wagmi";
@@ -11,222 +11,151 @@ import { CurrentPaths } from "@src/types/common";
 export const SidePanel = () => {
   const { userAddr } = useAppSelector((state) => state.user);
   const { isIconToLocal } = useAppSelector((state) => state.dapp);
-  const [show, setShow] = useState(false);
-
   const { isConnected, address } = useAccount();
 
   const dispatch = useAppDispatch();
+  const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
   const handleOnClick = (newCurrentPath: CurrentPaths) => {
     dispatch(updateCurrentPath(newCurrentPath));
-
-    // Push new history entry without changing URL
     window.history.pushState(
-      { currentPath: newCurrentPath }, // Store component name in history.state
-      "", // Unused title
-      window.location.pathname // Keep URL as `/`
+      { currentPath: newCurrentPath },
+      "",
+      window.location.pathname
     );
-
     handleClose();
   };
 
   return (
-    <>
+    <Modal
+      placement="end"
+      variant="sidepanel"
+      show={show}
+      onHide={handleClose}
+      trigger={
+        <div
+          onClick={handleShow}
+          style={{
+            display: "flex",
+            justifyContent: "Center",
+            alignItems: "center",
+            width: "30px",
+            height: "30px",
+            border: "1px solid white",
+            borderRadius: "7px",
+            cursor: "pointer",
+            color: "white",
+          }}
+        >
+          ☰
+        </div>
+      }
+      header={
+        <Link
+          className="navbar-brand"
+          to="/"
+          onClick={() => {
+            if (isConnected && !isIconToLocal) {
+              handleOnClick(`user/${address}`);
+            } else {
+              handleOnClick(LOCAL_ANTOLOGY_PATH);
+            }
+          }}
+          style={{ width: "100%", display: "flex", alignItems: "center" }}
+        >
+          <img
+            src="/IB_icon.png"
+            alt="Logo"
+            width="30"
+            height="24"
+            className="d-inline-block align-text-top"
+            style={{ marginLeft: "5px" }}
+          />
+        </Link>
+      }
+    >
       <div
-        onClick={handleShow}
         style={{
           display: "flex",
-          justifyContent: "Center",
-          alignItems: "center",
-          width: "30px",
-          height: "30px",
-          border: "1px solid white",
-          borderRadius: "7px",
-          cursor: "pointer",
-          color: "white",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          height: "100%",
         }}
       >
-        ☰
-      </div>
-
-      <Offcanvas
-        placement="end"
-        className="bg-dark"
-        data-bs-theme="dark"
-        show={show}
-        onHide={handleClose}
-        style={{
-          width: "200px",
-        }}
-      >
-        <Offcanvas.Header style={{ justifyContent: "center" }}>
-          <Link
-            className="navbar-brand"
-            to="/"
-            onClick={() => {
-              if (isConnected && !isIconToLocal) {
-                handleOnClick(`user/${address}`);
-              } else {
-                handleOnClick(LOCAL_ANTOLOGY_PATH);
-              }
-            }}
-            style={{ display: "flex", alignItems: "center" }}
-          >
-            <img
-              src="/IB_icon.png"
-              alt="Logo"
-              width="30"
-              height="24"
-              className="d-inline-block align-text-top"
-              style={{ marginLeft: "5px" }}
-            />
-            {/* <span style={{ marginLeft: "10px", fontSize: "25px" }}>
-              inBytes
-            </span> */}
-          </Link>
-        </Offcanvas.Header>
-        <Offcanvas.Body
+        <div
           style={{
             display: "flex",
             flexDirection: "column",
-            justifyContent: "space-between",
             alignItems: "center",
           }}
         >
-          <div>
-            {/* <div style={{ margin: "20px 0px", fontSize: "24px" }}>
-              <Link to="/" onClick={handleClose}>
-                e-Brain
-              </Link>
-            </div> */}
-            {isConnected && (
-              <div style={{ margin: "0px 0px" }}>
-                <div style={{ margin: "10px 0px" }}>
-                  <Link
-                    to="/"
-                    style={{
-                      cursor: "pointer",
-                      margin: "10px 0px",
-                      fontSize: "18px",
-                      textDecoration: "none",
-                    }}
-                    onClick={() => {
-                      handleOnClick(`user/${userAddr}`);
-                    }}
-                  >
-                    My Anthologies
-                  </Link>
-                </div>
-
-                <div style={{ margin: "10px 0px" }}>
-                  <Link
-                    to="/"
-                    style={{
-                      cursor: "pointer",
-                      margin: "10px 0px",
-                      fontSize: "18px",
-                      textDecoration: "none",
-                    }}
-                    onClick={() => {
-                      handleOnClick(`discover`);
-                    }}
-                  >
-                    Discover
-                  </Link>
-                </div>
-
-                {/*                 <br />
-                <Link
-                  to="/"
-                  style={{ cursor: "pointer", margin: "10px 0px" }}
-                  onClick={() => {
-                    handleOnClick(`deploy`);
-                  }}
-                >
-                  Deploy
-                </Link> */}
-              </div>
-            )}
-            <div>
+          {isConnected && (
+            <>
               <Link
                 to="/"
+                onClick={() => handleOnClick(`user/${userAddr}`)}
                 style={{
-                  cursor: "pointer",
                   margin: "10px 0px",
-                  color: "#ff8383",
+                  fontSize: "18px",
                   textDecoration: "none",
                 }}
-                onClick={() => {
-                  handleOnClick(LOCAL_ANTOLOGY_PATH);
+              >
+                My Anthologies
+              </Link>
+              <Link
+                to="/"
+                onClick={() => handleOnClick("discover")}
+                style={{
+                  margin: "10px 0px",
+                  fontSize: "18px",
+                  textDecoration: "none",
                 }}
               >
-                Draft Anthologies
+                Discover
               </Link>
-              {/*                 <br />
-                <Link
-                  to="/"
-                  style={{ cursor: "pointer", margin: "10px 0px" }}
-                  onClick={() => {
-                    handleOnClick(`deploy`);
-                  }}
-                >
-                  Deploy
-                </Link> */}
-            </div>
-
-            {/*             <br />
-            <Link
-              to="/"
-              style={{ cursor: "pointer", margin: "10px 0px" }}
-              onClick={() => {
-                handleOnClick(`factory`);
-              }}
-            >
-              Factory Users
-            </Link> */}
-          </div>
-          <div
+            </>
+          )}
+          <Link
+            to="/"
+            onClick={() => handleOnClick(LOCAL_ANTOLOGY_PATH)}
             style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
+              margin: "10px 0px",
+              color: "#ff8383",
+              textDecoration: "none",
             }}
           >
-            <div
-              style={{
-                margin: "20px 0px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
+            Draft Anthologies
+          </Link>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            width: "100%",
+          }}
+        >
+          <Link
+            to="/about"
+            onClick={handleClose}
+            style={{ textDecoration: "none", marginTop: "20px" }}
+          >
+            About
+          </Link>
+          {isConnected && (
+            <Link
+              to="/info"
+              onClick={handleClose}
+              style={{ textDecoration: "none", marginTop: "10px" }}
             >
-              <Link
-                to="about"
-                onClick={handleClose}
-                style={{ textDecoration: "none" }}
-              >
-                About
-              </Link>
-
-              {isConnected && (
-                <>
-                  <br />
-                  <Link
-                    to="/info"
-                    onClick={handleClose}
-                    style={{ textDecoration: "none" }}
-                  >
-                    Factory Info
-                  </Link>
-                </>
-              )}
-            </div>
-          </div>
-        </Offcanvas.Body>
-      </Offcanvas>
-    </>
+              Factory Info
+            </Link>
+          )}
+        </div>
+      </div>
+    </Modal>
   );
 };
