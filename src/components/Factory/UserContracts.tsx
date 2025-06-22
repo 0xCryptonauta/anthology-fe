@@ -59,23 +59,30 @@ export const UserContracts: React.FC<UserContractsProps> = ({
       }}
     >
       <div style={{ margin: "5px" }}>
-        <span
-          style={{ cursor: "pointer", marginRight: "5px" }}
-          onClick={() => dispatch(syncUserContractsToStore(userAddr))}
-        >
-          👤
-        </span>{" "}
-        <span
-          style={{ fontSize: "20px", cursor: "pointer" }}
-          onClick={() => {}}
-        >
-          {userAddr === LOCAL_USER_ADDR
-            ? "Local User: 0x0000...0000"
-            : shortenAddress(userAddr, 12, 9)}
-        </span>
-        {(currentUserAddr === userAddr || userAddr === LOCAL_USER_ADDR) && (
-          <DeployButton isLocal={userAddr === LOCAL_USER_ADDR} />
-        )}
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <span
+            style={{ cursor: "pointer", marginRight: "15px" }}
+            onClick={() =>
+              userAddr === LOCAL_USER_ADDR
+                ? {}
+                : dispatch(syncUserContractsToStore(userAddr))
+            }
+          >
+            👤
+          </span>{" "}
+          <span
+            style={{ fontSize: "20px", cursor: "pointer" }}
+            onClick={() => {}}
+          >
+            {userAddr === LOCAL_USER_ADDR
+              ? "Local User"
+              : shortenAddress(userAddr, 12, 9)}
+          </span>
+          {(currentUserAddr === userAddr || userAddr === LOCAL_USER_ADDR) && (
+            <DeployButton isLocal={userAddr === LOCAL_USER_ADDR} />
+          )}
+        </div>
+
         <div style={{ marginTop: "30px" }}>
           {Object.entries(categories)
             .sort(([categoryA], [categoryB]) =>

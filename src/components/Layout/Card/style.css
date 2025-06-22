@@ -1,0 +1,15 @@
+.cardStyle {
+  width: 11rem;
+  margin: 3px;
+  min-height: 100px;
+  height: auto;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+.cardBodyStyle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}

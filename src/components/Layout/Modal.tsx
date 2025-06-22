@@ -1,0 +1,151 @@
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  ReactElement,
+  cloneElement,
+} from "react";
+import { Offcanvas } from "react-bootstrap";
+
+type ModalProps = {
+  placement?: "top" | "bottom" | "end";
+  children: React.ReactNode;
+  trigger: ReactElement;
+  header?: ReactElement;
+  show?: boolean;
+  onHide?: () => void;
+  variant?: "modal" | "sidepanel";
+};
+
+export const Modal = ({
+  placement = "bottom",
+  children,
+  trigger,
+  header,
+  show: externalShow,
+  onHide,
+  variant = "modal",
+}: ModalProps) => {
+  const [internalShow, setInternalShow] = useState(false);
+  const show = externalShow ?? internalShow;
+
+  const handleClose = () => {
+    if (onHide) onHide();
+    else setInternalShow(false);
+  };
+
+  const handleShow = () => {
+    if (!onHide) setInternalShow(true);
+  };
+
+  const offcanvasRef = useRef<HTMLDivElement>(null);
+  const mouseDownRef = useRef(false);
+
+  useEffect(() => {
+    const handleMouseDown = (e: MouseEvent) => {
+      mouseDownRef.current =
+        !!offcanvasRef.current &&
+        !offcanvasRef.current.contains(e.target as Node);
+    };
+
+    const handleMouseUp = (e: MouseEvent) => {
+      const selection = window.getSelection();
+      const isSelectingText =
+        selection &&
+        selection.type === "Range" &&
+        selection.toString().length > 0;
+
+      if (
+        mouseDownRef.current &&
+        !isSelectingText &&
+        offcanvasRef.current &&
+        !offcanvasRef.current.contains(e.target as Node)
+      ) {
+        handleClose();
+      }
+
+      mouseDownRef.current = false;
+    };
+
+    document.addEventListener("mousedown", handleMouseDown);
+    document.addEventListener("mouseup", handleMouseUp);
+
+    return () => {
+      document.removeEventListener("mousedown", handleMouseDown);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [onHide]);
+
+  const isSidePanel = variant === "sidepanel";
+  const resolvedPlacement =
+    placement === "end"
+      ? "end"
+      : window.innerHeight > window.innerWidth
+      ? "top"
+      : "bottom";
+
+  return (
+    <>
+      <div style={{ cursor: "pointer" }}>
+        {cloneElement(trigger, {
+          onClick: (e: React.MouseEvent) => {
+            trigger.props.onClick?.(e);
+            handleShow();
+          },
+        })}
+      </div>
+
+      <Offcanvas
+        show={show}
+        onHide={handleClose}
+        placement={placement === "end" ? "end" : resolvedPlacement}
+        className={isSidePanel ? "bg-dark" : ""}
+        data-bs-theme={isSidePanel ? "dark" : undefined}
+        style={{
+          width: isSidePanel ? "200px" : undefined,
+          height: !isSidePanel && placement !== "end" ? "500px" : undefined,
+          backgroundColor: "transparent",
+          display: "flex",
+          flexDirection: isSidePanel ? "column" : "row",
+          alignItems: isSidePanel ? "center" : "flex-end",
+        }}
+      >
+        {header && (
+          <Offcanvas.Header style={{ justifyContent: "center" }}>
+            {header}
+          </Offcanvas.Header>
+        )}
+
+        <Offcanvas.Body
+          style={{
+            display: "flex",
+            width: "100%",
+            alignItems: "center",
+            flexDirection: "column",
+            backgroundColor: "transparent",
+          }}
+        >
+          <div
+            ref={offcanvasRef}
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundColor: isSidePanel ? "transparent" : "white",
+              border: isSidePanel ? "none" : "1px solid black",
+              borderRadius: "7px",
+              padding: "10px",
+              margin: isSidePanel ? "0px" : "3px",
+              width: "100%",
+              height: isSidePanel ? "100%" : "unset",
+              maxWidth: isSidePanel ? "100%" : "300px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            {children}
+          </div>
+        </Offcanvas.Body>
+      </Offcanvas>
+    </>
+  );
+};

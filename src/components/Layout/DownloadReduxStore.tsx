@@ -64,7 +64,7 @@ export const DownloadReduxStore = () => {
       style={{
         width: "100%",
         maxWidth: "320px",
-        margin: "30px auto",
+        margin: "10px auto",
         padding: "25px 30px",
         borderRadius: "16px",
         backgroundColor: "#ffffff",
