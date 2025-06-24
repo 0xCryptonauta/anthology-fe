@@ -24,10 +24,12 @@ export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
 
   const downloadLocalAnthology = () => {
     const anthologyData = {
-      contractAddr: contractAddr,
-      title: currentTitle,
-      anthology: anthology,
-      defaultSkin: defaultSkin,
+      anthology: {
+        contractAddr: contractAddr,
+        title: currentTitle,
+        anthology: anthology,
+        defaultSkin: defaultSkin,
+      },
     };
     downloadObjAsJson(
       anthologyData,
