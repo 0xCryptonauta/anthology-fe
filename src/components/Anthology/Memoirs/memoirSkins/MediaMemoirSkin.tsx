@@ -132,7 +132,7 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
               {memoir.content}
             </a>
           ) : (
-            <p>{memoir.content}</p>
+            <span>{memoir.content}</span>
           );
         };
 

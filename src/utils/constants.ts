@@ -10,3 +10,5 @@ export const MAX_CONTENT_LENGTH = 250;
 export const DEFAULT_SKIN = "media";
 
 export const CHAIN_SCAN_URL = "https://arbiscan.io/address/";
+
+export const CACHE_DURATION_MS = 5 * 60 * 1000; // 5min
