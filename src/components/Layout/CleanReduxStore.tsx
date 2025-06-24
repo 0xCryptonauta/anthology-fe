@@ -63,6 +63,8 @@ export const CleanReduxStore = () => {
           dispatch(resetDappStore());
           dispatch(resetUserStore());
           dispatch(resetLocalAnthologyStore());
+          //clear CP timestamps in local storage
+          localStorage.clear();
 
           await persistor.purge();
           setTimeout(() => {

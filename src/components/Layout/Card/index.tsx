@@ -23,7 +23,8 @@ export const Card: React.FC<CardProps> = ({
         >
           {title}
         </BootstrapCard.Title>
-        <BootstrapCard.Text
+
+        <div
           style={{
             wordBreak: "break-word",
             overflowWrap: "break-word",
@@ -43,7 +44,7 @@ export const Card: React.FC<CardProps> = ({
           ) : (
             content
           )}
-        </BootstrapCard.Text>
+        </div>
       </BootstrapCard.Body>
     </BootstrapCard>
   );
