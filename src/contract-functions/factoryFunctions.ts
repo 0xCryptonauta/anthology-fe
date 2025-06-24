@@ -8,6 +8,8 @@ import { AnthologyFactoryABI } from "@abi/AnthologyFactoryABI";
 import { networks } from "@src/wagmiConfig";
 import { retryWithBackoff } from "@utils/retryWithBackoff";
 import { getCurrentConfig } from "./helpers";
+import { CACHE_DURATION_MS } from "@src/utils/constants";
+import { safeStringify } from "@src/utils/safeStringify";
 
 const AnthologyFactoryAddress = import.meta.env.VITE_FACTORY_CONTRACT;
 
@@ -28,7 +30,7 @@ type readFactoryFunctions =
   | "isWhitelisted"
   | "getContractTitle"
   | "isDeployedContract" // not in this ABI -
-  | "deployedContracts" // default getter -> Does not work becase the state variable is not public
+  | "deployedContracts" // default getter -> Does not work becase the state variable is not
   | "getUserContractsWithTitles"
   | "getUsersContractsWithTitles";
 
@@ -46,10 +48,26 @@ type writeFactoryFunctions =
 
 const chain = networks[0];
 
+const getCacheFactoryKey = (fn: string, args: unknown[]) =>
+  `readFactory:${fn}:${safeStringify(args)}`;
+
+const isFresh = (timestamp: number) =>
+  Date.now() - timestamp < CACHE_DURATION_MS;
+
 export const readFactory = async <T = unknown>(
   functionName: readFactoryFunctions,
   args?: unknown[]
 ): Promise<T | undefined> => {
+  const key = getCacheFactoryKey(functionName, args as unknown[]);
+  const cached = localStorage.getItem(key);
+
+  if (cached) {
+    const { time, result } = JSON.parse(cached);
+    if (isFresh(time)) {
+      console.info(`[readFactory] Using cached result for ${functionName}`);
+      return result as T;
+    }
+  }
   try {
     const config = getCurrentConfig();
 
@@ -62,6 +80,9 @@ export const readFactory = async <T = unknown>(
         args,
       })
     );
+
+    localStorage.setItem(key, safeStringify({ time: Date.now(), result }));
+
     return result as T;
   } catch (error) {
     console.warn(`[readFactory] Failed: ${functionName}`);

@@ -4,6 +4,8 @@ import { AnthologyABI } from "@abi/AnthologyABI";
 import { networks } from "@src/wagmiConfig";
 import { retryWithBackoff } from "@utils/retryWithBackoff";
 import { getCurrentConfig } from "./helpers";
+import { safeStringify } from "@src/utils/safeStringify";
+import { CACHE_DURATION_MS } from "@src/utils/constants";
 
 type readFunctions =
   | "owner"
@@ -40,11 +42,27 @@ type writeFunctions =
 
 const chain = networks[0];
 
+const getCacheAnthologyKey = (fn: string, args: unknown[]) =>
+  `readAnthology:${fn}:${safeStringify(args)}`;
+
+const isFresh = (timestamp: number) =>
+  Date.now() - timestamp < CACHE_DURATION_MS;
+
 export const readAnthology = async <T = unknown>(
   contractAddr: `0x${string}`,
   functionName: readFunctions,
   args?: unknown[]
 ): Promise<T | undefined> => {
+  const key = getCacheAnthologyKey(functionName, args as unknown[]);
+  const cached = localStorage.getItem(key);
+
+  if (cached) {
+    const { time, result } = JSON.parse(cached);
+    if (isFresh(time)) {
+      console.info(`[readAnthogy] Using cached result for ${functionName}`);
+      return result as T;
+    }
+  }
   try {
     const config = getCurrentConfig();
 
@@ -57,6 +75,9 @@ export const readAnthology = async <T = unknown>(
         args,
       })
     );
+
+    localStorage.setItem(key, safeStringify({ time: Date.now(), result }));
+
     return result as T;
   } catch (error) {
     console.warn(`[readAnthology] Failed: ${functionName} @ ${contractAddr}`);
