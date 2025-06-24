@@ -1,25 +1,34 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { Address, SkinType } from "@src/types/common";
+import {
+  Address,
+  AnthologyType,
+  ContractTitlesType,
+  SkinType,
+  UserContractsType,
+} from "@src/types/common";
 import { DEFAULT_SKIN, LOCAL_USER_ADDR } from "@src/utils/constants";
 import { MemoirInterface } from "./anthologySlice";
+import { generateLocalContractAddr } from "@src/utils/generateLocalContractAddr";
 
-interface localAnthologyState {
+export interface localAnthologyState {
   users: Address[];
-  userContracts: { [key: Address]: Address[] }; // Mapping of user addresses to arrays of contract addresses
-  contractsTitles: { [key: Address]: string }; // Mapping of contract addresses to contract details (e.g., title)
-  anthologies: { [key: Address]: MemoirInterface[] };
+  userContracts: UserContractsType; // Mapping of user addresses to arrays of contract addresses
+  contractsTitles: ContractTitlesType; // Mapping of contract addresses to contract details (e.g., title)
+  anthologies: AnthologyType;
   defaultSkin: { [key: Address]: SkinType };
 }
 
+const newLocalAddr = generateLocalContractAddr();
+
 const initialState: localAnthologyState = {
   users: [LOCAL_USER_ADDR],
-  userContracts: { [LOCAL_USER_ADDR]: ["0x11111111111111111111"] },
+  userContracts: { [LOCAL_USER_ADDR]: [newLocalAddr] },
   contractsTitles: {
-    ["0x11111111111111111111"]: "[Category][Subcat]Default Anthology Title",
+    [newLocalAddr]: "[Category][Subcat]Default Title",
   },
   anthologies: {
-    ["0x11111111111111111111"]: [
+    [newLocalAddr]: [
       {
         sender: LOCAL_USER_ADDR,
         title: "Default Memoir Title",
@@ -28,7 +37,7 @@ const initialState: localAnthologyState = {
       },
     ],
   },
-  defaultSkin: { ["0x11111111111111111111"]: DEFAULT_SKIN },
+  defaultSkin: { [newLocalAddr]: DEFAULT_SKIN },
 };
 
 export const localAnthologySlice = createSlice({
@@ -88,6 +97,40 @@ export const localAnthologySlice = createSlice({
       }
       state.anthologies[contract].push(memoir);
     },
+    addManyMemoirsToUserLocalAnthology(
+      state,
+      action: PayloadAction<{
+        contract: Address;
+        memoirs: MemoirInterface[];
+      }>
+    ) {
+      const { contract, memoirs } = action.payload;
+
+      if (!state.anthologies[contract]) {
+        state.anthologies[contract] = [];
+      }
+
+      state.anthologies[contract].push(...memoirs);
+    },
+    addAnthologiesToLocalMemory(
+      state,
+      action: PayloadAction<{
+        anthologies: { [key: Address]: MemoirInterface[] };
+      }>
+    ) {
+      const { anthologies } = action.payload;
+
+      for (const contract in anthologies) {
+        if (!state.anthologies[contract as Address]) {
+          state.anthologies[contract as Address] = [];
+        }
+
+        state.anthologies[contract as Address].push(
+          ...anthologies[contract as Address]
+        );
+      }
+    },
+
     deleteMemoirFromUserLocalAnthology(
       state,
       action: PayloadAction<{
@@ -137,6 +180,35 @@ export const localAnthologySlice = createSlice({
         state.contractsTitles[contract] = newTitle;
       }
     },
+    updateLocalUserContracts: (
+      state,
+      action: PayloadAction<{ [key: Address]: Address[] }>
+    ) => {
+      state.userContracts = Object.keys(action.payload).reduce(
+        (acc, key) => {
+          const addressKey = key as Address;
+          const newContracts = action.payload[addressKey];
+
+          if (acc[addressKey]) {
+            acc[addressKey] = [
+              ...new Set([...acc[addressKey], ...newContracts]),
+            ];
+          } else {
+            acc[addressKey] = [...new Set(newContracts)];
+          }
+
+          return acc;
+        },
+        { ...state.userContracts } as { [key: Address]: Address[] }
+      );
+    },
+
+    updateLocalContractTitles: (
+      state,
+      action: PayloadAction<{ [key: string]: string }>
+    ) => {
+      state.contractsTitles = { ...state.contractsTitles, ...action.payload };
+    },
     setDefaultSkin: (
       state,
       action: PayloadAction<{
@@ -152,7 +224,17 @@ export const localAnthologySlice = createSlice({
 
       state.defaultSkin[contract] = newDefaultSkin;
     },
+    setManyDefaultSkin: (
+      state,
+      action: PayloadAction<{ [key: Address]: SkinType }>
+    ) => {
+      const newDefaultSkins = action.payload;
 
+      for (const address in newDefaultSkins) {
+        const typedAddress = address as Address;
+        state.defaultSkin[typedAddress] = newDefaultSkins[typedAddress];
+      }
+    },
     resetLocalAnthologyStore: () => {
       return initialState;
     },
@@ -163,9 +245,14 @@ export const {
   addUserLocalAnthology,
   deleteUserLocalAnthology,
   addMemoirToUserLocalAnthology,
+  addManyMemoirsToUserLocalAnthology,
+  addAnthologiesToLocalMemory,
   deleteMemoirFromUserLocalAnthology,
   updateUserLocalAnthologyTitle,
   setDefaultSkin,
+  updateLocalUserContracts,
+  updateLocalContractTitles,
+  setManyDefaultSkin,
   resetLocalAnthologyStore,
 } = localAnthologySlice.actions;
 

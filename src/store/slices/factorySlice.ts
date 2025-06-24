@@ -103,7 +103,6 @@ export const factorySlice = createSlice({
     },
     updateUsers: (state, action: PayloadAction<Address[]>) => {
       const data = action.payload;
-      console.log("User added:", data);
       data.forEach((address) => {
         if (!state.users.includes(address)) {
           state.users.push(address);

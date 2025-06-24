@@ -14,7 +14,7 @@ import { AboutView } from "@views/factory/AboutView.tsx";
 import { IndexView } from "@views/IndexView.tsx";
 import { AnthologyShareView } from "@views/anthology/AnthologyShareView";
 import { ContextWagmiProvider } from "./components/Layout/ContextWagmiProvider";
-import { SettingsView } from "./views/Settings";
+import { SettingsView } from "./views/SettingsView";
 
 const router = createBrowserRouter([
   {
