@@ -4,6 +4,7 @@ import { IconPathSwitcher } from "@src/components/Layout/IconPathSwitcher";
 
 import { DownloadReduxStore } from "@src/components/Layout/DownloadReduxStore";
 import { CleanReduxStore } from "@src/components/Layout/CleanReduxStore";
+import { LoadReduxStore } from "@src/components/Layout/LoadReduxStore";
 
 export const SettingsView = () => {
   return (
@@ -20,6 +21,7 @@ export const SettingsView = () => {
       }}
     >
       <DownloadReduxStore />
+      <LoadReduxStore />
       <InstallPWAButton />
       <IconPathSwitcher />
       <NetworkSettings />

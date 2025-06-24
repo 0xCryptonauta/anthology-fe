@@ -39,15 +39,17 @@ export const DownloadReduxStore = () => {
     if (addDiscovery) {
       dataToDownload = {
         ...dataToDownload,
-        users,
-        userContracts,
-        contractsTitles,
+        discoveries: {
+          users,
+          userContracts,
+          contractsTitles,
+        },
       };
     }
     if (addLocal) {
       dataToDownload = {
         ...dataToDownload,
-        localAnthology,
+        localMemory: localAnthology,
       };
     }
 
