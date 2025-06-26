@@ -40,7 +40,7 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
       style={{
         padding: "20px 16px",
         display: "flex",
-        width: "100vh",
+        width: "95vw",
         flexDirection: "row",
         alignItems: "center",
         flexWrap: "wrap",
