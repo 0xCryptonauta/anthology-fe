@@ -88,9 +88,8 @@ export const AddMemoir = ({
 
     if (currentPath !== `contract/${contractAddr}`) {
       dispatch(updateCurrentPath(`contract/${contractAddr}`));
-      navigate("/");
     }
-
+    navigate("/");
     handleClose();
   };
 

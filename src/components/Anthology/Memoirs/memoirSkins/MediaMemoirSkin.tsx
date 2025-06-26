@@ -55,6 +55,7 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
       style={{
         padding: "20px 16px",
         display: "flex",
+        width: "100vh",
         flexDirection: "row",
         alignItems: "center",
         flexWrap: "wrap",

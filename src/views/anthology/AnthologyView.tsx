@@ -209,14 +209,13 @@ export const AnthologyView = () => {
 
   return (
     <div
-      //className="bg-dark"
+      className="bg-dark"
       style={{
         color: "white",
-
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "end",
+        justifyContent: "flex-start",
       }}
     >
       <div style={{ display: "flex", margin: "20px" }}>
