@@ -281,13 +281,12 @@ export const AnthologyView = () => {
         <div
           style={{
             display: "flex",
-            width: "100%",
           }}
         >
           <div
             style={{
               display: "flex",
-              width: "100%",
+
               flexDirection: "row",
               alignItems: "flex-start",
               flexWrap: "wrap",
@@ -315,9 +314,9 @@ export const AnthologyView = () => {
         <>
           {/* <AddMemoir contractAddr={contractAddr} /> */}
           <Memoirs
-            contractAddr={contractAddr}
-            skin={currentSkin}
+            anthologyAddr={contractAddr}
             order={currentOrder}
+            skin={currentSkin}
           />
         </>
       )}

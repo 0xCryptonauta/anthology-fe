@@ -1,6 +1,6 @@
 import { shortenAddress } from "@utils/shortenAddress";
 import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
-//import { syncUserContractsToStore } from "@src/store/utils/thunks";
+import { syncUserContractsToStore } from "@src/store/utils/thunks";
 import { Address, CurrentPaths } from "@src/types/common";
 import { parseContractsCategories } from "@src/utils/parseContractsCategories";
 import { DeployButton } from "./DeployButton";
@@ -62,9 +62,13 @@ export const UserContracts: React.FC<UserContractsProps> = ({
         <div style={{ display: "flex", alignItems: "center" }}>
           <span
             style={{ cursor: "pointer", marginRight: "15px" }}
-            onClick={
-              () => (userAddr === LOCAL_USER_ADDR ? {} : {}) //dispatch(syncUserContractsToStore(userAddr))
-            }
+            onClick={() => {
+              if (userAddr === currentUserAddr) {
+                dispatch(syncUserContractsToStore(userAddr));
+              } else if (userAddr === LOCAL_USER_ADDR) {
+                console.log("Do nothing");
+              }
+            }}
           >
             👤
           </span>{" "}

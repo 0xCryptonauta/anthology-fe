@@ -1,8 +1,5 @@
 import { shortenAddress } from "@utils/shortenAddress";
-import { AppDispatch } from "@store/redux";
 import { formatUnixTime } from "@utils/formatUnixTime";
-import { MemoirInterface } from "@store/slices/anthologySlice";
-import { ToastVariantType, useToast } from "@components/Layout/Toast";
 import { Address } from "@src/types/common";
 import { isValidURL } from "@src/utils/isValidURL";
 import {
@@ -20,50 +17,45 @@ import {
   TWITTER_REGEX,
   YOUTUBE_REGEX,
 } from "@src/utils/regex";
-import { LOCAL_USER_ADDR } from "@src/utils/constants";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
+import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
+import { OrderType } from "@src/components/Layout/OrderSelector";
+import { useOrderedMemoirs } from "@src/hooks/useOrderedMemoirs";
+import { useAccount } from "wagmi";
+import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 
 interface MediaMemoirSkinProps {
-  contractAddr: `0x${string}`;
-  currentUser: `0x${string}` | "";
-  anthologyOwner: `0x${string}`;
-  memoirs: MemoirInterface[];
-  orderedMemoirsIndexes: number[]; // renamed from orderMap for clarity
-  dispatch: AppDispatch;
+  anthologyAddr: Address;
+  order: OrderType;
   handleDelete: (object: HandleDeleteProps) => void;
 }
-
-interface CustomToastProps {
-  id: string;
-  title: string;
-  content: string;
-  delay?: number;
-  variant: ToastVariantType;
-}
-
 interface HandleDeleteProps {
-  contractAddr: Address;
+  anthologyAddr: Address;
   index: number;
-  dispatch: AppDispatch;
-  addToast: (toast: Omit<CustomToastProps, "id">) => void;
 }
 
 export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
-  contractAddr,
-  anthologyOwner,
-  memoirs,
-  orderedMemoirsIndexes,
-  currentUser,
-  dispatch,
+  anthologyAddr,
+  order,
   handleDelete,
 }) => {
-  const { addToast } = useToast();
+  const { memoirs, orderedMemoirsIndexes } = useOrderedMemoirs(
+    anthologyAddr,
+    order
+  );
+  const { address: currentUser } = useAccount();
+  const anthologyOwner = useAppSelector(
+    (state) => state.anthology[anthologyAddr]?.anthologyState?.owner
+  );
+
+  const dispatch = useAppDispatch();
 
   return (
     <div
       style={{
         padding: "20px 16px",
         display: "flex",
+        width: "100vh",
         flexDirection: "row",
         alignItems: "center",
         flexWrap: "wrap",
@@ -195,7 +187,7 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
             </div>
 
             {(currentUser === anthologyOwner ||
-              anthologyOwner === LOCAL_USER_ADDR ||
+              isLocalAnthology(anthologyAddr) ||
               currentUser === memoir.sender) && (
               <span
                 style={{
@@ -205,7 +197,10 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
                   bottom: "10px",
                 }}
                 onClick={() =>
-                  handleDelete({ contractAddr, index: i, dispatch, addToast })
+                  handleDelete({
+                    anthologyAddr,
+                    index: i,
+                  })
                 }
               >
                 ❌
