@@ -1,34 +1,34 @@
-import { useAppDispatch } from "@store/utils/hooks";
+//import { useAppDispatch } from "@store/utils/hooks";
 import { useAppSelector } from "@store/utils/hooks";
 import { OrderType } from "../../Layout/OrderSelector";
-import { SkinType } from "@src/types/common";
 import { useEffect } from "react";
 import { MemoirRenderer } from "./MemoirRenderer";
-import { LOCAL_USER_ADDR } from "@src/utils/constants";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 import { Loading } from "@src/components/Layout/Loading";
+import { Address, SkinType } from "@src/types/common";
+
 interface MemoirsProps {
-  contractAddr: `0x${string}`;
-  skin: SkinType;
+  anthologyAddr: Address;
   order: OrderType;
+  skin: SkinType;
 }
 
 export const Memoirs: React.FC<MemoirsProps> = ({
-  contractAddr,
-  skin,
+  anthologyAddr,
   order,
+  skin,
 }) => {
   const anthology = useAppSelector((state) =>
-    contractAddr.length !== 22 ? state.anthology[contractAddr] : undefined
+    !isLocalAnthology(anthologyAddr)
+      ? state.anthology[anthologyAddr]
+      : undefined
   );
 
   const localAnthology = useAppSelector(
-    (state) => state.localAnthology.anthologies[contractAddr]
+    (state) => state.localAnthology.anthologies[anthologyAddr]
   );
 
-  const { userAddr } = useAppSelector((state) => state.user);
-
-  const dispatch = useAppDispatch();
+  //const dispatch = useAppDispatch();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -41,7 +41,7 @@ export const Memoirs: React.FC<MemoirsProps> = ({
         padding: "5px",
         borderRadius: "7px",
         margin: "3px",
-        width: "95%",
+        width: "100%",
         display: "flex",
         flexWrap: "wrap",
         alignItems: "center",
@@ -63,26 +63,18 @@ export const Memoirs: React.FC<MemoirsProps> = ({
           <Loading />
         </div>
       )}
-      {anthology && !isLocalAnthology(contractAddr) && (
+      {anthology && !isLocalAnthology(anthologyAddr) && (
         <MemoirRenderer
-          anthologySkin={skin}
+          anthologyAddr={anthologyAddr}
           order={order}
-          contractAddr={contractAddr}
-          anthologyOwner={anthology.anthologyState.owner}
-          memoirs={anthology.memoirs}
-          currentUser={userAddr}
-          dispatch={dispatch}
+          skin={skin}
         />
       )}
-      {isLocalAnthology(contractAddr) && (
+      {isLocalAnthology(anthologyAddr) && (
         <MemoirRenderer
-          anthologySkin={skin}
+          anthologyAddr={anthologyAddr}
           order={order}
-          contractAddr={contractAddr}
-          anthologyOwner={LOCAL_USER_ADDR}
-          memoirs={localAnthology}
-          currentUser={userAddr}
-          dispatch={dispatch}
+          skin={skin}
         />
       )}
     </div>

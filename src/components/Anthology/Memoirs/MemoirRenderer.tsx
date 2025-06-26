@@ -1,13 +1,8 @@
-import { orderMemoirIndexes } from "@src/utils/orderMemoirs";
 import { OrderType } from "@src/components/Layout/OrderSelector";
-import {
-  MemoirInterface,
-  removeOneFromMemoirs,
-} from "@src/store/slices/anthologySlice";
-import { AppDispatch } from "@src/store/redux";
-import { SkinType } from "@src/types/common";
+import { removeOneFromMemoirs } from "@src/store/slices/anthologySlice";
+import { Address, SkinType } from "@src/types/common";
 import { writeAnthology } from "@src/contract-functions/anthologyFunctions";
-import { ToastVariantType } from "@src/components/Layout/Toast";
+import { useToast } from "@src/components/Layout/Toast";
 import {
   MediaMemoirSkin,
   JsonMemoirSkin,
@@ -17,60 +12,41 @@ import {
 } from "./memoirSkins";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 import { deleteMemoirFromUserLocalAnthology } from "@src/store/slices/localAnthologySlice";
-import { useMemo } from "react";
+import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 
 interface RenderMemoirsProps {
-  anthologySkin: SkinType;
   order: OrderType;
-  anthologyOwner: `0x${string}`;
-  memoirs: MemoirInterface[];
-  contractAddr: `0x${string}`;
-  currentUser: `0x${string}` | "";
-  dispatch: AppDispatch;
+  anthologyAddr: Address;
+  skin: SkinType;
 }
 
 export const MemoirRenderer: React.FC<RenderMemoirsProps> = ({
-  anthologySkin,
   order,
-  anthologyOwner,
-  memoirs,
-  contractAddr,
-  currentUser,
-  dispatch,
+  anthologyAddr,
+  skin,
 }) => {
-  const orderedMemoirsIndexes = useMemo(
-    () =>
-      orderMemoirIndexes({
-        memoirs,
-        order,
-      }),
-    [memoirs, order]
+  const dispatch = useAppDispatch();
+
+  const { addToast } = useToast();
+
+  const memoirs = useAppSelector((state) =>
+    isLocalAnthology(anthologyAddr)
+      ? state.localAnthology.anthologies[anthologyAddr]
+      : state.anthology[anthologyAddr].memoirs
   );
 
   const handleDelete = async ({
-    contractAddr,
+    anthologyAddr,
     index,
-    dispatch,
-    addToast,
   }: {
-    contractAddr: `0x${string}`;
+    anthologyAddr: Address;
     index: number;
-    dispatch: AppDispatch;
-    addToast: ({
-      title,
-      content,
-      variant,
-    }: {
-      title: string;
-      content: string;
-      variant: ToastVariantType;
-    }) => void;
   }) => {
-    if (isLocalAnthology(contractAddr)) {
+    if (isLocalAnthology(anthologyAddr)) {
       try {
         dispatch(
           deleteMemoirFromUserLocalAnthology({
-            contract: contractAddr,
+            contract: anthologyAddr,
             memoir: memoirs[index],
           })
         );
@@ -89,13 +65,13 @@ export const MemoirRenderer: React.FC<RenderMemoirsProps> = ({
       }
     } else {
       try {
-        const txHash = await writeAnthology(contractAddr, "deleteMemoir", [
+        const txHash = await writeAnthology(anthologyAddr, "deleteMemoir", [
           index,
         ]);
         console.log("Deleting TxHash:", txHash);
         dispatch(
           removeOneFromMemoirs({
-            contract: contractAddr,
+            contract: anthologyAddr,
             memoirIndex: index,
           })
         );
@@ -118,66 +94,46 @@ export const MemoirRenderer: React.FC<RenderMemoirsProps> = ({
   };
 
   try {
-    switch (anthologySkin) {
+    switch (skin) {
       case "json":
-        return (
-          <JsonMemoirSkin
-            memoirs={memoirs}
-            orderedMemoirsIndexes={orderedMemoirsIndexes}
-          />
-        ); //RenderJsonMemoirs({ memoirs });
+        return <JsonMemoirSkin anthologyAddr={anthologyAddr} order={order} />;
       case "media":
         return (
           <MediaMemoirSkin
-            contractAddr={contractAddr}
-            anthologyOwner={anthologyOwner}
-            memoirs={memoirs}
-            orderedMemoirsIndexes={orderedMemoirsIndexes}
-            currentUser={currentUser}
-            dispatch={dispatch}
+            anthologyAddr={anthologyAddr}
+            order={order}
             handleDelete={handleDelete}
           />
         );
       case "text":
         return (
           <TextMemoirSkin
-            contractAddr={contractAddr}
-            anthologyOwner={anthologyOwner}
-            memoirs={memoirs}
-            orderedMemoirsIndexes={orderedMemoirsIndexes}
-            currentUser={currentUser}
-            dispatch={dispatch}
+            anthologyAddr={anthologyAddr}
+            order={order}
             handleDelete={handleDelete}
           />
         );
       case "list":
         return (
           <ListMemoirSkin
-            memoirs={memoirs}
-            orderedMemoirsIndexes={orderedMemoirsIndexes}
+            anthologyAddr={anthologyAddr}
+            order={order}
+            handleDelete={handleDelete}
           />
         );
 
       case "playlist":
         return (
-          <PlaylistMemoirSkin
-            memoirs={memoirs}
-            orderedMemoirsIndexes={orderedMemoirsIndexes}
-          />
+          <PlaylistMemoirSkin anthologyAddr={anthologyAddr} order={order} />
         );
       default:
         return (
           <MediaMemoirSkin
-            contractAddr={contractAddr}
-            anthologyOwner={anthologyOwner}
-            memoirs={memoirs}
-            orderedMemoirsIndexes={orderedMemoirsIndexes}
-            currentUser={currentUser}
-            dispatch={dispatch}
+            anthologyAddr={anthologyAddr}
+            order={order}
             handleDelete={handleDelete}
           />
         );
-      //throw new Error(`Unsupported skin type: ${memoirSkin}`);
     }
   } catch (error) {
     console.error("Error rendering RenderMemoirs:", error);

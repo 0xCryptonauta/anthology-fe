@@ -72,8 +72,11 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Cleanup on unmount
   useEffect(() => {
+    const currentTimeouts = timeouts.current;
     return () => {
-      timeouts.current.forEach((timeout) => clearTimeout(timeout));
+      Object.values(currentTimeouts).forEach((timeout) =>
+        clearTimeout(timeout)
+      );
     };
   }, []);
 
@@ -83,7 +86,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
       <ToastContainer
         position="top-end"
         className="p-3"
-        style={{ zIndex: 1050 }}
+        style={{ position: "fixed", top: 0, right: 0, zIndex: 1050 }}
       >
         {toasts.map((toast) => (
           <BootstrapToast

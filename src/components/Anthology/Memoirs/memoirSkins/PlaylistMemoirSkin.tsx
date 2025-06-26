@@ -1,14 +1,22 @@
 import { MemoirInterface } from "@src/store/slices/anthologySlice";
 import { YOUTUBE_REGEX } from "@src/utils/regex";
 import { ListMemoirSkin } from "./ListMemoirSkin";
+import { useOrderedMemoirs } from "@src/hooks/useOrderedMemoirs";
+import { OrderType } from "@src/components/Layout/OrderSelector";
+import { Address } from "@src/types/common";
 
 export const PlaylistMemoirSkin = ({
-  memoirs,
-  orderedMemoirsIndexes,
+  anthologyAddr,
+  order,
 }: {
-  memoirs: MemoirInterface[];
-  orderedMemoirsIndexes: number[];
+  anthologyAddr: Address;
+  order: OrderType;
 }) => {
+  const { memoirs, orderedMemoirsIndexes } = useOrderedMemoirs(
+    anthologyAddr,
+    order
+  );
+
   const extractYoutubeIds = (videoLinks: MemoirInterface[]) => {
     return videoLinks.map((vlink) => {
       const match = vlink.content.match(YOUTUBE_REGEX);
@@ -51,10 +59,7 @@ export const PlaylistMemoirSkin = ({
       <div style={{ display: "flex", justifyContent: "center", color: "red" }}>
         Youtube videos not found
       </div>
-      <ListMemoirSkin
-        memoirs={memoirs}
-        orderedMemoirsIndexes={orderedMemoirsIndexes}
-      />
+      <ListMemoirSkin anthologyAddr={anthologyAddr} order={order} />
     </div>
   );
 };

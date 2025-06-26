@@ -1,12 +1,21 @@
-import { MemoirInterface } from "@src/store/slices/anthologySlice";
+import { OrderType } from "@src/components/Layout/OrderSelector";
+import { useOrderedMemoirs } from "@src/hooks/useOrderedMemoirs";
+import { Address } from "@src/types/common";
 
 export const JsonMemoirSkin = ({
-  memoirs,
-  orderedMemoirsIndexes,
+  anthologyAddr,
+  order,
 }: {
-  memoirs: MemoirInterface[];
-  orderedMemoirsIndexes: number[];
+  anthologyAddr: Address;
+  order: OrderType;
+  //memoirs: MemoirInterface[];
+  //orderedMemoirsIndexes: number[];
 }) => {
+  const { memoirs, orderedMemoirsIndexes } = useOrderedMemoirs(
+    anthologyAddr,
+    order
+  );
+
   return (
     <div
       style={{
