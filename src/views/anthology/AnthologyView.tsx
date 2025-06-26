@@ -209,13 +209,14 @@ export const AnthologyView = () => {
 
   return (
     <div
-      className="bg-dark"
+      //className="bg-dark"
       style={{
         color: "white",
+
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "flex-start",
+        justifyContent: "end",
       }}
     >
       <div style={{ display: "flex", margin: "20px" }}>
@@ -281,13 +282,12 @@ export const AnthologyView = () => {
         <div
           style={{
             display: "flex",
-            width: "100%",
           }}
         >
           <div
             style={{
               display: "flex",
-              width: "100%",
+
               flexDirection: "row",
               alignItems: "flex-start",
               flexWrap: "wrap",
@@ -315,9 +315,9 @@ export const AnthologyView = () => {
         <>
           {/* <AddMemoir contractAddr={contractAddr} /> */}
           <Memoirs
-            contractAddr={contractAddr}
-            skin={currentSkin}
+            anthologyAddr={contractAddr}
             order={currentOrder}
+            skin={currentSkin}
           />
         </>
       )}

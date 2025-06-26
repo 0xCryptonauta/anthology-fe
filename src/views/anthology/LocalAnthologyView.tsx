@@ -141,9 +141,9 @@ export const LocalAnthologyView = () => {
         <>
           {/* <AddMemoir contractAddr={contractAddr} /> */}
           <Memoirs
-            contractAddr={contractAddr}
-            skin={currentSkin}
+            anthologyAddr={contractAddr}
             order={currentOrder}
+            skin={currentSkin}
           />
         </>
       )}

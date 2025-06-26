@@ -1,57 +1,59 @@
 import { shortenAddress } from "@utils/shortenAddress";
-import { AppDispatch } from "@store/redux";
 import { formatUnixTime } from "@utils/formatUnixTime";
-import { MemoirInterface } from "@store/slices/anthologySlice";
-import { ToastVariantType, useToast } from "@components/Layout/Toast";
 import { Address } from "@src/types/common";
 import { isValidURL } from "@src/utils/isValidURL";
-import { LOCAL_USER_ADDR } from "@src/utils/constants";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
+import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
+import { OrderType } from "@src/components/Layout/OrderSelector";
+import { useOrderedMemoirs } from "@src/hooks/useOrderedMemoirs";
+import { useAccount } from "wagmi";
+import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 
 interface TextMemoirSkinProps {
-  contractAddr: `0x${string}`;
-  currentUser: `0x${string}` | "";
-  anthologyOwner: `0x${string}`;
-  memoirs: MemoirInterface[];
-  orderedMemoirsIndexes: number[];
-  dispatch: AppDispatch;
+  anthologyAddr: Address;
+  order: OrderType;
   handleDelete: (object: HandleDeleteProps) => void;
 }
-
-interface CustomToastProps {
-  id: string;
-  title: string;
-  content: string;
-  delay?: number;
-  variant: ToastVariantType;
-}
-
 interface HandleDeleteProps {
-  contractAddr: Address;
+  anthologyAddr: Address;
   index: number;
-  dispatch: AppDispatch;
-  addToast: (toast: Omit<CustomToastProps, "id">) => void;
 }
 
 export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
-  contractAddr,
-  anthologyOwner,
-  memoirs,
-  orderedMemoirsIndexes,
-  currentUser,
-  dispatch,
+  anthologyAddr,
+  order,
   handleDelete,
 }) => {
-  const { addToast } = useToast();
+  const { memoirs, orderedMemoirsIndexes } = useOrderedMemoirs(
+    anthologyAddr,
+    order
+  );
+  const { address: currentUser } = useAccount();
+  const anthologyOwner = useAppSelector(
+    (state) => state.anthology[anthologyAddr]?.anthologyState?.owner
+  );
+
+  const dispatch = useAppDispatch();
 
   return (
-    <>
+    <div
+      style={{
+        padding: "20px 16px",
+        display: "flex",
+        width: "100vh",
+        flexDirection: "row",
+        alignItems: "center",
+        flexWrap: "wrap",
+        justifyContent: "space-around",
+        color: "black",
+      }}
+    >
       {orderedMemoirsIndexes.map((i) => {
         const memoir = memoirs[i];
 
         const isDeletable =
           currentUser === anthologyOwner ||
-          anthologyOwner === LOCAL_USER_ADDR ||
+          isLocalAnthology(anthologyAddr) ||
           currentUser === memoir.sender;
 
         return (
@@ -65,7 +67,7 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
               borderRadius: "8px",
               backgroundColor: "#f9f9f9",
               padding: "12px",
-              margin: "15px 0px",
+              margin: "15px 1px",
               width: "360px",
               position: "relative",
               boxShadow: "0 1px 4px rgba(0, 0, 0, 0.05)",
@@ -146,7 +148,10 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
                   color: "#cc0000",
                 }}
                 onClick={() =>
-                  handleDelete({ contractAddr, index: i, dispatch, addToast })
+                  handleDelete({
+                    anthologyAddr,
+                    index: i,
+                  })
                 }
               >
                 ❌
@@ -155,6 +160,6 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
           </div>
         );
       })}
-    </>
+    </div>
   );
 };
