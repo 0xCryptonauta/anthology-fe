@@ -8,21 +8,16 @@ import { OrderType } from "@src/components/Layout/OrderSelector";
 import { useOrderedMemoirs } from "@src/hooks/useOrderedMemoirs";
 import { useAccount } from "wagmi";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
+import { DeleteMemoir } from "../../DeleteMemoir";
 
 interface TextMemoirSkinProps {
   anthologyAddr: Address;
   order: OrderType;
-  handleDelete: (object: HandleDeleteProps) => void;
-}
-interface HandleDeleteProps {
-  anthologyAddr: Address;
-  index: number;
 }
 
 export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
   anthologyAddr,
   order,
-  handleDelete,
 }) => {
   const { memoirs, orderedMemoirsIndexes } = useOrderedMemoirs(
     anthologyAddr,
@@ -137,7 +132,7 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
 
             {/* Delete Button */}
             {isDeletable && (
-              <span
+              <div
                 title="Delete memoir"
                 style={{
                   cursor: "pointer",
@@ -147,15 +142,15 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
                   fontSize: "16px",
                   color: "#cc0000",
                 }}
-                onClick={() =>
+                /* onClick={() =>
                   handleDelete({
                     anthologyAddr,
                     index: i,
                   })
-                }
+                } */
               >
-                ❌
-              </span>
+                <DeleteMemoir anthologyAddr={anthologyAddr} index={i} />
+              </div>
             )}
           </div>
         );
