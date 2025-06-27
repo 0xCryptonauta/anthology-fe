@@ -4,21 +4,17 @@ import { useAppSelector } from "@src/store/utils/hooks";
 import { Address } from "@src/types/common";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 import { useAccount } from "wagmi";
+import { DeleteMemoir } from "../../DeleteMemoir";
 
-interface HandleDeleteProps {
-  anthologyAddr: Address;
-  index: number;
-}
 interface ListMemoirSkinProps {
   anthologyAddr: Address;
   order: OrderType;
-  handleDelete: (object: HandleDeleteProps) => void;
 }
 
 export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
   anthologyAddr,
   order,
-  handleDelete,
+  //handleDelete,
 }) => {
   const { memoirs, orderedMemoirsIndexes } = useOrderedMemoirs(
     anthologyAddr,
@@ -45,7 +41,7 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
     >
       {orderedMemoirsIndexes.map((i, index) => {
         const { title, content } = memoirs[i];
-        console.log("me", memoirs[i]);
+
         return (
           <div
             key={i}
@@ -89,22 +85,22 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
             {(currentUser === anthologyOwner ||
               isLocalAnthology(anthologyAddr) ||
               currentUser === memoirs[i].sender) && (
-              <span
+              <div
                 style={{
                   cursor: "pointer",
                   position: "absolute",
                   right: "10px",
                   top: "10px",
                 }}
-                onClick={() =>
+                /*  onClick={() =>
                   handleDelete({
                     anthologyAddr,
                     index: i,
                   })
-                }
+                } */
               >
-                ❌
-              </span>
+                <DeleteMemoir anthologyAddr={anthologyAddr} index={i} />
+              </div>
             )}
           </div>
         );
