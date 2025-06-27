@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { SidePanel } from "./SidePanel";
 import { WalletConnector } from "./WalletConnector";
 import { useAccount } from "wagmi";
-import { LOCAL_ANTOLOGY_PATH } from "@src/utils/constants";
+import { LOCAL_USER_PATH } from "@src/utils/constants";
 import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 import { CurrentPaths } from "@src/types/common";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
@@ -34,7 +34,7 @@ export const Header = () => {
             if (isConnected && !isIconToLocal) {
               handleOnClick(`user/${address}`);
             } else {
-              handleOnClick(LOCAL_ANTOLOGY_PATH);
+              handleOnClick(LOCAL_USER_PATH);
             }
           }}
         >

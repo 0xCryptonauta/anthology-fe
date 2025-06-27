@@ -4,7 +4,7 @@ import { Modal } from "./Modal";
 
 import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
 import { useAccount } from "wagmi";
-import { LOCAL_ANTOLOGY_PATH } from "@src/utils/constants";
+import { LOCAL_USER_PATH } from "@src/utils/constants";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
 import { CurrentPaths } from "@src/types/common";
 
@@ -78,7 +78,7 @@ export const SidePanel = () => {
             if (isConnected && !isIconToLocal) {
               handleOnClick(`user/${address}`);
             } else {
-              handleOnClick(LOCAL_ANTOLOGY_PATH);
+              handleOnClick(LOCAL_USER_PATH);
             }
           }}
           style={{ width: "100%", display: "flex", alignItems: "center" }}
@@ -137,7 +137,7 @@ export const SidePanel = () => {
           )}
           <Link
             to="/"
-            onClick={() => handleOnClick(LOCAL_ANTOLOGY_PATH)}
+            onClick={() => handleOnClick(LOCAL_USER_PATH)}
             style={{
               margin: "10px 0px",
               color: "#ff8383",

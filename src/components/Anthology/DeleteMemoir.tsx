@@ -88,8 +88,6 @@ export const DeleteMemoir: React.FC<DeleteMemoirProps> = ({
     }
   };
 
-  console.log("it does render every time");
-
   return (
     <Modal
       placement="bottom"
@@ -105,7 +103,7 @@ export const DeleteMemoir: React.FC<DeleteMemoirProps> = ({
           marginTop: "10px",
         }}
       >
-        <span style={{ fontSize: "18px", fontWeight: "bold" }}>
+        <span style={{ fontSize: "16px", fontWeight: "bold" }}>
           Are you sure you want to delete:
         </span>
         <br />
@@ -114,9 +112,11 @@ export const DeleteMemoir: React.FC<DeleteMemoirProps> = ({
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            //border: "1px solid black",
-            //borderRadius: "7px",
+            minWidth: "250px",
+            border: "1px solid black",
+            borderRadius: "7px",
             padding: "5px",
+            margin: "10px 0px",
           }}
         >
           <span style={{ fontWeight: "bold", textAlign: "center" }}>

@@ -10,11 +10,12 @@ import { Offcanvas } from "react-bootstrap";
 type ModalProps = {
   placement?: "top" | "bottom" | "end";
   children: React.ReactNode;
-  trigger: ReactElement;
+  trigger?: ReactElement;
   header?: ReactElement;
   show?: boolean;
   onHide?: () => void;
   variant?: "modal" | "sidepanel";
+  transparent?: boolean;
 };
 
 export const Modal = ({
@@ -25,14 +26,15 @@ export const Modal = ({
   show: externalShow,
   onHide,
   variant = "modal",
+  transparent = false,
 }: ModalProps) => {
   const [internalShow, setInternalShow] = useState(false);
   const show = externalShow ?? internalShow;
 
-  const handleClose = () => {
+  const handleClose = React.useCallback(() => {
     if (onHide) onHide();
     else setInternalShow(false);
-  };
+  }, [onHide]);
 
   const handleShow = () => {
     if (!onHide) setInternalShow(true);
@@ -74,7 +76,7 @@ export const Modal = ({
       document.removeEventListener("mousedown", handleMouseDown);
       document.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [onHide]);
+  }, [onHide, handleClose]);
 
   const isSidePanel = variant === "sidepanel";
   const resolvedPlacement =
@@ -86,14 +88,16 @@ export const Modal = ({
 
   return (
     <>
-      <div style={{ cursor: "pointer" }}>
-        {cloneElement(trigger, {
-          onClick: (e: React.MouseEvent) => {
-            trigger.props.onClick?.(e);
-            handleShow();
-          },
-        })}
-      </div>
+      {trigger && (
+        <div style={{ cursor: "pointer" }}>
+          {cloneElement(trigger, {
+            onClick: (e: React.MouseEvent) => {
+              trigger.props.onClick?.(e);
+              handleShow();
+            },
+          })}
+        </div>
+      )}
 
       <Offcanvas
         show={show}
@@ -105,6 +109,7 @@ export const Modal = ({
           width: isSidePanel ? "200px" : undefined,
           height: !isSidePanel && placement !== "end" ? "500px" : undefined,
           backgroundColor: "transparent",
+          border: "unset",
           display: "flex",
           flexDirection: isSidePanel ? "column" : "row",
           alignItems: isSidePanel ? "center" : "flex-end",
@@ -118,7 +123,7 @@ export const Modal = ({
 
         <Offcanvas.Body
           style={{
-            display: "flex",
+            display: transparent ? "unset" : "flex",
             width: "100%",
             alignItems: "center",
             flexDirection: "column",
@@ -129,14 +134,15 @@ export const Modal = ({
             ref={offcanvasRef}
             onClick={(e) => e.stopPropagation()}
             style={{
-              backgroundColor: isSidePanel ? "transparent" : "white",
-              border: isSidePanel ? "none" : "1px solid black",
+              backgroundColor:
+                isSidePanel || transparent ? "transparent" : "white",
+              border: isSidePanel || transparent ? "none" : "1px solid black",
               borderRadius: "7px",
               padding: "10px",
               margin: isSidePanel ? "0px" : "3px",
-              width: "100%",
+              width: transparent ? "unset" : "100%",
               height: isSidePanel ? "100%" : "unset",
-              maxWidth: isSidePanel ? "100%" : "300px",
+              maxWidth: isSidePanel || transparent ? "100%" : "300px",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
