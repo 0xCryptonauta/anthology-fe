@@ -6,7 +6,7 @@ import {
   validateJsonContentType,
 } from "@src/utils/validateJsonContentType";
 import { useAppDispatch } from "@src/store/utils/hooks";
-import { LOCAL_ANTOLOGY_PATH, LOCAL_USER_ADDR } from "@src/utils/constants";
+import { LOCAL_USER_PATH, LOCAL_USER_ADDR } from "@src/utils/constants";
 import {
   addAnthologiesToLocalMemory,
   addManyMemoirsToUserLocalAnthology,
@@ -351,7 +351,7 @@ export const LoadReduxStore = () => {
 
                 if (hasLocal) {
                   addMemoryToMemory();
-                  newPath = LOCAL_ANTOLOGY_PATH;
+                  newPath = LOCAL_USER_PATH;
                 }
 
                 addToast({

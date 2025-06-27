@@ -1,6 +1,6 @@
 import { Address } from "@src/types/common";
 
-export const LOCAL_ANTOLOGY_PATH = "user/local";
+export const LOCAL_USER_PATH = "user/local";
 export const LOCAL_USER_ADDR =
   "0x0000000000000000000000000000000000000000" as Address;
 

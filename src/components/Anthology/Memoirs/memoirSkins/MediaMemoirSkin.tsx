@@ -23,21 +23,16 @@ import { OrderType } from "@src/components/Layout/OrderSelector";
 import { useOrderedMemoirs } from "@src/hooks/useOrderedMemoirs";
 import { useAccount } from "wagmi";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
+import { DeleteMemoir } from "../../DeleteMemoir";
 
 interface MediaMemoirSkinProps {
   anthologyAddr: Address;
   order: OrderType;
-  handleDelete: (object: HandleDeleteProps) => void;
-}
-interface HandleDeleteProps {
-  anthologyAddr: Address;
-  index: number;
 }
 
 export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
   anthologyAddr,
   order,
-  handleDelete,
 }) => {
   const { memoirs, orderedMemoirsIndexes } = useOrderedMemoirs(
     anthologyAddr,
@@ -189,22 +184,22 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
             {(currentUser === anthologyOwner ||
               isLocalAnthology(anthologyAddr) ||
               currentUser === memoir.sender) && (
-              <span
+              <div
                 style={{
                   cursor: "pointer",
                   position: "absolute",
                   right: "10px",
                   bottom: "10px",
                 }}
-                onClick={() =>
+                /* onClick={() =>
                   handleDelete({
                     anthologyAddr,
                     index: i,
                   })
-                }
+                } */
               >
-                ❌
-              </span>
+                <DeleteMemoir anthologyAddr={anthologyAddr} index={i} />
+              </div>
             )}
           </div>
         );
