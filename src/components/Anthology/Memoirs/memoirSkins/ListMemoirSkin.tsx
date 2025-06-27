@@ -5,6 +5,9 @@ import { Address } from "@src/types/common";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 import { useAccount } from "wagmi";
 import { DeleteMemoir } from "../../DeleteMemoir";
+import { Modal } from "@src/components/Layout/Modal";
+import { useState } from "react";
+import { Mediaskin } from "./MediaSkin";
 
 interface ListMemoirSkinProps {
   anthologyAddr: Address;
@@ -20,6 +23,8 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
     anthologyAddr,
     order
   );
+  const [selectedMemoirIndex, setSelectedMemoirIndex] = useState(-1);
+  const handleClose = () => setSelectedMemoirIndex(-1);
 
   const { address: currentUser } = useAccount();
   const anthologyOwner = useAppSelector(
@@ -78,7 +83,9 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
                 color: "#555",
                 fontSize: "0.9rem",
                 wordBreak: "break-word",
+                cursor: "pointer",
               }}
+              onClick={() => setSelectedMemoirIndex(i)}
             >
               {content}
             </p>
@@ -102,6 +109,13 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
                 <DeleteMemoir anthologyAddr={anthologyAddr} index={i} />
               </div>
             )}
+            <Modal
+              show={selectedMemoirIndex === i}
+              onHide={handleClose}
+              transparent
+            >
+              <Mediaskin memoir={memoirs[i]} />
+            </Modal>
           </div>
         );
       })}

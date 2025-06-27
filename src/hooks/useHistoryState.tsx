@@ -1,7 +1,7 @@
 import { updateCurrentPath } from "@src/store/slices/userSlice";
 import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 /* import { CurrentPaths } from "@src/types/common";
-import { LOCAL_ANTOLOGY_PATH } from "@src/utils/constants"; */
+import { LOCAL_USER_PATH } from "@src/utils/constants"; */
 import { useEffect } from "react";
 import { useAccount } from "wagmi";
 
@@ -12,7 +12,7 @@ export const useHistoryState = () => {
 
   const dispatch = useAppDispatch();
 
-  /*   let defaultCurrentPath = LOCAL_ANTOLOGY_PATH as CurrentPaths;
+  /*   let defaultCurrentPath = LOCAL_USER_PATH as CurrentPaths;
 
   if (isConnected && !isIconToLocal) {
     defaultCurrentPath = `user/${address}`;

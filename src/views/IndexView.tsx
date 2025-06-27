@@ -4,7 +4,7 @@ import { AnthologyView } from "./anthology/AnthologyView";
 import { Address } from "@src/types/common";
 import { UserView } from "./factory/UserView";
 import { useHistoryState } from "@src/hooks/useHistoryState";
-import { LOCAL_ANTOLOGY_PATH } from "@src/utils/constants";
+import { LOCAL_USER_PATH } from "@src/utils/constants";
 import { LocalUserView } from "./factory/LocalUserView";
 import { LocalAnthologyView } from "./anthology/LocalAnthologyView";
 import { DiscoverView } from "./factory/DiscoverView";
@@ -22,7 +22,7 @@ export const IndexView = () => {
         <DiscoverView />
       ) : currentPath === `user/${userAddr}` ? (
         <CurrentUserView /> //add local memoirs?
-      ) : currentPath === LOCAL_ANTOLOGY_PATH ? (
+      ) : currentPath === LOCAL_USER_PATH ? (
         <LocalUserView />
       ) : currentPath.startsWith(`user/`) ? (
         <UserView userAddr={currentPath.split("/")[1] as Address} />
