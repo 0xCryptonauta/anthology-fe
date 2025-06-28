@@ -66,11 +66,38 @@ export default defineConfig({
       },
       includeAssets: ["/IB_icon.png", "/pwa-192x192.png", "/pwa-512x512.png"],
       manifest: manifest as ManifestOptions,
+
       workbox: {
+        cleanupOutdatedCaches: true,
+        clientsClaim: true,
+        skipWaiting: true,
+        globPatterns: ["**/*.{js,css,html,woff2,webp}"],
         runtimeCaching: [
           {
-            urlPattern: /robots\.txt$/,
-            handler: "NetworkOnly",
+            urlPattern: ({ request }) =>
+              request.destination === "script" ||
+              request.destination === "style" ||
+              request.destination === "font" ||
+              request.destination === "image",
+            handler: "CacheFirst",
+            options: {
+              cacheName: "static-assets",
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+              },
+              cacheableResponse: {
+                statuses: [0, 200],
+              },
+            },
+          },
+          {
+            urlPattern: ({ url }) =>
+              url.pathname === "/" || url.pathname.endsWith("index.html"),
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "html-cache",
+            },
           },
         ],
       },

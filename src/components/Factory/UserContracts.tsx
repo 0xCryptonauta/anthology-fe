@@ -90,11 +90,67 @@ export const UserContracts: React.FC<UserContractsProps> = ({
             .sort(([categoryA], [categoryB]) =>
               categoryA.localeCompare(categoryB)
             )
-            .map(([category, { items, subcategories }], index, arr) => (
-              <div key={category}>
-                <h3 className="text-lg font-semibold">{category}</h3>
-                <ul className="ml-4">
-                  {items.map(({ address, title }) => (
+            .map(([category, categoryData], index, arr) => {
+              const { items = [], subcategories = {} } = categoryData;
+
+              return (
+                <div key={category}>
+                  <h3 className="text-lg font-semibold">{category}</h3>
+                  <ul className="ml-4">
+                    {items
+                      .sort((a, b) => a.title.localeCompare(b.title))
+                      .map(({ address, title }) => (
+                        <li key={address}>
+                          <span
+                            style={{ cursor: "pointer" }}
+                            onClick={() => handleOnClick(`contract/${address}`)}
+                          >
+                            {title}
+                          </span>
+                        </li>
+                      ))}
+                  </ul>
+
+                  {Object.entries(subcategories)
+                    .sort(([a], [b]) => a.localeCompare(b))
+                    .map(([sub, subItems]) => (
+                      <div
+                        key={sub}
+                        className="ml-12"
+                        style={{ marginLeft: "1em" }}
+                      >
+                        <h5 className="text-md font-medium">{sub}</h5>
+                        <ul className="ml-12">
+                          {subItems
+                            .sort((a, b) => a.title.localeCompare(b.title))
+                            .map(({ address, title }) => (
+                              <li key={address}>
+                                <span
+                                  style={{ cursor: "pointer" }}
+                                  onClick={() =>
+                                    handleOnClick(`contract/${address}`)
+                                  }
+                                >
+                                  {title}
+                                </span>
+                              </li>
+                            ))}
+                        </ul>
+                      </div>
+                    ))}
+
+                  {index < arr.length - 1 && <hr className="my-2" />}
+                </div>
+              );
+            })}
+
+          {uncategorized.length > 0 && (
+            <div>
+              <h3 className="text-lg font-semibold">Other</h3>
+              <ul className="ml-4">
+                {uncategorized
+                  .sort((a, b) => a.title.localeCompare(b.title))
+                  .map(({ address, title }) => (
                     <li key={address}>
                       <span
                         style={{ cursor: "pointer" }}
@@ -102,53 +158,10 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                           handleOnClick(`contract/${address}`);
                         }}
                       >
-                        {title}
+                        {title.trim() ? title : shortenAddress(address, 12, 9)}
                       </span>
                     </li>
                   ))}
-                </ul>
-                {Object.entries(subcategories).map(([sub, subItems]) => (
-                  <div
-                    key={sub}
-                    className="ml-12"
-                    style={{ marginLeft: "1em" }}
-                  >
-                    <h5 className="text-md font-medium">{sub}</h5>
-                    <ul className="ml-12">
-                      {subItems.map(({ address, title }) => (
-                        <li key={address}>
-                          <span
-                            style={{ cursor: "pointer" }}
-                            onClick={() => {
-                              handleOnClick(`contract/${address}`);
-                            }}
-                          >
-                            {title}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-                {index < arr.length - 1 && <hr className="my-2" />}
-              </div>
-            ))}
-          {uncategorized.length > 0 && (
-            <div>
-              <h3 className="text-lg font-semibold">Other</h3>
-              <ul className="ml-4">
-                {uncategorized.map(({ address, title }) => (
-                  <li key={address}>
-                    <span
-                      style={{ cursor: "pointer" }}
-                      onClick={() => {
-                        handleOnClick(`contract/${address}`);
-                      }}
-                    >
-                      {title.trim() ? title : shortenAddress(address, 12, 9)}
-                    </span>
-                  </li>
-                ))}
               </ul>
             </div>
           )}

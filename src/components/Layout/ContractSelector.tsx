@@ -208,25 +208,27 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
         </ul>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
-        <label>Anthology Address: </label>
-        <input
-          type="text"
-          value={
-            selectedAddress
-              ? shortenAddress(selectedAddress, 10, 10)
-              : selectedAddress
-          }
-          readOnly
-          style={{ width: "100%", justifyItems: "center" }}
-        />
-      </div>
+      {selectedUser !== LOCAL_USER_ADDR && (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <label>Anthology Address: </label>
+          <input
+            type="text"
+            value={
+              selectedAddress
+                ? shortenAddress(selectedAddress, 10, 10)
+                : selectedAddress
+            }
+            readOnly
+            style={{ width: "100%", justifyItems: "center" }}
+          />
+        </div>
+      )}
     </div>
   );
 };

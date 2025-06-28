@@ -26,7 +26,7 @@ export const AddMemoir = ({
 }) => {
   const [anthologyTitle, setAnthologyTitle] = useState(title);
   const [anthologyContent, setAnthologyContent] = useState(content);
-  const [shouldFilterTracking, setShouldFilterTracking] = useState(false);
+  const [shouldFilterTracking, setShouldFilterTracking] = useState(true);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
 
