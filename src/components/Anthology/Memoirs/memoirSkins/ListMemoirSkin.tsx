@@ -85,7 +85,9 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
                 wordBreak: "break-word",
                 cursor: "pointer",
               }}
-              onClick={() => setSelectedMemoirIndex(i)}
+              onClick={() => {
+                setSelectedMemoirIndex(i);
+              }}
             >
               {content}
             </p>
@@ -113,6 +115,7 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
               show={selectedMemoirIndex === i}
               onHide={handleClose}
               transparent
+              stickToBottom
             >
               <Mediaskin memoir={memoirs[i]} />
             </Modal>

@@ -1,5 +1,3 @@
-import { shortenAddress } from "@utils/shortenAddress";
-import { formatUnixTime } from "@utils/formatUnixTime";
 import { isValidURL } from "@src/utils/isValidURL";
 import {
   TwitterEmbed,
@@ -16,8 +14,6 @@ import {
   TWITTER_REGEX,
   YOUTUBE_REGEX,
 } from "@src/utils/regex";
-import { updateCurrentPath } from "@src/store/slices/userSlice";
-import { useAppDispatch } from "@src/store/utils/hooks";
 import { MemoirInterface } from "@src/store/slices/anthologySlice";
 
 interface MediaSkinProps {
@@ -25,8 +21,6 @@ interface MediaSkinProps {
 }
 
 export const Mediaskin: React.FC<MediaSkinProps> = ({ memoir }) => {
-  const dispatch = useAppDispatch();
-
   const youtubeMatch = YOUTUBE_REGEX.exec(memoir.content);
   const spotifyMatch = SPOTIFY_REGEX.exec(memoir.content);
   const twitterMatch = TWITTER_REGEX.exec(memoir.content);
@@ -85,10 +79,11 @@ export const Mediaskin: React.FC<MediaSkinProps> = ({ memoir }) => {
     );
   };
 
+  const renderedContent = renderContent();
+
   return (
     <div
       style={{
-        padding: "20px 16px",
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
@@ -127,28 +122,10 @@ export const Mediaskin: React.FC<MediaSkinProps> = ({ memoir }) => {
             textAlign: "center",
             wordBreak: "break-word",
             marginBottom: "0.5rem",
+            minHeight: "100px",
           }}
         >
-          {renderContent()}
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            width: "300px",
-            flexDirection: "column",
-            alignItems: "center",
-            fontSize: "12px",
-            color: "#666",
-          }}
-        >
-          <span
-            style={{ cursor: "pointer" }}
-            onClick={() => dispatch(updateCurrentPath(`user/${memoir.sender}`))}
-          >
-            {shortenAddress(memoir.sender, 10, 8)}
-          </span>
-          <span>{formatUnixTime(Number(memoir.timestamp))}</span>
+          {renderedContent}
         </div>
       </div>
     </div>
