@@ -16,6 +16,7 @@ type ModalProps = {
   onHide?: () => void;
   variant?: "modal" | "sidepanel";
   transparent?: boolean;
+  stickToBottom?: boolean;
 };
 
 export const Modal = ({
@@ -27,6 +28,7 @@ export const Modal = ({
   onHide,
   variant = "modal",
   transparent = false,
+  stickToBottom = false,
 }: ModalProps) => {
   const [internalShow, setInternalShow] = useState(false);
   const show = externalShow ?? internalShow;
@@ -102,7 +104,7 @@ export const Modal = ({
       <Offcanvas
         show={show}
         onHide={handleClose}
-        placement={placement === "end" ? "end" : resolvedPlacement}
+        placement={stickToBottom ? "bottom" : resolvedPlacement}
         className={isSidePanel ? "bg-dark" : ""}
         data-bs-theme={isSidePanel ? "dark" : undefined}
         style={{
@@ -141,8 +143,9 @@ export const Modal = ({
               padding: "10px",
               margin: isSidePanel ? "0px" : "3px",
               width: transparent ? "unset" : "100%",
-              height: isSidePanel ? "100%" : "unset",
+              height: isSidePanel ? "90%" : "unset",
               maxWidth: isSidePanel || transparent ? "100%" : "300px",
+              maxHeight: "90vh",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",

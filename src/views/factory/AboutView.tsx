@@ -34,7 +34,7 @@ export const AboutView = () => {
               JSON.stringify(store.getState()).length / 1000;
             addToast({
               title: "Your memory size:",
-              content: currentStoreSize + " KB",
+              content: currentStoreSize.toFixed(2) + " KB",
               variant: "success",
             });
           }}

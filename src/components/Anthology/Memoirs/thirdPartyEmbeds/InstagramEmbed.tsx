@@ -1,3 +1,4 @@
+import { Loading } from "@src/components/Layout/Loading";
 import React, { useEffect, useRef, useState } from "react";
 
 interface InstagramEmbedProps {
@@ -125,7 +126,7 @@ const InstagramEmbed: React.FC<InstagramEmbedProps> = ({ postUrl }) => {
 
   return (
     <div ref={embedRef} style={containerStyle}>
-      {isLoading && <div style={spinnerStyle}>Loading...</div>}
+      {isLoading && <Loading />}
       {isInView && (
         <blockquote
           className="instagram-media"
@@ -141,18 +142,12 @@ const InstagramEmbed: React.FC<InstagramEmbedProps> = ({ postUrl }) => {
 // Styles
 const containerStyle: React.CSSProperties = {
   position: "relative",
-  borderRadius: "12px",
-  padding: "16px",
-  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+  //borderRadius: "12px",
+  padding: "3px",
+  //boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
   display: "flex",
   justifyContent: "center",
-  minHeight: "200px",
-};
-
-const spinnerStyle: React.CSSProperties = {
-  textAlign: "center",
-  padding: "16px",
-  color: "#888",
+  //minHeight: "200px",
 };
 
 const blockquoteStyle: React.CSSProperties = {

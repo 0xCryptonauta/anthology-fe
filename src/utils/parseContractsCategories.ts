@@ -1,10 +1,13 @@
-import { Categories, Contract } from "@src/components/Factory/UserContracts";
+import {
+  Categories,
+  MemoirContent,
+} from "@src/components/Factory/UserContracts";
 
 export const parseContractsCategories = (
-  contracts: Contract[]
-): { categories: Categories; uncategorized: Contract[] } => {
+  contracts: MemoirContent[]
+): { categories: Categories; uncategorized: MemoirContent[] } => {
   const categories: Categories = {};
-  const uncategorized: Contract[] = [];
+  const uncategorized: MemoirContent[] = [];
 
   contracts?.forEach(({ address, title, originalIndex }) => {
     if (!title.trim()) {
