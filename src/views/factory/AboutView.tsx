@@ -12,8 +12,11 @@ export const AboutView = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "space-around",
+        justifyContent: "center",
+        minHeight: "50vh",
+        padding: "2rem",
         flexWrap: "wrap",
+        gap: "1.5rem",
       }}
     >
       <span>Some description about this project</span>
