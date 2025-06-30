@@ -84,6 +84,7 @@ export const Mediaskin: React.FC<MediaSkinProps> = ({ memoir }) => {
   return (
     <div
       style={{
+        minWidth: "290px",
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
@@ -95,12 +96,15 @@ export const Mediaskin: React.FC<MediaSkinProps> = ({ memoir }) => {
       <div
         style={{
           width: "100%",
-          maxWidth: "340px",
+          maxWidth: "300px",
           padding: "12px",
-          margin: "15px 0px",
-          borderRadius: "8px",
-          backgroundColor: "#f9f9f9",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          //margin: "15px 0px",
+          //borderRadius: "8px",
+          //backgroundColor: "#f9f9f9",
+          //boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
           boxSizing: "border-box",
           position: "relative",
         }}
@@ -121,7 +125,6 @@ export const Mediaskin: React.FC<MediaSkinProps> = ({ memoir }) => {
           style={{
             textAlign: "center",
             wordBreak: "break-word",
-            marginBottom: "0.5rem",
             minHeight: "100px",
           }}
         >

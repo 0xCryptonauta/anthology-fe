@@ -1,5 +1,5 @@
-import { Loading } from "@src/components/Layout/Loading";
 import React, { useEffect, useRef, useState } from "react";
+import { Loading } from "@src/components/Layout/Loading";
 
 interface InstagramEmbedProps {
   postUrl: string;
@@ -20,18 +20,17 @@ const isInstagramReelOrPost = (url: string) =>
 
 const InstagramEmbed: React.FC<InstagramEmbedProps> = ({ postUrl }) => {
   const embedRef = useRef<HTMLDivElement>(null);
-  const scriptRef = useRef<HTMLScriptElement | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [isInView, setIsInView] = useState(false);
 
-  // Lazy loading with IntersectionObserver
+  // Lazy load with IntersectionObserver
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsInView(true);
-          observer.disconnect(); // Only trigger once
+          observer.disconnect();
         }
       },
       { threshold: 0.25 }
@@ -44,53 +43,61 @@ const InstagramEmbed: React.FC<InstagramEmbedProps> = ({ postUrl }) => {
     return () => observer.disconnect();
   }, []);
 
+  // Load Instagram embed script and render post
   useEffect(() => {
     if (!isInView || !isInstagramReelOrPost(postUrl)) return;
 
     setIsLoading(true);
-    const timeout = setTimeout(() => setHasError(true), 5000);
+    const timeout = setTimeout(() => {
+      setHasError(true);
+      setIsLoading(false);
+    }, 7000);
 
-    const isScriptPresent = !!document.querySelector(
-      'script[src="https://www.instagram.com/embed.js"]'
-    );
+    const embedInstagram = () => {
+      clearTimeout(timeout);
+      setIsLoading(false);
+      window.instgrm?.Embeds.process();
+    };
 
-    if (!window.instgrm && !isScriptPresent) {
+    const scriptSelector = 'script[src="https://www.instagram.com/embed.js"]';
+    const existingScript = document.querySelector(scriptSelector);
+
+    if (!window.instgrm && !existingScript) {
       const script = document.createElement("script");
       script.src = "https://www.instagram.com/embed.js";
       script.async = true;
-
-      script.onload = () => {
-        clearTimeout(timeout);
-        setIsLoading(false);
-        window.instgrm?.Embeds.process();
-      };
-
+      script.onload = embedInstagram;
       script.onerror = () => {
         clearTimeout(timeout);
         setHasError(true);
         setIsLoading(false);
       };
-
       document.body.appendChild(script);
-      scriptRef.current = script;
     } else {
-      clearTimeout(timeout);
-      setIsLoading(false);
-      window.instgrm?.Embeds.process();
+      embedInstagram();
     }
 
     return () => {
       clearTimeout(timeout);
-      const currentScript = scriptRef.current;
-      if (
-        currentScript &&
-        currentScript.parentNode &&
-        currentScript.parentNode.contains(currentScript)
-      ) {
-        currentScript.parentNode.removeChild(currentScript);
-      }
     };
   }, [isInView, postUrl]);
+
+  // Detect iframe load
+  useEffect(() => {
+    if (!isInView) return;
+
+    const checkIframeLoaded = () => {
+      const iframe = embedRef.current?.querySelector("iframe.instagram-media");
+      if (iframe) {
+        iframe.addEventListener("load", () => setIsLoading(false));
+        return () =>
+          iframe.removeEventListener("load", () => setIsLoading(false));
+      }
+    };
+
+    const delay = setTimeout(checkIframeLoaded, 500); // small delay to wait for iframe to appear
+    return () => clearTimeout(delay);
+  }, [isInView]);
 
   if (!isInstagramReelOrPost(postUrl)) {
     return (
@@ -127,14 +134,15 @@ const InstagramEmbed: React.FC<InstagramEmbedProps> = ({ postUrl }) => {
   return (
     <div ref={embedRef} style={containerStyle}>
       {isLoading && <Loading />}
-      {isInView && (
-        <blockquote
-          className="instagram-media"
-          data-instgrm-permalink={postUrl}
-          data-instgrm-version="14"
-          style={blockquoteStyle}
-        ></blockquote>
-      )}
+      <blockquote
+        className="instagram-media"
+        data-instgrm-permalink={postUrl}
+        data-instgrm-version="14"
+        style={{
+          ...blockquoteStyle,
+          ...(isLoading ? { display: "none" } : {}),
+        }}
+      ></blockquote>
     </div>
   );
 };
@@ -142,18 +150,15 @@ const InstagramEmbed: React.FC<InstagramEmbedProps> = ({ postUrl }) => {
 // Styles
 const containerStyle: React.CSSProperties = {
   position: "relative",
-  //borderRadius: "12px",
   padding: "3px",
-  //boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
   display: "flex",
   justifyContent: "center",
-  //minHeight: "200px",
 };
 
 const blockquoteStyle: React.CSSProperties = {
   margin: 0,
   width: "100%",
-  maxWidth: "300px",
+  maxWidth: "250px",
 };
 
 const errorStyle: React.CSSProperties = {
