@@ -45,7 +45,7 @@ export const WalletConnector = () => {
         color: "white",
       }}
     >
-      <span>{shortenAddress(userAddr)}</span>
+      <span style={{ margin: "0px 10px" }}>{shortenAddress(userAddr)}</span>
       <img
         //src={"./icons/WalletConnectIcon.svg"}
         src={
@@ -54,10 +54,10 @@ export const WalletConnector = () => {
         alt={connector?.name + " icon"}
         width={25}
         height={25}
-        style={{ marginLeft: "5px" }}
+        style={{ marginLeft: "5px", margin: "0px 5px" }}
       ></img>
       <span
-        style={{ marginLeft: "5px", cursor: "pointer" }}
+        style={{ marginLeft: "5px", cursor: "pointer", margin: "0px 5px" }}
         onClick={() => handleDisconnect()}
       >
         ❌
@@ -72,7 +72,7 @@ export const WalletConnector = () => {
 
         padding: "3px",
         borderRadius: "7px",
-        margin: "5px",
+        //margin: "5px",
       }}
     >
       <div style={{ display: "flex", alignItems: "center" }}>

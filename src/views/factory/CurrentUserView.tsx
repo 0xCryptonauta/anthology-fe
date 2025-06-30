@@ -9,7 +9,7 @@ interface Contract {
 }
 
 export const CurrentUserView = () => {
-  const { userContracts, contractsTitles } = useAppSelector(
+  const { userContracts, contractsTitles, whitelistedUsers } = useAppSelector(
     (state) => state.factory
   );
 
@@ -37,6 +37,14 @@ export const CurrentUserView = () => {
       }}
     >
       <UserContracts userAddr={userAddr} userTitles={userTitles} />
+      <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+        {!userTitles?.[0] && <span>Anthologies not found</span>}
+        {!whitelistedUsers.includes(userAddr) && (
+          <span style={{ color: "Red" }}>
+            Your are address is not whitelisted
+          </span>
+        )}
+      </div>
     </div>
   );
 };
