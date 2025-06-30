@@ -5,7 +5,6 @@ import { Address } from "@src/types/common";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 import { useAccount } from "wagmi";
 import { DeleteMemoir } from "../../DeleteMemoir";
-import { Modal } from "@src/components/Layout/Modal";
 import { useState } from "react";
 import { Mediaskin } from "./MediaSkin";
 
@@ -24,7 +23,6 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
     order
   );
   const [selectedMemoirIndex, setSelectedMemoirIndex] = useState(-1);
-  const handleClose = () => setSelectedMemoirIndex(-1);
 
   const { address: currentUser } = useAccount();
   const anthologyOwner = useAppSelector(
@@ -55,7 +53,7 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
               minWidth: "300px",
               maxWidth: "600px",
               marginBottom: "1.5rem",
-              padding: "1rem",
+              padding: "0.5rem",
               borderRadius: "8px",
               backgroundColor: "#f9f9f9",
               boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
@@ -63,19 +61,22 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
               position: "relative",
             }}
           >
-            <span
-              style={{
-                fontWeight: "600",
-                fontSize: "1rem",
-                color: "#333",
-                display: "block",
-                marginBottom: "0.25rem",
-                wordBreak: "break-word",
-              }}
-            >
-              {index + 1}. {title || "Untitled"}
-            </span>
-            <p
+            {selectedMemoirIndex !== i && (
+              <span
+                style={{
+                  fontWeight: "600",
+                  fontSize: "1rem",
+                  color: "#333",
+                  display: "block",
+                  marginBottom: "0.25rem",
+                  wordBreak: "break-word",
+                }}
+              >
+                {index + 1}. {title || "Untitled"}
+              </span>
+            )}
+
+            <div
               style={{
                 margin: 0,
                 whiteSpace: "pre-wrap",
@@ -89,8 +90,12 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
                 setSelectedMemoirIndex(i);
               }}
             >
-              {content}
-            </p>
+              {selectedMemoirIndex === i ? (
+                <Mediaskin memoir={memoirs[i]} />
+              ) : (
+                content
+              )}
+            </div>
             {(currentUser === anthologyOwner ||
               isLocalAnthology(anthologyAddr) ||
               currentUser === memoirs[i].sender) && (
@@ -111,14 +116,6 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
                 <DeleteMemoir anthologyAddr={anthologyAddr} index={i} />
               </div>
             )}
-            <Modal
-              show={selectedMemoirIndex === i}
-              onHide={handleClose}
-              transparent
-              stickToBottom
-            >
-              <Mediaskin memoir={memoirs[i]} />
-            </Modal>
           </div>
         );
       })}
