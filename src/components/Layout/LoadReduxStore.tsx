@@ -156,6 +156,7 @@ export const LoadReduxStore = () => {
             borderRadius: "8px",
             display: "inline-block",
             fontSize: "14px",
+            fontWeight: "bold",
             backgroundColor: "#f7fafc",
             color: "#2b6cb0",
           }}

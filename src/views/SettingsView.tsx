@@ -16,15 +16,27 @@ export const SettingsView = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "space-around",
+        justifyContent: "space-evenly",
         flexWrap: "wrap",
       }}
     >
-      <DownloadReduxStore />
-      <LoadReduxStore />
-      <InstallPWAButton />
-      <IconPathSwitcher />
-      <NetworkSettings />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "space-evenly",
+          flexWrap: "wrap",
+          gap: "50px",
+        }}
+      >
+        <DownloadReduxStore />
+        <LoadReduxStore />
+        <InstallPWAButton />
+        <IconPathSwitcher />
+        <NetworkSettings />
+      </div>
+
       <CleanReduxStore />
     </div>
   );

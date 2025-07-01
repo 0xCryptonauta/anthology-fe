@@ -3,6 +3,7 @@ import { useToast } from "./Toast";
 import { useState } from "react";
 import { downloadObjAsJson } from "@src/utils/downloadObjAsJson";
 import { useAccount } from "wagmi";
+import { Modal } from "./Modal";
 
 export const DownloadReduxStore = () => {
   const { users, userContracts, contractsTitles } = useAppSelector(
@@ -16,6 +17,9 @@ export const DownloadReduxStore = () => {
   const [addLocal, setAddLocal] = useState(false);
   const [addNewFileName, setAddNewFileName] = useState(false);
   const [newFileName, setNewFileName] = useState("");
+
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
 
   const downloadUserSelection = () => {
     let dataToDownload = {};
@@ -62,98 +66,126 @@ export const DownloadReduxStore = () => {
   };
 
   return (
-    <div
-      style={{
-        width: "100%",
-        maxWidth: "320px",
-        margin: "10px auto",
-        padding: "25px 30px",
-        borderRadius: "16px",
-        backgroundColor: "#ffffff",
-        boxShadow: "0 12px 24px rgba(0,0,0,0.08)",
-        fontFamily: `"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif`,
-        color: "#1a1a1a",
-      }}
+    <Modal
+      placement="bottom"
+      show={show}
+      onHide={handleClose}
+      trigger={
+        isConnected ? (
+          <span
+            style={{
+              cursor: "pointer",
+              border: "1px solid #ccc",
+              padding: "10px 16px",
+              borderRadius: "8px",
+              display: "inline-block",
+              fontSize: "14px",
+              fontWeight: "bold",
+              backgroundColor: "#f7fafc",
+              color: "#2b6cb0",
+            }}
+            onClick={() => setShow(true)}
+          >
+            Download your Data
+          </span>
+        ) : (
+          <></>
+        )
+      }
     >
-      <h3 style={{ textAlign: "center", marginBottom: "20px" }}>
-        Download Your Data
-      </h3>
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "320px",
+          margin: "10px auto",
+          padding: "25px 30px",
+          borderRadius: "16px",
+          backgroundColor: "#ffffff",
+          boxShadow: "0 12px 24px rgba(0,0,0,0.08)",
+          fontFamily: `"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif`,
+          color: "#1a1a1a",
+        }}
+      >
+        <h3 style={{ textAlign: "center", marginBottom: "20px" }}>
+          Download Your Data
+        </h3>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-        {isConnected && (
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          {isConnected && (
+            <label style={checkboxLabelStyle}>
+              <input
+                type="checkbox"
+                checked={addDiscovery}
+                onChange={() => setAddDiscovery(!addDiscovery)}
+                style={checkboxInputStyle}
+              />
+              <span>My Discoveries</span>
+            </label>
+          )}
+
           <label style={checkboxLabelStyle}>
             <input
               type="checkbox"
-              checked={addDiscovery}
-              onChange={() => setAddDiscovery(!addDiscovery)}
+              checked={addLocal}
+              onChange={() => setAddLocal(!addLocal)}
               style={checkboxInputStyle}
             />
-            <span>My Discoveries</span>
+            <span>Local Anthologies</span>
           </label>
-        )}
 
-        <label style={checkboxLabelStyle}>
-          <input
-            type="checkbox"
-            checked={addLocal}
-            onChange={() => setAddLocal(!addLocal)}
-            style={checkboxInputStyle}
-          />
-          <span>Local Anthologies</span>
-        </label>
+          <label style={checkboxLabelStyle}>
+            <input
+              type="checkbox"
+              checked={addNewFileName}
+              onChange={() => setAddNewFileName(!addNewFileName)}
+              style={checkboxInputStyle}
+            />
+            <span>Custom File Name</span>
+          </label>
 
-        <label style={checkboxLabelStyle}>
-          <input
-            type="checkbox"
-            checked={addNewFileName}
-            onChange={() => setAddNewFileName(!addNewFileName)}
-            style={checkboxInputStyle}
-          />
-          <span>Custom File Name</span>
-        </label>
+          {addNewFileName && (
+            <input
+              type="text"
+              placeholder="Enter file name"
+              value={newFileName}
+              onChange={(e) => setNewFileName(e.target.value)}
+              style={{
+                padding: "10px 5px",
+                borderRadius: "8px",
+                border: "1px solid #ccc",
+                fontSize: "14px",
+                outline: "none",
+                transition: "border-color 0.2s",
+              }}
+            />
+          )}
 
-        {addNewFileName && (
-          <input
-            type="text"
-            placeholder="Enter file name"
-            value={newFileName}
-            onChange={(e) => setNewFileName(e.target.value)}
+          <button
+            onClick={downloadUserSelection}
             style={{
-              padding: "10px 5px",
+              marginTop: "20px",
+              backgroundColor: "#3b82f6",
+              color: "#fff",
+              fontWeight: "500",
+              fontSize: "15px",
+              padding: "12px",
               borderRadius: "8px",
-              border: "1px solid #ccc",
-              fontSize: "14px",
-              outline: "none",
-              transition: "border-color 0.2s",
+              border: "none",
+              cursor: "pointer",
+              transition: "background-color 0.2s",
             }}
-          />
-        )}
-
-        <button
-          onClick={downloadUserSelection}
-          style={{
-            marginTop: "20px",
-            backgroundColor: "#3b82f6",
-            color: "#fff",
-            fontWeight: "500",
-            fontSize: "15px",
-            padding: "12px",
-            borderRadius: "8px",
-            border: "none",
-            cursor: "pointer",
-            transition: "background-color 0.2s",
-          }}
-          onMouseOver={(e) =>
-            (e.currentTarget.style.backgroundColor = "#2563eb")
-          }
-          onMouseOut={(e) =>
-            (e.currentTarget.style.backgroundColor = "#3b82f6")
-          }
-        >
-          💾 Download
-        </button>
+            onMouseOver={(e) =>
+              (e.currentTarget.style.backgroundColor = "#2563eb")
+            }
+            onMouseOut={(e) =>
+              (e.currentTarget.style.backgroundColor = "#3b82f6")
+            }
+          >
+            💾 Download
+          </button>
+        </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 
