@@ -42,8 +42,11 @@ type writeFunctions =
 
 const chain = networks[0];
 
-const getCacheAnthologyKey = (fn: string, args: unknown[]) =>
-  `readAnthology:${fn}:${safeStringify(args)}`;
+const getCacheAnthologyKey = (
+  contractAddr: string,
+  fn: string,
+  args: unknown[]
+) => `readAnthology:${contractAddr}:${fn}:${safeStringify(args)}`;
 
 const isFresh = (timestamp: number) =>
   Date.now() - timestamp < CACHE_DURATION_MS;
@@ -53,7 +56,8 @@ export const readAnthology = async <T = unknown>(
   functionName: readFunctions,
   args?: unknown[]
 ): Promise<T | undefined> => {
-  const key = getCacheAnthologyKey(functionName, args as unknown[]);
+  const key = getCacheAnthologyKey(contractAddr, functionName, args || []);
+
   const cached = localStorage.getItem(key);
 
   if (cached) {
