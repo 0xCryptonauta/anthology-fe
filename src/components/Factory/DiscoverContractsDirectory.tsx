@@ -27,6 +27,9 @@ export const DiscoverContractsDirectory = () => {
       }}
     >
       <div style={{ margin: "5px" }}>
+        {users.length === 0 && (
+          <span>You have not discovered any Anthologies</span>
+        )}
         {users
           ?.filter((user) => user !== currentUser)
           .map((user, userIndex) => {
