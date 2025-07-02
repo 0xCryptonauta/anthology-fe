@@ -60,20 +60,22 @@ export const NetworkSettings = () => {
       onHide={handleClose}
       trigger={
         isConnected ? (
-          <div
+          <span
             style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
               cursor: "pointer",
-              border: "1px solid white",
-              borderRadius: "7px",
-              padding: "15px 15px",
+              border: "1px solid #ccc",
+              padding: "10px 16px",
+              borderRadius: "8px",
+              display: "inline-block",
+              fontSize: "14px",
+              fontWeight: "bold",
+              backgroundColor: "#f7fafc",
+              color: "#2b6cb0",
             }}
             onClick={() => setShow(true)}
           >
             Network Settings
-          </div>
+          </span>
         ) : (
           <></>
         )
