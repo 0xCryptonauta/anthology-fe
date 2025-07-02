@@ -2,12 +2,17 @@ import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 import { useToast } from "./Toast";
 import { toggleIsIconToLocal } from "@src/store/slices/dappSlice";
 import { useAccount } from "wagmi";
+import { Modal } from "./Modal";
+import { useState } from "react";
 
 export const IconPathSwitcher = () => {
   const { isIconToLocal } = useAppSelector((state) => state.dapp);
   const dispatch = useAppDispatch();
   const { addToast } = useToast();
   const { isConnected } = useAccount();
+
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
 
   const handleToggle = (toLocal: boolean) => {
     if (toLocal !== isIconToLocal) {
@@ -24,7 +29,33 @@ export const IconPathSwitcher = () => {
   };
 
   return (
-    isConnected && (
+    <Modal
+      placement="bottom"
+      show={show}
+      onHide={handleClose}
+      trigger={
+        isConnected ? (
+          <span
+            style={{
+              cursor: "pointer",
+              border: "1px solid #ccc",
+              padding: "10px 16px",
+              borderRadius: "8px",
+              display: "inline-block",
+              fontSize: "14px",
+              fontWeight: "bold",
+              backgroundColor: "#f7fafc",
+              color: "#2b6cb0",
+            }}
+            onClick={() => setShow(true)}
+          >
+            Icon Path Switcher
+          </span>
+        ) : (
+          <></>
+        )
+      }
+    >
       <div
         style={{
           maxWidth: "420px",
@@ -65,7 +96,7 @@ export const IconPathSwitcher = () => {
           </label>
         </div>
       </div>
-    )
+    </Modal>
   );
 };
 

@@ -37,12 +37,17 @@ export const CurrentUserView = () => {
       }}
     >
       <UserContracts userAddr={userAddr} userTitles={userTitles} />
-      <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "0.5rem",
+        }}
+      >
         {!userTitles?.[0] && <span>Anthologies not found</span>}
         {!whitelistedUsers.includes(userAddr) && (
-          <span style={{ color: "Red" }}>
-            Your are address is not whitelisted
-          </span>
+          <span style={{ color: "Red" }}>Your address is not whitelisted</span>
         )}
       </div>
     </div>
