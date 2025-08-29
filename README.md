@@ -10,14 +10,6 @@ VITE_FACTORY_RPC = "Factory RPC - http";
 VITE_ENV = "development" | "any";
 ```
 
-How to run this project
-
-```
-bun install
-
-run dev
-```
-
 ---
 
 ## Git merge Example Workflow
