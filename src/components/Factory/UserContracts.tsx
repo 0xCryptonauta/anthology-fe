@@ -2,7 +2,7 @@ import { shortenAddress } from "@utils/shortenAddress";
 import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
 import { syncUserContractsToStore } from "@src/store/utils/thunks";
 import { Address, CurrentPaths } from "@src/types/common";
-import { parseContractsCategories } from "@src/utils/parseContractsCategories";
+import { parseContractsCategoriesSorted } from "@src/utils/parseContractsCategories";
 import { DeployButton } from "./DeployButton";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
@@ -43,7 +43,8 @@ export const UserContracts: React.FC<UserContractsProps> = ({
     );
   };
 
-  const { categories, uncategorized } = parseContractsCategories(userTitles);
+  const { categories, uncategorized } =
+    parseContractsCategoriesSorted(userTitles);
 
   return (
     <div
@@ -86,11 +87,8 @@ export const UserContracts: React.FC<UserContractsProps> = ({
         </div>
 
         <div style={{ marginTop: "30px" }}>
-          {Object.entries(categories)
-            .sort(([categoryA], [categoryB]) =>
-              categoryA.localeCompare(categoryB)
-            )
-            .map(([category, categoryData], index, arr) => {
+          {Object.entries(categories).map(
+            ([category, categoryData], index, arr) => {
               const { items = [], subcategories = {} } = categoryData;
 
               return (
@@ -111,38 +109,37 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                       ))}
                   </ul>
 
-                  {Object.entries(subcategories)
-                    .sort(([a], [b]) => a.localeCompare(b))
-                    .map(([sub, subItems]) => (
-                      <div
-                        key={sub}
-                        className="ml-12"
-                        style={{ marginLeft: "1em" }}
-                      >
-                        <h5 className="text-md font-medium">{sub}</h5>
-                        <ul className="ml-12">
-                          {subItems
-                            .sort((a, b) => a.title.localeCompare(b.title))
-                            .map(({ address, title }) => (
-                              <li key={address}>
-                                <span
-                                  style={{ cursor: "pointer" }}
-                                  onClick={() =>
-                                    handleOnClick(`contract/${address}`)
-                                  }
-                                >
-                                  {title}
-                                </span>
-                              </li>
-                            ))}
-                        </ul>
-                      </div>
-                    ))}
+                  {Object.entries(subcategories).map(([sub, subItems]) => (
+                    <div
+                      key={sub}
+                      className="ml-12"
+                      style={{ marginLeft: "1em" }}
+                    >
+                      <h5 className="text-md font-medium">{sub}</h5>
+                      <ul className="ml-12">
+                        {subItems
+                          .sort((a, b) => a.title.localeCompare(b.title))
+                          .map(({ address, title }) => (
+                            <li key={address}>
+                              <span
+                                style={{ cursor: "pointer" }}
+                                onClick={() =>
+                                  handleOnClick(`contract/${address}`)
+                                }
+                              >
+                                {title}
+                              </span>
+                            </li>
+                          ))}
+                      </ul>
+                    </div>
+                  ))}
 
                   {index < arr.length - 1 && <hr className="my-2" />}
                 </div>
               );
-            })}
+            }
+          )}
 
           {uncategorized.length > 0 && (
             <div>

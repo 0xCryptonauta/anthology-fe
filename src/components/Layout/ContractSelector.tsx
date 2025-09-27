@@ -1,6 +1,6 @@
 import { shortenAddress } from "@src/utils/shortenAddress";
 import React, { useState, useMemo } from "react";
-import { parseContractsCategories } from "@src/utils/parseContractsCategories";
+import { parseContractsCategoriesSorted } from "@src/utils/parseContractsCategories";
 import { Address } from "@src/types/common";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
 import { useAppSelector } from "@src/store/utils/hooks";
@@ -40,7 +40,7 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
         : contractsTitles[address] || "Untitled",
       originalIndex: index,
     }));
-    return parseContractsCategories(contracts);
+    return parseContractsCategoriesSorted(contracts);
   }, [
     contractsTitles,
     localTitles,
@@ -66,11 +66,12 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
 
   const subcategoryOptions = useMemo(() => {
     if (selectedCategory === "Other") return [];
-    return selectedCategory && userContractsList.categories[selectedCategory]
-      ? Object.keys(
-          userContractsList.categories[selectedCategory].subcategories
-        )
-      : [];
+    if (selectedCategory && userContractsList.categories[selectedCategory]) {
+      return Object.keys(
+        userContractsList.categories[selectedCategory].subcategories
+      );
+    }
+    return [];
   }, [selectedCategory, userContractsList.categories]);
 
   const filteredContracts = useMemo(() => {
@@ -138,17 +139,20 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
         style={{ minHeight: "30px" }}
       >
         {/* <option value="">No Category</option> */}
-        {selectedUser === LOCAL_USER_ADDR
-          ? categoryOptions.map((category) => (
+        {
+          selectedUser === LOCAL_USER_ADDR &&
+            categoryOptions.map((category) => (
               <option key={category} value={category}>
                 {category}
               </option>
             ))
-          : categoryOptions.map((category) => (
+          //NOT LOCAL USER IS MISSING IN CATEGORIES
+          /*           : categoryOptions.map((category) => (
               <option key={category} value={category}>
                 {category}
               </option>
-            ))}
+            )) */
+        }
       </select>
 
       {/*       <div
