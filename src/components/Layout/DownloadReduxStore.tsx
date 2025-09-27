@@ -71,26 +71,22 @@ export const DownloadReduxStore = () => {
       show={show}
       onHide={handleClose}
       trigger={
-        isConnected ? (
-          <span
-            style={{
-              cursor: "pointer",
-              border: "1px solid #ccc",
-              padding: "10px 16px",
-              borderRadius: "8px",
-              display: "inline-block",
-              fontSize: "14px",
-              fontWeight: "bold",
-              backgroundColor: "#f7fafc",
-              color: "#2b6cb0",
-            }}
-            onClick={() => setShow(true)}
-          >
-            Download your Data
-          </span>
-        ) : (
-          <></>
-        )
+        <span
+          style={{
+            cursor: "pointer",
+            border: "1px solid #ccc",
+            padding: "10px 16px",
+            borderRadius: "8px",
+            display: "inline-block",
+            fontSize: "14px",
+            fontWeight: "bold",
+            backgroundColor: "#f7fafc",
+            color: "#2b6cb0",
+          }}
+          onClick={() => setShow(true)}
+        >
+          Download your Data
+        </span>
       }
     >
       <div
