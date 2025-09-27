@@ -9,6 +9,7 @@ import { useOrderedMemoirs } from "@src/hooks/useOrderedMemoirs";
 import { useAccount } from "wagmi";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 import { DeleteMemoir } from "../../DeleteMemoir";
+import { LOCAL_USER_ADDR } from "@src/utils/constants";
 
 interface TextMemoirSkinProps {
   anthologyAddr: Address;
@@ -119,14 +120,17 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
                 marginTop: "8px",
               }}
             >
-              <span
-                style={{ cursor: "pointer" }}
-                onClick={() =>
-                  dispatch(updateCurrentPath(`user/${memoir.sender}`))
-                }
-              >
-                {shortenAddress(memoir.sender, 10, 8)}
-              </span>
+              {currentUser === LOCAL_USER_ADDR && (
+                <span
+                  style={{ cursor: "pointer" }}
+                  onClick={() =>
+                    dispatch(updateCurrentPath(`user/${memoir.sender}`))
+                  }
+                >
+                  {shortenAddress(memoir.sender, 10, 8)}
+                </span>
+              )}
+
               <span>{formatUnixTime(Number(memoir.timestamp))}</span>
             </div>
 
