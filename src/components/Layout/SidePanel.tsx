@@ -122,19 +122,19 @@ export const SidePanel = () => {
               >
                 My Anthologies
               </Link>
-              <Link
-                to="/"
-                onClick={() => handleOnClick("discover")}
-                style={{
-                  margin: "10px 0px",
-                  fontSize: "18px",
-                  textDecoration: "none",
-                }}
-              >
-                Discover
-              </Link>
             </>
           )}
+          <Link
+            to="/"
+            onClick={() => handleOnClick("discover")}
+            style={{
+              margin: "10px 0px",
+              fontSize: "18px",
+              textDecoration: "none",
+            }}
+          >
+            Discover
+          </Link>
           <Link
             to="/"
             onClick={() => handleOnClick(LOCAL_USER_PATH)}
