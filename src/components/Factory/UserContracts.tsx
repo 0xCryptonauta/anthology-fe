@@ -27,17 +27,41 @@ interface UserContractsProps {
 }
 
 /**
- * Mapeo de estilos neon por categoría.
- * Se centraliza fuera del componente para evitar ser recreado en cada render.
+ * Paleta de colores neon para categorías dinámicas.
+ */
+const CATEGORY_COLORS = [
+  "border-cyan-500/40 shadow-[0_0_15px_rgba(6,182,212,0.15)]",
+  "border-yellow-500/40 shadow-[0_0_15px_rgba(234,179,8,0.15)]",
+  "border-red-500/40 shadow-[0_0_15px_rgba(239,68,68,0.15)]",
+  "border-purple-500/40 shadow-[0_0_15px_rgba(168,85,247,0.15)]",
+  "border-orange-500/40 shadow-[0_0_15px_rgba(249,115,22,0.15)]",
+  "border-green-500/40 shadow-[0_0_15px_rgba(34,197,94,0.15)]",
+  "border-pink-500/40 shadow-[0_0_15px_rgba(236,72,153,0.15)]",
+  "border-blue-500/40 shadow-[0_0_15px_rgba(59,130,246,0.15)]",
+  "border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.15)]",
+  "border-violet-500/40 shadow-[0_0_15px_rgba(139,92,246,0.15)]",
+  "border-rose-500/40 shadow-[0_0_15px_rgba(244,63,94,0.15)]",
+  "border-amber-500/40 shadow-[0_0_15px_rgba(245,158,11,0.15)]",
+  "border-lime-500/40 shadow-[0_0_15px_rgba(132,204,22,0.15)]",
+  "border-sky-500/40 shadow-[0_0_15px_rgba(14,165,233,0.15)]",
+  "border-fuchsia-500/40 shadow-[0_0_15px_rgba(217,70,239,0.15)]",
+];
+
+/**
+ * Asigna un estilo neon dinámico basado en el hash de la categoría.
+ * Usa una paleta de 15 colores para distribuir categorías diferentes.
+ * El mismo nombre de categoría siempre recibe el mismo color (determinístico).
  */
 const getCategoryStyles = (category: string): string => {
+  // Generar hash consistente basado en el nombre de la categoría
+  let hash = 0;
   const lower = category.toLowerCase();
-  if (lower.includes("ai")) return "border-cyan-500/40 shadow-[0_0_15px_rgba(6,182,212,0.15)]";
-  if (lower.includes("book")) return "border-yellow-500/40 shadow-[0_0_15px_rgba(234,179,8,0.15)]";
-  if (lower.includes("colombia")) return "border-red-500/40 shadow-[0_0_15px_rgba(239,68,68,0.15)]";
-  if (lower.includes("mús") || lower.includes("music")) return "border-purple-500/40 shadow-[0_0_15px_rgba(168,85,247,0.15)]";
-  if (lower.includes("comedy")) return "border-orange-500/40 shadow-[0_0_15px_rgba(249,115,22,0.15)]";
-  return "border-zinc-700 shadow-sm";
+  for (let i = 0; i < lower.length; i++) {
+    hash = ((hash << 5) - hash) + lower.charCodeAt(i);
+    hash = hash & hash;
+  }
+  const index = Math.abs(hash) % CATEGORY_COLORS.length;
+  return CATEGORY_COLORS[index];
 };
 
 export const UserContracts: React.FC<UserContractsProps> = ({
@@ -98,7 +122,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
       <div className="w-full max-w-xl p-2">
         
         {/* --- HEADER DE USUARIO --- */}
-        <div className="flex justify-between items-center mb-6 p-4 bg-[#161b22] rounded-xl border border-zinc-800">
+        <div className="flex justify-between items-center mb-6 p-4 bg-[#161b22] rounded-xl !border-sky-500/40 shadow-[0_0_15px_rgba(14,165,233,0.15)] ">
           <div className="flex items-center gap-4">
             <div className="h-10 w-10 bg-zinc-800 rounded-full flex items-center justify-center font-bold text-zinc-400 select-none">
               U
@@ -136,9 +160,9 @@ export const UserContracts: React.FC<UserContractsProps> = ({
             const neonStyles = getCategoryStyles(category);
 
             return (
-              <div 
-                key={category} 
-                className={`p-4 bg-[#161b22] rounded-xl border transition-all duration-200 ${neonStyles}`}
+              <div
+                key={category}
+                className={`p-4 bg-[#161b22] rounded-xl transition-all duration-200 ${neonStyles}`}
               >
                 <div 
                   className="flex justify-between items-center cursor-pointer select-none mb-3"
@@ -190,7 +214,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
             );
           })}
 
-          {/* --- NO CATEGORIZADOS (UNCATEGORIZED) --- */}
+          {/* --- (UNCATEGORIZED) --- */}
           {processedData.uncategorized.length > 0 && (
             <div className="p-4 bg-[#161b22] rounded-xl border border-zinc-800">
               {

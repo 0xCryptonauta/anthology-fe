@@ -80,3 +80,7 @@ bun run lint         # ESLint
 
 ### Release Process
 Uses `standard-version` for conventional commits-based versioning. `bun run release` only allowed on main branch.
+
+## Development Guidelines
+
+**No Hardcoded Values**: Do not hardcode category names, contract addresses, or any business logic values. Use dynamic approaches (hash functions, configuration objects, environment variables) instead of conditional chains based on specific values.
