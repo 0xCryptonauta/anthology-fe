@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { parseEther } from "viem";
 import { writeAnthology } from "@src/contract-functions/anthologyFunctions";
 //import { ChangeAnthologyTitle } from "./ChangeAnthologyTitle";
@@ -13,8 +13,10 @@ import {
 } from "@store/slices/anthologySlice";
 
 import { updateOneContractTitle } from "@store/slices/factorySlice";
-import { Address } from "@src/types/common";
+import { Address, MemoirContent } from "@src/types/common";
 import { ChangeAnthologyDefaultSkin } from "./ChangeAnthologyDefaultSkin";
+import { TitleEditor } from "@components/Factory/TitleEditor";
+import { Modal } from "@src/components/Layout/Modal";
 
 export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
   const { addToast } = useToast();
@@ -25,13 +27,65 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
 
   const dispatch = useAppDispatch();
 
+  const { contractsTitles: factoryTitles, userContracts: factoryUserContracts } =
+    useAppSelector((state) => state.factory);
+
+  const userTitles: MemoirContent[] = useMemo(() => {
+    const owner = anthologyState?.owner;
+    const contracts = owner ? factoryUserContracts?.[owner] : undefined;
+    if (!contracts) return [];
+    return contracts.map((addr, i) => ({
+      address: addr,
+      title: factoryTitles[addr] || "",
+      originalIndex: i,
+    }));
+  }, [factoryTitles, factoryUserContracts, anthologyState?.owner]);
+
   // input fields value
   const [addressToAdd, setAddresToAdd] = useState("");
   const [addressToRemove, setAddressToRemove] = useState("");
   const [erc20TokenAddr, setErc20TokenAddr] = useState("");
   const [memoirPrice, setMemoirPrice] = useState<string>("0");
   const [newMaxMemoirs, setNewMaxMemoirs] = useState("");
-  const [newTitle, setNewTitle] = useState("");
+  const [showTitleModal, setShowTitleModal] = useState(false);
+  const handleCloseTitleModal = () => setShowTitleModal(false);
+
+  const handleTitleSubmit = async (combinedTitle: string) => {
+    try {
+      const txHash = await writeAnthology(contractAddr, "setTitle", [
+        [combinedTitle],
+      ]);
+      if (txHash) {
+        addToast({
+          title: "New title:",
+          content: combinedTitle,
+          variant: "success",
+          delay: 5000,
+        });
+        dispatch(
+          updateAnthologyTitle({
+            contract: contractAddr,
+            title: combinedTitle,
+          })
+        );
+        dispatch(
+          updateOneContractTitle({
+            contract: contractAddr,
+            title: combinedTitle,
+          })
+        );
+        handleCloseTitleModal();
+      }
+    } catch (error) {
+      addToast({
+        title: "Error setting new title",
+        content: "Unknown error",
+        variant: "warning",
+        delay: 5000,
+      });
+      console.error("Error setting new title", error);
+    }
+  };
 
   return (
     <div
@@ -49,60 +103,56 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
     >
       <h2>Anthology Owner</h2>
       {/* ------------------------------- Update Anthology title ------------------------------ */}
-      <div
-        style={{
-          border: "1px solid white",
-          padding: "5px",
-          borderRadius: "7px",
-          margin: "3px",
-        }}
+      <Modal
+        placement="bottom"
+        show={showTitleModal}
+        onHide={handleCloseTitleModal}
+        trigger={
+          <button
+            style={{
+              margin: "5px",
+              backgroundColor: "dodgerblue",
+              border: "none",
+              color: "white",
+              padding: "8px 16px",
+              borderRadius: "6px",
+              cursor: "pointer",
+              fontSize: "0.9rem",
+            }}
+            onClick={() => setShowTitleModal(true)}
+          >
+            Change title
+          </button>
+        }
       >
-        <input
-          placeholder="New title"
-          value={newTitle}
-          onChange={(e) => setNewTitle(e.target.value)}
-        ></input>
-        <span
-          style={{ marginLeft: "7px" }}
-          onClick={async () => {
-            try {
-              const txHash = await writeAnthology(contractAddr, "setTitle", [
-                [newTitle],
-              ]);
-              if (txHash) {
-                addToast({
-                  title: "New title:",
-                  content: newTitle,
-                  variant: "success",
-                  delay: 5000,
-                });
-                dispatch(
-                  updateAnthologyTitle({
-                    contract: contractAddr,
-                    title: newTitle,
-                  })
-                );
-                dispatch(
-                  updateOneContractTitle({
-                    contract: contractAddr,
-                    title: newTitle,
-                  })
-                );
-              }
-            } catch (error) {
-              addToast({
-                title: "Error setting new title",
-                content: "Unknown error",
-                variant: "warning",
-                delay: 5000,
-              });
-              console.error("Error setting new title", error);
-            }
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "1rem",
+            padding: "1.25rem 1rem",
+            width: "320px",
           }}
         >
-          🔄
-        </span>
-      </div>
+          <span
+            style={{
+              fontSize: "1rem",
+              fontWeight: 600,
+              color: "#111827",
+              textAlign: "center",
+            }}
+          >
+            Set New Title
+          </span>
+          <TitleEditor
+            initialTitle={anthologyState?.title || ""}
+            userTitles={userTitles}
+            submitLabel="Change title"
+            onSubmit={handleTitleSubmit}
+          />
+        </div>
+      </Modal>
 
       {/* ------------------------------- Update Anthology price ------------------------------ */}
       <div

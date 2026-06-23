@@ -27,3 +27,16 @@ export type ContractTitlesType = {
 export type UserContractsType = {
   [key: Address]: Address[];
 };
+
+export interface MemoirContent {
+  address: Address;
+  title: string;
+  originalIndex: number;
+}
+
+export interface Categories {
+  [category: string]: {
+    items: MemoirContent[];
+    subcategories: { [subcategory: string]: MemoirContent[] };
+  };
+}

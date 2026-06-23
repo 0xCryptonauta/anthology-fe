@@ -2,26 +2,13 @@ import { useState, useMemo } from "react";
 import { shortenAddress } from "@utils/shortenAddress";
 import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
 import { syncUserContractsToStore } from "@src/store/utils/thunks";
-import { Address, CurrentPaths } from "@src/types/common";
+import { Address, CurrentPaths, MemoirContent } from "@src/types/common";
 import { parseContractsCategoriesSorted } from "@src/utils/parseContractsCategories";
 import { DeployButton } from "./DeployButton";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
 import "@src/styles/backgrounds.css";
 import { getBgClass, hashString } from "@utils/backgrounds";
-
-export interface MemoirContent {
-  address: Address;
-  title: string;
-  originalIndex: number;
-}
-
-export interface Categories {
-  [category: string]: {
-    items: MemoirContent[];
-    subcategories: { [subcategory: string]: MemoirContent[] };
-  };
-}
 
 interface UserContractsProps {
   userAddr: Address;
@@ -125,7 +112,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
             </div>
           </div>
           {(currentUserAddr === userAddr || userAddr === LOCAL_USER_ADDR) && (
-            <DeployButton isLocal={userAddr === LOCAL_USER_ADDR} />
+            <DeployButton isLocal={userAddr === LOCAL_USER_ADDR} userTitles={userTitles} />
           )}
         </div>
 

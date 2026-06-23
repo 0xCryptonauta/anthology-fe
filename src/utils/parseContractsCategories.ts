@@ -1,7 +1,4 @@
-import {
-  Categories,
-  MemoirContent,
-} from "@src/components/Factory/UserContracts";
+import { Categories, MemoirContent } from "@src/types/common";
 
 export const parseContractsCategories = (
   contracts: MemoirContent[]
