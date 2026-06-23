@@ -98,25 +98,28 @@ export const UserContracts: React.FC<UserContractsProps> = ({
       <div className="w-full max-w-7xl">
 
         {/* --- HEADER DE USUARIO --- */}
-        <div className="flex justify-between items-center mb-8 p-4 bg-[#161b22] rounded-xl border-sky-500/40 shadow-[0_0_15px_rgba(14,165,233,0.15)] mx-auto w-full max-w-2xl">
+        <div className={`flex justify-between items-center mb-8 p-4 ${categoryBackgroundsEnabled && userAddr === LOCAL_USER_ADDR ? "bg-overlay bg-nested-triangles" : "bg-[#161b22]"} rounded-xl border-sky-500/40 shadow-[0_0_15px_rgba(14,165,233,0.15)] mx-auto w-full max-w-2xl`}>
           <div className="flex items-center gap-4">
-            <div className="h-10 w-10 bg-zinc-800 rounded-full flex items-center justify-center font-bold text-zinc-400 select-none">
-              U
+{/*             {userAddr === LOCAL_USER_ADDR && (
+                <div className="h-10 w-10 bg-zinc-800 rounded-full flex items-center justify-center font-bold text-zinc-400 select-none">
+              PA
             </div>
+              )} */}
+            
             <div className="flex items-center gap-2">
               <span
-                className="text-lg font-medium cursor-pointer hover:text-white transition-colors"
+                className="text-2xl font-medium hover:text-white transition-colors"
                 onClick={() => {
                   if (userAddr === currentUserAddr) {
                     dispatch(syncUserContractsToStore(userAddr));
                   }
                 }}
               >
-                {userAddr === LOCAL_USER_ADDR ? "Local User" : shortenAddress(userAddr, 12, 9)}
+                {userAddr === LOCAL_USER_ADDR ? "Private Anthology" : shortenAddress(userAddr, 12, 9)}
               </span>
               {userAddr === LOCAL_USER_ADDR && (
                 <span className="text-xs font-bold tracking-wider bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-md select-none">
-                  NEW
+                  LOCAL
                 </span>
               )}
             </div>

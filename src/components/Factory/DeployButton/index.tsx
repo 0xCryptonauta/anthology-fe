@@ -106,14 +106,13 @@ export const DeployButton: React.FC<DeployButtonProps> = ({
       trigger={
         isLocal || canCreateOnChain ? (
           <span
-            style={{
-              marginLeft: "10px",
-              fontSize: "1.25rem",
-              cursor: "pointer",
-            }}
+            className="btn-new-pill"
             onClick={() => setShow(true)}
+            aria-label="New Anthology"
           >
-            🆕
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
           </span>
         ) : (
           <></>
