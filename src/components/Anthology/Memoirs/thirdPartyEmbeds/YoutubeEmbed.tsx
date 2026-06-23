@@ -46,7 +46,7 @@ export const YoutubeEmbed: React.FC<YoutubeEmbedProps> = ({ videoId }) => {
                 src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
                 alt="YouTube thumbnail"
                 width={width}
-                height={height}
+                //height={height}
                 style={{ display: "block", objectFit: "cover" }}
               />
             </picture>

@@ -7,6 +7,7 @@ import { parseContractsCategoriesSorted } from "@src/utils/parseContractsCategor
 import { DeployButton } from "./DeployButton";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
+import "@src/styles/backgrounds.css";
 
 export interface MemoirContent {
   address: Address;
@@ -44,16 +45,34 @@ const CATEGORY_COLORS = [
   "border-fuchsia-500/40 shadow-[0_0_15px_rgba(217,70,239,0.15)]",
 ];
 
-const getCategoryStyles = (category: string): string => {
+const hashString = (s: string): number => {
   let hash = 0;
-  const lower = category.toLowerCase();
+  const lower = s.toLowerCase();
   for (let i = 0; i < lower.length; i++) {
     hash = ((hash << 5) - hash) + lower.charCodeAt(i);
     hash = hash & hash;
   }
-  const index = Math.abs(hash) % CATEGORY_COLORS.length;
-  return CATEGORY_COLORS[index];
+  return Math.abs(hash);
 };
+
+const BG_CLASSES = [
+  "bg-triangles-squares",
+  "bg-circles-stripes",
+  "bg-circle-pills",
+  "bg-squares-2",
+  "bg-rectangles-3d",
+  "bg-arc",
+  "bg-checkerboard-optical-illusion",
+  "bg-lines-dots",
+  "bg-triangles-mosaic",
+  "bg-diagonal-wavy-squares",
+];
+
+const getBgClass = (category: string) =>
+  `bg-overlay ${BG_CLASSES[hashString(category) % BG_CLASSES.length]}`;
+
+const getCategoryStyles = (category: string) =>
+  CATEGORY_COLORS[hashString(category) % CATEGORY_COLORS.length];
 
 export const UserContracts: React.FC<UserContractsProps> = ({
   userAddr,
@@ -144,14 +163,14 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                 key={category}
                 /* 🟢 CAMBIO AQUI: break-inside-avoid e inline-block son críticos para que 
                    la tarjeta no se corte a la mitad entre dos columnas */
-                className={`p-4 bg-[#161b22] rounded-xl transition-all duration-200 break-inside-avoid inline-block w-full ${neonStyles}`}
+                className={`p-4 ${getBgClass(category)} rounded-xl transition-all duration-200 break-inside-avoid inline-block w-full ${neonStyles}`}
               >
                 <div 
                   className="flex justify-between items-center cursor-pointer select-none"
                   onClick={() => toggleCategory(category)}
                 >
                   <h3 className="text-lg font-bold tracking-wide">{category}</h3>
-                  <span className="text-xs text-zinc-500 font-mono tracking-wider px-2 py-1 rounded">
+                  <span className="text-xs text-white/50 font-mono tracking-wider px-2 py-1 rounded">
                     {isExpanded ? "[-]" : "[+]"}
                   </span>
                 </div>
@@ -162,7 +181,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                       {items.map(({ address, title }) => (
                         <li key={address}>
                           <span
-                            className="text-lg cursor-pointer text-zinc-300 hover:text-white transition-colors"
+                            className="text-lg cursor-pointer text-white hover:text-white transition-colors"
                             onClick={() => handleOnClick(`contract/${address}`)}
                           >
                             &middot; {title}
@@ -172,13 +191,13 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                     </ul>
 
                     {Object.entries(subcategories).map(([sub, subItems]) => (
-                      <div key={sub} className="mt-4 p-3 bg-[#0d1117] rounded-lg border-zinc-800">
-                        <h5 className="text-lg font-semibold text-zinc-400 mb-2">{sub}</h5>
+                      <div key={sub} className="mt-4 p-3 rounded-lg border-zinc-800">
+                        <h5 className="text-lg font-semibold text-white mb-2">{sub}</h5>
                         <ul className="space-y-1.5 ml-1">
                           {subItems.map(({ address, title }) => (
                             <li key={address}>
                               <span
-                                className="text-lg cursor-pointer text-zinc-300 hover:text-white transition-colors"
+                                className="text-lg cursor-pointer text-white hover:text-white transition-colors"
                                 onClick={() => handleOnClick(`contract/${address}`)}
                               >
                                 &middot; {title}
@@ -196,7 +215,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
 
           {/* --- (UNCATEGORIZED) --- */}
           {processedData.uncategorized.length > 0 && (
-            <div className="p-4 bg-[#161b22] rounded-xl border-zinc-800 break-inside-avoid inline-block w-full">
+            <div className={`p-4 ${getBgClass("uncategorized")} rounded-xl border-zinc-800 break-inside-avoid inline-block w-full`}>
               {
                 (() => {
                   const isUncategorizedExpanded = expandedCategories["Uncategorized_General_Key"] || false;
@@ -207,7 +226,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                         onClick={() => toggleCategory("Uncategorized_General_Key")}
                       >
                         <h3 className="text-lg font-bold">Other</h3>
-                        <span className="text-xs text-zinc-500 font-mono bg-zinc-800/60 px-2 py-1 rounded">
+                        <span className="text-xs text-white/50 font-mono bg-zinc-800/60 px-2 py-1 rounded">
                           {isUncategorizedExpanded ? "[-]" : "[+]"}
                         </span>
                       </div>
@@ -217,7 +236,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                           {processedData.uncategorized.map(({ address, title }) => (
                             <li key={address}>
                               <span
-                                className="text-sm cursor-pointer text-zinc-300 hover:text-white transition-colors"
+                                className="text-sm cursor-pointer text-white hover:text-white transition-colors"
                                 onClick={() => handleOnClick(`contract/${address}`)}
                               >
                                 &middot; {title.trim() ? title : shortenAddress(address, 12, 9)}
