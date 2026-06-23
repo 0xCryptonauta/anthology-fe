@@ -8,6 +8,7 @@ import { DeployButton } from "./DeployButton";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
 import "@src/styles/backgrounds.css";
+import { getBgClass, hashString } from "@utils/backgrounds";
 
 export interface MemoirContent {
   address: Address;
@@ -44,32 +45,6 @@ const CATEGORY_COLORS = [
   "border-sky-500/40 shadow-[0_0_15px_rgba(14,165,233,0.15)]",
   "border-fuchsia-500/40 shadow-[0_0_15px_rgba(217,70,239,0.15)]",
 ];
-
-const hashString = (s: string): number => {
-  let hash = 0;
-  const lower = s.toLowerCase();
-  for (let i = 0; i < lower.length; i++) {
-    hash = ((hash << 5) - hash) + lower.charCodeAt(i);
-    hash = hash & hash;
-  }
-  return Math.abs(hash);
-};
-
-const BG_CLASSES = [
-  "bg-triangles-squares",
-  "bg-circles-stripes",
-  "bg-circle-pills",
-  "bg-squares-2",
-  "bg-rectangles-3d",
-  "bg-arc",
-  "bg-checkerboard-optical-illusion",
-  "bg-lines-dots",
-  "bg-triangles-mosaic",
-  "bg-diagonal-wavy-squares",
-];
-
-const getBgClass = (category: string) =>
-  `bg-overlay ${BG_CLASSES[hashString(category) % BG_CLASSES.length]}`;
 
 const getCategoryStyles = (category: string) =>
   CATEGORY_COLORS[hashString(category) % CATEGORY_COLORS.length];
@@ -153,7 +128,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
 
         {/* --- LISTA DE CATEGORÍAS (MASONRY LAYOUT) --- */}
         {/* 🟢 CAMBIO AQUI: Usamos columns-1, md:columns-2, etc., en lugar de flex */}
-        <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full items-start">
           {processedData.categories.map(([category, categoryData]) => {
             const { items, subcategories } = categoryData;
             const isExpanded = expandedCategories[category] || false; 
@@ -164,7 +139,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                 key={category}
                 /* 🟢 CAMBIO AQUI: break-inside-avoid e inline-block son críticos para que 
                    la tarjeta no se corte a la mitad entre dos columnas */
-                className={`p-4 ${categoryBackgroundsEnabled ? getBgClass(category) : ""} rounded-xl transition-all duration-200 break-inside-avoid inline-block w-full ${neonStyles}`}
+                className={`p-4 ${categoryBackgroundsEnabled ? getBgClass(category) : ""} rounded-xl transition-all duration-200 ${neonStyles}`}
               >
                 <div 
                   className="flex justify-between items-center cursor-pointer select-none"
@@ -216,7 +191,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
 
           {/* --- (UNCATEGORIZED) --- */}
           {processedData.uncategorized.length > 0 && (
-            <div className={`p-4 ${categoryBackgroundsEnabled ? getBgClass("uncategorized") : ""} rounded-xl border-zinc-800 break-inside-avoid inline-block w-full`}>
+            <div className={`p-4 ${categoryBackgroundsEnabled ? getBgClass("uncategorized") : ""} rounded-xl border-zinc-800`}>
               {
                 (() => {
                   const isUncategorizedExpanded = expandedCategories["Uncategorized_General_Key"] || false;

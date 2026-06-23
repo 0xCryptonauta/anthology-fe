@@ -14,10 +14,13 @@ import { LocalAnthologyOwner } from "@src/components/Anthology/LocalAnthologyOwn
 import { LocalAnthologyState } from "@src/components/Anthology/LocalAnthologyState";
 import { DEFAULT_SKIN } from "@src/utils/constants";
 import { FormatAnthologyTitle } from "@src/utils/FormatAnthologyTitle";
+import "@src/styles/backgrounds.css";
+import { getBgClass } from "@utils/backgrounds";
 
 export const LocalAnthologyView = () => {
   //const dispatch = useAppDispatch();
   const { currentPath } = useAppSelector((state) => state.user);
+  const categoryBackgroundsEnabled = useAppSelector((s) => s.dapp.categoryBackgroundsEnabled);
 
   //const { ethAddr, } = useParams();
 
@@ -41,13 +44,15 @@ export const LocalAnthologyView = () => {
 
   return (
     <div
-      className="bg-dark"
+      className={categoryBackgroundsEnabled ? getBgClass(contractAddr) : "bg-dark"}
       style={{
         color: "white",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "flex-start",
+        width: "100%",
+        minHeight: "100dvh",
       }}
     >
       <div style={{ display: "flex", margin: "20px" }}>

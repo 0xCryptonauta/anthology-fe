@@ -9,6 +9,7 @@ export const CategoryBackgroundsToggle = () => {
   return (
     <Form.Check
       type="switch"
+      reverse
       label="Category Backgrounds"
       checked={enabled}
       onChange={() => dispatch(toggleCategoryBackgrounds())}

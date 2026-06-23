@@ -14,7 +14,7 @@ export const RootView = () => {
       <Header />
       <div
         className="bg-dark"
-        style={{ color: "white" }} // -64 of the Header height
+        style={{ color: "white" }}
       >
         <Outlet />
       </div>
