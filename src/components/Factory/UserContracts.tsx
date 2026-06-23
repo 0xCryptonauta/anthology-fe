@@ -80,6 +80,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
 }) => {
   const dispatch = useAppDispatch();
   const currentUserAddr = useAppSelector((state) => state.user.userAddr);
+  const categoryBackgroundsEnabled = useAppSelector((s) => s.dapp.categoryBackgroundsEnabled);
 
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
 
@@ -163,7 +164,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                 key={category}
                 /* 🟢 CAMBIO AQUI: break-inside-avoid e inline-block son críticos para que 
                    la tarjeta no se corte a la mitad entre dos columnas */
-                className={`p-4 ${getBgClass(category)} rounded-xl transition-all duration-200 break-inside-avoid inline-block w-full ${neonStyles}`}
+                className={`p-4 ${categoryBackgroundsEnabled ? getBgClass(category) : ""} rounded-xl transition-all duration-200 break-inside-avoid inline-block w-full ${neonStyles}`}
               >
                 <div 
                   className="flex justify-between items-center cursor-pointer select-none"
@@ -215,7 +216,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
 
           {/* --- (UNCATEGORIZED) --- */}
           {processedData.uncategorized.length > 0 && (
-            <div className={`p-4 ${getBgClass("uncategorized")} rounded-xl border-zinc-800 break-inside-avoid inline-block w-full`}>
+            <div className={`p-4 ${categoryBackgroundsEnabled ? getBgClass("uncategorized") : ""} rounded-xl border-zinc-800 break-inside-avoid inline-block w-full`}>
               {
                 (() => {
                   const isUncategorizedExpanded = expandedCategories["Uncategorized_General_Key"] || false;
