@@ -1,0 +1,154 @@
+.sel-modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.25rem 1rem;
+  width: 340px;
+}
+
+.sel-back-btn {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  color: #6b7280;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.sel-back-btn:hover {
+  color: #374151;
+}
+
+.sel-header {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+  text-align: center;
+}
+
+.sel-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.sel-action-btn {
+  padding: 0.3rem 0.75rem;
+  font-size: 0.8rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  background: #f9fafb;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.sel-action-btn:hover {
+  background: #e5e7eb;
+}
+
+.sel-list {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: #f9fafb;
+}
+
+.sel-category {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #111827;
+  padding: 0.35rem 0 0.15rem 0;
+  border-bottom: 1px solid #e5e7eb;
+  margin-top: 0.25rem;
+}
+
+.sel-subcategory {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #4b5563;
+  padding: 0.2rem 0 0.1rem 1.2em;
+}
+
+.sel-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0 0.25rem 1.2em;
+  cursor: pointer;
+  border-radius: 0.3rem;
+  transition: background 0.1s ease;
+}
+
+.sel-item:hover {
+  background: #e5e7eb;
+}
+
+.sel-item-sub {
+  padding-left: 2.4em;
+}
+
+.sel-item label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  flex: 1;
+  font-size: 0.85rem;
+  color: #374151;
+  word-break: break-all;
+}
+
+.sel-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #3b82f6;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.sel-empty {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  text-align: center;
+  padding: 1rem;
+  font-style: italic;
+}
+
+.sel-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.sel-count {
+  font-size: 0.85rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.sel-download-btn {
+  padding: 0.5rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, #06b6d4, #2563eb);
+  color: white;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+/* .sel-download-btn:hover:not(:disabled) {
+  box-shadow: 0 0 12px rgba(6, 182, 212, 0.4);
+} */
+
+.sel-download-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

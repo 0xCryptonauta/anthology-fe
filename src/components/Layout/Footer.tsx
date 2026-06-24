@@ -1,16 +1,25 @@
+import { useAppSelector } from "@store/utils/hooks";
+
 export const Footer = () => {
+  const footerBgClass = useAppSelector((s) => s.dapp.anthologyFooterBgClass);
+
   return (
     <div
-      className="bg-dark"
+      className={footerBgClass}
       style={{
         display: "flex",
-        flexDirection: "row",
+        flexDirection: "column",
         justifyContent: "center",
+        alignItems: "center",
         color: "#222222",
-        height: "50px",
+        height: "60px",
       }}
     >
-      <span>Recording the collective memory.</span>
+      <span>© 2026 - InBytes.xyz</span>
+      
+      <span style={{ fontSize: "0.7rem" }}>
+        Recording the collective memory.
+      </span>
     </div>
   );
 };

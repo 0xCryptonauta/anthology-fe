@@ -32,10 +32,14 @@ import { Address, SkinType } from "@src/types/common";
 import { removePadding } from "@src/utils/removePadding";
 import { DEFAULT_SKIN } from "@src/utils/constants";
 import { FormatAnthologyTitle } from "@src/utils/FormatAnthologyTitle";
+import "@src/styles/backgrounds.css";
+import { getBgClass } from "@utils/backgrounds";
+import { setAnthologyFooterBgClass } from "@src/store/slices/dappSlice";
 
 export const AnthologyView = () => {
   const dispatch = useAppDispatch();
   const { currentPath } = useAppSelector((state) => state.user);
+  const categoryBackgroundsEnabled = useAppSelector((s) => s.dapp.categoryBackgroundsEnabled);
 
   //const { ethAddr, } = useParams();
 
@@ -207,15 +211,26 @@ export const AnthologyView = () => {
     setupAnthology();
   }, []);
 
+  useEffect(() => {
+    if (categoryBackgroundsEnabled) {
+      dispatch(setAnthologyFooterBgClass(getBgClass(contractAddr)));
+    }
+    return () => {
+      dispatch(setAnthologyFooterBgClass(""));
+    };
+  }, [categoryBackgroundsEnabled, contractAddr, dispatch]);
+
   return (
     <div
-      className="bg-dark"
+      className={categoryBackgroundsEnabled ? getBgClass(contractAddr) : ""}
       style={{
         color: "white",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "flex-start",
+        width: "100%",
+        minHeight: "95dvh",
       }}
     >
       <div style={{ display: "flex", margin: "20px" }}>

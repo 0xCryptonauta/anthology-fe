@@ -1,8 +1,8 @@
 //import { useAppDispatch } from "@store/utils/hooks";
-import { useAppSelector } from "@store/utils/hooks";
+import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
 //import { useParams } from "react-router-dom";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { Memoirs } from "@components/Anthology/Memoirs";
 import { AddMemoir } from "@components/Anthology/AddMemoir";
@@ -14,10 +14,14 @@ import { LocalAnthologyOwner } from "@src/components/Anthology/LocalAnthologyOwn
 import { LocalAnthologyState } from "@src/components/Anthology/LocalAnthologyState";
 import { DEFAULT_SKIN } from "@src/utils/constants";
 import { FormatAnthologyTitle } from "@src/utils/FormatAnthologyTitle";
+import "@src/styles/backgrounds.css";
+import { getBgClass } from "@utils/backgrounds";
+import { setAnthologyFooterBgClass } from "@src/store/slices/dappSlice";
 
 export const LocalAnthologyView = () => {
-  //const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   const { currentPath } = useAppSelector((state) => state.user);
+  const categoryBackgroundsEnabled = useAppSelector((s) => s.dapp.categoryBackgroundsEnabled);
 
   //const { ethAddr, } = useParams();
 
@@ -39,15 +43,26 @@ export const LocalAnthologyView = () => {
   );
   const [currentOrder, setCurrentOrder] = useState<OrderType>("Newer");
 
+  useEffect(() => {
+    if (categoryBackgroundsEnabled) {
+      dispatch(setAnthologyFooterBgClass(getBgClass(contractAddr)));
+    }
+    return () => {
+      dispatch(setAnthologyFooterBgClass(""));
+    };
+  }, [categoryBackgroundsEnabled, contractAddr, dispatch]);
+
   return (
     <div
-      className="bg-dark"
+      className={categoryBackgroundsEnabled ? getBgClass(contractAddr) : ""}
       style={{
         color: "white",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "flex-start",
+        width: "100%",
+        minHeight: "100dvh",
       }}
     >
       <div style={{ display: "flex", margin: "20px" }}>

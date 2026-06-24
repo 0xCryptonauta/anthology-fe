@@ -5,14 +5,15 @@ import { IconPathSwitcher } from "@src/components/Layout/IconPathSwitcher";
 import { DownloadReduxStore } from "@src/components/Layout/DownloadReduxStore";
 import { CleanReduxStore } from "@src/components/Layout/CleanReduxStore";
 import { LoadReduxStore } from "@src/components/Layout/LoadReduxStore";
+import { CategoryBackgroundsToggle } from "@src/components/Layout/CategoryBackgroundsToggle";
 
 export const SettingsView = () => {
   return (
     <div
-      className="bg-dark"
       style={{
         color: "white",
         height: "100%",
+        textShadow: "none",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -34,6 +35,7 @@ export const SettingsView = () => {
         <LoadReduxStore />
         <InstallPWAButton />
         <IconPathSwitcher />
+        <CategoryBackgroundsToggle />
         <NetworkSettings />
       </div>
 

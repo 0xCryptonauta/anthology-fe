@@ -5,11 +5,15 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 export interface dappState {
   factoryRpc: string;
   isIconToLocal: boolean;
+  categoryBackgroundsEnabled: boolean;
+  anthologyFooterBgClass: string;
 }
 
 const initialState: dappState = {
   factoryRpc: "",
   isIconToLocal: true,
+  categoryBackgroundsEnabled: true,
+  anthologyFooterBgClass: "",
 };
 
 export const dappSlice = createSlice({
@@ -22,13 +26,19 @@ export const dappSlice = createSlice({
     toggleIsIconToLocal: (state) => {
       state.isIconToLocal = !state.isIconToLocal;
     },
+    toggleCategoryBackgrounds: (state) => {
+      state.categoryBackgroundsEnabled = !state.categoryBackgroundsEnabled;
+    },
     resetDappStore: () => {
       return initialState;
+    },
+    setAnthologyFooterBgClass: (state, action: PayloadAction<string>) => {
+      state.anthologyFooterBgClass = action.payload;
     },
   },
 });
 
-export const { updateFactoryRpc, toggleIsIconToLocal, resetDappStore } =
+export const { updateFactoryRpc, toggleIsIconToLocal, toggleCategoryBackgrounds, resetDappStore, setAnthologyFooterBgClass } =
   dappSlice.actions;
 
 export default dappSlice.reducer;

@@ -118,6 +118,7 @@ export const SidePanel = () => {
                   margin: "10px 0px",
                   fontSize: "18px",
                   textDecoration: "none",
+                  color: "white",
                 }}
               >
                 My Anthologies
@@ -131,6 +132,7 @@ export const SidePanel = () => {
               margin: "10px 0px",
               fontSize: "18px",
               textDecoration: "none",
+              color: "white",
             }}
           >
             Discover
@@ -140,11 +142,11 @@ export const SidePanel = () => {
             onClick={() => handleOnClick(LOCAL_USER_PATH)}
             style={{
               margin: "10px 0px",
-              color: "#ff8383",
+              color: "white",
               textDecoration: "none",
             }}
           >
-            Draft Anthologies
+            Private Anthologies
           </Link>
         </div>
         <div
@@ -158,7 +160,7 @@ export const SidePanel = () => {
           <Link
             to="/about"
             onClick={handleClose}
-            style={{ textDecoration: "none", marginTop: "20px" }}
+            style={{ textDecoration: "none", marginTop: "20px", color: "white" }}
           >
             About
           </Link>
@@ -166,7 +168,7 @@ export const SidePanel = () => {
             <Link
               to="/info"
               onClick={handleClose}
-              style={{ textDecoration: "none", marginTop: "10px" }}
+              style={{ textDecoration: "none", marginTop: "10px", color: "white" }}
             >
               Factory Info
             </Link>
@@ -174,7 +176,7 @@ export const SidePanel = () => {
           <Link
             to="/settings"
             onClick={handleClose}
-            style={{ textDecoration: "none", marginTop: "10px" }}
+            style={{ textDecoration: "none", marginTop: "10px", color: "white" }}
           >
             Settings
           </Link>
