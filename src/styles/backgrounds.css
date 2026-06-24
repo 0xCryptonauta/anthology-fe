@@ -2,7 +2,6 @@
 
 .bg-overlay {
   position: relative;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.6);
 }
 .bg-overlay::before {
   content: '';
@@ -16,6 +15,10 @@
 .bg-overlay > * {
   position: relative;
   z-index: 1;
+}
+
+.text-shadow-dark {
+  text-shadow: 0 1px 4px rgba(0,0,0,0.6);
 }
 
 /* --------------------------------------------------------------------------- */

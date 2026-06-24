@@ -6,10 +6,11 @@ import "@src/styles/backgrounds.css";
 
 export const RootView = () => {
   const backgroundsEnabled = useAppSelector((s) => s.dapp.categoryBackgroundsEnabled);
+  const footerBgClass = useAppSelector((s) => s.dapp.anthologyFooterBgClass);
 
   return (
     <div
-      className={backgroundsEnabled ? "bg-overlay bg-arabesque-style" : "bg-dark"}
+      className={backgroundsEnabled ? (footerBgClass || "bg-overlay bg-arabesque-style") : "bg-dark"}
       style={{
         display: "grid",
         minHeight: "100dvh",

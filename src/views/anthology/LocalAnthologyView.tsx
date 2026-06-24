@@ -54,7 +54,7 @@ export const LocalAnthologyView = () => {
 
   return (
     <div
-      className={categoryBackgroundsEnabled ? getBgClass(contractAddr) : ""}
+      className=""
       style={{
         color: "white",
         display: "flex",
