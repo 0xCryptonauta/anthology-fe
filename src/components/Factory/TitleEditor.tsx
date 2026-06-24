@@ -171,6 +171,7 @@ export const TitleEditor: React.FC<TitleEditorProps> = ({
             onFocus={() => setSubDropdownOpen(true)}
             onKeyDown={handleKeyDown}
             autoComplete="off"
+            disabled={!category.trim()}
           />
           {subDropdownOpen && filteredSubcategories.length > 0 && (
             <div className="title-editor-dropdown">
@@ -192,7 +193,7 @@ export const TitleEditor: React.FC<TitleEditorProps> = ({
       </div>
 
       <div className="title-editor-field">
-        <label htmlFor={titleId}>Title</label>
+        <label htmlFor={titleId} style={{color: "black", fontWeight: "bold"}}>Title</label>
         <input
           id={titleId}
           type="text"

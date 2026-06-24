@@ -34,6 +34,7 @@ import { DEFAULT_SKIN } from "@src/utils/constants";
 import { FormatAnthologyTitle } from "@src/utils/FormatAnthologyTitle";
 import "@src/styles/backgrounds.css";
 import { getBgClass } from "@utils/backgrounds";
+import { setAnthologyFooterBgClass } from "@src/store/slices/dappSlice";
 
 export const AnthologyView = () => {
   const dispatch = useAppDispatch();
@@ -209,6 +210,15 @@ export const AnthologyView = () => {
     //Validate if contract already exist before making rpc call
     setupAnthology();
   }, []);
+
+  useEffect(() => {
+    if (categoryBackgroundsEnabled) {
+      dispatch(setAnthologyFooterBgClass(getBgClass(contractAddr)));
+    }
+    return () => {
+      dispatch(setAnthologyFooterBgClass(""));
+    };
+  }, [categoryBackgroundsEnabled, contractAddr, dispatch]);
 
   return (
     <div

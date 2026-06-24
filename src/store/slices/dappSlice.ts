@@ -6,12 +6,14 @@ export interface dappState {
   factoryRpc: string;
   isIconToLocal: boolean;
   categoryBackgroundsEnabled: boolean;
+  anthologyFooterBgClass: string;
 }
 
 const initialState: dappState = {
   factoryRpc: "",
   isIconToLocal: true,
   categoryBackgroundsEnabled: true,
+  anthologyFooterBgClass: "",
 };
 
 export const dappSlice = createSlice({
@@ -30,10 +32,13 @@ export const dappSlice = createSlice({
     resetDappStore: () => {
       return initialState;
     },
+    setAnthologyFooterBgClass: (state, action: PayloadAction<string>) => {
+      state.anthologyFooterBgClass = action.payload;
+    },
   },
 });
 
-export const { updateFactoryRpc, toggleIsIconToLocal, toggleCategoryBackgrounds, resetDappStore } =
+export const { updateFactoryRpc, toggleIsIconToLocal, toggleCategoryBackgrounds, resetDappStore, setAnthologyFooterBgClass } =
   dappSlice.actions;
 
 export default dappSlice.reducer;

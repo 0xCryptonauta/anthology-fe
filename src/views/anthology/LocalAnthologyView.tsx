@@ -1,8 +1,8 @@
 //import { useAppDispatch } from "@store/utils/hooks";
-import { useAppSelector } from "@store/utils/hooks";
+import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
 //import { useParams } from "react-router-dom";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { Memoirs } from "@components/Anthology/Memoirs";
 import { AddMemoir } from "@components/Anthology/AddMemoir";
@@ -16,9 +16,10 @@ import { DEFAULT_SKIN } from "@src/utils/constants";
 import { FormatAnthologyTitle } from "@src/utils/FormatAnthologyTitle";
 import "@src/styles/backgrounds.css";
 import { getBgClass } from "@utils/backgrounds";
+import { setAnthologyFooterBgClass } from "@src/store/slices/dappSlice";
 
 export const LocalAnthologyView = () => {
-  //const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   const { currentPath } = useAppSelector((state) => state.user);
   const categoryBackgroundsEnabled = useAppSelector((s) => s.dapp.categoryBackgroundsEnabled);
 
@@ -41,6 +42,15 @@ export const LocalAnthologyView = () => {
     defaultSkin ? defaultSkin : DEFAULT_SKIN
   );
   const [currentOrder, setCurrentOrder] = useState<OrderType>("Newer");
+
+  useEffect(() => {
+    if (categoryBackgroundsEnabled) {
+      dispatch(setAnthologyFooterBgClass(getBgClass(contractAddr)));
+    }
+    return () => {
+      dispatch(setAnthologyFooterBgClass(""));
+    };
+  }, [categoryBackgroundsEnabled, contractAddr, dispatch]);
 
   return (
     <div

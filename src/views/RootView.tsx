@@ -9,6 +9,7 @@ export const RootView = () => {
 
   return (
     <div
+      className={backgroundsEnabled ? "bg-overlay bg-arabesque-style" : "bg-dark"}
       style={{
         display: "grid",
         minHeight: "100dvh",
@@ -17,7 +18,6 @@ export const RootView = () => {
     >
       <Header />
       <div
-        className={backgroundsEnabled ? "bg-overlay bg-arabesque-style" : "bg-dark"}
         style={{ color: "white" }}
       >
         <Outlet />
