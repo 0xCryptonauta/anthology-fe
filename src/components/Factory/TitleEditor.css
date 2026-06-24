@@ -18,7 +18,40 @@
   letter-spacing: 0.02em;
 }
 
+.title-editor-input-wrap {
+  position: relative;
+}
+
+.title-editor-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  margin-top: 2px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 0.6rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.title-editor-dropdown-item {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  color: #374151;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.1s ease;
+}
+
+.title-editor-dropdown-item:hover {
+  background-color: #e5e7eb;
+}
+
 .title-editor-field input {
+  width: 100%;
   padding: 0.6rem 0.75rem;
   font-size: 0.9rem;
   color: #111827;

@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { shortenAddress } from "@utils/shortenAddress";
 import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
 import { syncUserContractsToStore } from "@src/store/utils/thunks";
@@ -44,7 +44,19 @@ export const UserContracts: React.FC<UserContractsProps> = ({
   const currentUserAddr = useAppSelector((state) => state.user.userAddr);
   const categoryBackgroundsEnabled = useAppSelector((s) => s.dapp.categoryBackgroundsEnabled);
 
-  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
+  const EXPANDED_KEY = `anthology-expanded-${userAddr}`;
+  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>(() => {
+    try {
+      const stored = localStorage.getItem(EXPANDED_KEY);
+      return stored ? JSON.parse(stored) : {};
+    } catch {
+      return {};
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem(EXPANDED_KEY, JSON.stringify(expandedCategories));
+  }, [expandedCategories, EXPANDED_KEY]);
 
   const handleOnClick = (newCurrentPath: CurrentPaths) => {
     dispatch(updateCurrentPath(newCurrentPath));

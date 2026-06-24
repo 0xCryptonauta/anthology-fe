@@ -109,7 +109,7 @@ export const Modal = ({
         data-bs-theme={isSidePanel ? "dark" : undefined}
         style={{
           width: isSidePanel ? "200px" : undefined,
-          height: !isSidePanel && placement !== "end" ? "550px" : undefined,
+          height: !isSidePanel && placement !== "end" ? "600px" : undefined,
           backgroundColor: "transparent",
           border: "unset",
           display: "flex",
