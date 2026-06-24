@@ -97,7 +97,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
       <div className="w-full max-w-7xl">
 
         {/* --- HEADER DE USUARIO --- */}
-        <div className={`flex justify-between items-center mb-8 p-4 ${categoryBackgroundsEnabled && userAddr === LOCAL_USER_ADDR ? "bg-overlay bg-nested-triangles" : "bg-[#161b22]"} rounded-xl border-sky-500/40 shadow-[0_0_15px_rgba(14,165,233,0.15)] mx-auto w-full max-w-2xl`}>
+        <div className={`flex justify-between items-center mb-8 p-4 ${categoryBackgroundsEnabled && userAddr === LOCAL_USER_ADDR ? "bg-overlay bg-nested-triangles text-shadow-dark" : "bg-[#161b22]"} rounded-xl border-sky-500/40 shadow-[0_0_15px_rgba(14,165,233,0.15)] mx-auto w-full max-w-2xl`}>
           <div className="flex items-center gap-4">
 {/*             {userAddr === LOCAL_USER_ADDR && (
                 <div className="h-10 w-10 bg-zinc-800 rounded-full flex items-center justify-center font-bold text-zinc-400 select-none">
@@ -141,7 +141,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                 key={category}
                 /* 🟢 CAMBIO AQUI: break-inside-avoid e inline-block son críticos para que 
                    la tarjeta no se corte a la mitad entre dos columnas */
-                className={`p-4 ${categoryBackgroundsEnabled ? getBgClass(category) : ""} rounded-xl transition-all duration-200 ${neonStyles}`}
+                className={`p-4 ${categoryBackgroundsEnabled ? `${getBgClass(category)} text-shadow-dark` : ""} rounded-xl transition-all duration-200 ${neonStyles}`}
               >
                 <div 
                   className="flex justify-between items-center cursor-pointer select-none"
@@ -193,7 +193,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
 
           {/* --- (UNCATEGORIZED) --- */}
           {processedData.uncategorized.length > 0 && (
-            <div className={`p-4 ${categoryBackgroundsEnabled ? getBgClass("uncategorized") : ""} rounded-xl border-zinc-800`}>
+            <div className={`p-4 ${categoryBackgroundsEnabled ? `${getBgClass("uncategorized")} text-shadow-dark` : ""} rounded-xl border-zinc-800`}>
               {
                 (() => {
                   const isUncategorizedExpanded = expandedCategories["Uncategorized_General_Key"] || false;
