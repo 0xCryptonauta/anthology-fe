@@ -212,7 +212,7 @@ export const AnthologyView = () => {
 
   return (
     <div
-      className={categoryBackgroundsEnabled ? getBgClass(contractAddr) : "bg-dark"}
+      className={categoryBackgroundsEnabled ? getBgClass(contractAddr) : ""}
       style={{
         color: "white",
         display: "flex",

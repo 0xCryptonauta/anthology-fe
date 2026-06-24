@@ -6,7 +6,6 @@ export const AboutView = () => {
 
   return (
     <div
-      className="bg-dark"
       style={{
         color: "white",
         display: "flex",

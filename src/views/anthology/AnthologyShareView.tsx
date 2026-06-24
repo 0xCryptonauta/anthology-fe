@@ -3,7 +3,6 @@ import { SharePage } from "@src/components/Layout/SharePage";
 export const AnthologyShareView = () => {
   return (
     <div
-      className="bg-dark"
       style={{
         color: "white",
         height: "600px",

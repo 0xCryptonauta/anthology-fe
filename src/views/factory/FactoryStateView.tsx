@@ -11,7 +11,6 @@ export const FactoryStateView = () => {
   useGetFactoryInfo(); // Fetch factory info on mount
   return (
     <div
-      className="bg-dark"
       style={{
         color: "white",
         display: "flex",

@@ -10,10 +10,10 @@ import { CategoryBackgroundsToggle } from "@src/components/Layout/CategoryBackgr
 export const SettingsView = () => {
   return (
     <div
-      className="bg-dark"
       style={{
         color: "white",
         height: "100%",
+        textShadow: "none",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",

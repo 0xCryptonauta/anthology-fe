@@ -20,9 +20,7 @@ export const LocalUserView = () => {
 
   return (
     <div
-      className="bg-dark"
       style={{
-        //width: "100%",
         color: "white",
         display: "flex",
         flexDirection: "row",

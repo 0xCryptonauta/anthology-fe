@@ -1,8 +1,12 @@
 import { Outlet } from "react-router-dom";
 import { Header } from "@components/Layout/Header";
 import { Footer } from "@components/Layout/Footer";
+import { useAppSelector } from "@store/utils/hooks";
+import "@src/styles/backgrounds.css";
 
 export const RootView = () => {
+  const backgroundsEnabled = useAppSelector((s) => s.dapp.categoryBackgroundsEnabled);
+
   return (
     <div
       style={{
@@ -13,7 +17,7 @@ export const RootView = () => {
     >
       <Header />
       <div
-        className="bg-dark"
+        className={backgroundsEnabled ? "bg-overlay bg-arabesque-style" : "bg-dark"}
         style={{ color: "white" }}
       >
         <Outlet />

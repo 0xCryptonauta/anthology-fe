@@ -26,11 +26,8 @@ export const UserView: React.FC<UserViewProps> = ({ userAddr }) => {
 
   return (
     <div
-      className="bg-dark"
       style={{
-        //width: "100svh",
         color: "white",
-        //border: "1px solid white",
         display: "flex",
         flexDirection: "row",
         alignItems: "flex-start",
