@@ -1,10 +1,15 @@
 import { Outlet } from "react-router-dom";
 import { Header } from "@components/Layout/Header";
 import { Footer } from "@components/Layout/Footer";
+import { useAppSelector } from "@store/utils/hooks";
+import "@src/styles/backgrounds.css";
 
 export const RootView = () => {
+  const backgroundsEnabled = useAppSelector((s) => s.dapp.categoryBackgroundsEnabled);
+
   return (
     <div
+      className={backgroundsEnabled ? "bg-overlay bg-arabesque-style" : "bg-dark"}
       style={{
         display: "grid",
         minHeight: "100dvh",
@@ -13,8 +18,7 @@ export const RootView = () => {
     >
       <Header />
       <div
-        className="bg-dark"
-        style={{ color: "white" }} // -64 of the Header height
+        style={{ color: "white" }}
       >
         <Outlet />
       </div>

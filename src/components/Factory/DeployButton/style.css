@@ -128,3 +128,38 @@
 .btn-rocket:hover span {
   transform: translateX(7px);
 }
+
+.btn-new-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, #06b6d4, #2563eb);
+  cursor: pointer;
+  margin-left: 10px;
+  transition: all 0.3s ease;
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.btn-new-pill svg {
+  width: 20px;
+  height: 20px;
+  color: #fff;
+}
+
+.btn-new-pill:hover {
+  transform: scale(1.15);
+  animation: none;
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.8), 0 0 40px rgba(6, 182, 212, 0.4);
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(6, 182, 212, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 24px rgba(6, 182, 212, 0.8), 0 0 40px rgba(59, 130, 246, 0.3);
+  }
+}

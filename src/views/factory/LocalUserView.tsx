@@ -1,7 +1,5 @@
-import {
-  UserContracts,
-  MemoirContent,
-} from "@components/Factory/UserContracts";
+import { UserContracts } from "@components/Factory/UserContracts";
+import { MemoirContent } from "@src/types/common";
 import { useAppSelector } from "@src/store/utils/hooks";
 import { Address } from "@src/types/common";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
@@ -22,9 +20,7 @@ export const LocalUserView = () => {
 
   return (
     <div
-      className="bg-dark"
       style={{
-        //width: "100%",
         color: "white",
         display: "flex",
         flexDirection: "row",

@@ -1,17 +1,14 @@
-import { useState } from "react";
-//import { ChangeAnthologyTitle } from "./ChangeAnthologyTitle";
+import { useState, useMemo } from "react";
 import { useToast } from "@components/Layout/Toast";
 
-import {
-  //useAppSelector,
-  useAppDispatch,
-  useAppSelector,
-} from "@store/utils/hooks";
-import { Address } from "@src/types/common";
+import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
+import { Address, MemoirContent } from "@src/types/common";
+import { LOCAL_USER_ADDR } from "@src/utils/constants";
 import { updateUserLocalAnthologyTitle } from "@src/store/slices/localAnthologySlice";
-import { MAX_TITLE_LENGTH } from "@src/utils/constants";
 
 import { ChangeAnthologyDefaultSkin } from "./ChangeAnthologyDefaultSkin";
+import { TitleEditor } from "@components/Factory/TitleEditor";
+import { Modal } from "@src/components/Layout/Modal";
 
 export const LocalAnthologyOwner = ({
   contractAddr,
@@ -20,13 +17,49 @@ export const LocalAnthologyOwner = ({
 }) => {
   const { addToast } = useToast();
 
-  const { contractsTitles } = useAppSelector((state) => state.localAnthology);
+  const { contractsTitles, userContracts } = useAppSelector((state) => state.localAnthology);
 
   const currentTitle = contractsTitles[contractAddr] || "";
 
   const dispatch = useAppDispatch();
 
-  const [newTitle, setNewTitle] = useState(currentTitle);
+  const [showTitleModal, setShowTitleModal] = useState(false);
+
+  const userTitles: MemoirContent[] = useMemo(() => {
+    const contracts = userContracts?.[LOCAL_USER_ADDR] || [];
+    return contracts.map((addr, i) => ({
+      address: addr,
+      title: contractsTitles[addr] || "",
+      originalIndex: i,
+    }));
+  }, [userContracts, contractsTitles]);
+  const handleCloseTitleModal = () => setShowTitleModal(false);
+
+  const handleTitleSubmit = (combinedTitle: string) => {
+    try {
+      addToast({
+        title: "New title:",
+        content: combinedTitle,
+        variant: "success",
+        delay: 5000,
+      });
+      dispatch(
+        updateUserLocalAnthologyTitle({
+          contract: contractAddr,
+          newTitle: combinedTitle,
+        })
+      );
+      handleCloseTitleModal();
+    } catch (error) {
+      addToast({
+        title: "Error setting new title",
+        content: "Unknown error",
+        variant: "warning",
+        delay: 5000,
+      });
+      console.error("Error setting new title", error);
+    }
+  };
 
   return (
     <div
@@ -35,81 +68,64 @@ export const LocalAnthologyOwner = ({
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "space-around",
-        //border: "1px solid white",
         width: "fit-content",
         padding: "7px",
         borderRadius: "7px",
         margin: "20px 5px",
       }}
     >
-      {/* <h2>Anthology basic settings</h2> */}
       <br />
       {/* ------------------------------- Update Anthology title ------------------------------ */}
-      <div
-        style={{
-          //border: "1px solid white",
-          padding: "5px",
-          borderRadius: "7px",
-          margin: "3px",
-        }}
+      <Modal
+        placement="bottom"
+        show={showTitleModal}
+        onHide={handleCloseTitleModal}
+        trigger={
+          <button
+            style={{
+              marginTop: "10px",
+              backgroundColor: "dodgerblue",
+              border: "none",
+              color: "white",
+              padding: "8px 16px",
+              borderRadius: "6px",
+              cursor: "pointer",
+              fontSize: "0.9rem",
+            }}
+            onClick={() => setShowTitleModal(true)}
+          >
+            Change title
+          </button>
+        }
       >
         <div
           style={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            gap: "1rem",
+            padding: "1.25rem 1rem",
+            width: "320px",
           }}
         >
-          <span style={{ marginBottom: "10px" }}>Set new Title</span>
-          <textarea
-            value={newTitle}
-            placeholder={"[Cat][Subcat]Title"}
+          <span
             style={{
-              height: "80px",
-              minHeight: "80px",
-              maxHeight: "150px",
-              //backgroundColor: "white",
-              color: "white",
-              borderRadius: "5px",
-              width: "320px",
+              fontSize: "1rem",
+              fontWeight: 600,
+              color: "#111827",
               textAlign: "center",
-              alignContent: "center",
-            }}
-            maxLength={MAX_TITLE_LENGTH}
-            onChange={(e) => setNewTitle(e.target.value)}
-          ></textarea>
-          <button
-            style={{ marginTop: "10px", backgroundColor: "dodgerblue" }}
-            onClick={async () => {
-              try {
-                addToast({
-                  title: "New title:",
-                  content: newTitle,
-                  variant: "success",
-                  delay: 5000,
-                });
-                console.log("new title:", newTitle);
-                dispatch(
-                  updateUserLocalAnthologyTitle({
-                    contract: contractAddr,
-                    newTitle: newTitle,
-                  })
-                );
-              } catch (error) {
-                addToast({
-                  title: "Error setting new title",
-                  content: "Unknown error",
-                  variant: "warning",
-                  delay: 5000,
-                });
-                console.error("Error setting new title", error);
-              }
             }}
           >
-            Change title
-          </button>
+            Set New Title
+          </span>
+          <TitleEditor
+            initialTitle={currentTitle}
+            userTitles={userTitles}
+            submitLabel="Change title"
+            onSubmit={handleTitleSubmit}
+          />
         </div>
-      </div>
+      </Modal>
       <br />
       <ChangeAnthologyDefaultSkin contractAddr={contractAddr} />
 
