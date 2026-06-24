@@ -11,6 +11,7 @@ import { CurrentPaths } from "@src/types/common";
 export const SidePanel = () => {
   const { userAddr } = useAppSelector((state) => state.user);
   const { isIconToLocal } = useAppSelector((state) => state.dapp);
+  const backgroundsEnabled = useAppSelector((s) => s.dapp.categoryBackgroundsEnabled);
   const { isConnected, address } = useAccount();
 
   const dispatch = useAppDispatch();
@@ -35,6 +36,7 @@ export const SidePanel = () => {
     <Modal
       placement="end"
       variant="sidepanel"
+      containerClassName={backgroundsEnabled ? "bg-dark-film" : ""}
       show={show}
       onHide={handleClose}
       trigger={

@@ -17,6 +17,7 @@ type ModalProps = {
   variant?: "modal" | "sidepanel";
   transparent?: boolean;
   stickToBottom?: boolean;
+  containerClassName?: string;
 };
 
 export const Modal = ({
@@ -29,6 +30,7 @@ export const Modal = ({
   variant = "modal",
   transparent = false,
   stickToBottom = false,
+  containerClassName,
 }: ModalProps) => {
   const [internalShow, setInternalShow] = useState(false);
   const show = externalShow ?? internalShow;
@@ -105,7 +107,7 @@ export const Modal = ({
         show={show}
         onHide={handleClose}
         placement={stickToBottom ? "bottom" : resolvedPlacement}
-        className={isSidePanel ? "bg-dark" : ""}
+        className={isSidePanel ? (containerClassName || "") : ""}
         data-bs-theme={isSidePanel ? "dark" : undefined}
         style={{
           width: isSidePanel ? "200px" : undefined,
