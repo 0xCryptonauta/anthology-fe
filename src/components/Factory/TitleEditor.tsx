@@ -1,7 +1,7 @@
 import { useState, useMemo, useId, useRef, useEffect } from "react";
 import { MAX_TITLE_LENGTH } from "@src/utils/constants";
 import { MemoirContent } from "@src/types/common";
-import { parseContractsCategories } from "@src/utils/parseContractsCategories";
+import { parseContractsCategoriesSorted } from "@src/utils/parseContractsCategories";
 import "./TitleEditor.css";
 
 interface TitleEditorProps {
@@ -64,7 +64,7 @@ export const TitleEditor: React.FC<TitleEditorProps> = ({
 
   const availableCategories = useMemo(() => {
     if (!userTitles?.length) return [];
-    const { categories } = parseContractsCategories(userTitles);
+    const { categories } = parseContractsCategoriesSorted(userTitles);
     return Object.keys(categories);
   }, [userTitles]);
 
@@ -77,7 +77,7 @@ export const TitleEditor: React.FC<TitleEditorProps> = ({
 
   const availableSubcategories = useMemo(() => {
     if (!userTitles?.length || !category.trim()) return [];
-    const { categories } = parseContractsCategories(userTitles);
+    const { categories } = parseContractsCategoriesSorted(userTitles);
     return Object.keys(categories[category.trim()]?.subcategories || {});
   }, [userTitles, category]);
 
