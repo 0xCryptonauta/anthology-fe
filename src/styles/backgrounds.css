@@ -207,3 +207,17 @@
     conic-gradient(#0000 75%,var(--c1) 0) 0 0/var(--s) var(--s) 
      var(--c2);
 }
+
+.bg-dark-film::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 0;
+  pointer-events: none;
+  border-radius: inherit;
+}
+.bg-dark-film > * {
+  position: relative;
+  z-index: 1;
+}

@@ -9,7 +9,7 @@ import { updateCurrentPath } from "@src/store/slices/userSlice";
 
 export const Header = () => {
   const { isConnected, address } = useAccount();
-  const { isIconToLocal } = useAppSelector((state) => state.dapp);
+  const { isIconToLocal, categoryBackgroundsEnabled } = useAppSelector((state) => state.dapp);
 
   const dispatch = useAppDispatch();
 
@@ -25,7 +25,7 @@ export const Header = () => {
   };
 
   return (
-    <nav className="navbar bg-dark" data-bs-theme="dark">
+    <nav className={`navbar ${categoryBackgroundsEnabled ? "bg-dark-film" : "bg-dark"}`} data-bs-theme="dark">
       <div className="container-fluid">
         <Link
           className="navbar-brand"
