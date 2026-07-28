@@ -1,11 +1,14 @@
 import { store } from "@store/redux";
 import { useToast } from "@components/Layout/Toast";
+import { Seo } from "@components/Layout/Seo";
 
 export const AboutView = () => {
   const { addToast } = useToast();
 
   return (
-    <div
+    <>
+      <Seo title="About" description="Learn more about the Anthology project" />
+      <div
       style={{
         color: "white",
         display: "flex",
@@ -44,6 +47,7 @@ export const AboutView = () => {
           Memory being used
         </button>
       </div>
-    </div>
+      </div>
+    </>
   );
 };

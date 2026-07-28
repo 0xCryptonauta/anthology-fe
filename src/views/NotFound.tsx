@@ -1,9 +1,12 @@
 import { Link } from "react-router-dom";
+import { Seo } from "@components/Layout/Seo";
 import "./NotFound.css";
 
 export function NotFound() {
   return (
-    <div className="notfound-container">
+    <>
+      <Seo title="404" description="Page not found" />
+      <div className="notfound-container">
       <h1 className="notfound-title">404</h1>
       <p className="notfound-subtitle">Page not found</p>
       <p className="notfound-message">
@@ -21,6 +24,7 @@ export function NotFound() {
         </em>
         <div className="notfound-quote-attribution">– Friedrich Nietzsche</div>
       </footer>
-    </div>
+      </div>
+    </>
   );
 }

@@ -3,6 +3,7 @@ import { useAppSelector } from "@store/utils/hooks";
 import { FactoryState } from "@src/components/Factory/FactoryState";
 import { OnlyOwner } from "@components/Factory/OnlyOwner";
 import { useGetFactoryInfo } from "@src/hooks/useGetFactoryInfo";
+import { Seo } from "@components/Layout/Seo";
 
 export const FactoryStateView = () => {
   const userAddr = useAppSelector((state) => state.user.userAddr);
@@ -10,7 +11,9 @@ export const FactoryStateView = () => {
 
   useGetFactoryInfo(); // Fetch factory info on mount
   return (
-    <div
+    <>
+      <Seo title="Factory" description="Explore Anthology factory contracts" />
+      <div
       style={{
         color: "white",
         display: "flex",
@@ -22,6 +25,7 @@ export const FactoryStateView = () => {
     >
       {factoryOwner == userAddr && <OnlyOwner />}
       <FactoryState />
-    </div>
+      </div>
+    </>
   );
 };

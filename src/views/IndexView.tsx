@@ -8,6 +8,7 @@ import { LOCAL_USER_PATH } from "@src/utils/constants";
 import { LocalUserView } from "./factory/LocalUserView";
 import { LocalAnthologyView } from "./anthology/LocalAnthologyView";
 import { DiscoverView } from "./factory/DiscoverView";
+import { Seo } from "@components/Layout/Seo";
 
 export const IndexView = () => {
   const { userAddr, currentPath } = useAppSelector((state) => state.user);
@@ -15,9 +16,15 @@ export const IndexView = () => {
   useHistoryState();
 
   return (
-    <div
-      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
-    >
+    <>
+      <Seo />
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
       {currentPath === `discover` ? (
         <DiscoverView />
       ) : currentPath === `user/${userAddr}` ? (
@@ -36,5 +43,6 @@ export const IndexView = () => {
         <div>Default View</div>
       )}
     </div>
+    </>
   );
 };
