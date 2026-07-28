@@ -6,6 +6,7 @@ import { store, persistor } from "@store/redux.ts";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { StrictMode } from "react";
 import { PersistGate } from "redux-persist/integration/react";
+import { HelmetProvider } from "react-helmet-async";
 import { ToastProvider } from "@components/Layout/Toast.tsx";
 import { NotFound } from "@views/NotFound.tsx";
 import { RootView } from "@views/RootView.tsx";
@@ -34,17 +35,7 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   import.meta.env.VITE_ENV === "development" ? (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <ToastProvider>
-          <ContextWagmiProvider>
-            <RouterProvider router={router} />
-          </ContextWagmiProvider>
-        </ToastProvider>
-      </PersistGate>
-    </Provider>
-  ) : (
-    <StrictMode>
+    <HelmetProvider>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <ToastProvider>
@@ -54,6 +45,20 @@ createRoot(document.getElementById("root")!).render(
           </ToastProvider>
         </PersistGate>
       </Provider>
+    </HelmetProvider>
+  ) : (
+    <StrictMode>
+      <HelmetProvider>
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <ToastProvider>
+              <ContextWagmiProvider>
+                <RouterProvider router={router} />
+              </ContextWagmiProvider>
+            </ToastProvider>
+          </PersistGate>
+        </Provider>
+      </HelmetProvider>
     </StrictMode>
   )
 );
