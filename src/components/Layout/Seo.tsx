@@ -35,6 +35,7 @@ export const Seo = ({
       <meta property="og:url" content={url} />
       <meta property="og:type" content={type} />
       <meta property="og:site_name" content={SITE_NAME} />
+      <meta property="og:logo" content="https://memory.inbytes.xyz/IB_icon.png" />
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={resolvedTitle} />
