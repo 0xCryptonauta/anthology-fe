@@ -8,13 +8,16 @@ import { Address } from "@src/types/common";
 export const PlaylistMemoirSkin = ({
   anthologyAddr,
   order,
+  search,
 }: {
   anthologyAddr: Address;
   order: OrderType;
+  search?: string;
 }) => {
   const { memoirs, orderedMemoirsIndexes } = useOrderedMemoirs(
     anthologyAddr,
-    order
+    order,
+    search
   );
 
   const extractYoutubeIds = (videoLinks: MemoirInterface[]) => {
