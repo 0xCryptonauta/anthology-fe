@@ -21,8 +21,7 @@ export const CacheStorageViewer = () => {
     const load = async () => {
       setIsLoading(true);
 
-      // The memoir data (Redux store) — /about used to report this as
-      // "memory being used"
+      // The memoir data (Redux store) — reported as "Memory (Anthologies)"
       setStoreBytes(JSON.stringify(store.getState()).length);
 
       // Total size of the service worker caches (thumbnails, assets, pages)
@@ -104,7 +103,7 @@ export const CacheStorageViewer = () => {
           }}
           onClick={() => setShow(true)}
         >
-          View cached files
+          View app storage usage
         </span>
       }
     >
@@ -137,6 +136,13 @@ export const CacheStorageViewer = () => {
             </div>
 
             <div style={rowStyle}>
+              <span>Memory (Anthologies)</span>
+              <span>
+                {storeBytes !== null ? `~${formatBytes(storeBytes)}` : "n/a"}
+              </span>
+            </div>
+
+            <div style={rowStyle}>
               <span>Cached thumbnails and files</span>
               <span>
                 {cacheBytes !== null ? formatBytes(cacheBytes) : "n/a"}
@@ -147,13 +153,6 @@ export const CacheStorageViewer = () => {
               <span>App data (wallet and others)</span>
               <span>
                 {appDataBytes !== null ? `~${formatBytes(appDataBytes)}` : "n/a"}
-              </span>
-            </div>
-
-            <div style={rowStyle}>
-              <span>Memory (Anthologies)</span>
-              <span>
-                {storeBytes !== null ? `~${formatBytes(storeBytes)}` : "n/a"}
               </span>
             </div>
           </div>
