@@ -81,7 +81,7 @@ export const localAnthologySlice = createSlice({
         state.userContracts[user].push(contract);
         state.contractsTitles[contract] = title;
         state.anthologies[contract] = state.anthologies[contract] || [];
-        state.defaultSkin[contract] = "media";
+        state.defaultSkin[contract] = DEFAULT_SKIN;
       }
     },
     addMemoirToUserLocalAnthology(

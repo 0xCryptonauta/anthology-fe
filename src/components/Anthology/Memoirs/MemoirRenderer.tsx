@@ -35,7 +35,8 @@ export const MemoirRenderer: React.FC<RenderMemoirsProps> = ({
           <PlaylistMemoirSkin anthologyAddr={anthologyAddr} order={order} />
         );
       default:
-        return <MediaMemoirSkin anthologyAddr={anthologyAddr} order={order} />;
+        // Fallback (incl. on-chain default/unknown skin) follows DEFAULT_SKIN
+        return <ListMemoirSkin anthologyAddr={anthologyAddr} order={order} />;
     }
   } catch (error) {
     console.error("Error rendering RenderMemoirs:", error);
