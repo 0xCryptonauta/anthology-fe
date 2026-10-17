@@ -79,7 +79,7 @@ export const MemoirActions = ({
   ];
 
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
       {isLocalAnthology(anthologyAddr) && (
         <>
           <EditMemoir
