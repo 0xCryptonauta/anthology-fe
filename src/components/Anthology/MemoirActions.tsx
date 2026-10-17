@@ -7,6 +7,7 @@ import { useToast } from "../Layout/Toast";
 import { Modal } from "../Layout/Modal";
 import { DeleteMemoir } from "./DeleteMemoir";
 import { EditMemoir } from "./EditMemoir";
+import { MoveMemoir } from "./MoveMemoir";
 
 export const MemoirActions = ({
   anthologyAddr,
@@ -80,11 +81,18 @@ export const MemoirActions = ({
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
       {isLocalAnthology(anthologyAddr) && (
-        <EditMemoir
-          anthologyAddr={anthologyAddr}
-          index={index}
-          memoir={memoir}
-        />
+        <>
+          <EditMemoir
+            anthologyAddr={anthologyAddr}
+            index={index}
+            memoir={memoir}
+          />
+          <MoveMemoir
+            anthologyAddr={anthologyAddr}
+            index={index}
+            memoir={memoir}
+          />
+        </>
       )}
 
       <span
