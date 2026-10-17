@@ -1,0 +1,29 @@
+/*
+ * Twitter's widgets.js includes an iframe-resizer with a resize sensor that
+ * feedback-loops the iframe width (+10px per cycle, up to 550px) when the
+ * container is narrower than the tweet's max width. Two things are needed:
+ *
+ * 1. Twitter rewrites the container div (it replaces our class with
+ *    `twitter-tweet-rendered`), so the clamp must target that class too.
+ * 2. The intrinsic iframe width must not propagate up through flex items
+ *    (that inflation is what feeds the loop) — see `minWidth: 0` on the
+ *    list container in ListMemoirSkin.tsx.
+ */
+
+.twitter-embed-wrapper,
+.twitter-tweet-rendered {
+  width: 100% !important;
+  max-width: 550px !important;
+  min-width: 0 !important;
+  margin: 0 auto;
+}
+
+.twitter-embed-wrapper .twitter-tweet,
+.twitter-embed-wrapper .twitter-tweet-rendered,
+.twitter-tweet-rendered .twitter-tweet,
+.twitter-embed-wrapper iframe,
+.twitter-tweet-rendered iframe {
+  min-width: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
