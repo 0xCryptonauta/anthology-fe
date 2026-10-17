@@ -135,24 +135,17 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
               )}
 
               <span>{formatUnixTime(Number(memoir.timestamp))}</span>
-            </div>
 
-            {/* Delete Button */}
-            {isDeletable && (
-              <div
-                style={{
-                  position: "absolute",
-                  right: "10px",
-                  bottom: "10px",
-                }}
-              >
-                <MemoirActions
-                  anthologyAddr={anthologyAddr}
-                  index={i}
-                  memoir={memoir}
-                />
-              </div>
-            )}
+              {isDeletable && (
+                <div style={{ marginTop: "6px" }}>
+                  <MemoirActions
+                    anthologyAddr={anthologyAddr}
+                    index={i}
+                    memoir={memoir}
+                  />
+                </div>
+              )}
+            </div>
           </div>
         );
       })}

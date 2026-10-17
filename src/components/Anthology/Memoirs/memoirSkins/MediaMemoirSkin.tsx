@@ -142,25 +142,19 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
               )}
 
               <span>{formatUnixTime(Number(memoir.timestamp))}</span>
-            </div>
 
-            {(currentUser === anthologyOwner ||
-              isLocalAnthology(anthologyAddr) ||
-              currentUser === memoir.sender) && (
-              <div
-                style={{
-                  position: "absolute",
-                  right: "10px",
-                  bottom: "10px",
-                }}
-              >
-                <MemoirActions
-                  anthologyAddr={anthologyAddr}
-                  index={i}
-                  memoir={memoir}
-                />
-              </div>
-            )}
+              {(currentUser === anthologyOwner ||
+                isLocalAnthology(anthologyAddr) ||
+                currentUser === memoir.sender) && (
+                <div style={{ marginTop: "6px" }}>
+                  <MemoirActions
+                    anthologyAddr={anthologyAddr}
+                    index={i}
+                    memoir={memoir}
+                  />
+                </div>
+              )}
+            </div>
           </div>
         );
       })}

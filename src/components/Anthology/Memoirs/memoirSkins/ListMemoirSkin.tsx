@@ -6,6 +6,7 @@ import { Address } from "@src/types/common";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 import { useAccount } from "wagmi";
 import { MemoirActions } from "../../MemoirActions";
+import { formatUnixTime } from "@utils/formatUnixTime";
 import { extractEmbed } from "@src/utils/embeds";
 import { EmbedRenderer } from "../thirdPartyEmbeds";
 
@@ -115,23 +116,30 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
                 content
               )}
             </div>
-            {(currentUser === anthologyOwner ||
-              isLocalAnthology(anthologyAddr) ||
-              currentUser === memoirs[i].sender) && (
-              <div
-                style={{
-                  position: "absolute",
-                  right: "10px",
-                  top: "10px",
-                }}
-              >
-                <MemoirActions
-                  anthologyAddr={anthologyAddr}
-                  index={i}
-                  memoir={memoirs[i]}
-                />
-              </div>
-            )}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                fontSize: "12px",
+                color: "#666",
+                marginTop: "8px",
+              }}
+            >
+              <span>{formatUnixTime(Number(memoirs[i].timestamp))}</span>
+
+              {(currentUser === anthologyOwner ||
+                isLocalAnthology(anthologyAddr) ||
+                currentUser === memoirs[i].sender) && (
+                <div style={{ marginTop: "6px" }}>
+                  <MemoirActions
+                    anthologyAddr={anthologyAddr}
+                    index={i}
+                    memoir={memoirs[i]}
+                  />
+                </div>
+              )}
+            </div>
           </div>
         );
       })}
