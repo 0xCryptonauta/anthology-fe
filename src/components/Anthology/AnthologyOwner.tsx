@@ -475,7 +475,16 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
             }
           }}
         >
-          📤
+          <img
+            src="/icons/share-icon.svg"
+            alt="Remove from whitelist"
+            style={{
+              width: "18px",
+              height: "18px",
+              display: "block",
+              filter: "invert(1)",
+            }}
+          />
         </span>
       </div>
 

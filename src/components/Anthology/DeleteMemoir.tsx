@@ -93,7 +93,15 @@ export const DeleteMemoir: React.FC<DeleteMemoirProps> = ({
       placement="bottom"
       show={show}
       onHide={handleClose}
-      trigger={<span onClick={() => setShow(true)}>❌</span>}
+      trigger={
+        <span onClick={() => setShow(true)}>
+          <img
+            src="/icons/delete-icon.svg"
+            alt="Delete memoir"
+            style={{ width: "18px", height: "18px", display: "block" }}
+          />
+        </span>
+      }
     >
       <div
         style={{
