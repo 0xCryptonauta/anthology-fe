@@ -1,6 +1,6 @@
-import { useState } from "react";
 import { useInView } from "react-intersection-observer";
 import "./YoutubeEmbed.css";
+import { useEmbedPlayback } from "./embedPlayback";
 
 type YoutubeEmbedProps = {
   videoId: string;
@@ -8,13 +8,13 @@ type YoutubeEmbedProps = {
 
 export const YoutubeEmbed: React.FC<YoutubeEmbedProps> = ({ videoId }) => {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0 });
-  const [isPlayerActive, setIsPlayerActive] = useState(false);
+  const { isActive, activate } = useEmbedPlayback();
 
   return (
-    <div ref={ref} className="yt-embed-container" onClick={() => setIsPlayerActive(true)}>
+    <div ref={ref} className="yt-embed-container" onClick={activate}>
       <div className="yt-embed-aspect">
         {inView ? (
-          isPlayerActive ? (
+          isActive ? (
             <iframe
               className="yt-embed-fill"
               src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
