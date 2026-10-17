@@ -223,3 +223,44 @@ export const detectEmbed = (content: string): EmbedMatch | null => {
     null
   );
 };
+
+/* -------------------------------- Extraction ------------------------------- */
+
+const URL_IN_TEXT_REGEX = /https?:\/\/\S+/i;
+const TRAILING_PUNCTUATION_REGEX = /[.,;:!?)\]}"']+$/;
+
+export interface ExtractedEmbed {
+  embed: EmbedMatch;
+  /** Remaining text with the URL removed ("" when the content is only a URL). */
+  caption: string;
+}
+
+/**
+ * Extracts the first embeddable URL from a content string, whether the content
+ * is exactly a URL or text mixed with one. Returns the detected embed plus the
+ * leftover text as caption.
+ */
+export const extractEmbed = (content: string): ExtractedEmbed | null => {
+  if (typeof content !== "string") return null;
+
+  // Fast path: the whole content is one embeddable URL
+  const direct = detectEmbed(content);
+  if (direct) return { embed: direct, caption: "" };
+
+  const match = content.match(URL_IN_TEXT_REGEX);
+  if (!match) return null;
+
+  // Strip punctuation that commonly follows URLs in prose
+  const url = match[0].replace(TRAILING_PUNCTUATION_REGEX, "");
+
+  const embed = detectEmbed(url);
+  if (!embed) return null;
+
+  const caption = content
+    .replace(match[0], "")
+    .replace(/[ \t]{2,}/g, " ")
+    .trim()
+    .replace(/[([{]$/, "");
+
+  return { embed, caption };
+};
