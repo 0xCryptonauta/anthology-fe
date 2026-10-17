@@ -2,21 +2,8 @@ import { shortenAddress } from "@utils/shortenAddress";
 import { formatUnixTime } from "@utils/formatUnixTime";
 import { Address } from "@src/types/common";
 import { isValidURL } from "@src/utils/isValidURL";
-import {
-  TwitterEmbed,
-  YoutubeEmbed,
-  InstagramEmbed,
-  FacebookEmbed,
-  RedditEmbed,
-} from "../thirdPartyEmbeds";
-import {
-  FACEBOOK_REGEX,
-  INSTAGRAM_REGEX,
-  REDDIT_REGEX,
-  SPOTIFY_REGEX,
-  TWITTER_REGEX,
-  YOUTUBE_REGEX,
-} from "@src/utils/regex";
+import { EmbedRenderer } from "../thirdPartyEmbeds";
+import { detectEmbed } from "@src/utils/embeds";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
 import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 import { OrderType } from "@src/components/Layout/OrderSelector";
@@ -62,53 +49,10 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
       {orderedMemoirsIndexes.map((i) => {
         const memoir = memoirs[i];
 
-        const youtubeMatch = YOUTUBE_REGEX.exec(memoir.content);
-        const spotifyMatch = SPOTIFY_REGEX.exec(memoir.content);
-        const twitterMatch = TWITTER_REGEX.exec(memoir.content);
-        const redditMatch = REDDIT_REGEX.exec(memoir.content);
-        const facebookMatch = FACEBOOK_REGEX.exec(memoir.content);
-        const instagramMatch = INSTAGRAM_REGEX.exec(memoir.content);
+        const embed = detectEmbed(memoir.content);
 
         const renderContent = () => {
-          if (youtubeMatch) return <YoutubeEmbed videoId={youtubeMatch[1]} />;
-          if (twitterMatch)
-            return (
-              <TwitterEmbed
-                username={twitterMatch[1]}
-                postId={twitterMatch[2]}
-              />
-            );
-          if (redditMatch) {
-            if (redditMatch[2]) return <RedditEmbed postUrl={memoir.content} />;
-            return (
-              <div style={{ overflowWrap: "break-word" }}>
-                <a
-                  href={memoir.content}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  //style={{ color: "#666" }}
-                >
-                  {memoir.content}
-                </a>
-              </div>
-            );
-          }
-          if (facebookMatch) return <FacebookEmbed postUrl={memoir.content} />;
-          if (instagramMatch)
-            return <InstagramEmbed postUrl={memoir.content} />;
-
-          if (spotifyMatch)
-            return (
-              <iframe
-                style={{ borderRadius: "12px" }}
-                src={`https://open.spotify.com/embed/${spotifyMatch[1]}/${spotifyMatch[2]}?utm_source=generator`}
-                width="100%"
-                height="352"
-                frameBorder="0"
-                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                loading="lazy"
-              ></iframe>
-            );
+          if (embed) return <EmbedRenderer embed={embed} />;
 
           return isValidURL(memoir.content) ? (
             <a
