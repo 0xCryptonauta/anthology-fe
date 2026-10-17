@@ -132,7 +132,9 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
             alignItems: "center",
             gap: "1rem",
             padding: "1.25rem 1rem",
-            width: "320px",
+            width: "100%",
+            maxWidth: "320px",
+            boxSizing: "border-box",
           }}
         >
           <span

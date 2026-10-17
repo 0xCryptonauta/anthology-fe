@@ -213,8 +213,8 @@ export const AddMemoir = ({
             display: "flex",
             flexDirection: "column",
             gap: "1rem",
-            width: "260px",
-            maxWidth: "100%",
+            width: "100%",
+            maxWidth: "260px",
             boxSizing: "border-box",
           }}
         >

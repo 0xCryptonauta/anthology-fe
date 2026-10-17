@@ -44,7 +44,9 @@ export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
         padding: "5px",
         borderRadius: "7px",
         margin: "3px",
-        width: "380px",
+        width: "100%",
+        maxWidth: "380px",
+        boxSizing: "border-box",
         display: "flex",
         flexWrap: "wrap",
       }}
