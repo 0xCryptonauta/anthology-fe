@@ -148,18 +148,6 @@ export const SidePanel = () => {
             Discover
           </Link>
           <Link
-            to="/search"
-            onClick={handleClose}
-            style={{
-              margin: "10px 0px",
-              fontSize: "18px",
-              textDecoration: "none",
-              color: linkColor,
-            }}
-          >
-            Search
-          </Link>
-          <Link
             to="/"
             onClick={() => handleOnClick(LOCAL_USER_PATH)}
             style={{
