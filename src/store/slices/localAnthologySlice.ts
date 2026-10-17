@@ -164,6 +164,16 @@ export const localAnthologySlice = createSlice({
 
       memoirs[index] = { ...memoirs[index], title, content };
     },
+    deleteMemoirAtIndexFromUserLocalAnthology(
+      state,
+      action: PayloadAction<{ contract: Address; index: number }>
+    ) {
+      const { contract, index } = action.payload;
+      const memoirs = state.anthologies[contract];
+      if (!memoirs || !memoirs[index]) return;
+
+      memoirs.splice(index, 1);
+    },
     deleteUserLocalAnthology(
       state,
       action: PayloadAction<{ user: Address; contract: Address }>
