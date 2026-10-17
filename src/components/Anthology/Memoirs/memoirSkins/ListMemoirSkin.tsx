@@ -78,6 +78,7 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
                 display: "block",
                 marginBottom: "0.25rem",
                 wordBreak: "break-word",
+                textAlign: "center",
                 cursor: extracted ? "pointer" : "default",
               }}
               onClick={
@@ -102,6 +103,7 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
                 color: "#555",
                 fontSize: "0.9rem",
                 wordBreak: "break-word",
+                textAlign: "center",
               }}
             >
               {isExpanded && extracted ? (
