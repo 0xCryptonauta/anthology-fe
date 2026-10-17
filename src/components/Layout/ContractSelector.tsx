@@ -7,11 +7,13 @@ import { useAppSelector } from "@src/store/utils/hooks";
 interface ContractSelectorProps {
   setSelectedContract: (addr: Address | "") => void;
   variant?: "dark" | "light";
+  showUserSelect?: boolean;
 }
 
 export const ContractSelector: React.FC<ContractSelectorProps> = ({
   setSelectedContract,
   variant = "dark",
+  showUserSelect = true,
 }) => {
   const { users, userContracts, contractsTitles } = useAppSelector(
     (state) => state.factory
@@ -113,27 +115,31 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
         boxSizing: "border-box",
       }}
     >
-      <label>User: </label>
-      <select
-        value={selectedUser}
-        style={{ minHeight: "30px" }}
-        onChange={(e) => {
-          setSelectedUser(e.target.value as Address);
-          setSelectedCategory("");
-          setSelectedSubcategory("");
-          setSelectedAddress("");
-          setSelectedContract("");
-        }}
-      >
-        <option key={"localUser"} value={LOCAL_USER_ADDR}>
-          Local User
-        </option>
-        {users.map((user) => (
-          <option key={user} value={user}>
-            {shortenAddress(user, 10, 10)}
-          </option>
-        ))}
-      </select>
+      {showUserSelect && (
+        <>
+          <label>User: </label>
+          <select
+            value={selectedUser}
+            style={{ minHeight: "30px" }}
+            onChange={(e) => {
+              setSelectedUser(e.target.value as Address);
+              setSelectedCategory("");
+              setSelectedSubcategory("");
+              setSelectedAddress("");
+              setSelectedContract("");
+            }}
+          >
+            <option key={"localUser"} value={LOCAL_USER_ADDR}>
+              Local User
+            </option>
+            {users.map((user) => (
+              <option key={user} value={user}>
+                {shortenAddress(user, 10, 10)}
+              </option>
+            ))}
+          </select>
+        </>
+      )}
 
       <label>Category: </label>
       <select
