@@ -33,7 +33,7 @@ export const CleanReduxStore = () => {
             setShow(true);
           }}
         >
-          CLEAN STORE
+          Delete Memory
         </button>
       }
     >
@@ -45,7 +45,9 @@ export const CleanReduxStore = () => {
           alignItems: "center",
         }}
       >
-        <span style={{ fontWeight: "bold" }}>Clear all app data?</span>
+        <span style={{ fontWeight: "bold" }}>
+          Delete private memory - All anthologies
+        </span>
 
         <span>This action cannot be undone.</span>
       </div>
@@ -72,13 +74,13 @@ export const CleanReduxStore = () => {
           }, 3000);
 
           addToast({
-            title: "Redux Store Cleaned",
-            content: "The store has been cleaned, reloading in 3 seconds...",
+            title: "Memory deleted",
+            content: "The memory has been deleted, reloading in 3 seconds...",
             variant: "info",
           });
         }}
       >
-        CLEAN STORE
+        Delete Memory
       </button>
     </Modal>
   );
