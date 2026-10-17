@@ -32,7 +32,10 @@ export const SharePage = () => {
         margin: "5px",
       }}
     >
-      <ContractSelector setSelectedContract={setSelectedContract} />
+      <ContractSelector
+        setSelectedContract={setSelectedContract}
+        showUserSelect={false}
+      />
 
       {selectedContract && (
         <AddMemoir
