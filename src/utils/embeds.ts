@@ -16,6 +16,7 @@ export type SpotifyContentType =
 export type EmbedMatch =
   | { provider: "youtube"; videoId: string }
   | { provider: "vimeo"; videoId: string; hash?: string }
+  | { provider: "archiveorg"; itemId: string }
   | { provider: "spotify"; contentType: SpotifyContentType; contentId: string }
   | { provider: "twitter"; username: string; postId: string }
   | { provider: "reddit"; postUrl: string }
@@ -226,6 +227,26 @@ const parseVimeo = (url: URL): EmbedMatch | null => {
   };
 };
 
+/* ------------------------------- Archive.org ------------------------------- */
+
+const ARCHIVE_DOMAINS = ["archive.org"];
+const ARCHIVE_ID_REGEX = /^[A-Za-z0-9._-]+$/;
+
+const parseArchiveOrg = (url: URL): EmbedMatch | null => {
+  if (!hostMatches(url.hostname, ARCHIVE_DOMAINS)) return null;
+
+  const segments = pathSegments(url);
+  const prefixIndex = segments.findIndex(
+    (segment) => segment === "details" || segment === "embed"
+  );
+  if (prefixIndex === -1) return null;
+
+  const itemId = segments[prefixIndex + 1];
+  if (!itemId || !ARCHIVE_ID_REGEX.test(itemId)) return null;
+
+  return { provider: "archiveorg", itemId };
+};
+
 /* -------------------------------- Dispatcher ------------------------------- */
 
 /**
@@ -241,6 +262,7 @@ export const detectEmbed = (content: string): EmbedMatch | null => {
   return (
     parseYouTube(url) ??
     parseVimeo(url) ??
+    parseArchiveOrg(url) ??
     parseTwitter(url) ??
     parseReddit(url) ??
     parseFacebook(url) ??
