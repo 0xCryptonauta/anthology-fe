@@ -64,7 +64,8 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate", // || prompt
       devOptions: {
-        enabled: false,
+        enabled: true,
+        type: "module",
       },
       includeAssets: ["/IB_icon.png", "/pwa-192x192.png", "/pwa-512x512.png"],
       manifest: manifest as ManifestOptions,

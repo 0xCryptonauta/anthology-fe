@@ -118,7 +118,8 @@ export const CacheStorageViewer = () => {
                 </p>
               ) : cacheInfo.length === 0 ? (
                 <p style={{ fontSize: "13px", color: "#666" }}>
-                  No cached files.
+                  No cached files yet — browse memoirs with videos or images
+                  so the app caches thumbnails and assets.
                 </p>
               ) : (
                 cacheInfo.map((cache) => (
