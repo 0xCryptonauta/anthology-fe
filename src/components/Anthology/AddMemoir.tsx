@@ -208,7 +208,16 @@ export const AddMemoir = ({
           </span>
         }
       >
-        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "1rem",
+            width: "260px",
+            maxWidth: "100%",
+            boxSizing: "border-box",
+          }}
+        >
           <label style={{ fontWeight: 500, fontSize: "1.2rem" }}>Title</label>
           <input
             value={anthologyTitle}
@@ -226,7 +235,14 @@ export const AddMemoir = ({
             }}
           />
           {titleError && (
-            <span style={{ color: "#dc2626", fontSize: "0.8rem" }}>
+            <span
+              style={{
+                color: "#dc2626",
+                fontSize: "0.8rem",
+                display: "block",
+                wordBreak: "break-word",
+              }}
+            >
               {titleError}
             </span>
           )}
@@ -279,12 +295,26 @@ export const AddMemoir = ({
             />
           </div>
           {urlError && (
-            <span style={{ color: "#dc2626", fontSize: "0.8rem" }}>
+            <span
+              style={{
+                color: "#dc2626",
+                fontSize: "0.8rem",
+                display: "block",
+                wordBreak: "break-word",
+              }}
+            >
               {urlError}
             </span>
           )}
           {!urlError && urlWarning && (
-            <span style={{ color: "#b45309", fontSize: "0.8rem" }}>
+            <span
+              style={{
+                color: "#b45309",
+                fontSize: "0.8rem",
+                display: "block",
+                wordBreak: "break-word",
+              }}
+            >
               {urlWarning}
             </span>
           )}
