@@ -12,9 +12,8 @@ export const CacheStorageViewer = () => {
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [cacheBytes, setCacheBytes] = useState<number | null>(null);
-  const [otherStorageBytes, setOtherStorageBytes] = useState<number | null>(
-    null
-  );
+  const [usageBytes, setUsageBytes] = useState<number | null>(null);
+  const [storeBytes, setStoreBytes] = useState<number | null>(null);
 
   useEffect(() => {
     if (!show) return;
@@ -22,7 +21,11 @@ export const CacheStorageViewer = () => {
     const load = async () => {
       setIsLoading(true);
 
-      // Total size of the service worker caches (images, assets, pages)
+      // The memoir data (Redux store) — /about used to report this as
+      // "memory being used"
+      setStoreBytes(JSON.stringify(store.getState()).length);
+
+      // Total size of the service worker caches (thumbnails, assets, pages)
       if (typeof caches !== "undefined") {
         try {
           const names = await caches.keys();
@@ -46,18 +49,16 @@ export const CacheStorageViewer = () => {
         setCacheBytes(null);
       }
 
-      // Total app storage minus the memoir data (the Redux store), which
-      // /about reports as "memory being used"
+      // Browser-reported usage: caches + database + service worker
       if (navigator.storage?.estimate) {
         try {
           const { usage } = await navigator.storage.estimate();
-          const storeBytes = JSON.stringify(store.getState()).length;
-          setOtherStorageBytes(Math.max(0, (usage ?? 0) - storeBytes));
+          setUsageBytes(usage ?? 0);
         } catch {
-          setOtherStorageBytes(null);
+          setUsageBytes(null);
         }
       } else {
-        setOtherStorageBytes(null);
+        setUsageBytes(null);
       }
 
       setIsLoading(false);
@@ -67,8 +68,13 @@ export const CacheStorageViewer = () => {
   }, [show]);
 
   const appDataBytes =
-    otherStorageBytes !== null && cacheBytes !== null
-      ? Math.max(0, otherStorageBytes - cacheBytes)
+    usageBytes !== null && cacheBytes !== null
+      ? Math.max(0, usageBytes - cacheBytes)
+      : null;
+
+  const totalBytes =
+    usageBytes !== null && cacheBytes !== null && storeBytes !== null
+      ? cacheBytes + Math.max(0, usageBytes - cacheBytes) + storeBytes
       : null;
 
   const rowStyle = {
@@ -122,31 +128,34 @@ export const CacheStorageViewer = () => {
             style={{ display: "flex", flexDirection: "column", gap: "10px" }}
           >
             <div style={rowStyle}>
-              <span>Used by the app</span>
               <span style={{ fontWeight: "bold" }}>
-                {otherStorageBytes !== null
-                  ? `~${formatBytes(otherStorageBytes)}`
-                  : "n/a"}
+                Total used by the app
+              </span>
+              <span style={{ fontWeight: "bold" }}>
+                {totalBytes !== null ? `~${formatBytes(totalBytes)}` : "n/a"}
               </span>
             </div>
 
             <div style={rowStyle}>
-              <span>Saved pictures &amp; files</span>
-              <span style={{ fontWeight: "bold" }}>
+              <span>Cached thumbnails and files</span>
+              <span>
                 {cacheBytes !== null ? formatBytes(cacheBytes) : "n/a"}
               </span>
             </div>
 
             <div style={rowStyle}>
-              <span>App data (memory)</span>
-              <span style={{ fontWeight: "bold" }}>
+              <span>App data (wallet and others)</span>
+              <span>
                 {appDataBytes !== null ? `~${formatBytes(appDataBytes)}` : "n/a"}
               </span>
             </div>
 
-            <span style={{ fontSize: "12px", color: "#666", marginTop: "4px" }}>
-              Memoirs not included (see About).
-            </span>
+            <div style={rowStyle}>
+              <span>Memory (Anthologies)</span>
+              <span>
+                {storeBytes !== null ? `~${formatBytes(storeBytes)}` : "n/a"}
+              </span>
+            </div>
           </div>
         )}
       </div>
