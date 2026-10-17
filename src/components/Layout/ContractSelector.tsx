@@ -123,7 +123,12 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
           <label>User: </label>
           <select
             value={selectedUser}
-            style={{ minHeight: "30px" }}
+            style={{
+            minHeight: "30px",
+            border: "1px solid #cbd5e1",
+            borderRadius: "6px",
+            padding: "4px 8px",
+          }}
             onChange={(e) => {
               setSelectedUser(e.target.value as Address);
               setSelectedCategory("");
@@ -148,7 +153,12 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
       <select
         value={selectedCategory}
         onChange={handleCategoryChange}
-        style={{ minHeight: "30px" }}
+        style={{
+            minHeight: "30px",
+            border: "1px solid #cbd5e1",
+            borderRadius: "6px",
+            padding: "4px 8px",
+          }}
       >
         {/* <option value="">No Category</option> */}
         {
@@ -177,7 +187,13 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
           <select
             value={selectedSubcategory}
             onChange={handleSubcategoryChange}
-            style={{ minHeight: "30px", marginTop: "10px" }}
+            style={{
+              minHeight: "30px",
+              marginTop: "10px",
+              border: "1px solid #cbd5e1",
+              borderRadius: "6px",
+              padding: "4px 8px",
+            }}
           >
             <option value="">No subcategory</option>
             {subcategoryOptions.map((subcategory) => (
