@@ -46,7 +46,9 @@ export const CleanReduxStore = () => {
         }}
       >
         <span style={{ fontWeight: "bold", textAlign: "center" }}>
-          Delete private memory - All anthologies
+          Delete private memory
+          <br />
+          All anthologies
         </span>
 
         <span>This action cannot be undone.</span>
