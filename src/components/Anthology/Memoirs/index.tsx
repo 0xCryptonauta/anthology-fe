@@ -73,13 +73,15 @@ export const Memoirs: React.FC<MemoirsProps> = ({
             display: "flex",
             justifyContent: "center",
             marginBottom: "10px",
+            padding: "0 20px",
+            boxSizing: "border-box",
           }}
         >
           <div
             style={{
               position: "relative",
               width: "100%",
-              maxWidth: "360px",
+              maxWidth: "600px",
             }}
           >
             <input
@@ -113,7 +115,7 @@ export const Memoirs: React.FC<MemoirsProps> = ({
                   fontSize: "14px",
                   lineHeight: 1,
                   color: "#64748b",
-                  padding: "2px",
+                  padding: 0,
                 }}
               >
                 ✕
