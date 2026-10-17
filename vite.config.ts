@@ -77,8 +77,10 @@ export default defineConfig({
         globPatterns: ["**/*.{js,css,html,woff2,webp}"],
         runtimeCaching: [
           {
+            // Note: "script" is intentionally NOT cached here — caching Vite's
+            // dev modules makes reloads serve stale code (and prod app scripts
+            // are already covered by the workbox precache).
             urlPattern: ({ request }) =>
-              request.destination === "script" ||
               request.destination === "style" ||
               request.destination === "font" ||
               request.destination === "image",
