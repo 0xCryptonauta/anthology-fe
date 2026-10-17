@@ -75,22 +75,51 @@ export const Memoirs: React.FC<MemoirsProps> = ({
             marginBottom: "10px",
           }}
         >
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search memoirs by title or content..."
+          <div
             style={{
-              padding: "8px 12px",
-              borderRadius: "8px",
-              border: "1px solid #cbd5e1",
-              fontSize: "14px",
+              position: "relative",
               width: "100%",
               maxWidth: "360px",
-              backgroundColor: "rgba(255, 255, 255, 0.9)",
-              color: "#111",
-              outline: "none",
             }}
-          />
+          >
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search memoirs by title or content..."
+              style={{
+                padding: "8px 32px 8px 12px",
+                borderRadius: "8px",
+                border: "1px solid #cbd5e1",
+                fontSize: "14px",
+                width: "100%",
+                boxSizing: "border-box",
+                backgroundColor: "rgba(255, 255, 255, 0.9)",
+                color: "#111",
+                outline: "none",
+              }}
+            />
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                aria-label="Clear search"
+                style={{
+                  position: "absolute",
+                  right: "8px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  border: "none",
+                  background: "transparent",
+                  cursor: "pointer",
+                  fontSize: "14px",
+                  lineHeight: 1,
+                  color: "#64748b",
+                  padding: "2px",
+                }}
+              >
+                ✕
+              </button>
+            )}
+          </div>
         </div>
       )}
 
