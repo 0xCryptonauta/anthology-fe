@@ -2,14 +2,6 @@ import { useEffect, useState } from "react";
 import { Modal } from "./Modal";
 import { store } from "@store/redux";
 
-interface CacheInfo {
-  name: string;
-  entryCount: number;
-  bytes: number;
-}
-
-const RPC_CACHE_PREFIXES = ["readFactory:", "readAnthology:"];
-
 const formatBytes = (bytes: number): string => {
   if (bytes >= 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
   if (bytes >= 1024) return `${(bytes / 1024).toFixed(1)} KB`;
@@ -19,15 +11,10 @@ const formatBytes = (bytes: number): string => {
 export const CacheStorageViewer = () => {
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [cacheStorageAvailable, setCacheStorageAvailable] = useState(true);
-  const [cacheInfo, setCacheInfo] = useState<CacheInfo[]>([]);
+  const [cacheBytes, setCacheBytes] = useState<number | null>(null);
   const [otherStorageBytes, setOtherStorageBytes] = useState<number | null>(
     null
   );
-  const [rpcCache, setRpcCache] = useState<{ count: number; bytes: number }>({
-    count: 0,
-    bytes: 0,
-  });
 
   useEffect(() => {
     if (!show) return;
@@ -35,48 +22,31 @@ export const CacheStorageViewer = () => {
     const load = async () => {
       setIsLoading(true);
 
-      // Cache Storage (service worker caches: thumbnails, app assets, html)
+      // Total size of the service worker caches (images, assets, pages)
       if (typeof caches !== "undefined") {
         try {
           const names = await caches.keys();
-          const infos = await Promise.all(
-            names.map(async (name) => {
-              const cache = await caches.open(name);
-              const requests = await cache.keys();
-              let bytes = 0;
-              for (const request of requests) {
-                const response = await cache.match(request);
-                if (response) {
-                  const blob = await response.clone().blob();
-                  bytes += blob.size;
-                }
+          let total = 0;
+          for (const name of names) {
+            const cache = await caches.open(name);
+            const requests = await cache.keys();
+            for (const request of requests) {
+              const response = await cache.match(request);
+              if (response) {
+                const blob = await response.clone().blob();
+                total += blob.size;
               }
-              return { name, entryCount: requests.length, bytes };
-            })
-          );
-          setCacheInfo(infos);
-          setCacheStorageAvailable(true);
+            }
+          }
+          setCacheBytes(total);
         } catch {
-          setCacheStorageAvailable(false);
+          setCacheBytes(null);
         }
       } else {
-        setCacheStorageAvailable(false);
+        setCacheBytes(null);
       }
 
-      // localStorage RPC caches (factory / anthology contract reads)
-      let count = 0;
-      let bytes = 0;
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (key && RPC_CACHE_PREFIXES.some((prefix) => key.startsWith(prefix))) {
-          count++;
-          // UTF-16 storage: ~2 bytes per char
-          bytes += (key.length + (localStorage.getItem(key)?.length ?? 0)) * 2;
-        }
-      }
-      setRpcCache({ count, bytes });
-
-      // Total origin storage minus the memoir data (the Redux store), which
+      // Total app storage minus the memoir data (the Redux store), which
       // /about reports as "memory being used"
       if (navigator.storage?.estimate) {
         try {
@@ -96,14 +66,17 @@ export const CacheStorageViewer = () => {
     load();
   }, [show]);
 
-  const totalCacheBytes = cacheInfo.reduce(
-    (sum, cache) => sum + cache.bytes,
-    0
-  );
-  const totalCacheEntries = cacheInfo.reduce(
-    (sum, cache) => sum + cache.entryCount,
-    0
-  );
+  const appDataBytes =
+    otherStorageBytes !== null && cacheBytes !== null
+      ? Math.max(0, otherStorageBytes - cacheBytes)
+      : null;
+
+  const rowStyle = {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: "10px",
+    fontSize: "14px",
+  };
 
   return (
     <Modal
@@ -140,81 +113,40 @@ export const CacheStorageViewer = () => {
           color: "#1a1a1a",
         }}
       >
-        <h3 style={{ textAlign: "center", marginBottom: "20px" }}>
-          Cached Storage
-        </h3>
+        <h3 style={{ textAlign: "center", marginBottom: "20px" }}>Storage</h3>
 
         {isLoading ? (
           <p style={{ textAlign: "center" }}>Loading...</p>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-            <div>
-              <span style={{ fontWeight: "bold", display: "block" }}>
-                Storage used (excl. memoirs):{" "}
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+          >
+            <div style={rowStyle}>
+              <span>Used by the app</span>
+              <span style={{ fontWeight: "bold" }}>
                 {otherStorageBytes !== null
                   ? `~${formatBytes(otherStorageBytes)}`
                   : "n/a"}
               </span>
-              <span style={{ fontSize: "12px", color: "#666" }}>
-                Total browser storage for the app minus your memoir data (the
-                memoir size lives in /about).
+            </div>
+
+            <div style={rowStyle}>
+              <span>Saved pictures &amp; files</span>
+              <span style={{ fontWeight: "bold" }}>
+                {cacheBytes !== null ? formatBytes(cacheBytes) : "n/a"}
               </span>
             </div>
 
-            <div>
-              <span style={{ fontWeight: "bold", display: "block" }}>
-                Cached files (images, assets, pages):{" "}
-                {formatBytes(totalCacheBytes)}
-                {totalCacheEntries > 0 ? ` (${totalCacheEntries})` : ""}
-              </span>
-
-              {!cacheStorageAvailable ? (
-                <p style={{ fontSize: "13px", color: "#666" }}>
-                  Cache Storage is not available in this browser.
-                </p>
-              ) : cacheInfo.length === 0 ? (
-                <p style={{ fontSize: "13px", color: "#666" }}>
-                  No cached files yet — browse memoirs with videos or images
-                  so the app caches thumbnails and assets.
-                </p>
-              ) : (
-                cacheInfo.map((cache) => (
-                  <div
-                    key={cache.name}
-                    style={{
-                      fontSize: "13px",
-                      color: "#444",
-                      marginTop: "4px",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      gap: "8px",
-                    }}
-                  >
-                    <span
-                      style={{
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {cache.name}
-                    </span>
-                    <span style={{ whiteSpace: "nowrap" }}>
-                      {formatBytes(cache.bytes)} ({cache.entryCount})
-                    </span>
-                  </div>
-                ))
-              )}
-            </div>
-
-            <div>
-              <span style={{ fontWeight: "bold", display: "block" }}>
-                Contract reads (localStorage): {formatBytes(rpcCache.bytes)}
-              </span>
-              <span style={{ fontSize: "12px", color: "#666" }}>
-                {rpcCache.count} {rpcCache.count === 1 ? "entry" : "entries"}
+            <div style={rowStyle}>
+              <span>App data (memory)</span>
+              <span style={{ fontWeight: "bold" }}>
+                {appDataBytes !== null ? `~${formatBytes(appDataBytes)}` : "n/a"}
               </span>
             </div>
+
+            <span style={{ fontSize: "12px", color: "#666", marginTop: "4px" }}>
+              Memoirs not included (see About).
+            </span>
           </div>
         )}
       </div>
