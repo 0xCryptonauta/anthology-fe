@@ -15,6 +15,7 @@ export type SpotifyContentType =
 
 export type EmbedMatch =
   | { provider: "youtube"; videoId: string }
+  | { provider: "vimeo"; videoId: string; hash?: string }
   | { provider: "spotify"; contentType: SpotifyContentType; contentId: string }
   | { provider: "twitter"; username: string; postId: string }
   | { provider: "reddit"; postUrl: string }
@@ -201,6 +202,30 @@ const parseInstagram = (url: URL): EmbedMatch | null => {
   };
 };
 
+/* ---------------------------------- Vimeo ---------------------------------- */
+
+const VIMEO_DOMAINS = ["vimeo.com"];
+const VIMEO_ID_REGEX = /^\d+$/;
+
+const parseVimeo = (url: URL): EmbedMatch | null => {
+  if (!hostMatches(url.hostname, VIMEO_DOMAINS)) return null;
+
+  const segments = pathSegments(url);
+
+  // player.vimeo.com/video/<id> or vimeo.com/<id>[/<private hash>]
+  const videoIndex = segments.indexOf("video");
+  const videoId = videoIndex !== -1 ? segments[videoIndex + 1] : segments[0];
+  const hash = videoIndex !== -1 ? undefined : segments[1];
+
+  if (!videoId || !VIMEO_ID_REGEX.test(videoId)) return null;
+
+  return {
+    provider: "vimeo",
+    videoId,
+    hash: hash && /^[a-zA-Z0-9]+$/.test(hash) ? hash : undefined,
+  };
+};
+
 /* -------------------------------- Dispatcher ------------------------------- */
 
 /**
@@ -215,6 +240,7 @@ export const detectEmbed = (content: string): EmbedMatch | null => {
 
   return (
     parseYouTube(url) ??
+    parseVimeo(url) ??
     parseTwitter(url) ??
     parseReddit(url) ??
     parseFacebook(url) ??
