@@ -71,7 +71,7 @@ string is stored on-chain and parsed client-side. Do not change the format.
   bumps minor version, `fix:` bumps patch via `standard-version`.
 - **Release**: `bun run release` only on `main` branch. Dry-run with
   `bun run pre-release`.
-- **Merge**: Use `git merge --no-ff` into dev to preserve branch topology.
+- **Merge**: Use `git merge --no-ff` into `agent/DeepSeekV4.1`; agent work does not merge to `dev` (that's the user's integration branch).
 - **Pre-existing TS errors**: Verify no NEW errors were introduced when
   changing code. Run `bun run tsc --noEmit | grep -c "^src"` and compare
   against the baseline of 12.
