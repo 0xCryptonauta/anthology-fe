@@ -45,7 +45,7 @@ export const CleanReduxStore = () => {
           alignItems: "center",
         }}
       >
-        <span style={{ fontWeight: "bold" }}>
+        <span style={{ fontWeight: "bold", textAlign: "center" }}>
           Delete private memory - All anthologies
         </span>
 
