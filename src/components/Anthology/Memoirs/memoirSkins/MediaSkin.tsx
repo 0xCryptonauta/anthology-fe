@@ -1,5 +1,5 @@
 import { isValidURL } from "@src/utils/isValidURL";
-import { detectEmbed } from "@src/utils/embeds";
+import { extractEmbed } from "@src/utils/embeds";
 import { EmbedRenderer } from "../thirdPartyEmbeds";
 import { MemoirInterface } from "@src/store/slices/anthologySlice";
 
@@ -8,10 +8,20 @@ interface MediaSkinProps {
 }
 
 export const Mediaskin: React.FC<MediaSkinProps> = ({ memoir }) => {
-  const embed = detectEmbed(memoir.content);
+  const extracted = extractEmbed(memoir.content);
 
   const renderContent = () => {
-    if (embed) return <EmbedRenderer embed={embed} />;
+    if (extracted)
+      return (
+        <>
+          <EmbedRenderer embed={extracted.embed} />
+          {extracted.caption && (
+            <div style={{ marginTop: "0.5rem", overflowWrap: "break-word" }}>
+              {extracted.caption}
+            </div>
+          )}
+        </>
+      );
 
     return isValidURL(memoir.content) ? (
       <a

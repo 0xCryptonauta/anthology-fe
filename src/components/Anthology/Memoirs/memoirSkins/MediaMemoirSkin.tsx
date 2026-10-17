@@ -3,7 +3,7 @@ import { formatUnixTime } from "@utils/formatUnixTime";
 import { Address } from "@src/types/common";
 import { isValidURL } from "@src/utils/isValidURL";
 import { EmbedRenderer } from "../thirdPartyEmbeds";
-import { detectEmbed } from "@src/utils/embeds";
+import { extractEmbed } from "@src/utils/embeds";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
 import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 import { OrderType } from "@src/components/Layout/OrderSelector";
@@ -49,10 +49,22 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
       {orderedMemoirsIndexes.map((i) => {
         const memoir = memoirs[i];
 
-        const embed = detectEmbed(memoir.content);
+        const extracted = extractEmbed(memoir.content);
 
         const renderContent = () => {
-          if (embed) return <EmbedRenderer embed={embed} />;
+          if (extracted)
+            return (
+              <>
+                <EmbedRenderer embed={extracted.embed} />
+                {extracted.caption && (
+                  <div
+                    style={{ marginTop: "0.5rem", overflowWrap: "break-word" }}
+                  >
+                    {extracted.caption}
+                  </div>
+                )}
+              </>
+            );
 
           return isValidURL(memoir.content) ? (
             <a
