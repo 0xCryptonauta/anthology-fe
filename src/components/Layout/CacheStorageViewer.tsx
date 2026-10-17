@@ -1,19 +1,33 @@
 import { useEffect, useState } from "react";
 import { Modal } from "./Modal";
+import { store } from "@store/redux";
 
-interface CacheEntryInfo {
+interface CacheInfo {
   name: string;
-  entries: string[];
+  entryCount: number;
+  bytes: number;
 }
 
 const RPC_CACHE_PREFIXES = ["readFactory:", "readAnthology:"];
+
+const formatBytes = (bytes: number): string => {
+  if (bytes >= 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+  if (bytes >= 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${bytes} B`;
+};
 
 export const CacheStorageViewer = () => {
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [cacheStorageAvailable, setCacheStorageAvailable] = useState(true);
-  const [cacheInfo, setCacheInfo] = useState<CacheEntryInfo[]>([]);
-  const [rpcKeys, setRpcKeys] = useState<string[]>([]);
+  const [cacheInfo, setCacheInfo] = useState<CacheInfo[]>([]);
+  const [otherStorageBytes, setOtherStorageBytes] = useState<number | null>(
+    null
+  );
+  const [rpcCache, setRpcCache] = useState<{ count: number; bytes: number }>({
+    count: 0,
+    bytes: 0,
+  });
 
   useEffect(() => {
     if (!show) return;
@@ -29,7 +43,15 @@ export const CacheStorageViewer = () => {
             names.map(async (name) => {
               const cache = await caches.open(name);
               const requests = await cache.keys();
-              return { name, entries: requests.map((req) => req.url) };
+              let bytes = 0;
+              for (const request of requests) {
+                const response = await cache.match(request);
+                if (response) {
+                  const blob = await response.clone().blob();
+                  bytes += blob.size;
+                }
+              }
+              return { name, entryCount: requests.length, bytes };
             })
           );
           setCacheInfo(infos);
@@ -42,14 +64,31 @@ export const CacheStorageViewer = () => {
       }
 
       // localStorage RPC caches (factory / anthology contract reads)
-      const keys: string[] = [];
+      let count = 0;
+      let bytes = 0;
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         if (key && RPC_CACHE_PREFIXES.some((prefix) => key.startsWith(prefix))) {
-          keys.push(key);
+          count++;
+          // UTF-16 storage: ~2 bytes per char
+          bytes += (key.length + (localStorage.getItem(key)?.length ?? 0)) * 2;
         }
       }
-      setRpcKeys(keys);
+      setRpcCache({ count, bytes });
+
+      // Total origin storage minus the memoir data (the Redux store), which
+      // /about reports as "memory being used"
+      if (navigator.storage?.estimate) {
+        try {
+          const { usage } = await navigator.storage.estimate();
+          const storeBytes = JSON.stringify(store.getState()).length;
+          setOtherStorageBytes(Math.max(0, (usage ?? 0) - storeBytes));
+        } catch {
+          setOtherStorageBytes(null);
+        }
+      } else {
+        setOtherStorageBytes(null);
+      }
 
       setIsLoading(false);
     };
@@ -57,8 +96,12 @@ export const CacheStorageViewer = () => {
     load();
   }, [show]);
 
-  const totalEntries = cacheInfo.reduce(
-    (sum, cache) => sum + cache.entries.length,
+  const totalCacheBytes = cacheInfo.reduce(
+    (sum, cache) => sum + cache.bytes,
+    0
+  );
+  const totalCacheEntries = cacheInfo.reduce(
+    (sum, cache) => sum + cache.entryCount,
     0
   );
 
@@ -104,12 +147,25 @@ export const CacheStorageViewer = () => {
         {isLoading ? (
           <p style={{ textAlign: "center" }}>Loading...</p>
         ) : (
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "16px" }}
-          >
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             <div>
-              <span style={{ fontWeight: "bold" }}>
-                Files (images, assets, pages): {totalEntries}
+              <span style={{ fontWeight: "bold", display: "block" }}>
+                Storage used (excl. memoirs):{" "}
+                {otherStorageBytes !== null
+                  ? `~${formatBytes(otherStorageBytes)}`
+                  : "n/a"}
+              </span>
+              <span style={{ fontSize: "12px", color: "#666" }}>
+                Total browser storage for the app minus your memoir data (the
+                memoir size lives in /about).
+              </span>
+            </div>
+
+            <div>
+              <span style={{ fontWeight: "bold", display: "block" }}>
+                Cached files (images, assets, pages):{" "}
+                {formatBytes(totalCacheBytes)}
+                {totalCacheEntries > 0 ? ` (${totalCacheEntries})` : ""}
               </span>
 
               {!cacheStorageAvailable ? (
@@ -123,58 +179,41 @@ export const CacheStorageViewer = () => {
                 </p>
               ) : (
                 cacheInfo.map((cache) => (
-                  <details key={cache.name} style={{ marginTop: "6px" }}>
-                    <summary
-                      style={{ cursor: "pointer", fontSize: "14px" }}
-                    >
-                      {cache.name} ({cache.entries.length})
-                    </summary>
-                    <ul
+                  <div
+                    key={cache.name}
+                    style={{
+                      fontSize: "13px",
+                      color: "#444",
+                      marginTop: "4px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      gap: "8px",
+                    }}
+                  >
+                    <span
                       style={{
-                        margin: "6px 0 0",
-                        paddingLeft: "18px",
-                        maxHeight: "150px",
-                        overflowY: "auto",
-                        fontSize: "12px",
-                        color: "#555",
-                        wordBreak: "break-all",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
                       }}
                     >
-                      {cache.entries.map((url) => (
-                        <li key={url}>{url}</li>
-                      ))}
-                    </ul>
-                  </details>
+                      {cache.name}
+                    </span>
+                    <span style={{ whiteSpace: "nowrap" }}>
+                      {formatBytes(cache.bytes)} ({cache.entryCount})
+                    </span>
+                  </div>
                 ))
               )}
             </div>
 
             <div>
-              <span style={{ fontWeight: "bold" }}>
-                Contract reads (localStorage): {rpcKeys.length}
+              <span style={{ fontWeight: "bold", display: "block" }}>
+                Contract reads (localStorage): {formatBytes(rpcCache.bytes)}
               </span>
-
-              {rpcKeys.length === 0 ? (
-                <p style={{ fontSize: "13px", color: "#666" }}>
-                  No cached contract reads.
-                </p>
-              ) : (
-                <ul
-                  style={{
-                    margin: "6px 0 0",
-                    paddingLeft: "18px",
-                    maxHeight: "150px",
-                    overflowY: "auto",
-                    fontSize: "12px",
-                    color: "#555",
-                    wordBreak: "break-all",
-                  }}
-                >
-                  {rpcKeys.map((key) => (
-                    <li key={key}>{key}</li>
-                  ))}
-                </ul>
-              )}
+              <span style={{ fontSize: "12px", color: "#666" }}>
+                {rpcCache.count} {rpcCache.count === 1 ? "entry" : "entries"}
+              </span>
             </div>
           </div>
         )}
