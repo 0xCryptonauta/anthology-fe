@@ -6,10 +6,12 @@ import { LOCAL_USER_ADDR } from "@src/utils/constants";
 import { useAppSelector } from "@src/store/utils/hooks";
 interface ContractSelectorProps {
   setSelectedContract: (addr: Address | "") => void;
+  variant?: "dark" | "light";
 }
 
 export const ContractSelector: React.FC<ContractSelectorProps> = ({
   setSelectedContract,
+  variant = "dark",
 }) => {
   const { users, userContracts, contractsTitles } = useAppSelector(
     (state) => state.factory
@@ -203,7 +205,12 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
               }}
               style={{
                 cursor: "pointer",
-                color: selectedAddress === contract.address ? "gray" : "white",
+                color:
+                  selectedAddress === contract.address
+                    ? "gray"
+                    : variant === "light"
+                    ? "#1a1a1a"
+                    : "white",
               }}
             >
               {contract.title}

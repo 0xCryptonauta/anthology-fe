@@ -6,9 +6,12 @@ import {
   deleteMemoirAtIndexFromUserLocalAnthology,
 } from "@src/store/slices/localAnthologySlice";
 import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
-import { LOCAL_USER_ADDR } from "@src/utils/constants";
+import { isLocalAnthology } from "@src/utils/isLocalAnthology";
+import { writeAnthology } from "@src/contract-functions/anthologyFunctions";
+import { useAccount } from "wagmi";
 import { useToast } from "../Layout/Toast";
 import { Modal } from "../Layout/Modal";
+import { ContractSelector } from "../Layout/ContractSelector";
 
 export const MoveMemoir = ({
   anthologyAddr,
@@ -22,46 +25,112 @@ export const MoveMemoir = ({
   const [show, setShow] = useState(false);
   const [destination, setDestination] = useState<Address | "">("");
   const [mode, setMode] = useState<"copy" | "move">("copy");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const dispatch = useAppDispatch();
   const { addToast } = useToast();
+  const { isConnected } = useAccount();
+  const { userAddr } = useAppSelector((s) => s.user);
 
-  const localUserContracts = useAppSelector(
-    (s) => s.localAnthology.userContracts[LOCAL_USER_ADDR] || []
+  const destIsLocal = destination !== "" && isLocalAnthology(destination);
+
+  const destAnthology = useAppSelector((s) =>
+    destination !== "" && !isLocalAnthology(destination)
+      ? s.anthology[destination]
+      : undefined
   );
-  const titles = useAppSelector((s) => s.localAnthology.contractsTitles);
 
-  const destinations = localUserContracts.filter(
-    (addr) => addr !== anthologyAddr
-  );
+  const canWriteToDest =
+    destIsLocal ||
+    !destAnthology ||
+    !destAnthology.anthologyState?.whitelistEnabled ||
+    destAnthology.whitelist?.includes(userAddr) ||
+    userAddr === destAnthology.anthologyState?.owner;
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (!destination) return;
 
-    dispatch(
-      addMemoirToUserLocalAnthology({
-        contract: destination,
-        memoir: { ...memoir },
-      })
-    );
-
-    if (mode === "move") {
-      dispatch(
-        deleteMemoirAtIndexFromUserLocalAnthology({
-          contract: anthologyAddr,
-          index,
-        })
-      );
+    if (destination === anthologyAddr) {
+      addToast({
+        title: "Pick a different anthology",
+        content: "The destination is the current anthology.",
+        variant: "info",
+      });
+      return;
     }
 
-    addToast({
-      title: mode === "move" ? "Memoir moved" : "Memoir copied",
-      content: `Saved to "${titles[destination] || destination}"`,
-      variant: "success",
-      delay: 5000,
-    });
+    if (!destIsLocal && !isConnected) {
+      addToast({
+        title: "Connect your wallet",
+        content: "A blockchain destination needs a connected wallet.",
+        variant: "info",
+      });
+      return;
+    }
 
-    setShow(false);
+    if (!canWriteToDest) {
+      addToast({
+        title: "Not whitelisted",
+        content: "You are not whitelisted in the destination anthology.",
+        variant: "info",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      if (destIsLocal) {
+        dispatch(
+          addMemoirToUserLocalAnthology({
+            contract: destination,
+            memoir: { ...memoir },
+          })
+        );
+      } else {
+        const txHash = await writeAnthology(destination, "createMemoir", [
+          memoir.title,
+          memoir.content,
+        ]);
+
+        if (!txHash) {
+          addToast({
+            title: "Copy failed",
+            content: "The transaction was not sent.",
+            variant: "danger",
+          });
+          return;
+        }
+      }
+
+      if (mode === "move") {
+        dispatch(
+          deleteMemoirAtIndexFromUserLocalAnthology({
+            contract: anthologyAddr,
+            index,
+          })
+        );
+      }
+
+      addToast({
+        title: mode === "move" ? "Memoir moved" : "Memoir copied",
+        content: destIsLocal
+          ? "Saved to the selected local anthology"
+          : "Saved to the selected blockchain anthology",
+        variant: "success",
+        delay: 5000,
+      });
+
+      setShow(false);
+    } catch (error) {
+      console.error("Error copying/moving memoir:", error);
+      addToast({
+        title: "Something went wrong",
+        content: "The memoir could not be copied or moved.",
+        variant: "danger",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -85,93 +154,75 @@ export const MoveMemoir = ({
           flexDirection: "column",
           gap: "1rem",
           width: "100%",
-          maxWidth: "320px",
+          maxWidth: "280px",
+          maxHeight: "70vh",
+          overflowY: "auto",
+          boxSizing: "border-box",
         }}
       >
         <h4 style={{ textAlign: "center", margin: 0 }}>Copy / Move Memoir</h4>
 
-        {destinations.length === 0 ? (
-          <span style={{ textAlign: "center", fontSize: "14px" }}>
-            You need another local anthology to copy or move memoirs into.
-          </span>
-        ) : (
-          <>
-            <label style={{ fontWeight: 500 }}>Destination anthology</label>
-            <select
-              value={destination}
-              onChange={(e) => setDestination(e.target.value as Address)}
-              style={{
-                padding: "0.5rem",
-                borderRadius: "0.5rem",
-                border: "1px solid #d1d5db",
-              }}
-            >
-              <option value="">Select anthology</option>
-              {destinations.map((addr) => (
-                <option key={addr} value={addr}>
-                  {titles[addr] || addr}
-                </option>
-              ))}
-            </select>
+        <ContractSelector
+          setSelectedContract={setDestination}
+          variant="light"
+        />
 
-            <div
-              style={{
-                display: "flex",
-                gap: "1rem",
-                justifyContent: "center",
-              }}
-            >
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  cursor: "pointer",
-                }}
-              >
-                <input
-                  type="radio"
-                  checked={mode === "copy"}
-                  onChange={() => setMode("copy")}
-                />
-                Copy
-              </label>
-              <label
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  cursor: "pointer",
-                }}
-              >
-                <input
-                  type="radio"
-                  checked={mode === "move"}
-                  onChange={() => setMode("move")}
-                />
-                Move
-              </label>
-            </div>
+        <div
+          style={{ display: "flex", gap: "1rem", justifyContent: "center" }}
+        >
+          <label
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              cursor: "pointer",
+            }}
+          >
+            <input
+              type="radio"
+              checked={mode === "copy"}
+              onChange={() => setMode("copy")}
+            />
+            Copy
+          </label>
+          <label
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              cursor: "pointer",
+            }}
+          >
+            <input
+              type="radio"
+              checked={mode === "move"}
+              onChange={() => setMode("move")}
+            />
+            Move
+          </label>
+        </div>
 
-            <button
-              onClick={handleConfirm}
-              disabled={!destination}
-              style={{
-                padding: "0.75rem 1.25rem",
-                borderRadius: "0.75rem",
-                fontWeight: 600,
-                fontSize: "0.95rem",
-                backgroundColor: "#111827",
-                color: "#fff",
-                border: "none",
-                cursor: destination ? "pointer" : "not-allowed",
-                opacity: destination ? 1 : 0.6,
-              }}
-            >
-              {mode === "move" ? "Move Memoir" : "Copy Memoir"}
-            </button>
-          </>
-        )}
+        <button
+          onClick={handleConfirm}
+          disabled={!destination || isSubmitting}
+          style={{
+            padding: "0.75rem 1.25rem",
+            borderRadius: "0.75rem",
+            fontWeight: 600,
+            fontSize: "0.95rem",
+            backgroundColor: "#111827",
+            color: "#fff",
+            border: "none",
+            cursor: destination && !isSubmitting ? "pointer" : "not-allowed",
+            opacity: destination && !isSubmitting ? 1 : 0.6,
+          }}
+        >
+          {isSubmitting
+            ? "Saving..."
+            : mode === "move"
+            ? "Move Memoir"
+            : "Copy Memoir"}
+        </button>
       </div>
     </Modal>
   );
