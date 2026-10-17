@@ -169,6 +169,7 @@ export const MoveMemoir = ({
         <ContractSelector
           setSelectedContract={setDestination}
           variant="light"
+          showUserSelect={false}
         />
 
         <div

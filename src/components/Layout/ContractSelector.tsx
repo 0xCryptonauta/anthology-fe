@@ -113,6 +113,9 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
         padding: "10px",
         maxWidth: "350px",
         boxSizing: "border-box",
+        backgroundColor:
+          variant === "light" ? "#f1f5f9" : "rgba(255, 255, 255, 0.06)",
+        borderRadius: "10px",
       }}
     >
       {showUserSelect && (
