@@ -14,12 +14,12 @@ export const Mediaskin: React.FC<MediaSkinProps> = ({ memoir }) => {
     if (extracted)
       return (
         <>
-          <EmbedRenderer embed={extracted.embed} />
           {extracted.caption && (
-            <div style={{ marginTop: "0.5rem", overflowWrap: "break-word" }}>
+            <div style={{ marginBottom: "0.5rem", overflowWrap: "break-word" }}>
               {extracted.caption}
             </div>
           )}
+          <EmbedRenderer embed={extracted.embed} />
         </>
       );
 
