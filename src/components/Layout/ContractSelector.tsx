@@ -107,9 +107,10 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
         display: "flex",
         flexDirection: "column",
         gap: "10px",
-        minWidth: "300px",
+        width: "100%",
         padding: "10px",
         maxWidth: "350px",
+        boxSizing: "border-box",
       }}
     >
       <label>User: </label>

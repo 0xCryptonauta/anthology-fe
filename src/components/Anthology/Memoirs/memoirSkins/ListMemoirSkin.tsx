@@ -46,6 +46,8 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        width: "100%",
+        boxSizing: "border-box",
       }}
     >
       {orderedMemoirsIndexes.map((i, index) => {
@@ -58,7 +60,6 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
             key={i}
             style={{
               width: "100%",
-              minWidth: "300px",
               maxWidth: "600px",
               marginBottom: "1.5rem",
               padding: "0.5rem",

@@ -123,7 +123,8 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
             <div
               style={{
                 display: "flex",
-                width: "300px",
+                width: "100%",
+                maxWidth: "300px",
                 flexDirection: "column",
                 alignItems: "center",
                 fontSize: "12px",

@@ -42,7 +42,7 @@ export const Mediaskin: React.FC<MediaSkinProps> = ({ memoir }) => {
   return (
     <div
       style={{
-        minWidth: "290px",
+        width: "100%",
         display: "flex",
         flexDirection: "row",
         alignItems: "center",

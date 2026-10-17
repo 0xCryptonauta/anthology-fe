@@ -67,7 +67,9 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
               backgroundColor: "#f9f9f9",
               padding: "12px",
               margin: "15px 1px",
-              width: "360px",
+              width: "100%",
+              maxWidth: "360px",
+              boxSizing: "border-box",
               position: "relative",
               boxShadow: "0 1px 4px rgba(0, 0, 0, 0.05)",
             }}
