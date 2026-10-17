@@ -5,8 +5,8 @@ import { Address } from "@src/types/common";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 import { useAccount } from "wagmi";
 import { DeleteMemoir } from "../../DeleteMemoir";
-import { useState } from "react";
-import { Mediaskin } from "./MediaSkin";
+import { extractEmbed } from "@src/utils/embeds";
+import { EmbedRenderer } from "../thirdPartyEmbeds";
 
 interface ListMemoirSkinProps {
   anthologyAddr: Address;
@@ -22,7 +22,6 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
     anthologyAddr,
     order
   );
-  const [selectedMemoirIndex, setSelectedMemoirIndex] = useState(-1);
 
   const { address: currentUser } = useAccount();
   const anthologyOwner = useAppSelector(
@@ -44,6 +43,7 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
     >
       {orderedMemoirsIndexes.map((i, index) => {
         const { title, content } = memoirs[i];
+        const extracted = extractEmbed(content);
 
         return (
           <div
@@ -61,20 +61,18 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
               position: "relative",
             }}
           >
-            {selectedMemoirIndex !== i && (
-              <span
-                style={{
-                  fontWeight: "600",
-                  fontSize: "1rem",
-                  color: "#333",
-                  display: "block",
-                  marginBottom: "0.25rem",
-                  wordBreak: "break-word",
-                }}
-              >
-                {index + 1}. {title || "Untitled"}
-              </span>
-            )}
+            <span
+              style={{
+                fontWeight: "600",
+                fontSize: "1rem",
+                color: "#333",
+                display: "block",
+                marginBottom: "0.25rem",
+                wordBreak: "break-word",
+              }}
+            >
+              {index + 1}. {title || "Untitled"}
+            </span>
 
             <div
               style={{
@@ -84,14 +82,17 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
                 color: "#555",
                 fontSize: "0.9rem",
                 wordBreak: "break-word",
-                cursor: "pointer",
-              }}
-              onClick={() => {
-                setSelectedMemoirIndex(i);
               }}
             >
-              {selectedMemoirIndex === i ? (
-                <Mediaskin memoir={memoirs[i]} />
+              {extracted ? (
+                <>
+                  <EmbedRenderer embed={extracted.embed} />
+                  {extracted.caption && (
+                    <div style={{ marginTop: "0.5rem" }}>
+                      {extracted.caption}
+                    </div>
+                  )}
+                </>
               ) : (
                 content
               )}
