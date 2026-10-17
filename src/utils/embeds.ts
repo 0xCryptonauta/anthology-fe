@@ -277,6 +277,14 @@ export const detectEmbed = (content: string): EmbedMatch | null => {
 const URL_IN_TEXT_REGEX = /https?:\/\/\S+/i;
 const TRAILING_PUNCTUATION_REGEX = /[.,;:!?)\]}"']+$/;
 
+/** Returns the first URL found in a string (trailing punctuation stripped). */
+export const extractFirstUrl = (content: string): string | null => {
+  if (typeof content !== "string") return null;
+  const match = content.match(URL_IN_TEXT_REGEX);
+  if (!match) return null;
+  return match[0].replace(TRAILING_PUNCTUATION_REGEX, "");
+};
+
 export interface ExtractedEmbed {
   embed: EmbedMatch;
   /** Remaining text with the URL removed ("" when the content is only a URL). */

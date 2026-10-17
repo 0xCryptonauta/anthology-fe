@@ -10,6 +10,12 @@ import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
 import { useNavigate } from "react-router-dom";
 import { removeSocialTracking } from "@src/utils/removeSocialTracking";
+import {
+  memoirHasUrl,
+  normalizeUrlForComparison,
+} from "@src/utils/memoirDuplicates";
+import { extractFirstUrl } from "@src/utils/embeds";
+import { MemoirInterface } from "@src/store/slices/anthologySlice";
 import { HighlightDifferences } from "../Layout/HighlightDifferences";
 import { Modal } from "../Layout/Modal";
 
@@ -28,6 +34,9 @@ export const AddMemoir = ({
   const [anthologyContent, setAnthologyContent] = useState(content);
   const [shouldFilterTracking, setShouldFilterTracking] = useState(true);
   const [show, setShow] = useState(false);
+  const [titleError, setTitleError] = useState("");
+  const [urlError, setUrlError] = useState("");
+  const [urlWarning, setUrlWarning] = useState("");
   const handleClose = () => setShow(false);
 
   const { userAddr, currentPath } = useAppSelector((state) => state.user);
@@ -37,6 +46,8 @@ export const AddMemoir = ({
   const whitelist = useAppSelector(
     (state) => state.anthology[contractAddr]?.whitelist
   );
+  const localAnthologies = useAppSelector((s) => s.localAnthology.anthologies);
+  const onchainAnthologies = useAppSelector((s) => s.anthology);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -48,7 +59,72 @@ export const AddMemoir = ({
       : anthologyContent;
   }, [shouldFilterTracking, anthologyContent]);
 
+  useEffect(() => {
+    const currentMemoirs = isLocalAnthology(contractAddr)
+      ? localAnthologies[contractAddr] || []
+      : onchainAnthologies[contractAddr]?.memoirs || [];
+
+    const trimmedTitle = anthologyTitle.trim();
+    const duplicateTitle =
+      trimmedTitle.length > 0 &&
+      currentMemoirs.some(
+        (m) => m.title.trim().toLowerCase() === trimmedTitle.toLowerCase()
+      );
+    setTitleError(
+      duplicateTitle
+        ? "A memoir with this title already exists in this anthology"
+        : ""
+    );
+
+    const url = extractFirstUrl(filteredContent);
+    const normalizedUrl = url ? normalizeUrlForComparison(url) : null;
+
+    if (!normalizedUrl) {
+      setUrlError("");
+      setUrlWarning("");
+      return;
+    }
+
+    const inCurrent = currentMemoirs.some((m) =>
+      memoirHasUrl(m, normalizedUrl)
+    );
+    setUrlError(inCurrent ? "This URL already exists in this anthology" : "");
+
+    if (inCurrent) {
+      setUrlWarning("");
+      return;
+    }
+
+    const otherLists: MemoirInterface[][] = [];
+    Object.entries(localAnthologies).forEach(([addr, memoirs]) => {
+      if (addr !== contractAddr) otherLists.push(memoirs);
+    });
+    Object.entries(onchainAnthologies).forEach(([addr, data]) => {
+      if (addr !== contractAddr) otherLists.push(data.memoirs || []);
+    });
+
+    const inOther = otherLists.some((memoirs) =>
+      memoirs.some((m) => memoirHasUrl(m, normalizedUrl))
+    );
+    setUrlWarning(inOther ? "This URL exists in another anthology" : "");
+  }, [
+    anthologyTitle,
+    filteredContent,
+    localAnthologies,
+    onchainAnthologies,
+    contractAddr,
+  ]);
+
   const handleAddMemoir = async () => {
+    if (titleError || urlError) {
+      addToast({
+        title: "Cannot add memoir",
+        content: titleError || urlError,
+        variant: "info",
+      });
+      return;
+    }
+
     if (isLocalAnthology(contractAddr)) {
       dispatch(
         addMemoirToUserLocalAnthology({
@@ -142,13 +218,18 @@ export const AddMemoir = ({
             style={{
               padding: "0.75rem 1rem",
               borderRadius: "0.75rem",
-              border: "1px solid #d1d5db",
+              border: titleError ? "1px solid #dc2626" : "1px solid #d1d5db",
               fontSize: "0.95rem",
               color: "#111",
               backgroundColor: "#fff",
               outline: "none",
             }}
           />
+          {titleError && (
+            <span style={{ color: "#dc2626", fontSize: "0.8rem" }}>
+              {titleError}
+            </span>
+          )}
 
           <label style={{ fontWeight: 500, fontSize: "1.2rem" }}>Content</label>
           <div style={{ position: "relative", width: "100%" }}>
@@ -192,11 +273,21 @@ export const AddMemoir = ({
                 fontFamily: "monospace",
                 backgroundColor: "#fff",
                 color: "#111",
-                border: "1px solid #d1d5db",
+                border: urlError ? "1px solid #dc2626" : "1px solid #d1d5db",
                 borderRadius: "0.75rem",
               }}
             />
           </div>
+          {urlError && (
+            <span style={{ color: "#dc2626", fontSize: "0.8rem" }}>
+              {urlError}
+            </span>
+          )}
+          {!urlError && urlWarning && (
+            <span style={{ color: "#b45309", fontSize: "0.8rem" }}>
+              {urlWarning}
+            </span>
+          )}
 
           <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
             <input
