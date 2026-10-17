@@ -4,6 +4,7 @@ import { IconPathSwitcher } from "@src/components/Layout/IconPathSwitcher";
 
 import { DownloadReduxStore } from "@src/components/Layout/DownloadReduxStore";
 import { CacheStorageViewer } from "@src/components/Layout/CacheStorageViewer";
+import { ClearCacheButton } from "@src/components/Layout/ClearCacheButton";
 import { CleanReduxStore } from "@src/components/Layout/CleanReduxStore";
 import { LoadReduxStore } from "@src/components/Layout/LoadReduxStore";
 import { CategoryBackgroundsToggle } from "@src/components/Layout/CategoryBackgroundsToggle";
@@ -37,6 +38,7 @@ export const SettingsView = () => {
       >
         <DownloadReduxStore />
         <CacheStorageViewer />
+        <ClearCacheButton />
         <LoadReduxStore />
         <InstallPWAButton />
         <IconPathSwitcher />
