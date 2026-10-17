@@ -4,7 +4,7 @@ import { useAppSelector } from "@src/store/utils/hooks";
 import { Address } from "@src/types/common";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 import { useAccount } from "wagmi";
-import { DeleteMemoir } from "../../DeleteMemoir";
+import { MemoirActions } from "../../MemoirActions";
 import { extractEmbed } from "@src/utils/embeds";
 import { EmbedRenderer } from "../thirdPartyEmbeds";
 
@@ -102,19 +102,16 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
               currentUser === memoirs[i].sender) && (
               <div
                 style={{
-                  cursor: "pointer",
                   position: "absolute",
                   right: "10px",
                   top: "10px",
                 }}
-                /*  onClick={() =>
-                  handleDelete({
-                    anthologyAddr,
-                    index: i,
-                  })
-                } */
               >
-                <DeleteMemoir anthologyAddr={anthologyAddr} index={i} />
+                <MemoirActions
+                  anthologyAddr={anthologyAddr}
+                  index={i}
+                  memoir={memoirs[i]}
+                />
               </div>
             )}
           </div>

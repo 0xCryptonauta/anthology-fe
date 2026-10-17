@@ -149,6 +149,21 @@ export const localAnthologySlice = createSlice({
         );
       }
     },
+    updateMemoirInUserLocalAnthology(
+      state,
+      action: PayloadAction<{
+        contract: Address;
+        index: number;
+        title: string;
+        content: string;
+      }>
+    ) {
+      const { contract, index, title, content } = action.payload;
+      const memoirs = state.anthologies[contract];
+      if (!memoirs || !memoirs[index]) return;
+
+      memoirs[index] = { ...memoirs[index], title, content };
+    },
     deleteUserLocalAnthology(
       state,
       action: PayloadAction<{ user: Address; contract: Address }>
@@ -248,6 +263,7 @@ export const {
   addManyMemoirsToUserLocalAnthology,
   addAnthologiesToLocalMemory,
   deleteMemoirFromUserLocalAnthology,
+  updateMemoirInUserLocalAnthology,
   updateUserLocalAnthologyTitle,
   setDefaultSkin,
   updateLocalUserContracts,
