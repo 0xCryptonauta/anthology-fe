@@ -1,0 +1,14 @@
+/*
+ * Instagram's embed.js injects its own stylesheet with `min-width: 326px` on
+ * `.instagram-media` elements. On narrow cards this forces the embed wider
+ * than its container (and the viewport). These overrides must use !important
+ * because Instagram's rules are injected at runtime.
+ */
+
+.instagram-media,
+iframe.instagram-media,
+.instagram-embed-wrapper iframe {
+  min-width: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
