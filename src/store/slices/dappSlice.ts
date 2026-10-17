@@ -2,11 +2,14 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 //import { Address } from "@src/types/common";
 
+export type ThemeType = "dark" | "light";
+
 export interface dappState {
   factoryRpc: string;
   isIconToLocal: boolean;
   categoryBackgroundsEnabled: boolean;
   anthologyFooterBgClass: string;
+  theme: ThemeType;
 }
 
 const initialState: dappState = {
@@ -14,6 +17,7 @@ const initialState: dappState = {
   isIconToLocal: true,
   categoryBackgroundsEnabled: true,
   anthologyFooterBgClass: "",
+  theme: "dark",
 };
 
 export const dappSlice = createSlice({
@@ -29,6 +33,9 @@ export const dappSlice = createSlice({
     toggleCategoryBackgrounds: (state) => {
       state.categoryBackgroundsEnabled = !state.categoryBackgroundsEnabled;
     },
+    toggleTheme: (state) => {
+      state.theme = state.theme === "dark" ? "light" : "dark";
+    },
     resetDappStore: () => {
       return initialState;
     },
@@ -38,7 +45,7 @@ export const dappSlice = createSlice({
   },
 });
 
-export const { updateFactoryRpc, toggleIsIconToLocal, toggleCategoryBackgrounds, resetDappStore, setAnthologyFooterBgClass } =
+export const { updateFactoryRpc, toggleIsIconToLocal, toggleCategoryBackgrounds, toggleTheme, resetDappStore, setAnthologyFooterBgClass } =
   dappSlice.actions;
 
 export default dappSlice.reducer;

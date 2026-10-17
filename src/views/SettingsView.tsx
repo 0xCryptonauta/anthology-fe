@@ -8,15 +8,19 @@ import { ClearCacheButton } from "@src/components/Layout/ClearCacheButton";
 import { CleanReduxStore } from "@src/components/Layout/CleanReduxStore";
 import { LoadReduxStore } from "@src/components/Layout/LoadReduxStore";
 import { CategoryBackgroundsToggle } from "@src/components/Layout/CategoryBackgroundsToggle";
+import { ThemeToggle } from "@src/components/Layout/ThemeToggle";
 import { Seo } from "@components/Layout/Seo";
+import { useTheme } from "@src/hooks/useTheme";
 
 export const SettingsView = () => {
+  const { isLight } = useTheme();
+
   return (
     <>
       <Seo title="Settings" description="Configure your Anthology experience" />
       <div
         style={{
-          color: "white",
+          color: isLight ? "#213547" : "white",
           height: "100%",
           textShadow: "none",
           display: "flex",
@@ -43,6 +47,7 @@ export const SettingsView = () => {
         <InstallPWAButton />
         <IconPathSwitcher />
         <CategoryBackgroundsToggle />
+        <ThemeToggle />
         <NetworkSettings />
       </div>
 
