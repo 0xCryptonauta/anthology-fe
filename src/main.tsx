@@ -16,6 +16,7 @@ import { IndexView } from "@views/IndexView.tsx";
 import { AnthologyShareView } from "@views/anthology/AnthologyShareView";
 import { ContextWagmiProvider } from "./components/Layout/ContextWagmiProvider";
 import { SettingsView } from "./views/SettingsView";
+import { SearchView } from "./views/SearchView";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,7 @@ const router = createBrowserRouter([
       { path: "about", element: <AboutView /> },
       { path: "share", element: <AnthologyShareView /> },
       { path: "settings", element: <SettingsView /> },
+      { path: "search", element: <SearchView /> },
     ],
   },
   { path: "*", element: <NotFound /> },
