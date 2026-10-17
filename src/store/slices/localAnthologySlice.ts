@@ -188,10 +188,14 @@ export const localAnthologySlice = createSlice({
         );
         if (state.userContracts[user].length === 0) {
           delete state.userContracts[user];
-          delete state.contractsTitles[contract];
           state.users = state.users.filter((u) => u !== user);
         }
       }
+
+      // Remove the anthology's data (title, memoirs, skin) with it
+      delete state.contractsTitles[contract];
+      delete state.anthologies[contract];
+      delete state.defaultSkin[contract];
     },
     updateUserLocalAnthologyTitle(
       state,
