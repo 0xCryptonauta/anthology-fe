@@ -108,7 +108,6 @@ export const Modal = ({
         onHide={handleClose}
         placement={stickToBottom ? "bottom" : resolvedPlacement}
         className={isSidePanel ? (containerClassName || "") : ""}
-        data-bs-theme={isSidePanel ? "dark" : undefined}
         style={{
           width: isSidePanel ? "200px" : undefined,
           height: !isSidePanel && placement !== "end" ? "600px" : undefined,
