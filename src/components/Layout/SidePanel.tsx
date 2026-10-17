@@ -10,10 +10,8 @@ import { CurrentPaths } from "@src/types/common";
 
 export const SidePanel = () => {
   const { userAddr } = useAppSelector((state) => state.user);
-  const { isIconToLocal, theme } = useAppSelector((state) => state.dapp);
+  const { isIconToLocal } = useAppSelector((state) => state.dapp);
   const backgroundsEnabled = useAppSelector((s) => s.dapp.categoryBackgroundsEnabled);
-  const isLight = theme === "light";
-  const linkColor = isLight ? "#213547" : "white";
   const { isConnected, address } = useAccount();
 
   const dispatch = useAppDispatch();
@@ -50,30 +48,24 @@ export const SidePanel = () => {
             alignItems: "center",
             width: "35px",
             height: "35px",
-            border: isLight
-              ? "1px solid rgba(0, 0, 0, 0.3)"
-              : "1px solid rgba(255, 255, 255, 0.3)",
+            border: "1px solid rgba(255, 255, 255, 0.3)",
             borderRadius: "10px",
             cursor: "pointer",
-            color: linkColor,
+            color: "white",
             fontSize: "22px",
-            background: isLight
-              ? "rgba(0, 0, 0, 0.05)"
-              : "rgba(255, 255, 255, 0.05)",
+            background: "rgba(255, 255, 255, 0.05)",
             backdropFilter: "blur(6px)",
             boxShadow: "0 2px 6px rgba(0, 0, 0, 0.2)",
             transition: "background 0.2s, transform 0.2s",
           }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLDivElement).style.background = isLight
-              ? "rgba(0, 0, 0, 0.1)"
-              : "rgba(255, 255, 255, 0.1)";
+            (e.currentTarget as HTMLDivElement).style.background =
+              "rgba(255, 255, 255, 0.1)";
             (e.currentTarget as HTMLDivElement).style.transform = "scale(1.05)";
           }}
           onMouseLeave={(e) => {
-            (e.currentTarget as HTMLDivElement).style.background = isLight
-              ? "rgba(0, 0, 0, 0.05)"
-              : "rgba(255, 255, 255, 0.05)";
+            (e.currentTarget as HTMLDivElement).style.background =
+              "rgba(255, 255, 255, 0.05)";
             (e.currentTarget as HTMLDivElement).style.transform = "scale(1)";
           }}
         >
@@ -128,7 +120,7 @@ export const SidePanel = () => {
                   margin: "10px 0px",
                   fontSize: "18px",
                   textDecoration: "none",
-                  color: linkColor,
+                  color: "white",
                 }}
               >
                 My Anthologies
@@ -142,7 +134,7 @@ export const SidePanel = () => {
               margin: "10px 0px",
               fontSize: "18px",
               textDecoration: "none",
-              color: linkColor,
+              color: "white",
             }}
           >
             Discover
@@ -152,7 +144,7 @@ export const SidePanel = () => {
             onClick={() => handleOnClick(LOCAL_USER_PATH)}
             style={{
               margin: "10px 0px",
-              color: linkColor,
+              color: "white",
               textDecoration: "none",
             }}
           >
@@ -170,7 +162,7 @@ export const SidePanel = () => {
           <Link
             to="/about"
             onClick={handleClose}
-            style={{ textDecoration: "none", marginTop: "20px", color: linkColor }}
+            style={{ textDecoration: "none", marginTop: "20px", color: "white" }}
           >
             About
           </Link>
@@ -178,7 +170,7 @@ export const SidePanel = () => {
             <Link
               to="/info"
               onClick={handleClose}
-              style={{ textDecoration: "none", marginTop: "10px", color: linkColor }}
+              style={{ textDecoration: "none", marginTop: "10px", color: "white" }}
             >
               Factory Info
             </Link>
@@ -186,7 +178,7 @@ export const SidePanel = () => {
           <Link
             to="/settings"
             onClick={handleClose}
-            style={{ textDecoration: "none", marginTop: "10px", color: linkColor }}
+            style={{ textDecoration: "none", marginTop: "10px", color: "white" }}
           >
             Settings
           </Link>
