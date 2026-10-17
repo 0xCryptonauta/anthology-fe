@@ -99,7 +99,7 @@ export const Modal = ({
           border: "unset",
           display: "flex",
           flexDirection: isSidePanel ? "column" : "row",
-          alignItems: isSidePanel ? "center" : "flex-end",
+          alignItems: isSidePanel ? "center" : "stretch",
         }}
       >
         {header && (
@@ -114,6 +114,12 @@ export const Modal = ({
             width: "100%",
             alignItems: "center",
             flexDirection: "column",
+            justifyContent:
+              isSidePanel || transparent
+                ? undefined
+                : (stickToBottom ? "bottom" : resolvedPlacement) === "top"
+                ? "flex-start"
+                : "flex-end",
             backgroundColor: "transparent",
           }}
         >
