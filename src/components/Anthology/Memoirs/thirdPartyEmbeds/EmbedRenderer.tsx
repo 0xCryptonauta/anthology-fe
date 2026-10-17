@@ -2,6 +2,7 @@ import type { EmbedMatch } from "@src/utils/embeds";
 import { TwitterEmbed } from "./TwitterEmbed";
 import { YoutubeEmbed } from "./YoutubeEmbed";
 import { VimeoEmbed } from "./VimeoEmbed";
+import { ArchiveOrgEmbed } from "./ArchiveOrgEmbed";
 import RedditEmbed from "./RedditEmbed";
 import FacebookEmbed from "./facebookEmbed";
 import InstagramEmbed from "./InstagramEmbed";
@@ -18,6 +19,8 @@ export const EmbedRenderer = ({ embed }: { embed: EmbedMatch }) => {
       return <YoutubeEmbed videoId={embed.videoId} />;
     case "vimeo":
       return <VimeoEmbed videoId={embed.videoId} hash={embed.hash} />;
+    case "archiveorg":
+      return <ArchiveOrgEmbed itemId={embed.itemId} />;
     case "twitter":
       return <TwitterEmbed username={embed.username} postId={embed.postId} />;
     case "reddit":
