@@ -16,15 +16,18 @@ import { LOCAL_USER_ADDR } from "@src/utils/constants";
 interface MediaMemoirSkinProps {
   anthologyAddr: Address;
   order: OrderType;
+  search?: string;
 }
 
 export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
   anthologyAddr,
   order,
+  search,
 }) => {
   const { memoirs, orderedMemoirsIndexes } = useOrderedMemoirs(
     anthologyAddr,
-    order
+    order,
+    search
   );
   const { address: currentUser } = useAccount();
   const anthologyOwner = useAppSelector(

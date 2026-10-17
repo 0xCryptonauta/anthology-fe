@@ -11,16 +11,19 @@ import { EmbedRenderer } from "../thirdPartyEmbeds";
 interface ListMemoirSkinProps {
   anthologyAddr: Address;
   order: OrderType;
+  search?: string;
 }
 
 export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
   anthologyAddr,
   order,
+  search,
   //handleDelete,
 }) => {
   const { memoirs, orderedMemoirsIndexes } = useOrderedMemoirs(
     anthologyAddr,
-    order
+    order,
+    search
   );
 
   const { address: currentUser } = useAccount();
