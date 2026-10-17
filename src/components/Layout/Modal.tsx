@@ -45,42 +45,25 @@ export const Modal = ({
   };
 
   const offcanvasRef = useRef<HTMLDivElement>(null);
-  const mouseDownRef = useRef(false);
 
+  // Close when a press starts outside the panel. Pointer events cover mouse,
+  // touch and pen uniformly, so taps on mobile close the modal reliably.
   useEffect(() => {
-    const handleMouseDown = (e: MouseEvent) => {
-      mouseDownRef.current =
-        !!offcanvasRef.current &&
-        !offcanvasRef.current.contains(e.target as Node);
-    };
-
-    const handleMouseUp = (e: MouseEvent) => {
-      const selection = window.getSelection();
-      const isSelectingText =
-        selection &&
-        selection.type === "Range" &&
-        selection.toString().length > 0;
-
+    const handlePointerDown = (e: PointerEvent) => {
       if (
-        mouseDownRef.current &&
-        !isSelectingText &&
         offcanvasRef.current &&
         !offcanvasRef.current.contains(e.target as Node)
       ) {
         handleClose();
       }
-
-      mouseDownRef.current = false;
     };
 
-    document.addEventListener("mousedown", handleMouseDown);
-    document.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener("pointerdown", handlePointerDown);
 
     return () => {
-      document.removeEventListener("mousedown", handleMouseDown);
-      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("pointerdown", handlePointerDown);
     };
-  }, [onHide, handleClose]);
+  }, [handleClose]);
 
   const isSidePanel = variant === "sidepanel";
   const resolvedPlacement =
