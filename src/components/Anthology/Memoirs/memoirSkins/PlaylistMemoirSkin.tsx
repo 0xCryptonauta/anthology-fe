@@ -1,5 +1,5 @@
 import { MemoirInterface } from "@src/store/slices/anthologySlice";
-import { YOUTUBE_REGEX } from "@src/utils/regex";
+import { detectEmbed } from "@src/utils/embeds";
 import { ListMemoirSkin } from "./ListMemoirSkin";
 import { useOrderedMemoirs } from "@src/hooks/useOrderedMemoirs";
 import { OrderType } from "@src/components/Layout/OrderSelector";
@@ -19,8 +19,8 @@ export const PlaylistMemoirSkin = ({
 
   const extractYoutubeIds = (videoLinks: MemoirInterface[]) => {
     return videoLinks.map((vlink) => {
-      const match = vlink.content.match(YOUTUBE_REGEX);
-      return match && match[1] ? match[1] : "";
+      const embed = detectEmbed(vlink.content);
+      return embed?.provider === "youtube" ? embed.videoId : "";
     });
   };
 
@@ -32,8 +32,6 @@ export const PlaylistMemoirSkin = ({
   const playlistUrl = `https://www.youtube.com/embed/?playlist=${nonEmptyYoutubeIds.join(
     ","
   )}`;
-
-  console.log("playlist:", nonEmptyYoutubeIds);
 
   return nonEmptyYoutubeIds.length > 0 ? (
     <div
