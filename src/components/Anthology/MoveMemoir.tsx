@@ -144,7 +144,11 @@ export const MoveMemoir = ({
           style={{ cursor: "pointer", fontSize: "1rem" }}
           onClick={() => setShow(true)}
         >
-          🗂️
+          <img
+            src="/icons/copy-clipboard-icon.svg"
+            alt="Copy or move memoir"
+            style={{ width: "18px", height: "18px", display: "block" }}
+          />
         </span>
       }
     >

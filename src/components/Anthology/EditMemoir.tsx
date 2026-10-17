@@ -57,7 +57,11 @@ export const EditMemoir = ({
           style={{ cursor: "pointer", fontSize: "1rem" }}
           onClick={handleOpen}
         >
-          ✏️
+          <img
+            src="/icons/edit-icon.svg"
+            alt="Edit memoir"
+            style={{ width: "18px", height: "18px", display: "block" }}
+          />
         </span>
       }
     >

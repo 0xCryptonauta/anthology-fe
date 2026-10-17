@@ -100,7 +100,11 @@ export const MemoirActions = ({
         style={{ cursor: "pointer", fontSize: "1rem" }}
         onClick={handleCopy}
       >
-        📋
+        <img
+          src="/icons/copy-icon.svg"
+          alt="Copy memoir"
+          style={{ width: "18px", height: "18px", display: "block" }}
+        />
       </span>
 
       <span
@@ -108,7 +112,11 @@ export const MemoirActions = ({
         style={{ cursor: "pointer", fontSize: "1rem" }}
         onClick={handleShare}
       >
-        📤
+        <img
+          src="/icons/share-icon.svg"
+          alt="Share memoir"
+          style={{ width: "18px", height: "18px", display: "block" }}
+        />
       </span>
 
       <DeleteMemoir anthologyAddr={anthologyAddr} index={index} />

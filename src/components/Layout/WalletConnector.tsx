@@ -60,7 +60,16 @@ export const WalletConnector = () => {
         style={{ marginLeft: "5px", cursor: "pointer", margin: "0px 5px" }}
         onClick={() => handleDisconnect()}
       >
-        ❌
+        <img
+          src="/icons/delete-icon.svg"
+          alt="Disconnect wallet"
+          style={{
+            width: "16px",
+            height: "16px",
+            display: "block",
+            filter: "invert(1)",
+          }}
+        />
       </span>
     </div>
   ) : (
