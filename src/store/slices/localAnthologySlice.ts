@@ -273,6 +273,7 @@ export const {
   addManyMemoirsToUserLocalAnthology,
   addAnthologiesToLocalMemory,
   deleteMemoirFromUserLocalAnthology,
+  deleteMemoirAtIndexFromUserLocalAnthology,
   updateMemoirInUserLocalAnthology,
   updateUserLocalAnthologyTitle,
   setDefaultSkin,
