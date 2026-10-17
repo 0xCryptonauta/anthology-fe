@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { OrderType } from "@src/components/Layout/OrderSelector";
 import { useOrderedMemoirs } from "@src/hooks/useOrderedMemoirs";
 import { useAppSelector } from "@src/store/utils/hooks";
@@ -18,13 +19,15 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
   anthologyAddr,
   order,
   search,
-  //handleDelete,
 }) => {
   const { memoirs, orderedMemoirsIndexes } = useOrderedMemoirs(
     anthologyAddr,
     order,
     search
   );
+  const [expandedMemoirs, setExpandedMemoirs] = useState<
+    Record<number, boolean>
+  >({});
 
   const { address: currentUser } = useAccount();
   const anthologyOwner = useAppSelector(
@@ -47,6 +50,7 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
       {orderedMemoirsIndexes.map((i, index) => {
         const { title, content } = memoirs[i];
         const extracted = extractEmbed(content);
+        const isExpanded = !!expandedMemoirs[i];
 
         return (
           <div
@@ -72,9 +76,20 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
                 display: "block",
                 marginBottom: "0.25rem",
                 wordBreak: "break-word",
+                cursor: extracted ? "pointer" : "default",
               }}
+              onClick={
+                extracted
+                  ? () =>
+                      setExpandedMemoirs((prev) => ({
+                        ...prev,
+                        [i]: !prev[i],
+                      }))
+                  : undefined
+              }
             >
               {index + 1}. {title || "Untitled"}
+              {extracted && <span>{isExpanded ? " ▾" : " ▸"}</span>}
             </span>
 
             <div
@@ -87,14 +102,14 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
                 wordBreak: "break-word",
               }}
             >
-              {extracted ? (
+              {isExpanded && extracted ? (
                 <>
-                  <EmbedRenderer embed={extracted.embed} />
                   {extracted.caption && (
-                    <div style={{ marginTop: "0.5rem" }}>
+                    <div style={{ marginBottom: "0.5rem" }}>
                       {extracted.caption}
                     </div>
                   )}
+                  <EmbedRenderer embed={extracted.embed} />
                 </>
               ) : (
                 content
