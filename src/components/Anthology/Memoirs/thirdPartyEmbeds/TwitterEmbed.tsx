@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import "./TwitterEmbed.css";
 
 declare global {
   interface Window {
@@ -44,7 +45,16 @@ export const TwitterEmbed = ({
   }, []);
 
   return (
-    <div ref={tweetRef} style={{ backgroundColor: "none" }}>
+    <div
+      ref={tweetRef}
+      className="twitter-embed-wrapper"
+      style={{
+        backgroundColor: "none",
+        width: "100%",
+        maxWidth: "550px",
+        margin: "0 auto",
+      }}
+    >
       <blockquote className="twitter-tweet">
         <a href={"https://twitter.com/" + username + "/status/" + postId}></a>
       </blockquote>

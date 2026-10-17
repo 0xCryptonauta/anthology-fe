@@ -47,6 +47,7 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
         flexDirection: "column",
         alignItems: "center",
         width: "100%",
+        minWidth: 0,
         boxSizing: "border-box",
       }}
     >
