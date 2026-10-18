@@ -116,6 +116,7 @@ export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
             onHide={() => setShowDeleteModal(false)}
             trigger={
               <span
+                title={t("localState.delete")}
                 style={{ cursor: "pointer" }}
                 onClick={() => setShowDeleteModal(true)}
               >
