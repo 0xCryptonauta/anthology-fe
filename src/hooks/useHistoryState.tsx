@@ -1,8 +1,8 @@
 import { updateCurrentPath } from "@src/store/slices/userSlice";
 import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
-/* import { CurrentPaths } from "@src/types/common";
-import { LOCAL_USER_PATH } from "@src/utils/constants"; */
+import { CurrentPaths } from "@src/types/common";
 import { useEffect } from "react";
+import { isAddress } from "viem";
 import { useAccount } from "wagmi";
 
 export const useHistoryState = () => {
@@ -12,11 +12,34 @@ export const useHistoryState = () => {
 
   const dispatch = useAppDispatch();
 
-  /*   let defaultCurrentPath = LOCAL_USER_PATH as CurrentPaths;
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const contractParam =
+      params.get("contract") || params.get("anthology");
+    const userParam = params.get("user");
 
-  if (isConnected && !isIconToLocal) {
-    defaultCurrentPath = `user/${address}`;
-  } */
+    if (contractParam && isAddress(contractParam)) {
+      const targetPath = `contract/${contractParam}` as CurrentPaths;
+      dispatch(updateCurrentPath(targetPath));
+      window.history.replaceState(
+        { currentPath: targetPath },
+        "",
+        window.location.pathname
+      );
+      return;
+    }
+
+    if (userParam && isAddress(userParam)) {
+      const targetPath = `user/${userParam}` as CurrentPaths;
+      dispatch(updateCurrentPath(targetPath));
+      window.history.replaceState(
+        { currentPath: targetPath },
+        "",
+        window.location.pathname
+      );
+      return;
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     const resetHistoryState = () => {

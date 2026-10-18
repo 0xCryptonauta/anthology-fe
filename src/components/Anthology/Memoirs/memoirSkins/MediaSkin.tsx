@@ -1,19 +1,6 @@
 import { isValidURL } from "@src/utils/isValidURL";
-import {
-  TwitterEmbed,
-  YoutubeEmbed,
-  InstagramEmbed,
-  FacebookEmbed,
-  RedditEmbed,
-} from "../thirdPartyEmbeds";
-import {
-  FACEBOOK_REGEX,
-  INSTAGRAM_REGEX,
-  REDDIT_REGEX,
-  SPOTIFY_REGEX,
-  TWITTER_REGEX,
-  YOUTUBE_REGEX,
-} from "@src/utils/regex";
+import { extractEmbed } from "@src/utils/embeds";
+import { EmbedRenderer } from "../thirdPartyEmbeds";
 import { MemoirInterface } from "@src/store/slices/anthologySlice";
 
 interface MediaSkinProps {
@@ -21,48 +8,19 @@ interface MediaSkinProps {
 }
 
 export const Mediaskin: React.FC<MediaSkinProps> = ({ memoir }) => {
-  const youtubeMatch = YOUTUBE_REGEX.exec(memoir.content);
-  const spotifyMatch = SPOTIFY_REGEX.exec(memoir.content);
-  const twitterMatch = TWITTER_REGEX.exec(memoir.content);
-  const redditMatch = REDDIT_REGEX.exec(memoir.content);
-  const facebookMatch = FACEBOOK_REGEX.exec(memoir.content);
-  const instagramMatch = INSTAGRAM_REGEX.exec(memoir.content);
+  const extracted = extractEmbed(memoir.content);
 
   const renderContent = () => {
-    if (youtubeMatch) return <YoutubeEmbed videoId={youtubeMatch[1]} />;
-    if (twitterMatch)
+    if (extracted)
       return (
-        <TwitterEmbed username={twitterMatch[1]} postId={twitterMatch[2]} />
-      );
-    if (redditMatch) {
-      if (redditMatch[2]) return <RedditEmbed postUrl={memoir.content} />;
-      return (
-        <div style={{ overflowWrap: "break-word" }}>
-          <a
-            href={memoir.content}
-            target="_blank"
-            rel="noopener noreferrer"
-            //style={{ color: "#666" }}
-          >
-            {memoir.content}
-          </a>
-        </div>
-      );
-    }
-    if (facebookMatch) return <FacebookEmbed postUrl={memoir.content} />;
-    if (instagramMatch) return <InstagramEmbed postUrl={memoir.content} />;
-
-    if (spotifyMatch)
-      return (
-        <iframe
-          style={{ borderRadius: "12px" }}
-          src={`https://open.spotify.com/embed/${spotifyMatch[1]}/${spotifyMatch[2]}?utm_source=generator`}
-          width="100%"
-          height="352"
-          frameBorder="0"
-          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-          loading="lazy"
-        ></iframe>
+        <>
+          {extracted.caption && (
+            <div style={{ marginBottom: "0.5rem", overflowWrap: "break-word" }}>
+              {extracted.caption}
+            </div>
+          )}
+          <EmbedRenderer embed={extracted.embed} />
+        </>
       );
 
     return isValidURL(memoir.content) ? (
@@ -84,7 +42,7 @@ export const Mediaskin: React.FC<MediaSkinProps> = ({ memoir }) => {
   return (
     <div
       style={{
-        minWidth: "290px",
+        width: "100%",
         display: "flex",
         flexDirection: "row",
         alignItems: "center",

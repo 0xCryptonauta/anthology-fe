@@ -1,8 +1,10 @@
 import { useState } from "react";
 //import { readFactory } from "./FactoryFunctions";
 import { useAppSelector } from "@store/utils/hooks";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 export const IsWhitelisted = () => {
+  const { t } = useTranslation();
   const { whitelistedUsers } = useAppSelector((state) => state.factory);
 
   const [addressToCheck, setAddressToCheck] = useState("");
@@ -25,7 +27,8 @@ export const IsWhitelisted = () => {
       <div style={{ display: "flex", flexDirection: "column" }}>
         <input
           type="text"
-          placeholder="Check address"
+          placeholder={t("a11y.checkAddress")}
+          aria-label={t("a11y.checkAddress")}
           value={addressToCheck}
           onChange={(event) => {
             setAddressToCheck(event.target.value);
@@ -36,6 +39,7 @@ export const IsWhitelisted = () => {
         ></input>
         {isWhitelisted != undefined && (
           <span
+            role="status"
             style={{
               fontSize: "10px",
               color: isWhitelisted ? "green" : "red",
@@ -48,8 +52,12 @@ export const IsWhitelisted = () => {
         )}
       </div>
 
-      <span
-        style={{ marginLeft: "7px", cursor: "pointer" }}
+      <button
+        type="button"
+        className="icon-button"
+        style={{ marginLeft: "7px" }}
+        aria-label={t("a11y.checkAddress")}
+        title={t("a11y.checkAddress")}
         onClick={async () => {
           //const isWl = await readFactory("isWhitelisted", [addressToCheck]);
           const isWl = whitelistedUsers.includes(addressToCheck);
@@ -58,7 +66,7 @@ export const IsWhitelisted = () => {
         }}
       >
         🔎
-      </span>
+      </button>
     </div>
   );
 };

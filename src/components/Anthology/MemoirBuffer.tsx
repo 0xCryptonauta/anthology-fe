@@ -3,8 +3,10 @@ import { removeOneFromBuffer } from "@store/slices/anthologySlice";
 import { shortenAddress } from "@utils/shortenAddress";
 import { useAppDispatch } from "@store/utils/hooks";
 import { useAppSelector } from "@store/utils/hooks";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 export const MemoirBuffer = ({ contractAddr }: { contractAddr: string }) => {
+  const { t } = useTranslation();
   const memoirBuffer = useAppSelector((state) =>
     contractAddr ? state.anthology[contractAddr].memoirBuffer : []
   );
@@ -24,17 +26,20 @@ export const MemoirBuffer = ({ contractAddr }: { contractAddr: string }) => {
               margin: "3px",
             }}
           >
-            <span>Title: </span>
-            <span>{memoir.title}</span>
-            <div>Content:</div>
-            <div>{memoir.content}</div>
-            <div>Sent by:</div>
+            <span>{t("memoirs.titleLabel")} </span>
+            <span translate="no">{memoir.title}</span>
+            <div>{t("memoirs.contentLabel")}</div>
+            <div translate="no">{memoir.content}</div>
+            <div>{t("memoirs.sentBy")}</div>
             <div>{shortenAddress(memoir.sender, 10, 8)}</div>
-            <span>When added: </span>
+            <span>{t("memoirs.whenAdded")} </span>
             <span>{memoir.timestamp}</span>
             <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-              <span
-                style={{ cursor: "pointer" }}
+              <button
+                type="button"
+                className="icon-button"
+                title={t("memoir.accept")}
+                aria-label={t("memoir.accept")}
                 onClick={async () => {
                   const txHash = await writeAnthology(
                     contractAddr,
@@ -52,9 +57,12 @@ export const MemoirBuffer = ({ contractAddr }: { contractAddr: string }) => {
                 }}
               >
                 ✅
-              </span>
-              <span
-                style={{ cursor: "pointer" }}
+              </button>
+              <button
+                type="button"
+                className="icon-button"
+                title={t("memoirs.decline")}
+                aria-label={t("memoirs.decline")}
                 onClick={async () => {
                   const txHash = await writeAnthology(
                     contractAddr,
@@ -70,8 +78,17 @@ export const MemoirBuffer = ({ contractAddr }: { contractAddr: string }) => {
                   );
                 }}
               >
-                ❌
-              </span>
+                <img
+                  src="/icons/delete-icon.svg"
+                  alt=""
+                  style={{
+                    width: "16px",
+                    height: "16px",
+                    display: "block",
+                    filter: "invert(1)",
+                  }}
+                />
+              </button>
             </div>
           </div>
         );

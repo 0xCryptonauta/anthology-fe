@@ -16,6 +16,12 @@ export const removeSocialTracking = (url: string): string => {
     return url;
   }
 
+  // Only sanitize when the whole string is a URL. Mixed "url + text" content
+  // would otherwise lose the text (URL parsers treat it as part of a param).
+  if (/\s/.test(url)) {
+    return url;
+  }
+
   try {
     const urlObject = new URL(url);
     const hostname = urlObject.hostname.toLowerCase();

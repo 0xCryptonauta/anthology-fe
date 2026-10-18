@@ -18,6 +18,7 @@ type ModalProps = {
   transparent?: boolean;
   stickToBottom?: boolean;
   containerClassName?: string;
+  height?: string;
 };
 
 export const Modal = ({
@@ -31,6 +32,7 @@ export const Modal = ({
   transparent = false,
   stickToBottom = false,
   containerClassName,
+  height,
 }: ModalProps) => {
   const [internalShow, setInternalShow] = useState(false);
   const show = externalShow ?? internalShow;
@@ -45,50 +47,36 @@ export const Modal = ({
   };
 
   const offcanvasRef = useRef<HTMLDivElement>(null);
-  const mouseDownRef = useRef(false);
 
+  // Close when a press starts outside the panel. Pointer events cover mouse,
+  // touch and pen uniformly, so taps on mobile close the modal reliably.
   useEffect(() => {
-    const handleMouseDown = (e: MouseEvent) => {
-      mouseDownRef.current =
-        !!offcanvasRef.current &&
-        !offcanvasRef.current.contains(e.target as Node);
-    };
-
-    const handleMouseUp = (e: MouseEvent) => {
-      const selection = window.getSelection();
-      const isSelectingText =
-        selection &&
-        selection.type === "Range" &&
-        selection.toString().length > 0;
-
+    const handlePointerDown = (e: PointerEvent) => {
       if (
-        mouseDownRef.current &&
-        !isSelectingText &&
         offcanvasRef.current &&
         !offcanvasRef.current.contains(e.target as Node)
       ) {
         handleClose();
       }
-
-      mouseDownRef.current = false;
     };
 
-    document.addEventListener("mousedown", handleMouseDown);
-    document.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener("pointerdown", handlePointerDown);
 
     return () => {
-      document.removeEventListener("mousedown", handleMouseDown);
-      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("pointerdown", handlePointerDown);
     };
-  }, [onHide, handleClose]);
+  }, [handleClose]);
 
   const isSidePanel = variant === "sidepanel";
-  const resolvedPlacement =
-    placement === "end"
-      ? "end"
-      : window.innerHeight > window.innerWidth
-      ? "top"
-      : "bottom";
+  const isPortrait = window.innerHeight > window.innerWidth;
+  const resolvedPlacement = placement === "end" ? "end" : "bottom";
+
+  // WCAG 2.1.1 / 4.1.2 — custom (non-button) triggers get keyboard support.
+  const nativeInteractiveTags = ["button", "a", "input", "select", "textarea"];
+  const triggerNeedsKeyboard =
+    !!trigger &&
+    typeof trigger.type === "string" &&
+    !nativeInteractiveTags.includes(trigger.type as string);
 
   return (
     <>
@@ -99,6 +87,20 @@ export const Modal = ({
               trigger.props.onClick?.(e);
               handleShow();
             },
+            ...(triggerNeedsKeyboard
+              ? {
+                  role: "button",
+                  tabIndex: 0,
+                  "aria-haspopup": "dialog" as const,
+                  onKeyDown: (e: React.KeyboardEvent) => {
+                    trigger.props.onKeyDown?.(e);
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      handleShow();
+                    }
+                  },
+                }
+              : {}),
           })}
         </div>
       )}
@@ -111,12 +113,13 @@ export const Modal = ({
         data-bs-theme={isSidePanel ? "dark" : undefined}
         style={{
           width: isSidePanel ? "200px" : undefined,
-          height: !isSidePanel && placement !== "end" ? "600px" : undefined,
+          height: !isSidePanel && placement !== "end" ? height ?? "min(600px, 90dvh)" : undefined,
+          bottom: !isSidePanel && isPortrait ? "40px" : undefined,
           backgroundColor: "transparent",
           border: "unset",
           display: "flex",
           flexDirection: isSidePanel ? "column" : "row",
-          alignItems: isSidePanel ? "center" : "flex-end",
+          alignItems: isSidePanel ? "center" : "stretch",
         }}
       >
         {header && (
@@ -131,12 +134,17 @@ export const Modal = ({
             width: "100%",
             alignItems: "center",
             flexDirection: "column",
+            justifyContent:
+              isSidePanel || transparent
+                ? undefined
+                : isPortrait
+                ? "flex-start"
+                : "flex-end",
             backgroundColor: "transparent",
           }}
         >
           <div
             ref={offcanvasRef}
-            onClick={(e) => e.stopPropagation()}
             style={{
               backgroundColor:
                 isSidePanel || transparent ? "transparent" : "white",
@@ -147,7 +155,7 @@ export const Modal = ({
               width: transparent ? "unset" : "100%",
               height: isSidePanel ? "100%" : "unset",
               maxWidth: isSidePanel || transparent ? "100%" : "315px",
-              maxHeight: "90vh",
+              maxHeight: "calc(100% - 6px)",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",

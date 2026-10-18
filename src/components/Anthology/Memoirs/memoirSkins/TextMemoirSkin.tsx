@@ -8,21 +8,26 @@ import { OrderType } from "@src/components/Layout/OrderSelector";
 import { useOrderedMemoirs } from "@src/hooks/useOrderedMemoirs";
 import { useAccount } from "wagmi";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
-import { DeleteMemoir } from "../../DeleteMemoir";
+import { MemoirActions } from "../../MemoirActions";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 interface TextMemoirSkinProps {
   anthologyAddr: Address;
   order: OrderType;
+  search?: string;
 }
 
 export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
   anthologyAddr,
   order,
+  search,
 }) => {
+  const { t } = useTranslation();
   const { memoirs, orderedMemoirsIndexes } = useOrderedMemoirs(
     anthologyAddr,
-    order
+    order,
+    search
   );
   const { address: currentUser } = useAccount();
   const anthologyOwner = useAppSelector(
@@ -64,13 +69,16 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
               backgroundColor: "#f9f9f9",
               padding: "12px",
               margin: "15px 1px",
-              width: "360px",
+              width: "100%",
+              maxWidth: "360px",
+              boxSizing: "border-box",
               position: "relative",
               boxShadow: "0 1px 4px rgba(0, 0, 0, 0.05)",
             }}
           >
             {/* Title */}
             <div
+              translate="no"
               style={{
                 textAlign: "center",
                 fontWeight: 600,
@@ -81,11 +89,12 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
                 color: "black",
               }}
             >
-              {memoir.title || "Untitled"}
+              {memoir.title || t("common.untitled")}
             </div>
 
             {/* Content */}
             <div
+              translate="no"
               style={{
                 textAlign: "center",
                 padding: "6px 0",
@@ -121,41 +130,30 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
               }}
             >
               {currentUser === LOCAL_USER_ADDR && (
-                <span
-                  style={{ cursor: "pointer" }}
+                <button
+                  type="button"
+                  className="bg-transparent border-none p-0"
+                  style={{ cursor: "pointer", color: "black" }}
                   onClick={() =>
                     dispatch(updateCurrentPath(`user/${memoir.sender}`))
                   }
                 >
                   {shortenAddress(memoir.sender, 10, 8)}
-                </span>
+                </button>
               )}
 
               <span>{formatUnixTime(Number(memoir.timestamp))}</span>
-            </div>
 
-            {/* Delete Button */}
-            {isDeletable && (
-              <div
-                title="Delete memoir"
-                style={{
-                  cursor: "pointer",
-                  position: "absolute",
-                  right: "10px",
-                  bottom: "10px",
-                  fontSize: "16px",
-                  color: "#cc0000",
-                }}
-                /* onClick={() =>
-                  handleDelete({
-                    anthologyAddr,
-                    index: i,
-                  })
-                } */
-              >
-                <DeleteMemoir anthologyAddr={anthologyAddr} index={i} />
-              </div>
-            )}
+              {isDeletable && (
+                <div style={{ marginTop: "6px" }}>
+                  <MemoirActions
+                    anthologyAddr={anthologyAddr}
+                    index={i}
+                    memoir={memoir}
+                  />
+                </div>
+              )}
+            </div>
           </div>
         );
       })}

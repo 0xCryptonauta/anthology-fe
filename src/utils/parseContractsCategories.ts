@@ -50,11 +50,14 @@ export const parseContractsCategories = (
 
 // Note: Objects in JS preserve insertion order, but callers often iterate keys
 // expecting alphabetical order. Provide a helper to produce a new Categories
-// object with sorted category and subcategory keys (alphabetically).
+// object with sorted category / subcategory keys and items sorted by title.
 export const parseContractsCategoriesSorted = (
   contracts: MemoirContent[]
 ): { categories: Categories; uncategorized: MemoirContent[] } => {
   const { categories, uncategorized } = parseContractsCategories(contracts);
+
+  const byTitle = (a: MemoirContent, b: MemoirContent) =>
+    a.title.localeCompare(b.title);
 
   const sortedCategories: Categories = {};
 
@@ -67,14 +70,17 @@ export const parseContractsCategoriesSorted = (
       Object.keys(cat.subcategories)
         .sort((a, b) => a.localeCompare(b))
         .forEach((subKey) => {
-          sortedSubcats[subKey] = cat.subcategories[subKey];
+          sortedSubcats[subKey] = [...cat.subcategories[subKey]].sort(byTitle);
         });
 
       sortedCategories[catKey] = {
-        items: cat.items,
+        items: [...cat.items].sort(byTitle),
         subcategories: sortedSubcats,
       };
     });
 
-  return { categories: sortedCategories, uncategorized };
+  return {
+    categories: sortedCategories,
+    uncategorized: [...uncategorized].sort(byTitle),
+  };
 };

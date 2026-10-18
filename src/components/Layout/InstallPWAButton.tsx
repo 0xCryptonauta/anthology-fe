@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -9,6 +10,7 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 const InstallPWAButton: React.FC = () => {
+  const { t } = useTranslation();
   const [deferredPrompt, setDeferredPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState<boolean>(false);
@@ -64,7 +66,7 @@ const InstallPWAButton: React.FC = () => {
         alignItems: "center",
       }}
     >
-      <span>Install App: </span>
+      <span>{t("install.label")}</span>
       <span
         role="button"
         tabIndex={0}

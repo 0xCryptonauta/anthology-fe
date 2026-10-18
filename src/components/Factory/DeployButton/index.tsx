@@ -10,6 +10,7 @@ import { generateLocalContractAddr } from "@src/utils/generateLocalContractAddr"
 import { Modal } from "@src/components/Layout/Modal";
 import { TitleEditor } from "@components/Factory/TitleEditor";
 import { MemoirContent } from "@src/types/common";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 interface DeployButtonProps {
   isLocal?: boolean;
@@ -20,6 +21,7 @@ export const DeployButton: React.FC<DeployButtonProps> = ({
   isLocal = false,
   userTitles,
 }) => {
+  const { t } = useTranslation();
 
   const { userAddr } = useAppSelector((state) => state.user || "");
   const { whitelistEnabled, owner } = useAppSelector(
@@ -51,7 +53,7 @@ export const DeployButton: React.FC<DeployButtonProps> = ({
         })
       );
       addToast({
-        title: "New Anthology was created",
+        title: t("deploy.created"),
         content: localContract,
         variant: "success",
         delay: 5000,
@@ -61,7 +63,7 @@ export const DeployButton: React.FC<DeployButtonProps> = ({
       const txHash = await writeFactory("deployAnthology");
       if (txHash) {
         addToast({
-          title: "New Anthology was created",
+          title: t("deploy.created"),
           content: "TxHash: " + txHash,
           variant: "success",
           delay: 5000,
@@ -78,15 +80,16 @@ export const DeployButton: React.FC<DeployButtonProps> = ({
       onHide={handleClose}
       trigger={
         isLocal || canCreateOnChain ? (
-          <span
+          <button
+            type="button"
             className="btn-new-pill"
             onClick={() => setShow(true)}
-            aria-label="New Anthology"
+            aria-label={t("deploy.newAnthology")}
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" aria-hidden="true">
               <path d="M12 5v14M5 12h14" />
             </svg>
-          </span>
+          </button>
         ) : (
           <></>
         )
@@ -99,7 +102,9 @@ export const DeployButton: React.FC<DeployButtonProps> = ({
           alignItems: "center",
           gap: "1rem",
           padding: "1.25rem 1rem",
-          width: "320px",
+          width: "100%",
+          maxWidth: "320px",
+          boxSizing: "border-box",
         }}
       >
         <span
@@ -110,12 +115,12 @@ export const DeployButton: React.FC<DeployButtonProps> = ({
             textAlign: "center",
           }}
         >
-          New Anthology
+          {t("deploy.newAnthology")}
         </span>
 
         <TitleEditor
           userTitles={userTitles}
-          submitLabel={isLocal || !canCreateOnChain ? "Add Private Anthology" : "Add Public Anthology"}
+          submitLabel={isLocal || !canCreateOnChain ? t("deploy.addPrivate") : t("deploy.addPublic")}
           onSubmit={handleDeploy}
         />
       </div>

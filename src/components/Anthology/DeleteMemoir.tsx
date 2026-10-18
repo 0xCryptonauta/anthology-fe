@@ -4,10 +4,11 @@ import { Modal } from "@src/components/Layout/Modal";
 import { Address } from "@src/types/common";
 import { useToast } from "../Layout/Toast";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
-import { deleteMemoirFromUserLocalAnthology } from "@src/store/slices/localAnthologySlice";
+import { deleteMemoirAtIndexFromUserLocalAnthology } from "@src/store/slices/localAnthologySlice";
 import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 import { writeAnthology } from "@src/contract-functions/anthologyFunctions";
 import { removeOneFromMemoirs } from "@src/store/slices/anthologySlice";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 interface DeleteMemoirProps {
   anthologyAddr: Address;
@@ -18,6 +19,7 @@ export const DeleteMemoir: React.FC<DeleteMemoirProps> = ({
   anthologyAddr,
   index,
 }) => {
+  const { t } = useTranslation();
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
 
@@ -40,21 +42,21 @@ export const DeleteMemoir: React.FC<DeleteMemoirProps> = ({
     if (isLocalAnthology(anthologyAddr)) {
       try {
         dispatch(
-          deleteMemoirFromUserLocalAnthology({
+          deleteMemoirAtIndexFromUserLocalAnthology({
             contract: anthologyAddr,
-            memoir,
+            index,
           })
         );
         addToast({
-          title: "Memoir deleted",
+          title: t("delete.deleted"),
           content: memoir.title,
           variant: "success",
         });
       } catch (error) {
         console.log("Error deleting memoir from local anthology:", error);
         addToast({
-          title: "Error deleting memoir",
-          content: "Error deleting memoir",
+          title: t("delete.errorTitle"),
+          content: t("delete.errorTitle"),
           variant: "danger",
         });
       }
@@ -72,7 +74,7 @@ export const DeleteMemoir: React.FC<DeleteMemoirProps> = ({
         );
         if (txHash) {
           addToast({
-            title: "Memoir deleted",
+            title: t("delete.deleted"),
             content: "TxHash: " + txHash,
             variant: "danger",
           });
@@ -80,8 +82,8 @@ export const DeleteMemoir: React.FC<DeleteMemoirProps> = ({
       } catch (error) {
         console.error("Error deleting memoir:", error);
         addToast({
-          title: "Error deleting memoir",
-          content: "Error deleting memoir",
+          title: t("delete.errorTitle"),
+          content: t("delete.errorTitle"),
           variant: "danger",
         });
       }
@@ -93,7 +95,22 @@ export const DeleteMemoir: React.FC<DeleteMemoirProps> = ({
       placement="bottom"
       show={show}
       onHide={handleClose}
-      trigger={<span onClick={() => setShow(true)}>❌</span>}
+      trigger={
+        <button
+          type="button"
+          className="icon-button"
+          title={t("memoir.deleteTitle")}
+          aria-label={t("memoir.deleteTitle")}
+          style={{ fontSize: "1rem" }}
+          onClick={() => setShow(true)}
+        >
+          <img
+            src="/icons/delete-icon.svg"
+            alt=""
+            style={{ width: "18px", height: "18px", display: "block" }}
+          />
+        </button>
+      }
     >
       <div
         style={{
@@ -104,7 +121,7 @@ export const DeleteMemoir: React.FC<DeleteMemoirProps> = ({
         }}
       >
         <span style={{ fontSize: "16px", fontWeight: "bold" }}>
-          Are you sure you want to delete:
+          {t("delete.confirmTitle")}
         </span>
         <br />
         <div
@@ -144,10 +161,10 @@ export const DeleteMemoir: React.FC<DeleteMemoirProps> = ({
             handleClose();
           }}
         >
-          YES, DELETE
+          {t("delete.yesDelete")}
         </button>
         <span style={{ fontSize: "12px", color: "red" }}>
-          This action cannot be undone.
+          {t("delete.cannotUndo")}
         </span>
       </div>
     </Modal>

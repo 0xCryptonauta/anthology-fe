@@ -3,6 +3,47 @@
 See `CLAUDE.md` for tech stack, commands, and architecture overview. This file adds
 repo-specific gotchas and patterns that are easy to miss.
 
+**Design system**: `design.md` (repo root) is the single source of truth for
+colors, typography, components and interaction rules. Follow it for any UI work.
+
+## Accessibility — mandatory for every change
+
+**Every change must comply with ISO/IEC 40500:2025 (WCAG 2.2, Conformance
+Level AA).** No exceptions, no "later". Follow the POUR principles:
+
+- **Perceivable**: text contrast ≥ 4.5:1 (≥ 3:1 for large text/UI borders);
+  every `<img>` gets meaningful `alt` (or `alt=""` + `aria-label` on the
+  control when decorative); every `<iframe>` gets a `title`; decorative SVGs
+  get `aria-hidden="true"`; use semantic landmarks (`<main id="main-content">`,
+  `<footer>`, `<nav>`).
+- **Operable**: all interactive controls must be real `<button type="button">`
+  (preferred) or keyboard-operable (`role="button"` + `tabIndex={0}` +
+  `Enter`/`Space` `onKeyDown`). Never leave a bare `<span onClick>` or
+  `<div onClick>`. Modal triggers are auto-fixed by `Modal.tsx`, but new
+  standalone controls must be keyboard reachable. No focus traps. Target
+  size ≥ 24×24 CSS px for icon-only controls (use the `.icon-button` class).
+  Never remove focus outlines without a `:focus-visible` replacement (global
+  rule lives in `src/index.css`).
+- **Understandable**: every form control has an explicit label — `<label
+  htmlFor>` + `id` (use `useId()`), or `aria-label` when no visible label
+  exists. Validation errors use `aria-invalid` + `aria-describedby` and
+  `role="alert"`. Dynamic status messages (toasts, inline warnings) use
+  `role="status"` / `aria-live`.
+- **Robust**: expandable controls expose `aria-expanded`; selected states
+  expose `aria-pressed`/`aria-selected`; keep `<html lang>` synced (done by
+  `useTranslation`); user-generated content keeps `translate="no"`.
+- **Icon-only controls** always carry `aria-label` + `title` (both translated
+  via `t("...")` — never hardcode).
+
+**Validation (run before every commit):**
+```bash
+bun run lint                    # must be 0 jsx-a11y errors
+bun run tsc --noEmit | grep -c "^src"   # must stay at the 12-error baseline
+bun run build                   # must pass
+```
+`eslint-plugin-jsx-a11y` (recommended + strict keyboard/label rules) is wired
+into `eslint.config.js`; treat any new violation as a blocker.
+
 ## Gotchas
 
 - **Pre-existing TS errors**: 12 errors in `AnthologyWhitelistedUsers`,
@@ -71,7 +112,7 @@ string is stored on-chain and parsed client-side. Do not change the format.
   bumps minor version, `fix:` bumps patch via `standard-version`.
 - **Release**: `bun run release` only on `main` branch. Dry-run with
   `bun run pre-release`.
-- **Merge**: Use `git merge --no-ff` into dev to preserve branch topology.
+- **Merge**: Use `git merge --no-ff` into `agent/DeepSeekV4.1`; agent work does not merge to `dev` (that's the user's integration branch).
 - **Pre-existing TS errors**: Verify no NEW errors were introduced when
   changing code. Run `bun run tsc --noEmit | grep -c "^src"` and compare
   against the baseline of 12.

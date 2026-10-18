@@ -1,7 +1,9 @@
 import { walletConnect } from "@wagmi/connectors";
 import { useConnect } from "wagmi";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 export const WalletOptions = () => {
+  const { t } = useTranslation();
   const { connectors, connect } = useConnect();
 
   return (
@@ -18,11 +20,13 @@ export const WalletOptions = () => {
         }
         if (connector.name === "WalletConnect") {
           return (
-            <div
+            <button
               key={i}
+              type="button"
+              className="icon-button"
+              aria-label={connector.name}
               style={{
                 margin: "5px",
-                cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
               }}
@@ -36,16 +40,23 @@ export const WalletOptions = () => {
                 console.log("res2:", currentUser);
               }}
             >
-              <img src={"icons/WalletConnectIcon.svg"} height={25} width={25} />
-            </div>
+              <img
+                src={"icons/WalletConnectIcon.svg"}
+                height={25}
+                width={25}
+                alt=""
+              />
+            </button>
           );
         }
         return (
-          <div
+          <button
             key={i}
+            type="button"
+            className="icon-button"
+            aria-label={connector.name || t("a11y.connectorLogo")}
             style={{
               margin: "5px",
-              cursor: "pointer",
               display: "flex",
               alignItems: "center",
             }}
@@ -65,8 +76,9 @@ export const WalletOptions = () => {
               }
               height={25}
               width={25}
+              alt=""
             />
-          </div>
+          </button>
         );
       })}
     </div>

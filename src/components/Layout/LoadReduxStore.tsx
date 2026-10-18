@@ -33,8 +33,10 @@ import {
   updateUsers,
 } from "@src/store/slices/factorySlice";
 import { useToast } from "./Toast";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 export const LoadReduxStore = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -72,6 +74,8 @@ export const LoadReduxStore = () => {
     setHasDiscovery(hasDiscoveryJson);
     setHasLocal(hasLocalJson);
     setIsOneAnthology(isOneAnthologyJson);
+    setLoadDiscoveries(hasDiscoveryJson);
+    setLoadLocalMemory(hasLocalJson);
 
     if (hasDiscoveryJson || hasLocalJson || isOneAnthologyJson) {
       setIsValidJson(true);
@@ -148,7 +152,8 @@ export const LoadReduxStore = () => {
       show={show}
       onHide={handleClose}
       trigger={
-        <span
+        <button
+          type="button"
           style={{
             cursor: "pointer",
             border: "1px solid #ccc",
@@ -162,8 +167,8 @@ export const LoadReduxStore = () => {
           }}
           onClick={() => setShow(true)}
         >
-          Load JSON
-        </span>
+          {t("load.trigger")}
+        </button>
       }
     >
       <div
@@ -189,7 +194,7 @@ export const LoadReduxStore = () => {
                     marginBottom: "16px",
                   }}
                 >
-                  Found:
+                  {t("load.found")}
                 </div>
 
                 {hasDiscovery &&
@@ -209,10 +214,10 @@ export const LoadReduxStore = () => {
                         onChange={() => setLoadDiscoveries(!loadDiscoveries)}
                         style={{ transform: "scale(1.2)" }}
                       />
-                      <span>Discoveries</span>
+                      <span>{t("load.discoveries")}</span>
                     </label>
                   ) : (
-                    <span style={{ fontSize: "16px" }}>- Discoveries</span>
+                    <span style={{ fontSize: "16px" }}>- {t("load.discoveries")}</span>
                   ))}
 
                 {hasLocal && hasDiscovery && <br />}
@@ -234,10 +239,10 @@ export const LoadReduxStore = () => {
                         onChange={() => setLoadLocalMemory(!loadLocalMemory)}
                         style={{ transform: "scale(1.2)" }}
                       />
-                      <span>Local Memory</span>
+                      <span>{t("load.localMemory")}</span>
                     </label>
                   ) : (
-                    <span style={{ fontSize: "16px" }}>- Local Memory</span>
+                    <span style={{ fontSize: "16px" }}>- {t("load.localMemory")}</span>
                   ))}
 
                 {isOneAnthology && (
@@ -253,17 +258,21 @@ export const LoadReduxStore = () => {
                 )}
               </div>
             ) : (
-              <div
+              <button
+                type="button"
                 style={{
                   color: "#e53e3e",
                   fontWeight: "500",
                   marginBottom: "16px",
                   cursor: "pointer",
+                  background: "none",
+                  border: "none",
+                  padding: 0,
                 }}
                 onClick={() => setIsValidJson(undefined)}
               >
-                ⚠️ JSON file is not valid.
-              </div>
+                {t("load.invalid")}
+              </button>
             )}
           </>
         )}
@@ -282,7 +291,7 @@ export const LoadReduxStore = () => {
               }}
               onClick={handleJsonLoad}
             >
-              Load JSON
+              {t("load.button")}
             </button>
             <div
               style={{
@@ -291,7 +300,7 @@ export const LoadReduxStore = () => {
                 marginTop: "8px",
               }}
             >
-              Upload a .json file
+              {t("load.upload")}
             </div>
           </div>
         )}
@@ -306,17 +315,22 @@ export const LoadReduxStore = () => {
               width: "100%",
             }}
           >
-            <span
+            <button
+              type="button"
               style={{
                 fontSize: "20px",
                 cursor: "pointer",
                 marginRight: "16px",
+                background: "none",
+                border: "none",
+                padding: 0,
               }}
               onClick={() => setIsValidJson(undefined)}
-              title="Go back"
+              title={t("common.back")}
+              aria-label={t("common.back")}
             >
               🔙
-            </span>
+            </button>
             <button
               style={{
                 padding: "10px 20px",
@@ -335,7 +349,7 @@ export const LoadReduxStore = () => {
                   navigate("/");
                   dispatch(updateCurrentPath(newPath as CurrentPaths));
                   addToast({
-                    title: "Anthology added to your memory",
+                    title: t("load.anthologyAdded"),
                     content: loadedJsonState.anthology?.title as string,
                     variant: "success",
                     delay: 3000,
@@ -343,24 +357,39 @@ export const LoadReduxStore = () => {
                   return;
                 }
 
+                const shouldLoadDiscovery =
+                  hasDiscovery && (!hasLocal || loadDiscoveries);
+                const shouldLoadLocal =
+                  hasLocal && (!hasDiscovery || loadLocalMemory);
+
+                if (!shouldLoadDiscovery && !shouldLoadLocal) {
+                  addToast({
+                    title: t("load.noOptions"),
+                    content: t("load.selectOne"),
+                    variant: "info",
+                    delay: 3000,
+                  });
+                  return;
+                }
+
                 let newPath = "";
 
-                if (hasDiscovery) {
+                if (shouldLoadDiscovery) {
                   addDiscoveriesToMemory();
                   newPath = "discover";
                 }
 
-                if (hasLocal) {
+                if (shouldLoadLocal) {
                   addMemoryToMemory();
                   newPath = LOCAL_USER_PATH;
                 }
 
                 addToast({
                   title:
-                    (hasDiscovery ? "Discover" : "") +
-                    (hasDiscovery && hasLocal ? " & " : "") +
-                    (hasLocal ? "External Memory" : ""),
-                  content: "Added to your memory",
+                    (shouldLoadDiscovery ? t("load.discoverPart") : "") +
+                    (shouldLoadDiscovery && shouldLoadLocal ? " & " : "") +
+                    (shouldLoadLocal ? t("load.memoryPart") : ""),
+                  content: t("load.addedToMemory"),
                   variant: "success",
                   delay: 3000,
                 });
@@ -369,7 +398,7 @@ export const LoadReduxStore = () => {
                 navigate("/");
               }}
             >
-              Add to my memory
+              {t("load.addToMemory")}
             </button>
           </div>
         )}

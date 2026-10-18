@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Loading } from "@src/components/Layout/Loading";
+import "./InstagramEmbed.css";
 
 interface InstagramEmbedProps {
   postUrl: string;
@@ -132,7 +133,11 @@ const InstagramEmbed: React.FC<InstagramEmbedProps> = ({ postUrl }) => {
   }
 
   return (
-    <div ref={embedRef} style={containerStyle}>
+    <div
+      ref={embedRef}
+      className="instagram-embed-wrapper"
+      style={containerStyle}
+    >
       {isLoading && <Loading />}
       <blockquote
         className="instagram-media"
@@ -153,12 +158,15 @@ const containerStyle: React.CSSProperties = {
   padding: "3px",
   display: "flex",
   justifyContent: "center",
+  width: "100%",
+  maxWidth: "100%",
+  boxSizing: "border-box",
 };
 
 const blockquoteStyle: React.CSSProperties = {
   margin: 0,
   width: "100%",
-  maxWidth: "250px",
+  maxWidth: "100%",
 };
 
 const errorStyle: React.CSSProperties = {

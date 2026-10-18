@@ -15,8 +15,10 @@ import {
 
 import { useToast } from "@components/Layout/Toast";
 import { Address } from "@src/types/common";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 export const OnlyOwner = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { addToast } = useToast();
 
@@ -72,8 +74,11 @@ export const OnlyOwner = () => {
           ></input>
         </div>
 
-        <span
+        <button
+          type="button"
           style={{ marginLeft: "7px", cursor: "pointer" }}
+          aria-label={t("owner.price")}
+          title={t("owner.price")}
           onClick={async () => {
             try {
               //Check first if users include address before call
@@ -101,7 +106,7 @@ export const OnlyOwner = () => {
           }}
         >
           💰
-        </span>
+        </button>
       </div>
 
       {/* ---------------------------------- Toggle useERC20 ---------------------------------- */}
@@ -165,8 +170,11 @@ export const OnlyOwner = () => {
           ></input>
         </div>
 
-        <span
+        <button
+          type="button"
           style={{ marginLeft: "7px", cursor: "pointer" }}
+          aria-label={t("owner.setToken")}
+          title={t("owner.setToken")}
           onClick={async () => {
             //Check first if users include address before call
             try {
@@ -194,7 +202,7 @@ export const OnlyOwner = () => {
           }}
         >
           📝
-        </span>
+        </button>
       </div>
 
       {/* ---------------------------------- Toggle whitelist --------------------------------- */}
@@ -258,8 +266,11 @@ export const OnlyOwner = () => {
           ></input>
         </div>
 
-        <span
+        <button
+          type="button"
           style={{ marginLeft: "7px", cursor: "pointer" }}
+          aria-label={t("owner.addedToWhitelist")}
+          title={t("owner.addedToWhitelist")}
           onClick={async () => {
             //Check first if users include address before call
             try {
@@ -287,7 +298,7 @@ export const OnlyOwner = () => {
           }}
         >
           📥
-        </span>
+        </button>
       </div>
 
       {/* -------------------------------- Remove From Whitelist ------------------------------ */}
@@ -316,8 +327,12 @@ export const OnlyOwner = () => {
           ></input>
         </div>
 
-        <span
-          style={{ marginLeft: "7px", cursor: "pointer" }}
+        <button
+          type="button"
+          className="icon-button"
+          style={{ marginLeft: "7px" }}
+          aria-label={t("owner.removedFromWhitelist")}
+          title={t("owner.removedFromWhitelist")}
           onClick={async () => {
             try {
               const txHash = await writeFactory("removeFromWhitelist", [
@@ -343,8 +358,17 @@ export const OnlyOwner = () => {
             }
           }}
         >
-          📤
-        </span>
+          <img
+            src="/icons/share-icon.svg"
+            alt=""
+            style={{
+              width: "18px",
+              height: "18px",
+              display: "block",
+              filter: "invert(1)",
+            }}
+          />
+        </button>
       </div>
 
       {/* ----------------------------------- Set isFrozen ------------------------------------ */}

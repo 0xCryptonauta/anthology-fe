@@ -4,26 +4,35 @@ import { useToast } from "@components/Layout/Toast";
 import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
 import { Address, MemoirContent } from "@src/types/common";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
-import { updateUserLocalAnthologyTitle } from "@src/store/slices/localAnthologySlice";
+import {
+  clearMemoirsInUserLocalAnthology,
+  updateUserLocalAnthologyTitle,
+} from "@src/store/slices/localAnthologySlice";
 
 import { ChangeAnthologyDefaultSkin } from "./ChangeAnthologyDefaultSkin";
 import { TitleEditor } from "@components/Factory/TitleEditor";
 import { Modal } from "@src/components/Layout/Modal";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 export const LocalAnthologyOwner = ({
   contractAddr,
 }: {
   contractAddr: Address;
 }) => {
+  const { t } = useTranslation();
   const { addToast } = useToast();
 
-  const { contractsTitles, userContracts } = useAppSelector((state) => state.localAnthology);
+  const { contractsTitles, userContracts, anthologies } = useAppSelector(
+    (state) => state.localAnthology
+  );
 
   const currentTitle = contractsTitles[contractAddr] || "";
+  const memoirCount = anthologies[contractAddr]?.length ?? 0;
 
   const dispatch = useAppDispatch();
 
   const [showTitleModal, setShowTitleModal] = useState(false);
+  const [showCleanModal, setShowCleanModal] = useState(false);
 
   const userTitles: MemoirContent[] = useMemo(() => {
     const contracts = userContracts?.[LOCAL_USER_ADDR] || [];
@@ -38,7 +47,7 @@ export const LocalAnthologyOwner = ({
   const handleTitleSubmit = (combinedTitle: string) => {
     try {
       addToast({
-        title: "New title:",
+        title: t("owner.newTitleToast"),
         content: combinedTitle,
         variant: "success",
         delay: 5000,
@@ -52,13 +61,24 @@ export const LocalAnthologyOwner = ({
       handleCloseTitleModal();
     } catch (error) {
       addToast({
-        title: "Error setting new title",
-        content: "Unknown error",
+        title: t("owner.errorTitle"),
+        content: t("common.unknownError"),
         variant: "warning",
         delay: 5000,
       });
       console.error("Error setting new title", error);
     }
+  };
+
+  const handleCleanMemoirs = () => {
+    dispatch(clearMemoirsInUserLocalAnthology({ contract: contractAddr }));
+    addToast({
+      title: t("owner.memoirsDeleted"),
+      content: t("owner.memoirsDeletedDesc"),
+      variant: "success",
+      delay: 5000,
+    });
+    setShowCleanModal(false);
   };
 
   return (
@@ -94,7 +114,7 @@ export const LocalAnthologyOwner = ({
             }}
             onClick={() => setShowTitleModal(true)}
           >
-            Change title
+            {t("owner.changeTitle")}
           </button>
         }
       >
@@ -105,7 +125,9 @@ export const LocalAnthologyOwner = ({
             alignItems: "center",
             gap: "1rem",
             padding: "1.25rem 1rem",
-            width: "320px",
+            width: "100%",
+            maxWidth: "320px",
+            boxSizing: "border-box",
           }}
         >
           <span
@@ -116,12 +138,12 @@ export const LocalAnthologyOwner = ({
               textAlign: "center",
             }}
           >
-            Set New Title
+            {t("owner.setNewTitle")}
           </span>
           <TitleEditor
             initialTitle={currentTitle}
             userTitles={userTitles}
-            submitLabel="Change title"
+            submitLabel={t("owner.changeTitle")}
             onSubmit={handleTitleSubmit}
           />
         </div>
@@ -130,35 +152,88 @@ export const LocalAnthologyOwner = ({
       <ChangeAnthologyDefaultSkin contractAddr={contractAddr} />
 
       {/* ----------------------------------- cleanMemoirs ------------------------------------ */}
-
-      {/* <div style={{ marginTop: "20px" }}>
-        <button
-          style={{ backgroundColor: "red" }}
-          onClick={async () => {
-            try {
-              
-              if (txHash) {
-                addToast({
-                  title: "Cleaning memoirs",
-                  content: "txHash: " + txHash,
-                  variant: "success",
-                  delay: 5000,
-                });
-              }
-            } catch (error) {
-              addToast({
-                title: "Error cleaning memoirs",
-                content: "Unknown error",
-                variant: "warning",
-                delay: 5000,
-              });
-              console.error("Error cleaning memoirs", error);
+      {memoirCount > 0 && (
+        <div style={{ marginTop: "20px" }}>
+          <Modal
+            placement="bottom"
+            show={showCleanModal}
+            onHide={() => setShowCleanModal(false)}
+            trigger={
+              <button
+                style={{
+                  backgroundColor: "red",
+                  color: "white",
+                  border: "none",
+                  padding: "8px 16px",
+                  borderRadius: "6px",
+                  cursor: "pointer",
+                  fontSize: "0.9rem",
+                }}
+                onClick={() => setShowCleanModal(true)}
+              >
+                {t("owner.deleteAllMemoirs")}
+              </button>
             }
-          }}
-        >
-          Clean Memoirs
-        </button>
-      </div> */}
+          >
+            <div
+              style={{
+                margin: "30px 10px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "8px",
+                color: "#1a1a1a",
+              }}
+            >
+              <span style={{ fontWeight: "bold", textAlign: "center" }}>
+                {t("owner.deleteAllTitle")}
+              </span>
+              <span style={{ textAlign: "center" }}>
+                {t("owner.deleteAllDesc", {
+                  count: memoirCount,
+                  title: currentTitle || t("owner.thisAnthology"),
+                })}
+              </span>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "10px",
+                marginTop: "10px",
+              }}
+            >
+              <button
+                style={{
+                  backgroundColor: "#e2e8f0",
+                  color: "#1a1a1a",
+                  padding: "10px 20px",
+                  borderRadius: "5px",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+                onClick={() => setShowCleanModal(false)}
+              >
+                {t("common.cancel")}
+              </button>
+              <button
+                style={{
+                  backgroundColor: "red",
+                  color: "white",
+                  padding: "10px 20px",
+                  borderRadius: "5px",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+                onClick={handleCleanMemoirs}
+              >
+                {t("owner.deleteAllMemoirs")}
+              </button>
+            </div>
+          </Modal>
+        </div>
+      )}
     </div>
   );
 };

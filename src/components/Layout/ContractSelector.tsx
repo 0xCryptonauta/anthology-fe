@@ -1,16 +1,22 @@
 import { shortenAddress } from "@src/utils/shortenAddress";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useId } from "react";
 import { parseContractsCategoriesSorted } from "@src/utils/parseContractsCategories";
 import { Address } from "@src/types/common";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
 import { useAppSelector } from "@src/store/utils/hooks";
+import { useTranslation } from "@src/i18n/useTranslation";
 interface ContractSelectorProps {
   setSelectedContract: (addr: Address | "") => void;
+  variant?: "dark" | "light";
+  showUserSelect?: boolean;
 }
 
 export const ContractSelector: React.FC<ContractSelectorProps> = ({
   setSelectedContract,
+  variant = "dark",
+  showUserSelect = true,
 }) => {
+  const { t } = useTranslation();
   const { users, userContracts, contractsTitles } = useAppSelector(
     (state) => state.factory
   );
@@ -26,6 +32,12 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
     LOCAL_USER_ADDR || ""
   );
 
+  // WCAG 3.3.2 / 4.1.2 — label/control associations.
+  const userSelectId = useId();
+  const categorySelectId = useId();
+  const subcategorySelectId = useId();
+  const addressInputId = useId();
+
   const isLocalUser = selectedUser === LOCAL_USER_ADDR;
 
   const userContractsList = useMemo(() => {
@@ -37,7 +49,7 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
       address,
       title: isLocalUser
         ? localTitles[address]
-        : contractsTitles[address] || "Untitled",
+        : contractsTitles[address] || t("selector.untitled"),
       originalIndex: index,
     }));
     return parseContractsCategoriesSorted(contracts);
@@ -48,6 +60,7 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
     isLocalUser,
     userContracts,
     selectedUser,
+    t,
   ]);
 
   const [selectedCategory, setSelectedCategory] = useState<string>(
@@ -105,45 +118,69 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
         display: "flex",
         flexDirection: "column",
         gap: "10px",
-        minWidth: "300px",
+        width: "100%",
         padding: "10px",
         maxWidth: "350px",
+        boxSizing: "border-box",
+        backgroundColor:
+          variant === "light" ? "#cbd5e1" : "rgba(255, 255, 255, 0.06)",
+        borderRadius: "10px",
       }}
     >
-      <label>User: </label>
-      <select
-        value={selectedUser}
-        style={{ minHeight: "30px" }}
-        onChange={(e) => {
-          setSelectedUser(e.target.value as Address);
-          setSelectedCategory("");
-          setSelectedSubcategory("");
-          setSelectedAddress("");
-          setSelectedContract("");
-        }}
-      >
-        <option key={"localUser"} value={LOCAL_USER_ADDR}>
-          Local User
-        </option>
-        {users.map((user) => (
-          <option key={user} value={user}>
-            {shortenAddress(user, 10, 10)}
-          </option>
-        ))}
-      </select>
+      {showUserSelect && (
+        <>
+          <label htmlFor={userSelectId}>{t("selector.user")} </label>
+          <select
+            id={userSelectId}
+            value={selectedUser}
+            style={{
+            minHeight: "30px",
+            border: "1px solid #94a3b8",
+            borderRadius: "6px",
+            padding: "4px 8px",
+          }}
+            onChange={(e) => {
+              setSelectedUser(e.target.value as Address);
+              setSelectedCategory("");
+              setSelectedSubcategory("");
+              setSelectedAddress("");
+              setSelectedContract("");
+            }}
+          >
+            <option key={"localUser"} value={LOCAL_USER_ADDR}>
+              {t("selector.localUser")}
+            </option>
+            {users.map((user) => (
+              <option key={user} value={user}>
+                {shortenAddress(user, 10, 10)}
+              </option>
+            ))}
+          </select>
+        </>
+      )}
 
-      <label>Category: </label>
+      <label htmlFor={categorySelectId}>{t("selector.category")} </label>
       <select
+        id={categorySelectId}
         value={selectedCategory}
         onChange={handleCategoryChange}
-        style={{ minHeight: "30px" }}
+        style={{
+            minHeight: "30px",
+            border: "1px solid #94a3b8",
+            borderRadius: "6px",
+            padding: "4px 8px",
+          }}
       >
         {/* <option value="">No Category</option> */}
         {
           selectedUser === LOCAL_USER_ADDR &&
             categoryOptions.map((category) => (
-              <option key={category} value={category}>
-                {category}
+              <option translate="no" key={category} value={category}>
+                {category === "Other"
+                  ? t("common.other")
+                  : category === "Select Category"
+                  ? t("selector.selectCategory")
+                  : category}
               </option>
             ))
           //NOT LOCAL USER IS MISSING IN CATEGORIES
@@ -160,16 +197,23 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
       > */}
       {subcategoryOptions.length > 0 && (
         <>
-          <label>Subcategory: </label>
+          <label htmlFor={subcategorySelectId}>{t("selector.subcategory")} </label>
 
           <select
+            id={subcategorySelectId}
             value={selectedSubcategory}
             onChange={handleSubcategoryChange}
-            style={{ minHeight: "30px", marginTop: "10px" }}
+            style={{
+              minHeight: "30px",
+              marginTop: "10px",
+              border: "1px solid #94a3b8",
+              borderRadius: "6px",
+              padding: "4px 8px",
+            }}
           >
-            <option value="">No subcategory</option>
+            <option value="">{t("selector.noSubcategory")}</option>
             {subcategoryOptions.map((subcategory) => (
-              <option key={subcategory} value={subcategory}>
+              <option translate="no" key={subcategory} value={subcategory}>
                 {subcategory}
               </option>
             ))}
@@ -195,18 +239,35 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
           }}
         >
           {filteredContracts.map((contract) => (
-            <li
-              key={contract.address}
-              onClick={() => {
-                setSelectedAddress(contract.address);
-                setSelectedContract(contract.address as Address);
-              }}
-              style={{
-                cursor: "pointer",
-                color: selectedAddress === contract.address ? "gray" : "white",
-              }}
-            >
-              {contract.title}
+            <li key={contract.address}>
+              <button
+                type="button"
+                translate="no"
+                onClick={() => {
+                  setSelectedAddress(contract.address);
+                  setSelectedContract(contract.address as Address);
+                }}
+                aria-pressed={selectedAddress === contract.address}
+                style={{
+                  cursor: "pointer",
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  textAlign: "left",
+                  color:
+                    selectedAddress === contract.address
+                      ? variant === "light"
+                        ? "#0891b2"
+                        : "#22d3ee"
+                      : variant === "light"
+                      ? "#1a1a1a"
+                      : "white",
+                  fontWeight:
+                    selectedAddress === contract.address ? 600 : 400,
+                }}
+              >
+                {contract.title}
+              </button>
             </li>
           ))}
         </ul>
@@ -220,8 +281,9 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
             alignItems: "center",
           }}
         >
-          <label>Anthology Address: </label>
+          <label htmlFor={addressInputId}>{t("selector.anthologyAddress")} </label>
           <input
+            id={addressInputId}
             type="text"
             value={
               selectedAddress

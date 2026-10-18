@@ -1,6 +1,7 @@
 import { UserContracts } from "@components/Factory/UserContracts";
 import { useAppSelector } from "@src/store/utils/hooks";
 import { Address } from "@src/types/common";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 interface Contract {
   address: Address;
@@ -9,6 +10,7 @@ interface Contract {
 }
 
 export const CurrentUserView = () => {
+  const { t } = useTranslation();
   const { userContracts, contractsTitles, whitelistedUsers } = useAppSelector(
     (state) => state.factory
   );
@@ -43,9 +45,9 @@ export const CurrentUserView = () => {
           gap: "0.5rem",
         }}
       >
-        {!userTitles?.[0] && <span>Anthologies not found</span>}
+        {!userTitles?.[0] && <span>{t("discover.notFound")}</span>}
         {!whitelistedUsers.includes(userAddr) && (
-          <span style={{ color: "Red" }}>Your address is not whitelisted</span>
+          <span style={{ color: "Red" }}>{t("discover.notWhitelisted")}</span>
         )}
       </div>
     </div>

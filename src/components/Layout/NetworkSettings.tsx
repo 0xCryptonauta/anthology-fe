@@ -5,8 +5,10 @@ import { useState } from "react";
 import { useToast } from "./Toast";
 import { useAccount } from "wagmi";
 import { Modal } from "./Modal";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 export const NetworkSettings = () => {
+  const { t } = useTranslation();
   const { factoryRpc } = useAppSelector((state) => state.dapp);
 
   const { isConnected } = useAccount();
@@ -29,14 +31,14 @@ export const NetworkSettings = () => {
 
       if (newFactoryRpc === "") {
         addToast({
-          title: "RPC changed to:",
-          content: `default RPC`,
+          title: t("network.changed"),
+          content: t("network.defaultRpc"),
           variant: "success",
           delay: 5000,
         });
       } else {
         addToast({
-          title: "RPC changed to:",
+          title: t("network.changed"),
           content: `${newFactoryRpc}`,
           variant: "success",
           delay: 5000,
@@ -45,8 +47,8 @@ export const NetworkSettings = () => {
       handleClose();
     } else {
       addToast({
-        title: "Error changing RPC",
-        content: "Invalid RPC URL",
+        title: t("network.errorTitle"),
+        content: t("network.errorDesc"),
         variant: "danger",
         delay: 5000,
       });
@@ -60,7 +62,8 @@ export const NetworkSettings = () => {
       onHide={handleClose}
       trigger={
         isConnected ? (
-          <span
+          <button
+            type="button"
             style={{
               cursor: "pointer",
               border: "1px solid #ccc",
@@ -74,8 +77,8 @@ export const NetworkSettings = () => {
             }}
             onClick={() => setShow(true)}
           >
-            Network Settings
-          </span>
+            {t("network.trigger")}
+          </button>
         ) : (
           <></>
         )
@@ -104,7 +107,7 @@ export const NetworkSettings = () => {
           }}
         >
           <span style={{ marginBottom: "10px", color: "black" }}>
-            Set new RPC
+            {t("network.setRpc")}
           </span>
           <textarea
             value={newFactoryRpc}
@@ -132,7 +135,7 @@ export const NetworkSettings = () => {
             handleRpcChange();
           }}
         >
-          Update RPC 🔄
+          {t("network.updateRpc")} 🔄
         </button>
       </div>
     </Modal>

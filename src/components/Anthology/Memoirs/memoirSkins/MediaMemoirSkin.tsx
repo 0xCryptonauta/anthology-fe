@@ -2,42 +2,34 @@ import { shortenAddress } from "@utils/shortenAddress";
 import { formatUnixTime } from "@utils/formatUnixTime";
 import { Address } from "@src/types/common";
 import { isValidURL } from "@src/utils/isValidURL";
-import {
-  TwitterEmbed,
-  YoutubeEmbed,
-  InstagramEmbed,
-  FacebookEmbed,
-  RedditEmbed,
-} from "../thirdPartyEmbeds";
-import {
-  FACEBOOK_REGEX,
-  INSTAGRAM_REGEX,
-  REDDIT_REGEX,
-  SPOTIFY_REGEX,
-  TWITTER_REGEX,
-  YOUTUBE_REGEX,
-} from "@src/utils/regex";
+import { EmbedRenderer } from "../thirdPartyEmbeds";
+import { extractEmbed } from "@src/utils/embeds";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
 import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 import { OrderType } from "@src/components/Layout/OrderSelector";
 import { useOrderedMemoirs } from "@src/hooks/useOrderedMemoirs";
 import { useAccount } from "wagmi";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
-import { DeleteMemoir } from "../../DeleteMemoir";
+import { MemoirActions } from "../../MemoirActions";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 interface MediaMemoirSkinProps {
   anthologyAddr: Address;
   order: OrderType;
+  search?: string;
 }
 
 export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
   anthologyAddr,
   order,
+  search,
 }) => {
+  const { t } = useTranslation();
   const { memoirs, orderedMemoirsIndexes } = useOrderedMemoirs(
     anthologyAddr,
-    order
+    order,
+    search
   );
   const { address: currentUser } = useAccount();
   const anthologyOwner = useAppSelector(
@@ -62,52 +54,21 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
       {orderedMemoirsIndexes.map((i) => {
         const memoir = memoirs[i];
 
-        const youtubeMatch = YOUTUBE_REGEX.exec(memoir.content);
-        const spotifyMatch = SPOTIFY_REGEX.exec(memoir.content);
-        const twitterMatch = TWITTER_REGEX.exec(memoir.content);
-        const redditMatch = REDDIT_REGEX.exec(memoir.content);
-        const facebookMatch = FACEBOOK_REGEX.exec(memoir.content);
-        const instagramMatch = INSTAGRAM_REGEX.exec(memoir.content);
+        const extracted = extractEmbed(memoir.content);
 
         const renderContent = () => {
-          if (youtubeMatch) return <YoutubeEmbed videoId={youtubeMatch[1]} />;
-          if (twitterMatch)
+          if (extracted)
             return (
-              <TwitterEmbed
-                username={twitterMatch[1]}
-                postId={twitterMatch[2]}
-              />
-            );
-          if (redditMatch) {
-            if (redditMatch[2]) return <RedditEmbed postUrl={memoir.content} />;
-            return (
-              <div style={{ overflowWrap: "break-word" }}>
-                <a
-                  href={memoir.content}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  //style={{ color: "#666" }}
-                >
-                  {memoir.content}
-                </a>
-              </div>
-            );
-          }
-          if (facebookMatch) return <FacebookEmbed postUrl={memoir.content} />;
-          if (instagramMatch)
-            return <InstagramEmbed postUrl={memoir.content} />;
-
-          if (spotifyMatch)
-            return (
-              <iframe
-                style={{ borderRadius: "12px" }}
-                src={`https://open.spotify.com/embed/${spotifyMatch[1]}/${spotifyMatch[2]}?utm_source=generator`}
-                width="100%"
-                height="352"
-                frameBorder="0"
-                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                loading="lazy"
-              ></iframe>
+              <>
+                {extracted.caption && (
+                  <div
+                    style={{ marginBottom: "0.5rem", overflowWrap: "break-word" }}
+                  >
+                    {extracted.caption}
+                  </div>
+                )}
+                <EmbedRenderer embed={extracted.embed} />
+              </>
             );
 
           return isValidURL(memoir.content) ? (
@@ -140,6 +101,7 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
             }}
           >
             <div
+              translate="no"
               style={{
                 textAlign: "center",
                 wordBreak: "break-word",
@@ -148,10 +110,11 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
                 color: "#333",
               }}
             >
-              {memoir.title || "Untitled"}
+              {memoir.title || t("common.untitled")}
             </div>
 
             <div
+              translate="no"
               style={{
                 textAlign: "center",
                 wordBreak: "break-word",
@@ -164,7 +127,8 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
             <div
               style={{
                 display: "flex",
-                width: "300px",
+                width: "100%",
+                maxWidth: "300px",
                 flexDirection: "column",
                 alignItems: "center",
                 fontSize: "12px",
@@ -172,39 +136,32 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
               }}
             >
               {currentUser === LOCAL_USER_ADDR && (
-                <span
-                  style={{ cursor: "pointer" }}
+                <button
+                  type="button"
+                  className="bg-transparent border-none p-0"
+                  style={{ cursor: "pointer", color: "#666" }}
                   onClick={() =>
                     dispatch(updateCurrentPath(`user/${memoir.sender}`))
                   }
                 >
                   {shortenAddress(memoir.sender, 10, 8)}
-                </span>
+                </button>
               )}
 
               <span>{formatUnixTime(Number(memoir.timestamp))}</span>
-            </div>
 
-            {(currentUser === anthologyOwner ||
-              isLocalAnthology(anthologyAddr) ||
-              currentUser === memoir.sender) && (
-              <div
-                style={{
-                  cursor: "pointer",
-                  position: "absolute",
-                  right: "10px",
-                  bottom: "10px",
-                }}
-                /* onClick={() =>
-                  handleDelete({
-                    anthologyAddr,
-                    index: i,
-                  })
-                } */
-              >
-                <DeleteMemoir anthologyAddr={anthologyAddr} index={i} />
-              </div>
-            )}
+              {(currentUser === anthologyOwner ||
+                isLocalAnthology(anthologyAddr) ||
+                currentUser === memoir.sender) && (
+                <div style={{ marginTop: "6px" }}>
+                  <MemoirActions
+                    anthologyAddr={anthologyAddr}
+                    index={i}
+                    memoir={memoir}
+                  />
+                </div>
+              )}
+            </div>
           </div>
         );
       })}

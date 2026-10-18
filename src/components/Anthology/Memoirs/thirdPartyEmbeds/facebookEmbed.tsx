@@ -87,6 +87,7 @@ const FacebookEmbed: React.FC<FacebookEmbedProps> = ({ postUrl }) => {
           width="300"
           style={iframeStyle}
           allowFullScreen
+          title="Facebook video"
         ></iframe>
       </div>
     );

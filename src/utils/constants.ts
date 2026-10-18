@@ -7,7 +7,7 @@ export const LOCAL_USER_ADDR =
 export const MAX_TITLE_LENGTH = 70;
 export const MAX_CONTENT_LENGTH = 250;
 
-export const DEFAULT_SKIN = "media";
+export const DEFAULT_SKIN = "list";
 
 export const CHAIN_SCAN_URL = "https://arbiscan.io/address/";
 

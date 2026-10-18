@@ -1,26 +1,33 @@
 import { MemoirInterface } from "@src/store/slices/anthologySlice";
-import { YOUTUBE_REGEX } from "@src/utils/regex";
+import { extractEmbed } from "@src/utils/embeds";
 import { ListMemoirSkin } from "./ListMemoirSkin";
 import { useOrderedMemoirs } from "@src/hooks/useOrderedMemoirs";
 import { OrderType } from "@src/components/Layout/OrderSelector";
 import { Address } from "@src/types/common";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 export const PlaylistMemoirSkin = ({
   anthologyAddr,
   order,
+  search,
 }: {
   anthologyAddr: Address;
   order: OrderType;
+  search?: string;
 }) => {
+  const { t } = useTranslation();
   const { memoirs, orderedMemoirsIndexes } = useOrderedMemoirs(
     anthologyAddr,
-    order
+    order,
+    search
   );
 
   const extractYoutubeIds = (videoLinks: MemoirInterface[]) => {
     return videoLinks.map((vlink) => {
-      const match = vlink.content.match(YOUTUBE_REGEX);
-      return match && match[1] ? match[1] : "";
+      const extracted = extractEmbed(vlink.content);
+      return extracted?.embed.provider === "youtube"
+        ? extracted.embed.videoId
+        : "";
     });
   };
 
@@ -32,8 +39,6 @@ export const PlaylistMemoirSkin = ({
   const playlistUrl = `https://www.youtube.com/embed/?playlist=${nonEmptyYoutubeIds.join(
     ","
   )}`;
-
-  console.log("playlist:", nonEmptyYoutubeIds);
 
   return nonEmptyYoutubeIds.length > 0 ? (
     <div
@@ -57,9 +62,9 @@ export const PlaylistMemoirSkin = ({
   ) : (
     <div style={{ marginTop: "30px" }}>
       <div style={{ display: "flex", justifyContent: "center", color: "red" }}>
-        Youtube videos not found
+        {t("memoirs.playlistNotFound")}
       </div>
-      <ListMemoirSkin anthologyAddr={anthologyAddr} order={order} />
+      <ListMemoirSkin anthologyAddr={anthologyAddr} order={order} search={search} />
     </div>
   );
 };

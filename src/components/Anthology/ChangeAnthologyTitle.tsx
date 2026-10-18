@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { writeAnthology } from "@src/contract-functions/anthologyFunctions";
 import { Address } from "@src/types/common";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 export const ChangeAnthologyTitle = ({
   contractAddr,
 }: {
   contractAddr: Address;
 }) => {
+  const { t } = useTranslation();
   const [newTitle, setNewTitle] = useState("");
 
   return (
@@ -19,12 +21,17 @@ export const ChangeAnthologyTitle = ({
       }}
     >
       <input
-        placeholder="New title"
+        placeholder={t("owner.setNewTitle")}
+        aria-label={t("owner.setNewTitle")}
         value={newTitle}
         onChange={(e) => setNewTitle(e.target.value)}
       ></input>
-      <span
+      <button
+        type="button"
+        className="icon-button"
         style={{ marginLeft: "7px" }}
+        aria-label={t("owner.changeTitle")}
+        title={t("owner.changeTitle")}
         onClick={async () => {
           const txHash_setTitle = await writeAnthology(
             contractAddr,
@@ -35,7 +42,7 @@ export const ChangeAnthologyTitle = ({
         }}
       >
         🔄
-      </span>
+      </button>
     </div>
   );
 };

@@ -4,8 +4,10 @@ import { useAccount, useDisconnect } from "wagmi";
 import { useEffect } from "react";
 import { resetUserStore, updateUserAddr } from "@src/store/slices/userSlice";
 import { WalletOptions } from "./WalletOptions";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 export const WalletConnector = () => {
+  const { t } = useTranslation();
   const { userAddr } = useAppSelector((state) => state.user);
   const { disconnect } = useDisconnect({
     mutation: {
@@ -56,12 +58,25 @@ export const WalletConnector = () => {
         height={25}
         style={{ marginLeft: "5px", margin: "0px 5px" }}
       ></img>
-      <span
-        style={{ marginLeft: "5px", cursor: "pointer", margin: "0px 5px" }}
+      <button
+        type="button"
+        className="icon-button"
+        title={t("wallet.disconnect")}
+        aria-label={t("wallet.disconnect")}
+        style={{ marginLeft: "5px", margin: "0px 5px" }}
         onClick={() => handleDisconnect()}
       >
-        ❌
-      </span>
+        <img
+          src="/icons/delete-icon.svg"
+          alt=""
+          style={{
+            width: "16px",
+            height: "16px",
+            display: "block",
+            filter: "invert(1)",
+          }}
+        />
+      </button>
     </div>
   ) : (
     <div
