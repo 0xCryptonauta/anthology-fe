@@ -39,12 +39,12 @@ export const Header = () => {
           }}
         >
           <img
-            src="/IB_icon.png"
+            src="/IB_icon-60.png"
             alt="Logo"
             width="30"
-            height="24"
+            height="29"
             className="d-inline-block align-text-top"
-            style={{ marginLeft: "5px" }}
+            style={{ marginLeft: "5px", width: "30px", height: "29px" }}
           />
         </Link>
 

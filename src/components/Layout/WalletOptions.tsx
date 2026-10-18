@@ -41,10 +41,11 @@ export const WalletOptions = () => {
               }}
             >
               <img
-                src={"icons/WalletConnectIcon.svg"}
+                src={"/icons/WalletConnectIcon.svg"}
                 height={25}
                 width={25}
                 alt=""
+                style={{ width: "25px", height: "25px" }}
               />
             </button>
           );
@@ -72,11 +73,12 @@ export const WalletOptions = () => {
               src={
                 connector?.icon
                   ? connector?.icon
-                  : "icons/WalletConnectIcon.svg"
+                  : "/icons/WalletConnectIcon.svg"
               }
               height={25}
               width={25}
               alt=""
+              style={{ width: "25px", height: "25px" }}
             />
           </button>
         );
