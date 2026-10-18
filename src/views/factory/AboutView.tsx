@@ -34,7 +34,7 @@ export const AboutView = () => {
           style={{
             maxWidth: "640px",
             width: "100%",
-            backgroundColor: "rgba(255, 255, 255, 0.25)",
+            backgroundColor: "rgba(255, 255, 255, 0.75)",
             backdropFilter: "blur(6px)",
             borderRadius: "12px",
             padding: "24px",
