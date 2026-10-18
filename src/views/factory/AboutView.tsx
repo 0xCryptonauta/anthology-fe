@@ -54,8 +54,8 @@ export const AboutView = () => {
 
           <p style={paragraphStyle}>
             Anthology is a place to keep what you want to remember — notes,
-            links, videos, ideas — organized into collections. We call each
-            collection an <em>anthology</em>: like a book of your own writing,
+            links, videos, ideas — organized into collections. Each collection
+            is called an <em>anthology</em>: like a book of your own writing,
             except it can hold anything.
           </p>
 

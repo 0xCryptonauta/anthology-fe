@@ -11,6 +11,8 @@ this file.
   only for content cards and modal panels.
 - **Plain, user-facing copy (ELI10).** No developer jargon in the UI — say
   "Memory (Anthologies)", not "store/cache/service worker".
+- **App voice.** The app speaks as itself or to "you" — no first-person plural
+  ("we", "our", "us").
 - **Color semantics:** accent cyan = interactive/selected · red = destructive ·
   green = neutral toggle actions.
 - **No emojis for actions.** Action controls use the SVG icon set (see Icons).
