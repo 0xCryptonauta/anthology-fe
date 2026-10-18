@@ -5,6 +5,7 @@ export const FormatAnthologyTitle = (title?: string): React.ReactNode => {
   if (!title.trim().startsWith("[")) {
     return (
       <div
+        translate="no"
         style={{
           fontSize: "1.5rem",
           fontWeight: "600",
@@ -21,7 +22,10 @@ export const FormatAnthologyTitle = (title?: string): React.ReactNode => {
   const match = title.match(/\[(.*?)\](?:\[(.*?)\])?\s*(.*)/);
   if (!match) {
     return (
-      <div style={{ fontSize: "1.5rem", fontWeight: "600", color: "white" }}>
+      <div
+        translate="no"
+        style={{ fontSize: "1.5rem", fontWeight: "600", color: "white" }}
+      >
         {title}
       </div>
     );
@@ -30,7 +34,7 @@ export const FormatAnthologyTitle = (title?: string): React.ReactNode => {
   const [, category, subcategory, item] = match;
 
   return (
-    <div>
+    <div translate="no">
       <div style={{ fontSize: "1rem", color: "white" }}>
         {category}
         {subcategory && ` › ${subcategory}`}

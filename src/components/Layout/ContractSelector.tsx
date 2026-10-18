@@ -43,7 +43,7 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
       address,
       title: isLocalUser
         ? localTitles[address]
-        : contractsTitles[address] || "Untitled",
+        : contractsTitles[address] || t("selector.untitled"),
       originalIndex: index,
     }));
     return parseContractsCategoriesSorted(contracts);
@@ -54,6 +54,7 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
     isLocalUser,
     userContracts,
     selectedUser,
+    t,
   ]);
 
   const [selectedCategory, setSelectedCategory] = useState<string>(
@@ -166,7 +167,7 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
         {
           selectedUser === LOCAL_USER_ADDR &&
             categoryOptions.map((category) => (
-              <option key={category} value={category}>
+              <option translate="no" key={category} value={category}>
                 {category === "Other"
                   ? t("common.other")
                   : category === "Select Category"
@@ -203,7 +204,7 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
           >
             <option value="">{t("selector.noSubcategory")}</option>
             {subcategoryOptions.map((subcategory) => (
-              <option key={subcategory} value={subcategory}>
+              <option translate="no" key={subcategory} value={subcategory}>
                 {subcategory}
               </option>
             ))}
@@ -230,6 +231,7 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
         >
           {filteredContracts.map((contract) => (
             <li
+              translate="no"
               key={contract.address}
               onClick={() => {
                 setSelectedAddress(contract.address);

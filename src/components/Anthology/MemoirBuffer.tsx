@@ -27,9 +27,9 @@ export const MemoirBuffer = ({ contractAddr }: { contractAddr: string }) => {
             }}
           >
             <span>{t("memoirs.titleLabel")} </span>
-            <span>{memoir.title}</span>
+            <span translate="no">{memoir.title}</span>
             <div>{t("memoirs.contentLabel")}</div>
-            <div>{memoir.content}</div>
+            <div translate="no">{memoir.content}</div>
             <div>{t("memoirs.sentBy")}</div>
             <div>{shortenAddress(memoir.sender, 10, 8)}</div>
             <span>{t("memoirs.whenAdded")} </span>

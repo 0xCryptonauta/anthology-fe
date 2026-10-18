@@ -12,6 +12,7 @@ import { useAccount } from "wagmi";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 import { MemoirActions } from "../../MemoirActions";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 interface MediaMemoirSkinProps {
   anthologyAddr: Address;
@@ -24,6 +25,7 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
   order,
   search,
 }) => {
+  const { t } = useTranslation();
   const { memoirs, orderedMemoirsIndexes } = useOrderedMemoirs(
     anthologyAddr,
     order,
@@ -99,6 +101,7 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
             }}
           >
             <div
+              translate="no"
               style={{
                 textAlign: "center",
                 wordBreak: "break-word",
@@ -107,10 +110,11 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
                 color: "#333",
               }}
             >
-              {memoir.title || "Untitled"}
+              {memoir.title || t("common.untitled")}
             </div>
 
             <div
+              translate="no"
               style={{
                 textAlign: "center",
                 wordBreak: "break-word",

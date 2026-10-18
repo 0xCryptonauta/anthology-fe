@@ -140,6 +140,24 @@ category color.
   and the in-app scanner open the anthology directly) and can be cloned offline
   via "Save to Private Memory".
 
+## Localization
+
+- Built-in dictionaries: **English (`en`, source of truth) and Spanish (`es`)**
+  in `src/i18n/translations.ts`. The `es` object is typed
+  `Record<TranslationKey, string>` so a missing translation fails the build.
+- All UI copy goes through `t("key")` from `useTranslation()`
+  (`src/i18n/useTranslation.ts`). Never hardcode user-facing strings.
+- Locale preference lives in `dappSlice.locale` (`"auto" | "en" | "es"`,
+  persisted). `"auto"` (default) resolves from `navigator.languages`: any
+  `es*` language selects Spanish, everything else falls back to English.
+- The hook syncs `<html lang>` with the resolved locale, which lets the
+  browser/OS offer **real-time translation** for languages without a bundled
+  dictionary. Supported locales show no translate prompt.
+- **`translate="no"` guards**: user-generated content (anthology titles,
+  categories, subcategories, memoir titles/content, JSON dumps) must carry
+  `translate="no"` so native browser translation never rewrites saved data.
+- The language picker is `LanguageSelector` in `/settings`.
+
 ## Known limitations
 
 - Facebook embeds have a ~350px minimum width (their iframe) — best effort.
