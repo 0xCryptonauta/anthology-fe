@@ -70,9 +70,9 @@ category color.
 - Cancel: `#e2e8f0`, dark text.
 
 ### Anthology selector (`src/components/Layout/ContractSelector.tsx`)
-- Panel background: `#f1f5f9` (light variant) / `rgba(255,255,255,0.06)`
+- Panel background: `#cbd5e1` (light variant) / `rgba(255,255,255,0.06)`
   (dark), radius 10px, padding 10px.
-- Dropdowns: border `1px solid #cbd5e1`, radius 6px, padding `4px 8px`.
+- Dropdowns: border `1px solid #94a3b8`, radius 6px, padding `4px 8px`.
 - Selected item: bold + accent (`#0891b2` light / `#22d3ee` dark).
 - Variants: `light` (modals) · `dark` (/share). `showUserSelect={false}` hides
   the user dropdown where only local matters (/share, copy/move modal).
