@@ -81,6 +81,11 @@ category color.
 - Action row: icon order **edit · move · copy · share · delete**, `18px` gap,
   centered under the date. Local-only actions gated by `isLocalAnthology`.
 
+### Reading panel (/about)
+- Translucent white `rgba(255,255,255,0.5)` + `backdrop-filter: blur(6px)`,
+  radius 12px, padding 24px.
+- Black text (`#1a1a1a`); section headings in amber `#b45309`.
+
 ## Icons
 
 - SVG set in `public/icons/` (`edit`, `copy`, `copy-clipboard`, `share`,

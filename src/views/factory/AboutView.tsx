@@ -4,13 +4,13 @@ const headingStyle = {
   fontSize: "1.05rem",
   fontWeight: 600,
   marginBottom: "0.4rem",
-  color: "#22d3ee",
+  color: "#b45309",
 };
 
 const paragraphStyle = {
   fontSize: "0.95rem",
   lineHeight: 1.6,
-  color: "rgba(255, 255, 255, 0.85)",
+  color: "#1a1a1a",
   marginBottom: "1.5rem",
 };
 
@@ -20,7 +20,6 @@ export const AboutView = () => {
       <Seo title="About" description="Learn more about the Anthology project" />
       <div
         style={{
-          color: "white",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -31,12 +30,23 @@ export const AboutView = () => {
           gap: "1.5rem",
         }}
       >
-        <div style={{ maxWidth: "640px", width: "100%" }}>
+        <div
+          style={{
+            maxWidth: "640px",
+            width: "100%",
+            backgroundColor: "rgba(255, 255, 255, 0.5)",
+            backdropFilter: "blur(6px)",
+            borderRadius: "12px",
+            padding: "24px",
+            boxSizing: "border-box",
+          }}
+        >
           <h1
             style={{
               fontSize: "1.8rem",
               marginBottom: "1.5rem",
               textAlign: "center",
+              color: "#1a1a1a",
             }}
           >
             Anthology
