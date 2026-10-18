@@ -51,12 +51,12 @@ export const WalletConnector = () => {
       <img
         //src={"./icons/WalletConnectIcon.svg"}
         src={
-          connector?.icon ? connector?.icon : "./icons/WalletConnectIcon.svg"
+          connector?.icon ? connector?.icon : "/icons/WalletConnectIcon.svg"
         }
         alt={connector?.name + " icon"}
         width={25}
         height={25}
-        style={{ marginLeft: "5px", margin: "0px 5px" }}
+        style={{ margin: "0px 5px", width: "25px", height: "25px" }}
       ></img>
       <button
         type="button"

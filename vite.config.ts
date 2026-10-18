@@ -14,6 +14,7 @@ export default defineConfig({
   //base: "/anthology-fe/",
   build: {
     outDir: "dist",
+    sourcemap: true,
     rollupOptions: {
       output: {
         manualChunks(id) {
@@ -63,11 +64,17 @@ export default defineConfig({
     }),
     VitePWA({
       registerType: "autoUpdate", // || prompt
+      injectRegister: "script-defer",
       devOptions: {
         enabled: true,
         type: "module",
       },
-      includeAssets: ["/IB_icon.png", "/pwa-192x192.png", "/pwa-512x512.png"],
+      includeAssets: [
+        "/IB_icon.png",
+        "/IB_icon-60.png",
+        "/pwa-192x192.png",
+        "/pwa-512x512.png",
+      ],
       manifest: manifest as ManifestOptions,
 
       workbox: {

@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, lazy, Suspense } from "react";
 import { shortenAddress } from "@utils/shortenAddress";
 import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
 import { syncUserContractsToStore } from "@src/store/utils/thunks";
@@ -9,8 +9,13 @@ import { LOCAL_USER_ADDR } from "@src/utils/constants";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
 import "@src/styles/backgrounds.css";
 import { getBgClass, hashString } from "@utils/backgrounds";
-import { MemoirSearchResults } from "@src/components/Anthology/MemoirSearchResults";
 import { useTranslation } from "@src/i18n/useTranslation";
+
+const MemoirSearchResults = lazy(() =>
+  import("@src/components/Anthology/MemoirSearchResults").then((m) => ({
+    default: m.MemoirSearchResults,
+  }))
+);
 
 interface UserContractsProps {
   userAddr: Address;
@@ -60,6 +65,7 @@ const CARD_PITCH_PX = CARD_ROW_PX + CARD_GAP_PX;
 interface CategoryCardProps {
   title: React.ReactNode;
   expanded: boolean;
+  estimatedHeight?: number;
   onToggle: () => void;
   className: string;
   indicatorClassName: string;
@@ -69,24 +75,28 @@ interface CategoryCardProps {
 const CategoryCard: React.FC<CategoryCardProps> = ({
   title,
   expanded,
+  estimatedHeight = 80,
   onToggle,
   className,
   indicatorClassName,
   children,
 }) => {
   const contentRef = useRef<HTMLDivElement | null>(null);
-  const [contentHeight, setContentHeight] = useState(0);
+  const [contentHeight, setContentHeight] = useState(estimatedHeight);
 
-  // Measure the card's natural content (header + expanded section) so the
-  // row span can be snapped to whole card units — re-measures on resize.
+  // Measure the card's natural content via ResizeObserver entries to avoid
+  // synchronous scrollHeight forced reflows on mount.
   useEffect(() => {
     const el = contentRef.current;
     if (!el || !expanded) return;
 
-    const update = () => setContentHeight(el.scrollHeight);
-    update();
-
-    const observer = new ResizeObserver(update);
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (!entry) return;
+      const h =
+        entry.borderBoxSize?.[0]?.blockSize ?? entry.contentRect.height;
+      if (h > 0) setContentHeight(Math.ceil(h));
+    });
     observer.observe(el);
     return () => observer.disconnect();
   }, [expanded]);
@@ -187,20 +197,31 @@ export const UserContracts: React.FC<UserContractsProps> = ({
       const isExpanded = expandedCategories[category] || false;
       const neonStyles = getCategoryStyles(category);
 
+      const subEntries = Object.entries(subcategories);
+      const estimatedHeight =
+        28 +
+        16 +
+        items.length * 36 +
+        subEntries.reduce(
+          (sum, [, subItems]) => sum + 56 + subItems.length * 34,
+          0
+        );
+
       return (
         <CategoryCard
           key={category}
           expanded={isExpanded}
+          estimatedHeight={estimatedHeight}
           onToggle={() => toggleCategory(category)}
           className={`p-4 ${categoryBackgroundsEnabled ? `${getBgClass(category)} text-shadow-dark` : ""} rounded-xl transition-all duration-200 ${neonStyles}`}
           indicatorClassName="shrink-0 text-xs text-zinc-300 font-mono tracking-wider px-2 py-1 rounded"
           title={
-            <h3
+            <h2
               className={`m-0 font-bold tracking-wide ${getCategoryTitleSizeClass(category.length)}`}
               translate="no"
             >
               {category}
-            </h3>
+            </h2>
           }
         >
           <div className="animate-fadeIn mt-4">
@@ -219,9 +240,9 @@ export const UserContracts: React.FC<UserContractsProps> = ({
               ))}
             </ul>
 
-            {Object.entries(subcategories).map(([sub, subItems]) => (
+            {subEntries.map(([sub, subItems]) => (
               <div key={sub} className="mt-4 p-3 rounded-lg border-zinc-800">
-                <h5 className="text-lg font-semibold text-white mb-2" translate="no">{sub}</h5>
+                <h3 className="text-lg font-semibold text-white mb-2" translate="no">{sub}</h3>
                 <ul className="space-y-1.5 ml-1">
                   {subItems.map(({ address, title }) => (
                     <li key={address}>
@@ -252,13 +273,14 @@ export const UserContracts: React.FC<UserContractsProps> = ({
       <CategoryCard
         key="uncategorized"
         expanded={isUncategorizedExpanded}
+        estimatedHeight={44 + processedData.uncategorized.length * 28}
         onToggle={() => toggleCategory("Uncategorized_General_Key")}
         className={`p-4 ${categoryBackgroundsEnabled ? `${getBgClass("uncategorized")} text-shadow-dark` : ""} rounded-xl border-zinc-800`}
         indicatorClassName="shrink-0 text-xs text-zinc-300 font-mono bg-zinc-800/60 px-2 py-1 rounded"
         title={
-          <h3 className="m-0 text-lg font-bold text-white">
+          <h2 className="m-0 text-lg font-bold text-white">
             {t("common.other")}
-          </h3>
+          </h2>
         }
       >
         <ul className="space-y-2 ml-2 animate-fadeIn mt-4">
@@ -293,19 +315,29 @@ export const UserContracts: React.FC<UserContractsProps> = ({
               )} */}
             
             <div className="flex items-center gap-2">
-              <button
-                type="button"
-                className="text-2xl font-medium hover:text-white transition-colors bg-transparent border-none text-zinc-100"
-                title={t("a11y.syncAnthologies")}
-                aria-label={t("a11y.syncAnthologies")}
-                onClick={() => {
-                  if (userAddr === currentUserAddr) {
-                    dispatch(syncUserContractsToStore(userAddr));
+              <h1 className="m-0 text-2xl font-medium leading-none">
+                <button
+                  type="button"
+                  className="text-2xl font-medium hover:text-white transition-colors bg-transparent border-none text-zinc-100 p-0"
+                  title={
+                    userAddr !== LOCAL_USER_ADDR
+                      ? t("a11y.syncAnthologies")
+                      : undefined
                   }
-                }}
-              >
-                {userAddr === LOCAL_USER_ADDR ? t("nav.privateMemory") : shortenAddress(userAddr, 12, 9)}
-              </button>
+                  aria-label={
+                    userAddr !== LOCAL_USER_ADDR
+                      ? `${shortenAddress(userAddr, 12, 9)} — ${t("a11y.syncAnthologies")}`
+                      : undefined
+                  }
+                  onClick={() => {
+                    if (userAddr === currentUserAddr) {
+                      dispatch(syncUserContractsToStore(userAddr));
+                    }
+                  }}
+                >
+                  {userAddr === LOCAL_USER_ADDR ? t("nav.privateMemory") : shortenAddress(userAddr, 12, 9)}
+                </button>
+              </h1>
               {userAddr === LOCAL_USER_ADDR && (
                 <span className="text-xs font-bold tracking-wider bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-md select-none">
                   {t("directory.local")}
@@ -342,7 +374,9 @@ export const UserContracts: React.FC<UserContractsProps> = ({
         )}
 
         {search.trim() ? (
-          <MemoirSearchResults term={search} />
+          <Suspense fallback={null}>
+            <MemoirSearchResults term={search} />
+          </Suspense>
         ) : (
         <div
           /* Unit grid: fixed 60px rows + dense flow. An expanded card spans
