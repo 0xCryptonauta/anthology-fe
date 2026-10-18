@@ -174,7 +174,7 @@ export const AboutView = () => {
             <iframe
               ref={iframeRef}
               key={locale}
-              src={`/onboarding.html?lang=${locale}`}
+              src={`/onboarding.html#lang=${locale}`}
               title={t("about.onboardingIframeTitle")}
               onLoad={handleIframeLoad}
               style={{

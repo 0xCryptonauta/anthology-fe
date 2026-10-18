@@ -75,6 +75,8 @@ export default defineConfig({
         clientsClaim: true,
         skipWaiting: true,
         globPatterns: ["**/*.{js,css,html,woff2,webp}"],
+        navigateFallbackDenylist: [/^\/onboarding\.html/, /^\/og-image\.html/],
+        ignoreURLParametersMatching: [/^lang$/, /^utm_/, /^fbclid$/],
         runtimeCaching: [
           {
             // Note: "script" is intentionally NOT cached here — caching Vite's

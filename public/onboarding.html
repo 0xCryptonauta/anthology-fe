@@ -812,6 +812,10 @@ dialog.ve-respond {
 
   function detectLocale() {
     try {
+      var hashStr = String(window.location.hash || "").replace(/^#/, "");
+      var hashParams = new URLSearchParams(hashStr);
+      var h = hashParams.get("lang");
+      if (h === "es" || h === "en") return h;
       var params = new URLSearchParams(window.location.search);
       var q = params.get("lang");
       if (q === "es" || q === "en") return q;
