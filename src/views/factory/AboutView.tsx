@@ -68,9 +68,10 @@ export const AboutView = () => {
 
           <h2 style={headingStyle}>Share it if you want</h2>
           <p style={paragraphStyle}>
-            Every collection can be shared as a QR code. Scan it on another
-            device and it's imported instantly — no links, no sign-ups, no
-            middleman.
+            Collections you publish to the blockchain can be shared as a QR
+            code — scan it on another device and it's imported instantly.
+            Private collections stay in your browser, and can be exported as a
+            file whenever you want.
           </p>
 
           <h2 style={headingStyle}>Make it permanent (optional)</h2>
