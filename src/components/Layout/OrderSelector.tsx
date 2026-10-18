@@ -1,4 +1,6 @@
 import React from "react";
+import { useTranslation } from "@src/i18n/useTranslation";
+import { TranslationKey } from "@src/i18n/translations";
 
 export type OrderType = "Newer" | "Older" | "Random" | "A -> Z" | "Z -> A";
 
@@ -7,15 +9,17 @@ interface SelectorProps {
   onChange: (value: OrderType) => void;
 }
 
-const skinOptions: OrderType[] = [
-  "Newer",
-  "Older",
-  "Random",
-  "A -> Z",
-  "Z -> A",
+const orderOptions: { value: OrderType; labelKey: TranslationKey }[] = [
+  { value: "Newer", labelKey: "order.newer" },
+  { value: "Older", labelKey: "order.older" },
+  { value: "Random", labelKey: "order.random" },
+  { value: "A -> Z", labelKey: "order.az" },
+  { value: "Z -> A", labelKey: "order.za" },
 ];
 
 export const OrderSelector = ({ value, onChange }: SelectorProps) => {
+  const { t } = useTranslation();
+
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = event.target.value as OrderType;
     onChange(selectedValue);
@@ -44,9 +48,13 @@ export const OrderSelector = ({ value, onChange }: SelectorProps) => {
       onFocus={(e) => (e.currentTarget.style.borderColor = "#6366f1")}
       onBlur={(e) => (e.currentTarget.style.borderColor = "#e2e2e2")}
     >
-      {skinOptions.map((option) => (
-        <option key={option} value={option} style={{ backgroundColor: "#fff" }}>
-          {option}
+      {orderOptions.map((option) => (
+        <option
+          key={option.value}
+          value={option.value}
+          style={{ backgroundColor: "#fff" }}
+        >
+          {t(option.labelKey)}
         </option>
       ))}
     </select>

@@ -16,6 +16,7 @@ import { Address, MemoirContent } from "@src/types/common";
 import { ChangeAnthologyDefaultSkin } from "./ChangeAnthologyDefaultSkin";
 import { TitleEditor } from "@components/Factory/TitleEditor";
 import { Modal } from "@src/components/Layout/Modal";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 const sectionStyle: React.CSSProperties = {
   display: "flex",
@@ -61,6 +62,7 @@ const actionBtnStyle: React.CSSProperties = {
 };
 
 export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
+  const { t } = useTranslation();
   const { addToast } = useToast();
 
   const anthologyState = useAppSelector((state) =>
@@ -104,7 +106,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
       ]);
       if (txHash) {
         addToast({
-          title: "New title:",
+          title: t("owner.newTitleToast"),
           content: combinedTitle,
           variant: "success",
           delay: 5000,
@@ -125,8 +127,8 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
       }
     } catch (error) {
       addToast({
-        title: "Error setting new title",
-        content: "Unknown error",
+        title: t("owner.errorTitle"),
+        content: t("common.unknownError"),
         variant: "warning",
         delay: 5000,
       });
@@ -144,7 +146,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
         const txHash = await writeAnthology(contractAddr, "cleanMemoirs");
         if (txHash) {
           addToast({
-            title: "Cleaning memoirs",
+            title: t("owner.cleaningMemoirs"),
             content: "txHash: " + txHash,
             variant: "success",
             delay: 5000,
@@ -154,7 +156,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
         const txHash = await writeAnthology(contractAddr, "cleanMemoirBuffer");
         if (txHash) {
           addToast({
-            title: "Cleaning memoir buffer",
+            title: t("owner.cleaningBuffer"),
             content: "txHash: " + txHash,
             variant: "success",
             delay: 5000,
@@ -164,7 +166,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
         const txHash = await writeAnthology(contractAddr, "cleanWhitelist");
         if (txHash) {
           addToast({
-            title: "Cleaning whitelist",
+            title: t("owner.cleaningWhitelist"),
             content: "txHash: " + txHash,
             variant: "success",
             delay: 5000,
@@ -173,8 +175,8 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
       }
     } catch (error) {
       addToast({
-        title: `Error cleaning ${currentType}`,
-        content: "Unknown error",
+        title: t("owner.errorCleaning", { target: currentType }),
+        content: t("common.unknownError"),
         variant: "warning",
         delay: 5000,
       });
@@ -198,7 +200,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
       }}
     >
       <h3 style={{ fontSize: "1.2rem", fontWeight: 600, margin: 0 }}>
-        Anthology Settings
+        {t("owner.settingsTitle")}
       </h3>
 
       {/* ------------------------------- Update Anthology title ------------------------------ */}
@@ -220,7 +222,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
             }}
             onClick={() => setShowTitleModal(true)}
           >
-            Change title
+            {t("owner.changeTitle")}
           </button>
         }
       >
@@ -244,12 +246,12 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
               textAlign: "center",
             }}
           >
-            Set New Title
+            {t("owner.setNewTitle")}
           </span>
           <TitleEditor
             initialTitle={anthologyState?.title || ""}
             userTitles={userTitles}
-            submitLabel="Change title"
+            submitLabel={t("owner.changeTitle")}
             onSubmit={handleTitleSubmit}
           />
         </div>
@@ -261,7 +263,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
       {/* ------------------------------- Update Anthology price ------------------------------ */}
       <div style={sectionStyle}>
         <span style={{ fontSize: "14px", fontWeight: 500 }}>
-          Price per memoir
+          {t("owner.price")}
         </span>
         <div style={inputRowStyle}>
           <input
@@ -283,7 +285,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
                 );
                 if (txHash) {
                   addToast({
-                    title: "New price:",
+                    title: t("owner.priceSet"),
                     content: memoirPrice,
                     variant: "success",
                     delay: 5000,
@@ -291,8 +293,8 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
                 }
               } catch (error) {
                 addToast({
-                  title: "Error setting new price",
-                  content: "Unknown error",
+                  title: t("owner.errorPrice"),
+                  content: t("common.unknownError"),
                   variant: "warning",
                   delay: 5000,
                 });
@@ -300,7 +302,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
               }
             }}
           >
-            Save
+            {t("common.save")}
           </button>
         </div>
       </div>
@@ -308,12 +310,12 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
       {/* ------------------------------- setMaxMemoirs ------------------------------ */}
       <div style={sectionStyle}>
         <span style={{ fontSize: "14px", fontWeight: 500 }}>
-          Max memoirs allowed
+          {t("owner.maxMemoirs")}
         </span>
         <div style={inputRowStyle}>
           <input
             type="number"
-            placeholder="Max memoirs"
+            placeholder={t("owner.maxPlaceholder")}
             value={newMaxMemoirs}
             onChange={(event) => setNewMaxMemoirs(event.target.value)}
             autoComplete="new-password"
@@ -330,7 +332,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
                 );
                 if (txHash) {
                   addToast({
-                    title: "New max number of memoirs:",
+                    title: t("owner.maxSet"),
                     content: newMaxMemoirs + "\n\nTxHash: " + txHash,
                     variant: "success",
                     delay: 5000,
@@ -338,8 +340,8 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
                 }
               } catch (error) {
                 addToast({
-                  title: "Error setting max memoirs",
-                  content: "Unknown error",
+                  title: t("owner.errorMax"),
+                  content: t("common.unknownError"),
                   variant: "warning",
                   delay: 5000,
                 });
@@ -347,7 +349,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
               }
             }}
           >
-            Save
+            {t("common.save")}
           </button>
         </div>
       </div>
@@ -355,7 +357,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
       {/* ---------------------------------- Toggle useERC20 & Token ---------------------------------- */}
       <div style={sectionStyle}>
         <span style={{ fontSize: "14px", fontWeight: 500 }}>
-          Payment method
+          {t("owner.paymentMethod")}
         </span>
         <button
           style={{ ...actionBtnStyle, width: "100%" }}
@@ -366,7 +368,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
               ]);
               if (txHash) {
                 addToast({
-                  title: "Payment method changed to:",
+                  title: t("owner.paymentChanged"),
                   content: !anthologyState?.useERC20 + "\n\nTxHash: " + txHash,
                   variant: "success",
                   delay: 5000,
@@ -380,8 +382,8 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
               }
             } catch (error) {
               addToast({
-                title: "Error updating payment method",
-                content: "Unknown error",
+                title: t("owner.errorPayment"),
+                content: t("common.unknownError"),
                 variant: "warning",
                 delay: 5000,
               });
@@ -390,14 +392,14 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
           }}
         >
           {anthologyState && anthologyState.useERC20
-            ? "Switch to ETH payment"
-            : "Switch to Token (ERC20) payment"}
+            ? t("owner.switchToEth")
+            : t("owner.switchToToken")}
         </button>
 
         <div style={{ ...inputRowStyle, marginTop: "4px" }}>
           <input
             type="text"
-            placeholder="Token contract address (0x...)"
+            placeholder={t("owner.tokenPlaceholder")}
             value={erc20TokenAddr}
             onChange={(event) => setErc20TokenAddr(event.target.value)}
             autoComplete="new-password"
@@ -414,7 +416,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
                 );
                 if (txHash) {
                   addToast({
-                    title: "Token address set to:",
+                    title: t("owner.tokenSet"),
                     content: erc20TokenAddr + "\n\nTxHash: " + txHash,
                     variant: "success",
                     delay: 5000,
@@ -422,8 +424,8 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
                 }
               } catch (error) {
                 addToast({
-                  title: "Error setting token address",
-                  content: "Unknown error",
+                  title: t("owner.errorToken"),
+                  content: t("common.unknownError"),
                   variant: "warning",
                   delay: 5000,
                 });
@@ -431,14 +433,16 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
               }
             }}
           >
-            Set Token
+            {t("owner.setToken")}
           </button>
         </div>
       </div>
 
       {/* ---------------------------------- Whitelist Controls --------------------------------- */}
       <div style={sectionStyle}>
-        <span style={{ fontSize: "14px", fontWeight: 500 }}>Whitelist</span>
+        <span style={{ fontSize: "14px", fontWeight: 500 }}>
+          {t("owner.whitelist")}
+        </span>
         <button
           style={{ ...actionBtnStyle, width: "100%" }}
           onClick={async () => {
@@ -450,10 +454,10 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
               );
               if (txHash) {
                 addToast({
-                  title: "Whitelist has been:",
+                  title: t("owner.whitelistChanged"),
                   content: !anthologyState?.whitelistEnabled
-                    ? "Activated"
-                    : "Disabled" + "\n\nTxHash: " + txHash,
+                    ? t("owner.whitelistActivated")
+                    : t("owner.whitelistDisabled") + "\n\nTxHash: " + txHash,
                   variant: "success",
                   delay: 5000,
                 });
@@ -466,8 +470,8 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
               }
             } catch (error) {
               addToast({
-                title: "Error updating whitelist",
-                content: "Unknown error",
+                title: t("owner.errorWhitelist"),
+                content: t("common.unknownError"),
                 variant: "warning",
                 delay: 5000,
               });
@@ -476,14 +480,14 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
           }}
         >
           {anthologyState && anthologyState?.whitelistEnabled
-            ? "Disable whitelist"
-            : "Enable whitelist"}
+            ? t("owner.disableWhitelist")
+            : t("owner.enableWhitelist")}
         </button>
 
         <div style={{ ...inputRowStyle, marginTop: "4px" }}>
           <input
             type="text"
-            placeholder="Address to allow (0x...)"
+            placeholder={t("owner.addressAllow")}
             value={addressToAdd}
             onChange={(event) => setAddresToAdd(event.target.value)}
             autoComplete="new-password"
@@ -500,7 +504,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
                 );
                 if (txHash) {
                   addToast({
-                    title: "Address added to whitelist",
+                    title: t("owner.addedToWhitelist"),
                     content: addressToAdd + "\n\nTxHash: " + txHash,
                     variant: "success",
                     delay: 5000,
@@ -508,8 +512,8 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
                 }
               } catch (error) {
                 addToast({
-                  title: "Error adding to whitelist",
-                  content: "Unknown error",
+                  title: t("owner.errorAddWL"),
+                  content: t("common.unknownError"),
                   variant: "warning",
                   delay: 5000,
                 });
@@ -517,14 +521,14 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
               }
             }}
           >
-            Add
+            {t("common.add")}
           </button>
         </div>
 
         <div style={inputRowStyle}>
           <input
             type="text"
-            placeholder="Address to remove (0x...)"
+            placeholder={t("owner.addressRemove")}
             value={addressToRemove}
             onChange={(event) => setAddressToRemove(event.target.value)}
             autoComplete="new-password"
@@ -541,7 +545,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
                 );
                 if (txHash) {
                   addToast({
-                    title: "Address removed from whitelist",
+                    title: t("owner.removedFromWhitelist"),
                     content: addressToRemove + "\n\nTxHash: " + txHash,
                     variant: "success",
                     delay: 5000,
@@ -549,8 +553,8 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
                 }
               } catch (error) {
                 addToast({
-                  title: "Error removing from whitelist",
-                  content: "Unknown error",
+                  title: t("owner.errorRemoveWL"),
+                  content: t("common.unknownError"),
                   variant: "warning",
                   delay: 5000,
                 });
@@ -558,7 +562,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
               }
             }}
           >
-            Remove
+            {t("common.remove")}
           </button>
         </div>
       </div>
@@ -566,7 +570,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
       {/* ----------------------------------- Set useBuffer ------------------------------------ */}
       <div style={sectionStyle}>
         <span style={{ fontSize: "14px", fontWeight: 500 }}>
-          Moderation buffer
+          {t("owner.buffer")}
         </span>
         <button
           style={{ ...actionBtnStyle, width: "100%" }}
@@ -579,10 +583,10 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
               );
               if (txHash) {
                 addToast({
-                  title: "Buffer has been:",
+                  title: t("owner.bufferChanged"),
                   content: !anthologyState?.useBuffer
-                    ? "Activated"
-                    : "Disabled" + "\n\nTxHash: " + txHash,
+                    ? t("owner.bufferActivated")
+                    : t("owner.bufferDisabled") + "\n\nTxHash: " + txHash,
                   variant: "success",
                   delay: 5000,
                 });
@@ -595,8 +599,8 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
               }
             } catch (error) {
               addToast({
-                title: "Error updating buffer status",
-                content: "Unknown error",
+                title: t("owner.errorBuffer"),
+                content: t("common.unknownError"),
                 variant: "warning",
                 delay: 5000,
               });
@@ -605,8 +609,8 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
           }}
         >
           {anthologyState?.useBuffer
-            ? "Disable moderation buffer"
-            : "Enable moderation buffer"}
+            ? t("owner.disableBuffer")
+            : t("owner.enableBuffer")}
         </button>
       </div>
 
@@ -619,7 +623,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
         }}
       >
         <span style={{ fontSize: "14px", fontWeight: 500, color: "#fca5a5" }}>
-          Danger Zone
+          {t("owner.dangerZone")}
         </span>
         <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
           <button
@@ -635,7 +639,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
             }}
             onClick={() => setConfirmCleanType("memoirs")}
           >
-            Delete all memoirs
+            {t("owner.deleteAllMemoirs")}
           </button>
           <button
             style={{
@@ -650,7 +654,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
             }}
             onClick={() => setConfirmCleanType("buffer")}
           >
-            Clear buffer
+            {t("owner.clearBuffer")}
           </button>
           <button
             style={{
@@ -665,7 +669,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
             }}
             onClick={() => setConfirmCleanType("whitelist")}
           >
-            Clear whitelist
+            {t("owner.clearWhitelist")}
           </button>
         </div>
       </div>
@@ -688,20 +692,23 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
         >
           <span style={{ fontWeight: "bold", textAlign: "center" }}>
             {confirmCleanType === "memoirs"
-              ? "Delete all memoirs in this anthology?"
+              ? t("owner.deleteAllTitle")
               : confirmCleanType === "buffer"
-              ? "Clear all pending memoirs in the moderation buffer?"
-              : "Remove all addresses from the whitelist?"}
+              ? t("owner.confirmClearBuffer")
+              : t("owner.confirmClearWhitelist")}
           </span>
           <span style={{ textAlign: "center" }}>
-            This will send a blockchain transaction to clear the{" "}
             {confirmCleanType === "memoirs"
-              ? "memoirs"
+              ? t("owner.confirmDeleteAllBody", {
+                  title: anthologyState?.title || t("owner.thisAnthology"),
+                })
               : confirmCleanType === "buffer"
-              ? "moderation buffer"
-              : "whitelist"}{" "}
-            in <strong>{anthologyState?.title || "this anthology"}</strong>.
-            This action cannot be undone.
+              ? t("owner.confirmClearBufferBody", {
+                  title: anthologyState?.title || t("owner.thisAnthology"),
+                })
+              : t("owner.confirmClearWhitelistBody", {
+                  title: anthologyState?.title || t("owner.thisAnthology"),
+                })}
           </span>
         </div>
 
@@ -724,7 +731,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
             }}
             onClick={() => setConfirmCleanType(null)}
           >
-            Cancel
+            {t("common.cancel")}
           </button>
           <button
             style={{
@@ -737,7 +744,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
             }}
             onClick={handleConfirmedClean}
           >
-            Confirm
+            {t("common.confirm")}
           </button>
         </div>
       </Modal>

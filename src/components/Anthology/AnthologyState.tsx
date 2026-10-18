@@ -20,6 +20,7 @@ import {
 } from "@src/store/slices/localAnthologySlice";
 import { removePadding } from "@src/utils/removePadding";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 interface AnthologyStateProps {
   contractAddr: Address;
@@ -28,6 +29,7 @@ interface AnthologyStateProps {
 export const AnthologyState: React.FC<AnthologyStateProps> = ({
   contractAddr,
 }) => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { addToast } = useToast();
 
@@ -49,8 +51,8 @@ export const AnthologyState: React.FC<AnthologyStateProps> = ({
     const ok = await copyToClipboard(shareUrl);
     if (ok) {
       addToast({
-        title: "Link copied",
-        content: "Shareable anthology link copied to clipboard.",
+        title: t("anthologyState.linkCopied"),
+        content: t("anthologyState.linkCopiedDesc"),
         variant: "success",
         delay: 3000,
       });
@@ -59,7 +61,8 @@ export const AnthologyState: React.FC<AnthologyStateProps> = ({
 
   const handleCloneToLocal = () => {
     const newLocalAddr = generateLocalContractAddr();
-    const title = anthologyState?.title || "Cloned Anthology";
+    const title =
+      anthologyState?.title || t("anthologyState.clonedFallback");
     const cleanedSkin = anthologyState?.skin
       ? (removePadding(anthologyState.skin) as SkinType)
       : DEFAULT_SKIN;
@@ -102,8 +105,11 @@ export const AnthologyState: React.FC<AnthologyStateProps> = ({
     );
 
     addToast({
-      title: "Saved to Private Memory",
-      content: `${title} (${memoirs.length} memoirs) saved offline.`,
+      title: t("anthologyState.clonedTitle"),
+      content: t("anthologyState.clonedDesc", {
+        title,
+        count: memoirs.length,
+      }),
       variant: "success",
       delay: 4000,
     });
@@ -123,21 +129,21 @@ export const AnthologyState: React.FC<AnthologyStateProps> = ({
       }}
     >
       <Card
-        title="Anthology Address"
+        title={t("anthologyState.address")}
         content={contractAddr}
         contentHref={CHAIN_SCAN_URL + contractAddr}
       />
 
       <Card
-        title="Share QR Code"
+        title={t("anthologyState.shareQr")}
         content={<QRCodeGenerator text={shareUrl} />}
       />
 
       <Card
-        title="Share Link"
+        title={t("anthologyState.shareLink")}
         content={
           <span
-            title="Copy shareable link"
+            title={t("anthologyState.shareLink")}
             style={{
               cursor: "pointer",
               display: "inline-flex",
@@ -148,7 +154,7 @@ export const AnthologyState: React.FC<AnthologyStateProps> = ({
           >
             <img
               src="/icons/copy-icon.svg"
-              alt="Copy link"
+              alt={t("anthologyState.shareLink")}
               style={{
                 width: "20px",
                 height: "20px",
@@ -161,10 +167,10 @@ export const AnthologyState: React.FC<AnthologyStateProps> = ({
       />
 
       <Card
-        title="Save to Private Memory"
+        title={t("anthologyState.saveToLocal")}
         content={
           <span
-            title="Save an offline copy in Private Memory"
+            title={t("anthologyState.saveToLocal")}
             style={{ cursor: "pointer", fontSize: "20px" }}
             onClick={handleCloneToLocal}
           >
@@ -173,54 +179,62 @@ export const AnthologyState: React.FC<AnthologyStateProps> = ({
         }
       />
 
-      <Card title="Owner" content={anthologyState?.owner.toString()} />
+      <Card title={t("anthologyState.owner")} content={anthologyState?.owner.toString()} />
 
-      <Card title="Title" content={anthologyState?.title} />
+      <Card title={t("anthologyState.title")} content={anthologyState?.title} />
 
       <Card
-        title="Memoirs count"
+        title={t("anthologyState.memoirCount")}
         content={anthologyState?.currentMemoirCount.toString()}
       />
 
       <Card
-        title="Total created"
+        title={t("anthologyState.totalCreated")}
         content={anthologyState?.totalCreatedMemoirs.toString()}
       />
 
       <Card
-        title="Max memoirs"
+        title={t("anthologyState.maxMemoirs")}
         content={anthologyState?.maxMemoirs.toString()}
       />
 
       <Card
-        title="Price per memoir"
+        title={t("anthologyState.price")}
         content={anthologyState?.memoirPrice.toString()}
       />
 
       <Card
-        title="Token payment"
-        content={anthologyState?.useERC20 ? "Enabled" : "Disabled"}
+        title={t("anthologyState.tokenPayment")}
+        content={
+          anthologyState?.useERC20 ? t("common.enabled") : t("common.disabled")
+        }
       />
 
       {anthologyState?.useERC20 && (
         <Card
-          title="Token Address"
+          title={t("anthologyState.tokenAddress")}
           content={anthologyState?.erc20Token.toString()}
         />
       )}
 
       <Card
-        title="Moderation buffer"
-        content={anthologyState?.useBuffer ? "Enabled" : "Disabled"}
+        title={t("anthologyState.buffer")}
+        content={
+          anthologyState?.useBuffer ? t("common.enabled") : t("common.disabled")
+        }
       />
 
       <Card
-        title="Whitelist only"
-        content={anthologyState?.whitelistEnabled ? "Enabled" : "Disabled"}
+        title={t("anthologyState.whitelistOnly")}
+        content={
+          anthologyState?.whitelistEnabled
+            ? t("common.enabled")
+            : t("common.disabled")
+        }
       />
 
       <Card
-        title="Default Skin"
+        title={t("anthologyState.defaultSkin")}
         content={
           anthologyState?.skin
             ? removePadding(anthologyState.skin)

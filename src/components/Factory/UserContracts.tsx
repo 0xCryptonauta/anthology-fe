@@ -10,6 +10,7 @@ import { updateCurrentPath } from "@src/store/slices/userSlice";
 import "@src/styles/backgrounds.css";
 import { getBgClass, hashString } from "@utils/backgrounds";
 import { MemoirSearchResults } from "@src/components/Anthology/MemoirSearchResults";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 interface UserContractsProps {
   userAddr: Address;
@@ -41,6 +42,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
   userAddr,
   userTitles,
 }) => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const currentUserAddr = useAppSelector((state) => state.user.userAddr);
   const categoryBackgroundsEnabled = useAppSelector((s) => s.dapp.categoryBackgroundsEnabled);
@@ -117,11 +119,11 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                   }
                 }}
               >
-                {userAddr === LOCAL_USER_ADDR ? "Private Memory" : shortenAddress(userAddr, 12, 9)}
+                {userAddr === LOCAL_USER_ADDR ? t("nav.privateMemory") : shortenAddress(userAddr, 12, 9)}
               </span>
               {userAddr === LOCAL_USER_ADDR && (
                 <span className="text-xs font-bold tracking-wider bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-md select-none">
-                  LOCAL
+                  {t("directory.local")}
                 </span>
               )}
             </div>
@@ -136,7 +138,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search all memoirs..."
+              placeholder={t("directory.searchAll")}
               className="w-full px-4 py-2 pr-10 rounded-xl bg-[#161b22] border border-sky-500/40 text-zinc-100 placeholder-zinc-500 outline-none"
             />
             {search && (
@@ -228,7 +230,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                         className="flex justify-between items-center cursor-pointer select-none"
                         onClick={() => toggleCategory("Uncategorized_General_Key")}
                       >
-                        <h3 className="text-lg font-bold">Other</h3>
+                        <h3 className="text-lg font-bold">{t("common.other")}</h3>
                         <span className="text-xs text-white/50 font-mono bg-zinc-800/60 px-2 py-1 rounded">
                           {isUncategorizedExpanded ? "[-]" : "[+]"}
                         </span>

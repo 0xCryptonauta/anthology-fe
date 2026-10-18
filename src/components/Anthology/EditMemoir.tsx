@@ -13,6 +13,7 @@ import { fetchUrlTitle } from "@src/utils/fetchUrlTitle";
 import { HighlightDifferences } from "../Layout/HighlightDifferences";
 import { useToast } from "../Layout/Toast";
 import { Modal } from "../Layout/Modal";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 export const EditMemoir = ({
   anthologyAddr,
@@ -23,6 +24,7 @@ export const EditMemoir = ({
   index: number;
   memoir: MemoirInterface;
 }) => {
+  const { t } = useTranslation();
   const [show, setShow] = useState(false);
   const [title, setTitle] = useState(memoir.title);
   const [content, setContent] = useState(memoir.content);
@@ -65,9 +67,7 @@ export const EditMemoir = ({
           m.title.trim().toLowerCase() === trimmedTitle.toLowerCase()
       );
     setTitleError(
-      duplicateTitle
-        ? "A memoir with this title already exists in this anthology"
-        : ""
+      duplicateTitle ? t("memoir.duplicateTitleErr") : ""
     );
 
     const url = extractFirstUrl(filteredContent);
@@ -82,7 +82,7 @@ export const EditMemoir = ({
     const inCurrent = currentMemoirs.some(
       (m, i) => i !== index && memoirHasUrl(m, normalizedUrl)
     );
-    setUrlError(inCurrent ? "This URL already exists in this anthology" : "");
+    setUrlError(inCurrent ? t("memoir.duplicateUrlErr") : "");
 
     if (inCurrent) {
       setUrlWarning("");
@@ -100,7 +100,7 @@ export const EditMemoir = ({
     const inOther = otherLists.some((memoirs) =>
       memoirs.some((m) => memoirHasUrl(m, normalizedUrl))
     );
-    setUrlWarning(inOther ? "This URL exists in another anthology" : "");
+    setUrlWarning(inOther ? t("memoir.urlInOtherWarning") : "");
   }, [
     show,
     title,
@@ -109,6 +109,7 @@ export const EditMemoir = ({
     onchainAnthologies,
     anthologyAddr,
     index,
+    t,
   ]);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -131,7 +132,7 @@ export const EditMemoir = ({
   const handleSave = () => {
     if (titleError || urlError) {
       addToast({
-        title: "Cannot save memoir",
+        title: t("memoir.cannotSave"),
         content: titleError || urlError,
         variant: "info",
       });
@@ -147,8 +148,8 @@ export const EditMemoir = ({
       })
     );
     addToast({
-      title: "Memoir updated",
-      content: "Your changes were saved locally",
+      title: t("memoir.updated"),
+      content: t("memoir.updatedDesc"),
       variant: "success",
       delay: 5000,
     });
@@ -162,13 +163,13 @@ export const EditMemoir = ({
       onHide={() => setShow(false)}
       trigger={
         <span
-          title="Edit memoir"
+          title={t("memoir.editTitle")}
           style={{ cursor: "pointer", fontSize: "1rem" }}
           onClick={handleOpen}
         >
           <img
             src="/icons/edit-icon.svg"
-            alt="Edit memoir"
+            alt={t("memoir.editTitle")}
             style={{ width: "18px", height: "18px", display: "block" }}
           />
         </span>
@@ -184,7 +185,7 @@ export const EditMemoir = ({
           boxSizing: "border-box",
         }}
       >
-        <h4 style={{ textAlign: "center", margin: 0 }}>Edit Memoir</h4>
+        <h4 style={{ textAlign: "center", margin: 0 }}>{t("memoir.editTitle")}</h4>
 
         <div
           style={{
@@ -193,7 +194,7 @@ export const EditMemoir = ({
             alignItems: "center",
           }}
         >
-          <label style={{ fontWeight: 500, fontSize: "1.2rem" }}>Title</label>
+          <label style={{ fontWeight: 500, fontSize: "1.2rem" }}>{t("memoir.title")}</label>
           {extractFirstUrl(filteredContent) && (
             <button
               type="button"
@@ -206,8 +207,8 @@ export const EditMemoir = ({
                   setTitle(fetched);
                 } else {
                   addToast({
-                    title: "Title not found",
-                    content: "Could not fetch a title for this link.",
+                    title: t("memoir.titleNotFound"),
+                    content: t("memoir.titleNotFoundDesc"),
                     variant: "info",
                   });
                 }
@@ -223,14 +224,14 @@ export const EditMemoir = ({
                 cursor: isFetchingTitle ? "wait" : "pointer",
               }}
             >
-              {isFetchingTitle ? "Fetching..." : "Auto-fill title"}
+              {isFetchingTitle ? t("memoir.fetching") : t("memoir.autoFill")}
             </button>
           )}
         </div>
         <input
           value={title}
           maxLength={50}
-          placeholder="Enter title"
+          placeholder={t("memoir.enterTitle")}
           onChange={(e) => setTitle(e.target.value)}
           style={{
             padding: "0.75rem 1rem",
@@ -255,7 +256,7 @@ export const EditMemoir = ({
           </span>
         )}
 
-        <label style={{ fontWeight: 500, fontSize: "1.2rem" }}>Content</label>
+        <label style={{ fontWeight: 500, fontSize: "1.2rem" }}>{t("memoir.content")}</label>
         <div
           style={{
             position: "relative",
@@ -348,7 +349,7 @@ export const EditMemoir = ({
             style={{ cursor: "pointer", userSelect: "none" }}
             onClick={() => setShouldFilterTracking(!shouldFilterTracking)}
           >
-            Remove Tracking from URL
+            {t("memoir.removeTracking")}
           </span>
         </div>
 
@@ -367,7 +368,7 @@ export const EditMemoir = ({
             cursor: "pointer",
           }}
         >
-          Save Changes
+          {t("memoir.saveChanges")}
         </button>
       </div>
     </Modal>

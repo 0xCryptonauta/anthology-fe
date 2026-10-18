@@ -35,8 +35,10 @@ import { FormatAnthologyTitle } from "@src/utils/FormatAnthologyTitle";
 import "@src/styles/backgrounds.css";
 import { getBgClass } from "@utils/backgrounds";
 import { setAnthologyFooterBgClass } from "@src/store/slices/dappSlice";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 export const AnthologyView = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { currentPath } = useAppSelector((state) => state.user);
   const categoryBackgroundsEnabled = useAppSelector((s) => s.dapp.categoryBackgroundsEnabled);
@@ -258,7 +260,7 @@ export const AnthologyView = () => {
             boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
           }}
         >
-          {showInfo ? "Show Anthology" : "Anthology Info"}
+          {showInfo ? t("anthology.show") : t("anthology.info")}
         </div>
 
         {!showInfo && (
@@ -286,7 +288,7 @@ export const AnthologyView = () => {
               backgroundColor: "darkred",
             }}
           >
-            {sudoMode ? "Anthology info" : "Settings"}
+            {sudoMode ? t("anthology.info") : t("nav.settings")}
           </div>
         )}
       </div>

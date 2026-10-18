@@ -9,6 +9,7 @@ import { MemoirActions } from "../../MemoirActions";
 import { formatUnixTime } from "@utils/formatUnixTime";
 import { extractEmbed } from "@src/utils/embeds";
 import { EmbedRenderer } from "../thirdPartyEmbeds";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 interface ListMemoirSkinProps {
   anthologyAddr: Address;
@@ -21,6 +22,7 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
   order,
   search,
 }) => {
+  const { t } = useTranslation();
   const { memoirs, orderedMemoirsIndexes } = useOrderedMemoirs(
     anthologyAddr,
     order,
@@ -36,7 +38,7 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
   );
 
   if (!memoirs || memoirs.length === 0) {
-    return <p style={{ margin: "30px" }}>No memoirs available.</p>;
+    return <p style={{ margin: "30px" }}>{t("memoirs.none")}</p>;
   }
 
   return (
@@ -92,7 +94,7 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
                   : undefined
               }
             >
-              {index + 1}. {title || "Untitled"}
+              {index + 1}. {title || t("common.untitled")}
               {extracted && <span>{isExpanded ? " ▾" : " ▸"}</span>}
             </span>
 

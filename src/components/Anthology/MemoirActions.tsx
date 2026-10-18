@@ -8,6 +8,7 @@ import { Modal } from "../Layout/Modal";
 import { DeleteMemoir } from "./DeleteMemoir";
 import { EditMemoir } from "./EditMemoir";
 import { MoveMemoir } from "./MoveMemoir";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 export const MemoirActions = ({
   anthologyAddr,
@@ -18,6 +19,7 @@ export const MemoirActions = ({
   index: number;
   memoir: MemoirInterface;
 }) => {
+  const { t } = useTranslation();
   const { addToast } = useToast();
   const [shareOpen, setShareOpen] = useState(false);
 
@@ -28,10 +30,10 @@ export const MemoirActions = ({
   const handleCopy = async () => {
     const copied = await copyToClipboard(shareText);
     addToast({
-      title: copied ? "Copied to clipboard" : "Copy failed",
+      title: copied ? t("memoir.copied") : t("memoir.copyFailed"),
       content: copied
-        ? "The memoir was copied to your clipboard"
-        : "Could not access the clipboard",
+        ? t("memoir.copiedDesc")
+        : t("memoir.copyFailedDesc"),
       variant: copied ? "success" : "info",
       delay: 3000,
     });
@@ -41,7 +43,7 @@ export const MemoirActions = ({
     if (navigator.share) {
       try {
         await navigator.share({
-          title: memoir.title || "Anthology memoir",
+          title: memoir.title || t("memoir.defaultShareTitle"),
           text: shareText,
         });
       } catch {
@@ -104,25 +106,25 @@ export const MemoirActions = ({
       )}
 
       <span
-        title="Copy memoir"
+        title={t("memoir.copyTitle")}
         style={{ cursor: "pointer", fontSize: "1rem" }}
         onClick={handleCopy}
       >
         <img
           src="/icons/copy-icon.svg"
-          alt="Copy memoir"
+          alt={t("memoir.copyTitle")}
           style={{ width: "18px", height: "18px", display: "block" }}
         />
       </span>
 
       <span
-        title="Share memoir"
+        title={t("memoir.shareTitle")}
         style={{ cursor: "pointer", fontSize: "1rem" }}
         onClick={handleShare}
       >
         <img
           src="/icons/share-icon.svg"
-          alt="Share memoir"
+          alt={t("memoir.shareTitle")}
           style={{ width: "18px", height: "18px", display: "block" }}
         />
       </span>
@@ -141,7 +143,7 @@ export const MemoirActions = ({
           }}
         >
           <span style={{ fontWeight: "bold", textAlign: "center" }}>
-            Share memoir
+            {t("memoir.shareTitle")}
           </span>
 
           <div style={{ display: "flex", gap: "12px" }}>
@@ -151,8 +153,8 @@ export const MemoirActions = ({
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                title={`Share on ${link.name}`}
-                aria-label={`Share on ${link.name}`}
+                title={t("memoir.shareOn", { name: link.name })}
+                aria-label={t("memoir.shareOn", { name: link.name })}
                 onClick={() => setShareOpen(false)}
                 style={{
                   width: "44px",

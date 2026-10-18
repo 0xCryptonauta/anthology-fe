@@ -4,6 +4,7 @@ import { parseContractsCategoriesSorted } from "@src/utils/parseContractsCategor
 import { Address } from "@src/types/common";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
 import { useAppSelector } from "@src/store/utils/hooks";
+import { useTranslation } from "@src/i18n/useTranslation";
 interface ContractSelectorProps {
   setSelectedContract: (addr: Address | "") => void;
   variant?: "dark" | "light";
@@ -15,6 +16,7 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
   variant = "dark",
   showUserSelect = true,
 }) => {
+  const { t } = useTranslation();
   const { users, userContracts, contractsTitles } = useAppSelector(
     (state) => state.factory
   );
@@ -120,7 +122,7 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
     >
       {showUserSelect && (
         <>
-          <label>User: </label>
+          <label>{t("selector.user")} </label>
           <select
             value={selectedUser}
             style={{
@@ -138,7 +140,7 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
             }}
           >
             <option key={"localUser"} value={LOCAL_USER_ADDR}>
-              Local User
+              {t("selector.localUser")}
             </option>
             {users.map((user) => (
               <option key={user} value={user}>
@@ -149,7 +151,7 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
         </>
       )}
 
-      <label>Category: </label>
+      <label>{t("selector.category")} </label>
       <select
         value={selectedCategory}
         onChange={handleCategoryChange}
@@ -165,7 +167,11 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
           selectedUser === LOCAL_USER_ADDR &&
             categoryOptions.map((category) => (
               <option key={category} value={category}>
-                {category}
+                {category === "Other"
+                  ? t("common.other")
+                  : category === "Select Category"
+                  ? t("selector.selectCategory")
+                  : category}
               </option>
             ))
           //NOT LOCAL USER IS MISSING IN CATEGORIES
@@ -182,7 +188,7 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
       > */}
       {subcategoryOptions.length > 0 && (
         <>
-          <label>Subcategory: </label>
+          <label>{t("selector.subcategory")} </label>
 
           <select
             value={selectedSubcategory}
@@ -195,7 +201,7 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
               padding: "4px 8px",
             }}
           >
-            <option value="">No subcategory</option>
+            <option value="">{t("selector.noSubcategory")}</option>
             {subcategoryOptions.map((subcategory) => (
               <option key={subcategory} value={subcategory}>
                 {subcategory}
@@ -257,7 +263,7 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
             alignItems: "center",
           }}
         >
-          <label>Anthology Address: </label>
+          <label>{t("selector.anthologyAddress")} </label>
           <input
             type="text"
             value={

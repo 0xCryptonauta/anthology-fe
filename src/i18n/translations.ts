@@ -304,6 +304,10 @@ export const en = {
   "owner.dangerZone": "Danger Zone",
   "owner.clearBuffer": "Clear buffer",
   "owner.clearWhitelist": "Clear whitelist",
+  "owner.confirmClearBuffer":
+    "Clear all pending memoirs in the moderation buffer?",
+  "owner.confirmClearWhitelist":
+    "Remove all addresses from the whitelist?",
   "owner.confirmDeleteAllBody":
     "This will send a blockchain transaction to delete all memoirs in {title}. This action cannot be undone.",
   "owner.confirmClearBufferBody":
@@ -728,6 +732,10 @@ export const es: Record<TranslationKey, string> = {
   "owner.dangerZone": "Zona peligrosa",
   "owner.clearBuffer": "Vaciar búfer",
   "owner.clearWhitelist": "Vaciar lista blanca",
+  "owner.confirmClearBuffer":
+    "¿Vaciar todos los recuerdos pendientes en el búfer de moderación?",
+  "owner.confirmClearWhitelist":
+    "¿Quitar todas las direcciones de la lista blanca?",
   "owner.confirmDeleteAllBody":
     "Esto enviará una transacción a la blockchain para borrar todos los recuerdos en {title}. Esta acción no se puede deshacer.",
   "owner.confirmClearBufferBody":

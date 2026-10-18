@@ -12,12 +12,14 @@ import {
 import { ChangeAnthologyDefaultSkin } from "./ChangeAnthologyDefaultSkin";
 import { TitleEditor } from "@components/Factory/TitleEditor";
 import { Modal } from "@src/components/Layout/Modal";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 export const LocalAnthologyOwner = ({
   contractAddr,
 }: {
   contractAddr: Address;
 }) => {
+  const { t } = useTranslation();
   const { addToast } = useToast();
 
   const { contractsTitles, userContracts, anthologies } = useAppSelector(
@@ -45,7 +47,7 @@ export const LocalAnthologyOwner = ({
   const handleTitleSubmit = (combinedTitle: string) => {
     try {
       addToast({
-        title: "New title:",
+        title: t("owner.newTitleToast"),
         content: combinedTitle,
         variant: "success",
         delay: 5000,
@@ -59,8 +61,8 @@ export const LocalAnthologyOwner = ({
       handleCloseTitleModal();
     } catch (error) {
       addToast({
-        title: "Error setting new title",
-        content: "Unknown error",
+        title: t("owner.errorTitle"),
+        content: t("common.unknownError"),
         variant: "warning",
         delay: 5000,
       });
@@ -71,8 +73,8 @@ export const LocalAnthologyOwner = ({
   const handleCleanMemoirs = () => {
     dispatch(clearMemoirsInUserLocalAnthology({ contract: contractAddr }));
     addToast({
-      title: "Memoirs deleted",
-      content: "All memoirs in this anthology were deleted.",
+      title: t("owner.memoirsDeleted"),
+      content: t("owner.memoirsDeletedDesc"),
       variant: "success",
       delay: 5000,
     });
@@ -112,7 +114,7 @@ export const LocalAnthologyOwner = ({
             }}
             onClick={() => setShowTitleModal(true)}
           >
-            Change title
+            {t("owner.changeTitle")}
           </button>
         }
       >
@@ -136,12 +138,12 @@ export const LocalAnthologyOwner = ({
               textAlign: "center",
             }}
           >
-            Set New Title
+            {t("owner.setNewTitle")}
           </span>
           <TitleEditor
             initialTitle={currentTitle}
             userTitles={userTitles}
-            submitLabel="Change title"
+            submitLabel={t("owner.changeTitle")}
             onSubmit={handleTitleSubmit}
           />
         </div>
@@ -169,7 +171,7 @@ export const LocalAnthologyOwner = ({
                 }}
                 onClick={() => setShowCleanModal(true)}
               >
-                Delete all memoirs
+                {t("owner.deleteAllMemoirs")}
               </button>
             }
           >
@@ -184,13 +186,13 @@ export const LocalAnthologyOwner = ({
               }}
             >
               <span style={{ fontWeight: "bold", textAlign: "center" }}>
-                Delete all memoirs in this anthology?
+                {t("owner.deleteAllTitle")}
               </span>
               <span style={{ textAlign: "center" }}>
-                All {memoirCount} memoir{memoirCount === 1 ? "" : "s"} in{" "}
-                <strong>{currentTitle || "this anthology"}</strong> will be
-                deleted. The anthology itself will remain. This action cannot be
-                undone.
+                {t("owner.deleteAllDesc", {
+                  count: memoirCount,
+                  title: currentTitle || t("owner.thisAnthology"),
+                })}
               </span>
             </div>
 
@@ -213,7 +215,7 @@ export const LocalAnthologyOwner = ({
                 }}
                 onClick={() => setShowCleanModal(false)}
               >
-                Cancel
+                {t("common.cancel")}
               </button>
               <button
                 style={{
@@ -226,7 +228,7 @@ export const LocalAnthologyOwner = ({
                 }}
                 onClick={handleCleanMemoirs}
               >
-                Delete all memoirs
+                {t("owner.deleteAllMemoirs")}
               </button>
             </div>
           </Modal>

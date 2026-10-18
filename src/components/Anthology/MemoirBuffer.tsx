@@ -3,8 +3,10 @@ import { removeOneFromBuffer } from "@store/slices/anthologySlice";
 import { shortenAddress } from "@utils/shortenAddress";
 import { useAppDispatch } from "@store/utils/hooks";
 import { useAppSelector } from "@store/utils/hooks";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 export const MemoirBuffer = ({ contractAddr }: { contractAddr: string }) => {
+  const { t } = useTranslation();
   const memoirBuffer = useAppSelector((state) =>
     contractAddr ? state.anthology[contractAddr].memoirBuffer : []
   );
@@ -24,13 +26,13 @@ export const MemoirBuffer = ({ contractAddr }: { contractAddr: string }) => {
               margin: "3px",
             }}
           >
-            <span>Title: </span>
+            <span>{t("memoirs.titleLabel")} </span>
             <span>{memoir.title}</span>
-            <div>Content:</div>
+            <div>{t("memoirs.contentLabel")}</div>
             <div>{memoir.content}</div>
-            <div>Sent by:</div>
+            <div>{t("memoirs.sentBy")}</div>
             <div>{shortenAddress(memoir.sender, 10, 8)}</div>
-            <span>When added: </span>
+            <span>{t("memoirs.whenAdded")} </span>
             <span>{memoir.timestamp}</span>
             <div style={{ display: "flex", justifyContent: "space-evenly" }}>
               <span
@@ -72,7 +74,7 @@ export const MemoirBuffer = ({ contractAddr }: { contractAddr: string }) => {
               >
                 <img
                   src="/icons/delete-icon.svg"
-                  alt="Decline memoir"
+                  alt={t("memoirs.decline")}
                   style={{
                     width: "16px",
                     height: "16px",

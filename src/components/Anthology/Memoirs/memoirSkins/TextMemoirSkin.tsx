@@ -10,6 +10,7 @@ import { useAccount } from "wagmi";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 import { MemoirActions } from "../../MemoirActions";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 interface TextMemoirSkinProps {
   anthologyAddr: Address;
@@ -22,6 +23,7 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
   order,
   search,
 }) => {
+  const { t } = useTranslation();
   const { memoirs, orderedMemoirsIndexes } = useOrderedMemoirs(
     anthologyAddr,
     order,
@@ -86,7 +88,7 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
                 color: "black",
               }}
             >
-              {memoir.title || "Untitled"}
+              {memoir.title || t("common.untitled")}
             </div>
 
             {/* Content */}
