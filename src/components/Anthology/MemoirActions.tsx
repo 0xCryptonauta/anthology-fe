@@ -56,22 +56,30 @@ export const MemoirActions = ({
   const shareLinks = [
     {
       name: "X",
+      icon: "/icons/x-icon.svg",
+      color: "#000000",
       url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(
         shareText
       )}`,
     },
     {
       name: "WhatsApp",
+      icon: "/icons/whatsapp-icon.svg",
+      color: "#25D366",
       url: `https://wa.me/?text=${encodeURIComponent(shareText)}`,
     },
     {
       name: "Telegram",
+      icon: "/icons/telegram-icon.svg",
+      color: "#26A5E4",
       url: `https://t.me/share/url?url=${encodeURIComponent(
         memoir.content
       )}&text=${encodeURIComponent(memoir.title)}`,
     },
     {
       name: "Facebook",
+      icon: "/icons/facebook-icon.svg",
+      color: "#1877F2",
       url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
         memoir.content
       )}`,
@@ -126,37 +134,45 @@ export const MemoirActions = ({
           style={{
             display: "flex",
             flexDirection: "column",
-            gap: "10px",
+            gap: "12px",
             padding: "10px",
             minWidth: "200px",
+            alignItems: "center",
           }}
         >
           <span style={{ fontWeight: "bold", textAlign: "center" }}>
             Share memoir
           </span>
 
-          {shareLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => setShareOpen(false)}
-              style={{
-                padding: "8px 12px",
-                borderRadius: "8px",
-                backgroundColor: "#f7fafc",
-                border: "1px solid #e2e8f0",
-                color: "#2b6cb0",
-                textAlign: "center",
-                textDecoration: "none",
-                fontSize: "14px",
-                fontWeight: 500,
-              }}
-            >
-              {link.name}
-            </a>
-          ))}
+          <div style={{ display: "flex", gap: "12px" }}>
+            {shareLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={`Share on ${link.name}`}
+                aria-label={`Share on ${link.name}`}
+                onClick={() => setShareOpen(false)}
+                style={{
+                  width: "44px",
+                  height: "44px",
+                  borderRadius: "50%",
+                  backgroundColor: link.color,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textDecoration: "none",
+                }}
+              >
+                <img
+                  src={link.icon}
+                  alt=""
+                  style={{ width: "22px", height: "22px", display: "block" }}
+                />
+              </a>
+            ))}
+          </div>
         </div>
       </Modal>
     </div>

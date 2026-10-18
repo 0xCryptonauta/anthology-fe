@@ -83,6 +83,12 @@ category color.
 - Action row: icon order **edit · move · copy · share · delete**, `18px` gap,
   centered under the date. Local-only actions gated by `isLocalAnthology`.
 
+### Share sheet
+- Round brand buttons (44px) with official marks from `public/icons/`
+  (white glyphs): X `#000000` · WhatsApp `#25D366` · Telegram `#26A5E4` ·
+  Facebook `#1877F2`. `title`/`aria-label` required; opens the platform intent
+  link.
+
 ### Reading panel (/about)
 - Translucent white `rgba(255,255,255,0.35)` + `backdrop-filter: blur(6px)`,
   radius 12px, padding 24px.
