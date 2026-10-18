@@ -111,9 +111,10 @@ category color.
 - **One embed plays at a time** (`thirdPartyEmbeds/embedPlayback.ts` registry).
   YouTube/Vimeo/archive.org are click-to-play; Spotify remounts when another
   embed starts.
-- **Search** matches substring OR exact words (any order) at 100% accuracy
-  (`SEARCH_ACCURACY` in `src/utils/searchMatch.ts`; lower it to allow fuzzy) —
-  used by the anthology filter and the global search.
+- **Search** matches **exact words** (any order) at 100% accuracy
+  (`SEARCH_ACCURACY` in `src/utils/searchMatch.ts`; lower it to allow
+  substring/fuzzy matching) — used by the anthology filter and the global
+  search.
 - **Never use `<datalist>`** on mobile (system autofill can't be suppressed) —
   build custom dropdowns (`TitleEditor`).
 - Destructive actions always get a confirm modal that names what is deleted
