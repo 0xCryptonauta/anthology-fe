@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useEmbedPlayback } from "./embedPlayback";
 
 export const VimeoEmbed = ({
@@ -8,6 +9,35 @@ export const VimeoEmbed = ({
   hash?: string;
 }) => {
   const { isActive, activate } = useEmbedPlayback();
+  const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const fetchThumbnail = async () => {
+      try {
+        const response = await fetch(
+          `https://vimeo.com/api/oembed.json?url=${encodeURIComponent(
+            `https://vimeo.com/${videoId}`
+          )}`
+        );
+        if (!response.ok) return;
+        const text = await response.text();
+        // Vimeo prefixes JSON with `while(1);` (anti-hijacking guard)
+        const data = JSON.parse(text.replace(/^while\(1\);/, ""));
+        if (!cancelled && typeof data.thumbnail_url === "string") {
+          setThumbnailUrl(data.thumbnail_url);
+        }
+      } catch {
+        // No poster available — keep the plain placeholder
+      }
+    };
+
+    fetchThumbnail();
+    return () => {
+      cancelled = true;
+    };
+  }, [videoId]);
 
   return (
     <div
@@ -34,40 +64,56 @@ export const VimeoEmbed = ({
           title="Vimeo video"
         />
       ) : (
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
+        <>
+          {thumbnailUrl && (
+            <img
+              src={thumbnailUrl}
+              alt=""
+              style={{
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                opacity: 0.75,
+              }}
+            />
+          )}
           <div
             style={{
-              width: "52px",
-              height: "52px",
-              borderRadius: "50%",
-              backgroundColor: "#1ab7ea",
+              position: "absolute",
+              inset: 0,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              boxShadow: "0 2px 12px rgba(0,0,0,0.4)",
             }}
           >
-            <svg
-              viewBox="0 0 24 24"
+            <div
               style={{
-                width: "22px",
-                height: "22px",
-                fill: "white",
-                marginLeft: "3px",
+                width: "52px",
+                height: "52px",
+                borderRadius: "50%",
+                backgroundColor: "#1ab7ea",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.4)",
               }}
             >
-              <path d="M8 5v14l11-7z" />
-            </svg>
+              <svg
+                viewBox="0 0 24 24"
+                style={{
+                  width: "22px",
+                  height: "22px",
+                  fill: "white",
+                  marginLeft: "3px",
+                }}
+              >
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );

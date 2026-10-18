@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { useEmbedPlayback } from "./embedPlayback";
 
 export const ArchiveOrgEmbed = ({ itemId }: { itemId: string }) => {
   const { isActive, activate } = useEmbedPlayback();
+  const [posterFailed, setPosterFailed] = useState(false);
 
   return (
     <div
@@ -25,40 +27,57 @@ export const ArchiveOrgEmbed = ({ itemId }: { itemId: string }) => {
           title="Internet Archive item"
         />
       ) : (
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
+        <>
+          {!posterFailed && (
+            <img
+              src={`https://archive.org/services/img/${itemId}`}
+              alt=""
+              onError={() => setPosterFailed(true)}
+              style={{
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                opacity: 0.7,
+              }}
+            />
+          )}
           <div
             style={{
-              width: "52px",
-              height: "52px",
-              borderRadius: "50%",
-              backgroundColor: "#334155",
+              position: "absolute",
+              inset: 0,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              boxShadow: "0 2px 12px rgba(0,0,0,0.4)",
             }}
           >
-            <svg
-              viewBox="0 0 24 24"
+            <div
               style={{
-                width: "22px",
-                height: "22px",
-                fill: "white",
-                marginLeft: "3px",
+                width: "52px",
+                height: "52px",
+                borderRadius: "50%",
+                backgroundColor: "#334155",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.4)",
               }}
             >
-              <path d="M8 5v14l11-7z" />
-            </svg>
+              <svg
+                viewBox="0 0 24 24"
+                style={{
+                  width: "22px",
+                  height: "22px",
+                  fill: "white",
+                  marginLeft: "3px",
+                }}
+              >
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );
