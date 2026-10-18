@@ -117,8 +117,12 @@ category color.
 ## Interaction rules
 
 - **One embed plays at a time** (`thirdPartyEmbeds/embedPlayback.ts` registry).
-  YouTube/Vimeo/archive.org are click-to-play; Spotify remounts when another
-  embed starts.
+  YouTube/Vimeo/archive.org/Spotify are click-to-play; activating another embed
+  deactivates the previous one.
+- **Embeds load cheap first**: poster thumbnail + click-to-play (YouTube
+  thumbnail, Vimeo/Spotify oEmbed thumbnails, archive.org image service);
+  third-party scripts (Twitter, Reddit, Instagram) load only when scrolled
+  into view.
 - **Search** matches words by prefix ("tes" finds "test") or ≥90% similarity
   for typos (`SEARCH_ACCURACY` in `src/utils/searchMatch.ts`); no mid-word
   substring matching ("test" won't match "latest"). Used by the anthology

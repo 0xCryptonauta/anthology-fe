@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useInView } from "react-intersection-observer";
 import "./TwitterEmbed.css";
 
 declare global {
@@ -18,9 +19,15 @@ export const TwitterEmbed = ({
   username: string;
   postId: string;
 }) => {
-  const tweetRef = useRef<HTMLDivElement>(null);
+  const tweetRef = useRef<HTMLDivElement | null>(null);
+  const { ref: inViewRef, inView } = useInView({
+    triggerOnce: true,
+    threshold: 0,
+  });
 
   useEffect(() => {
+    if (!inView) return;
+
     if (!window.twttr) {
       const script = document.createElement("script");
       script.src = "https://platform.twitter.com/widgets.js";
@@ -42,11 +49,14 @@ export const TwitterEmbed = ({
     } else if (tweetRef.current) {
       window.twttr.widgets.load(tweetRef.current);
     }
-  }, []);
+  }, [inView]);
 
   return (
     <div
-      ref={tweetRef}
+      ref={(node) => {
+        inViewRef(node);
+        tweetRef.current = node;
+      }}
       className="twitter-embed-wrapper"
       style={{
         backgroundColor: "none",
