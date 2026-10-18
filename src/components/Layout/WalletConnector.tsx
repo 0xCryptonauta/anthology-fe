@@ -4,8 +4,10 @@ import { useAccount, useDisconnect } from "wagmi";
 import { useEffect } from "react";
 import { resetUserStore, updateUserAddr } from "@src/store/slices/userSlice";
 import { WalletOptions } from "./WalletOptions";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 export const WalletConnector = () => {
+  const { t } = useTranslation();
   const { userAddr } = useAppSelector((state) => state.user);
   const { disconnect } = useDisconnect({
     mutation: {
@@ -62,7 +64,7 @@ export const WalletConnector = () => {
       >
         <img
           src="/icons/delete-icon.svg"
-          alt="Disconnect wallet"
+          alt={t("wallet.disconnect")}
           style={{
             width: "16px",
             height: "16px",

@@ -1,4 +1,8 @@
+import { useTranslation } from "@src/i18n/useTranslation";
+
 export const Footer = () => {
+  const { t } = useTranslation();
+
   return (
     <div
       style={{
@@ -12,9 +16,7 @@ export const Footer = () => {
     >
       <span>© 2026 - InBytes.xyz</span>
 
-      <span style={{ fontSize: "0.7rem" }}>
-        Recording the collective memory.
-      </span>
+      <span style={{ fontSize: "0.7rem" }}>{t("footer.tagline")}</span>
     </div>
   );
 };

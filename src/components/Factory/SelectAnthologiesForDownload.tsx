@@ -3,6 +3,7 @@ import { MemoirContent } from "@src/types/common";
 import { parseContractsCategoriesSorted } from "@src/utils/parseContractsCategories";
 import { Modal } from "@components/Layout/Modal";
 import { shortenAddress } from "@utils/shortenAddress";
+import { useTranslation } from "@src/i18n/useTranslation";
 import "./SelectAnthologiesForDownload.css";
 
 interface SelectAnthologiesForDownloadProps {
@@ -20,6 +21,7 @@ export const SelectAnthologiesForDownload: React.FC<SelectAnthologiesForDownload
   userTitles,
   onDownload,
 }) => {
+  const { t } = useTranslation();
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
   const processedData = useMemo(() => {
@@ -76,27 +78,27 @@ export const SelectAnthologiesForDownload: React.FC<SelectAnthologiesForDownload
   const content = (
     <div>
       <button className="sel-back-btn" onClick={() => onHide?.()}>
-        ← Back
+        {t("common.back")}
       </button>
-      <div className="sel-header m-2">Select Anthologies</div>
+      <div className="sel-header m-2">{t("settings.selectAnthologiesTitle")}</div>
 
       <div className="sel-actions m-3">
         <button className="sel-action-btn" onClick={selectAll}>
-          Select All
+          {t("settings.selectAll")}
         </button>
         <button className="sel-action-btn" onClick={deselectAll}>
-          Deselect All
+          {t("settings.deselectAll")}
         </button>
       </div>
 
       <div className="sel-list  my-3">
         {processedData.categories.length === 0 && processedData.uncategorized.length === 0 ? (
-          <div className="sel-empty">No anthologies available</div>
+          <div className="sel-empty">{t("settings.noAnthologies")}</div>
         ) : (
           <>
             {processedData.uncategorized.length > 0 && (
               <div>
-                <div className="sel-category">Other</div>
+                <div className="sel-category">{t("common.other")}</div>
                 {processedData.uncategorized.map((item) => renderItem(item))}
               </div>
             )}
@@ -119,10 +121,10 @@ export const SelectAnthologiesForDownload: React.FC<SelectAnthologiesForDownload
 
       <div className="sel-footer">
         <span className="sel-count">
-          {selected.size} selected
+          {t("settings.selectedCount", { count: selected.size })}
         </span>
         <button className="sel-download-btn" disabled={selected.size === 0} onClick={handleDownload}>
-          Download ({selected.size})
+          {t("settings.downloadCount", { count: selected.size })}
         </button>
       </div>
     </div>

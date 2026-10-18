@@ -8,6 +8,7 @@ import { SelectAnthologiesForDownload } from "@components/Factory/SelectAntholog
 import { Address, MemoirContent } from "@src/types/common";
 import { LOCAL_USER_ADDR, DEFAULT_SKIN } from "@src/utils/constants";
 import { localAnthologyState } from "@src/store/slices/localAnthologySlice";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 const filterLocalByAddresses = (
   local: localAnthologyState,
@@ -34,6 +35,7 @@ const filterLocalByAddresses = (
 };
 
 export const DownloadReduxStore = () => {
+  const { t } = useTranslation();
   const { users, userContracts, contractsTitles } = useAppSelector(
     (state) => state.factory
   );
@@ -64,16 +66,16 @@ export const DownloadReduxStore = () => {
   const downloadUserSelection = () => {
     if (addNewFileName && newFileName.trim() === "") {
       addToast({
-        title: "File name required",
-        content: "Please enter a file name for the download.",
+        title: t("settings.fileNameRequired"),
+        content: t("settings.fileNameRequiredDesc"),
         variant: "info",
       });
       return;
     }
     if (!addDiscovery && !addLocal && !addCustomSelection) {
       addToast({
-        title: "No options selected",
-        content: "Please select at least one option to download.",
+        title: t("settings.noOptionsSelected"),
+        content: t("settings.selectOneDownload"),
         variant: "info",
       });
       return;
@@ -160,7 +162,7 @@ export const DownloadReduxStore = () => {
           }}
           onClick={() => setShow(true)}
         >
-          Download your Data
+          {t("settings.downloadData")}
         </span>
       }
     >
@@ -187,7 +189,7 @@ export const DownloadReduxStore = () => {
         ) : (
           <>
             <h3 style={{ textAlign: "center", marginBottom: "20px" }}>
-              Download Your Data
+              {t("settings.downloadDataTitle")}
             </h3>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
@@ -199,7 +201,7 @@ export const DownloadReduxStore = () => {
                     onChange={() => setAddDiscovery(!addDiscovery)}
                     style={checkboxInputStyle}
                   />
-                  <span>My Discoveries</span>
+                  <span>{t("settings.myDiscoveries")}</span>
                 </label>
               )}
 
@@ -219,7 +221,7 @@ export const DownloadReduxStore = () => {
                   }}
                   style={checkboxInputStyle}
                 />
-                <span>Local Anthologies</span>
+                <span>{t("settings.localAnthologies")}</span>
               </label>
 
               <label
@@ -238,7 +240,7 @@ export const DownloadReduxStore = () => {
                   }}
                   style={checkboxInputStyle}
                 />
-                <span>Custom Selection</span>
+                <span>{t("settings.customSelection")}</span>
               </label>
 
               <label style={checkboxLabelStyle}>
@@ -248,13 +250,13 @@ export const DownloadReduxStore = () => {
                   onChange={() => setAddNewFileName(!addNewFileName)}
                   style={checkboxInputStyle}
                 />
-                <span>Custom File Name</span>
+                <span>{t("settings.customFileName")}</span>
               </label>
 
               {addNewFileName && (
                 <input
                   type="text"
-                  placeholder="Enter file name"
+                  placeholder={t("settings.enterFileName")}
                   value={newFileName}
                   onChange={(e) => setNewFileName(e.target.value)}
                   style={{
@@ -289,7 +291,9 @@ export const DownloadReduxStore = () => {
                   (e.currentTarget.style.backgroundColor = "#3b82f6")
                 }
               >
-                {addCustomSelection ? "Select Anthologies →" : "💾 Download"}
+                {addCustomSelection
+                  ? t("settings.selectAnthologies")
+                  : t("settings.download")}
               </button>
             </div>
           </>
