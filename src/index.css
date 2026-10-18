@@ -56,12 +56,11 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+/* Mouse/touch clicks must not show a focus ring — only keyboard navigation
+   does (WCAG 2.4.7 Focus Visible applies to keyboard focus). The keyboard
+   ring comes from the global :focus-visible rule below. */
+:focus:not(:focus-visible) {
+  outline: none;
 }
 
 /* ---------------------------------------------------------------- */
