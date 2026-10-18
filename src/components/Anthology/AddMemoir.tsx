@@ -248,7 +248,16 @@ export const AddMemoir = ({
           )}
 
           <label style={{ fontWeight: 500, fontSize: "1.2rem" }}>Content</label>
-          <div style={{ position: "relative", width: "100%" }}>
+          <div
+            style={{
+              position: "relative",
+              width: "100%",
+              backgroundColor: "#fff",
+              border: urlError ? "1px solid #dc2626" : "1px solid #d1d5db",
+              borderRadius: "0.75rem",
+              overflow: "hidden",
+            }}
+          >
             <div
               ref={overlayRef}
               style={{
@@ -257,16 +266,16 @@ export const AddMemoir = ({
                 left: 0,
                 right: 0,
                 bottom: 0,
-                zIndex: 1,
+                zIndex: 2,
                 height: "10.5rem",
                 overflowY: "auto",
                 pointerEvents: "none",
                 whiteSpace: "pre-wrap",
                 wordBreak: "break-word",
-                color: "transparent",
+                color: "#111",
                 fontSize: "0.875rem",
                 fontFamily: "monospace",
-                padding: "0.5rem",
+                padding: "0.75rem",
               }}
               aria-hidden="true"
             >
@@ -275,22 +284,24 @@ export const AddMemoir = ({
 
             <textarea
               ref={textareaRef}
-              value={shouldFilterTracking ? filteredContent : anthologyContent}
+              value={anthologyContent}
               onChange={(e) => setAnthologyContent(e.target.value)}
               maxLength={255}
               style={{
                 position: "relative",
-                zIndex: 2,
+                zIndex: 1,
                 width: "100%",
                 height: "10.5rem",
                 resize: "none",
                 padding: "0.75rem",
                 fontSize: "0.875rem",
                 fontFamily: "monospace",
-                backgroundColor: "#fff",
-                color: "#111",
-                border: urlError ? "1px solid #dc2626" : "1px solid #d1d5db",
+                backgroundColor: "transparent",
+                color: "transparent",
+                caretColor: "#111",
+                border: "none",
                 borderRadius: "0.75rem",
+                outline: "none",
               }}
             />
           </div>
