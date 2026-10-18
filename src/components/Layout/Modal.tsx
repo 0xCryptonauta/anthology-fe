@@ -91,6 +91,7 @@ export const Modal = ({
         style={{
           width: isSidePanel ? "200px" : undefined,
           height: !isSidePanel && placement !== "end" ? "min(600px, 90dvh)" : undefined,
+          bottom: !isSidePanel && isPortrait ? "40px" : undefined,
           backgroundColor: "transparent",
           border: "unset",
           display: "flex",
