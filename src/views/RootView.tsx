@@ -11,26 +11,31 @@ export const RootView = () => {
   const footerBgClass = useAppSelector((s) => s.dapp.anthologyFooterBgClass);
 
   return (
-    <div
-      className={backgroundsEnabled ? (footerBgClass || "bg-overlay bg-arabesque-style") : "bg-dark"}
-      style={{
-        display: "grid",
-        minHeight: "100dvh",
-        gridTemplateRows: "auto 1fr auto",
-      }}
-    >
+    <>
+      {/* Skip link lives outside the grid container: `.bg-overlay > *` forces
+          `position: relative` on direct children, which would turn the link
+          into a grid row and push the header down. */}
       <a href="#main-content" className="skip-link">
         {t("a11y.skipToMain")}
       </a>
-      <Header />
-      <main
-        id="main-content"
-        tabIndex={-1}
-        style={{ color: "white", outline: "none" }}
+      <div
+        className={backgroundsEnabled ? (footerBgClass || "bg-overlay bg-arabesque-style") : "bg-dark"}
+        style={{
+          display: "grid",
+          minHeight: "100dvh",
+          gridTemplateRows: "auto 1fr auto",
+        }}
       >
-        <Outlet />
-      </main>
-      <Footer />
-    </div>
+        <Header />
+        <main
+          id="main-content"
+          tabIndex={-1}
+          style={{ color: "white", outline: "none" }}
+        >
+          <Outlet />
+        </main>
+        <Footer />
+      </div>
+    </>
   );
 };

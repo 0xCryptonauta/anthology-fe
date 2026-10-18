@@ -68,9 +68,12 @@ button:focus-visible {
 /* WCAG 2.2 AA (ISO/IEC 40500:2025) — global accessibility helpers  */
 /* ---------------------------------------------------------------- */
 
-/* SC 2.4.1 Bypass Blocks — skip link, visible only on keyboard focus */
+/* SC 2.4.1 Bypass Blocks — skip link, visible only on keyboard focus.
+   Kept OUTSIDE the `.bg-overlay` grid container in RootView: that class
+   forces `position: relative` on all direct children, which would turn the
+   link into a grid row and push the header down. */
 .skip-link {
-  position: absolute;
+  position: fixed;
   left: -9999px;
   top: 0;
   z-index: 2000;
