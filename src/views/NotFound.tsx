@@ -10,8 +10,8 @@ export function NotFound() {
       <h1 className="notfound-title">404</h1>
       <p className="notfound-subtitle">Page not found</p>
       <p className="notfound-message">
-        This route doesn’t exist. Maybe you mistyped the URL, or maybe we broke
-        something.
+        This route doesn’t exist. Maybe you mistyped the URL, or maybe the
+        link is broken.
       </p>
       <Link to="/" className="notfound-link">
         ← Go back home
