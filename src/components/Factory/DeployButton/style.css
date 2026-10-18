@@ -130,6 +130,7 @@
 }
 
 .btn-new-pill {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -139,9 +140,21 @@
   border: none;
   border-radius: 9999px;
   background: linear-gradient(135deg, #06b6d4, #2563eb);
+  box-shadow: 0 0 12px rgba(6, 182, 212, 0.45);
   cursor: pointer;
   margin-left: 10px;
-  transition: all 0.3s ease;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.btn-new-pill::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.55) 0%, transparent 70%);
+  z-index: -1;
+  pointer-events: none;
+  will-change: transform, opacity;
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
@@ -154,15 +167,21 @@
 
 .btn-new-pill:hover {
   transform: scale(1.15);
+}
+
+.btn-new-pill:hover::after {
   animation: none;
-  box-shadow: 0 0 20px rgba(6, 182, 212, 0.8), 0 0 40px rgba(6, 182, 212, 0.4);
+  opacity: 0.9;
+  transform: scale(1.2);
 }
 
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 8px rgba(6, 182, 212, 0.3);
+    opacity: 0.35;
+    transform: scale(0.92);
   }
   50% {
-    box-shadow: 0 0 24px rgba(6, 182, 212, 0.8), 0 0 40px rgba(59, 130, 246, 0.3);
+    opacity: 0.9;
+    transform: scale(1.18);
   }
 }
