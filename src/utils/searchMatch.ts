@@ -1,13 +1,16 @@
 /**
- * Search matching with a 90% accuracy threshold.
+ * Search matching with a configurable accuracy threshold.
  *
  * A field matches when:
  * 1. it contains the whole query (case-insensitive substring), or
  * 2. every query word is found in it — either as a partial word, or as a word
  *    whose similarity to a field word is >= SEARCH_ACCURACY (Levenshtein).
+ *
+ * SEARCH_ACCURACY = 1 → exact words only (no typo tolerance). Lower it (e.g.
+ * 0.9) to allow approximate matches.
  */
 
-export const SEARCH_ACCURACY = 0.9;
+export const SEARCH_ACCURACY = 1;
 
 const levenshtein = (a: string, b: string): number => {
   const cols = b.length + 1;
