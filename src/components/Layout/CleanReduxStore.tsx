@@ -8,8 +8,10 @@ import { resetFactoryStore } from "@src/store/slices/factorySlice";
 import { resetDappStore } from "@src/store/slices/dappSlice";
 import { resetUserStore } from "@src/store/slices/userSlice";
 import { resetLocalAnthologyStore } from "@src/store/slices/localAnthologySlice";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 export const CleanReduxStore = () => {
+  const { t } = useTranslation();
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const dispatch = useAppDispatch();
@@ -33,7 +35,7 @@ export const CleanReduxStore = () => {
             setShow(true);
           }}
         >
-          Delete Memory
+          {t("clean.deleteMemory")}
         </button>
       }
     >
@@ -46,12 +48,12 @@ export const CleanReduxStore = () => {
         }}
       >
         <span style={{ fontWeight: "bold", textAlign: "center" }}>
-          Delete private memory
+          {t("clean.deleteTitle")}
           <br />
-          All anthologies
+          {t("clean.allAnthologies")}
         </span>
 
-        <span>This action cannot be undone.</span>
+        <span>{t("clean.cannotUndo")}</span>
       </div>
 
       <button
@@ -76,13 +78,13 @@ export const CleanReduxStore = () => {
           }, 3000);
 
           addToast({
-            title: "Memory deleted",
-            content: "The memory has been deleted, reloading in 3 seconds...",
+            title: t("clean.deletedTitle"),
+            content: t("clean.deletedDesc"),
             variant: "info",
           });
         }}
       >
-        Delete Memory
+        {t("clean.deleteMemory")}
       </button>
     </Modal>
   );

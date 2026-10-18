@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Modal } from "./Modal";
 import { store } from "@store/redux";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 const formatBytes = (bytes: number): string => {
   if (bytes >= 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
@@ -9,6 +10,7 @@ const formatBytes = (bytes: number): string => {
 };
 
 export const CacheStorageViewer = () => {
+  const { t } = useTranslation();
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [cacheBytes, setCacheBytes] = useState<number | null>(null);
@@ -103,7 +105,7 @@ export const CacheStorageViewer = () => {
           }}
           onClick={() => setShow(true)}
         >
-          View app storage usage
+          {t("storage.viewUsage")}
         </span>
       }
     >
@@ -118,41 +120,51 @@ export const CacheStorageViewer = () => {
           color: "#1a1a1a",
         }}
       >
-        <h3 style={{ textAlign: "center", marginBottom: "20px" }}>Storage</h3>
+        <h3 style={{ textAlign: "center", marginBottom: "20px" }}>
+          {t("storage.title")}
+        </h3>
 
         {isLoading ? (
-          <p style={{ textAlign: "center" }}>Loading...</p>
+          <p style={{ textAlign: "center" }}>{t("common.loading")}</p>
         ) : (
           <div
             style={{ display: "flex", flexDirection: "column", gap: "10px" }}
           >
             <div style={rowStyle}>
               <span style={{ fontWeight: "bold" }}>
-                Total used by the app
+                {t("storage.totalUsed")}
               </span>
               <span style={{ fontWeight: "bold" }}>
-                {totalBytes !== null ? `~${formatBytes(totalBytes)}` : "n/a"}
+                {totalBytes !== null
+                  ? `~${formatBytes(totalBytes)}`
+                  : t("storage.nA")}
               </span>
             </div>
 
             <div style={rowStyle}>
-              <span>Memory (Anthologies)</span>
+              <span>{t("storage.memory")}</span>
               <span>
-                {storeBytes !== null ? `~${formatBytes(storeBytes)}` : "n/a"}
+                {storeBytes !== null
+                  ? `~${formatBytes(storeBytes)}`
+                  : t("storage.nA")}
               </span>
             </div>
 
             <div style={rowStyle}>
-              <span>Cached thumbnails and files</span>
+              <span>{t("storage.cachedFiles")}</span>
               <span>
-                {cacheBytes !== null ? formatBytes(cacheBytes) : "n/a"}
+                {cacheBytes !== null
+                  ? formatBytes(cacheBytes)
+                  : t("storage.nA")}
               </span>
             </div>
 
             <div style={rowStyle}>
-              <span>App data (wallet and others)</span>
+              <span>{t("storage.appData")}</span>
               <span>
-                {appDataBytes !== null ? `~${formatBytes(appDataBytes)}` : "n/a"}
+                {appDataBytes !== null
+                  ? `~${formatBytes(appDataBytes)}`
+                  : t("storage.nA")}
               </span>
             </div>
           </div>

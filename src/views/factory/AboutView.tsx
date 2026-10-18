@@ -1,4 +1,5 @@
 import { Seo } from "@components/Layout/Seo";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 const headingStyle = {
   fontSize: "1.05rem",
@@ -15,9 +16,11 @@ const paragraphStyle = {
 };
 
 export const AboutView = () => {
+  const { t } = useTranslation();
+
   return (
     <>
-      <Seo title="About" description="Learn more about the Anthology project" />
+      <Seo title={t("nav.about")} description="Learn more about the Anthology project" />
       <div
         style={{
           display: "flex",
@@ -52,41 +55,20 @@ export const AboutView = () => {
             Anthology
           </h1>
 
-          <p style={paragraphStyle}>
-            Anthology is a place to keep what you want to remember — notes,
-            links, videos, ideas — organized into collections. Each collection
-            is called an <em>anthology</em>: like a book of your own writing,
-            except it can hold anything.
-          </p>
+          <p style={paragraphStyle}>{t("about.intro")}</p>
 
-          <h2 style={headingStyle}>Yours, on your device</h2>
-          <p style={paragraphStyle}>
-            Everything you save lives in your browser. No account, no server,
-            nobody else reading it. Close the tab, come back next week — it's
-            all still there. It even works offline.
-          </p>
+          <h2 style={headingStyle}>{t("about.localTitle")}</h2>
+          <p style={paragraphStyle}>{t("about.local")}</p>
 
-          <h2 style={headingStyle}>Make it permanent (optional)</h2>
-          <p style={paragraphStyle}>
-            If you want a collection to outlive your browser — or be public for
-            anyone to read — you can publish it to the blockchain (Arbitrum).
-            Think of it as carving it into stone instead of writing it in a
-            notebook. It costs a small network fee, and it's completely
-            optional.
-          </p>
+          <h2 style={headingStyle}>{t("about.permanentTitle")}</h2>
+          <p style={paragraphStyle}>{t("about.permanent")}</p>
 
-          <h2 style={headingStyle}>Share it if you want</h2>
-          <p style={paragraphStyle}>
-            Collections you publish to the blockchain can be shared as a QR
-            code — scan it on another device and it's imported instantly.
-            Private collections stay in your browser, and can be exported as a
-            file whenever you want.
-          </p>
+          <h2 style={headingStyle}>{t("about.shareTitle")}</h2>
+          <p style={paragraphStyle}>{t("about.share")}</p>
 
-          <h2 style={headingStyle}>Why "anthology"?</h2>
+          <h2 style={headingStyle}>{t("about.whyTitle")}</h2>
           <p style={{ ...paragraphStyle, marginBottom: 0 }}>
-            An anthology is a collection of writing — poems, stories, songs.
-            This one is your collection of whatever matters to you.
+            {t("about.why")}
           </p>
         </div>
       </div>
