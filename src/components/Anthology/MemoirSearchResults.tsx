@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
 import { extractEmbed } from "@src/utils/embeds";
+import { matchesSearch } from "@src/utils/searchMatch";
 import { EmbedRenderer } from "@src/components/Anthology/Memoirs/thirdPartyEmbeds";
 import { Address } from "@src/types/common";
 import {
@@ -38,8 +39,8 @@ export const MemoirSearchResults = ({ term }: { term: string }) => {
     ).forEach(([addr, memoirs]) => {
       memoirs.forEach((memoir, index) => {
         if (
-          memoir.title.toLowerCase().includes(normalizedTerm) ||
-          memoir.content.toLowerCase().includes(normalizedTerm)
+          matchesSearch(memoir.title, normalizedTerm) ||
+          matchesSearch(memoir.content, normalizedTerm)
         ) {
           out.push({
             anthologyAddr: addr,
@@ -58,8 +59,8 @@ export const MemoirSearchResults = ({ term }: { term: string }) => {
     ).forEach(([addr, data]) => {
       (data.memoirs || []).forEach((memoir, index) => {
         if (
-          memoir.title.toLowerCase().includes(normalizedTerm) ||
-          memoir.content.toLowerCase().includes(normalizedTerm)
+          matchesSearch(memoir.title, normalizedTerm) ||
+          matchesSearch(memoir.content, normalizedTerm)
         ) {
           out.push({
             anthologyAddr: addr,

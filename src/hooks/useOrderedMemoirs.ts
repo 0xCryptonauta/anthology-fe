@@ -3,6 +3,7 @@ import { useAppSelector } from "@src/store/utils/hooks";
 import { Address } from "@src/types/common";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 import { orderMemoirIndexes } from "@src/utils/orderMemoirs";
+import { matchesSearch } from "@src/utils/searchMatch";
 import { useMemo } from "react";
 
 export const useOrderedMemoirs = (
@@ -29,8 +30,8 @@ export const useOrderedMemoirs = (
       const memoir = memoirs[i];
       if (!memoir) return false;
       return (
-        memoir.title.toLowerCase().includes(term) ||
-        memoir.content.toLowerCase().includes(term)
+        matchesSearch(memoir.title, term) ||
+        matchesSearch(memoir.content, term)
       );
     });
   }, [memoirs, order, search]);
