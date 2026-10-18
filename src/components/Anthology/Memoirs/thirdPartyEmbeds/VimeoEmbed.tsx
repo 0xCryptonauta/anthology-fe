@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useEmbedPlayback } from "./embedPlayback";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 export const VimeoEmbed = ({
   videoId,
@@ -8,6 +9,7 @@ export const VimeoEmbed = ({
   videoId: string;
   hash?: string;
 }) => {
+  const { t } = useTranslation();
   const { isActive, activate } = useEmbedPlayback();
   const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
 
@@ -50,7 +52,20 @@ export const VimeoEmbed = ({
         backgroundColor: "#1a1a2e",
         cursor: isActive ? "default" : "pointer",
       }}
+      role={isActive ? undefined : "button"}
+      tabIndex={isActive ? -1 : 0}
+      aria-label={isActive ? undefined : t("a11y.playVideo")}
       onClick={isActive ? undefined : activate}
+      onKeyDown={
+        isActive
+          ? undefined
+          : (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                activate();
+              }
+            }
+      }
     >
       {isActive ? (
         <iframe
@@ -102,6 +117,7 @@ export const VimeoEmbed = ({
             >
               <svg
                 viewBox="0 0 24 24"
+                aria-hidden="true"
                 style={{
                   width: "22px",
                   height: "22px",

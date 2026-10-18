@@ -2,6 +2,7 @@ import { useAppSelector } from "@store/utils/hooks";
 import { Address } from "@src/types/common";
 import { UserContracts } from "./UserContracts";
 import { useAccount } from "wagmi";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 interface Contract {
   address: Address;
@@ -10,6 +11,7 @@ interface Contract {
 }
 
 export const DiscoverContractsDirectory = () => {
+  const { t } = useTranslation();
   const { users, userContracts, contractsTitles } = useAppSelector(
     (state) => state.factory
   );
@@ -28,7 +30,7 @@ export const DiscoverContractsDirectory = () => {
     >
       <div style={{ margin: "5px" }}>
         {users.length === 0 && (
-          <span>You have not discovered any Anthologies</span>
+          <span>{t("discover.noAnthologies")}</span>
         )}
         {users
           ?.filter((user) => user !== currentUser)

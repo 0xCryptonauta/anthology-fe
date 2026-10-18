@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Modal } from "./Modal";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 type QRScannerProps = {
   onScan: (text: string) => void;
@@ -12,6 +13,7 @@ const QRScanner: React.FC<QRScannerProps> = ({
   onError,
   qrboxSize = 250,
 }) => {
+  const { t } = useTranslation();
   const scannerRef = useRef<unknown>(null);
   const elementId = "qr-reader";
   const [active, setActive] = useState(false);
@@ -132,20 +134,25 @@ const QRScanner: React.FC<QRScannerProps> = ({
       show={active}
       onHide={handleClose}
       trigger={
-        <div
+        <button
+          type="button"
+          className="icon-button"
+          aria-label={t("a11y.scanQr")}
           onClick={async () => {
             setActive(true);
             await startScanner();
           }}
-          style={{ cursor: "pointer" }}
         >
-          <img src="icons/qrIcon.svg" width="32px" alt="qrIcon" />
-        </div>
+          <img src="icons/qrIcon.svg" width="32px" alt="" />
+        </button>
       }
     >
-      <span style={{ marginBottom: "10px" }}>Scan QR Code</span>
+      <span style={{ marginBottom: "10px" }} role="status">
+        {t("a11y.scanQr")}
+      </span>
       <div
         id={elementId}
+        aria-label={t("a11y.scanQr")}
         style={{
           width: "200px",
           maxWidth: "100%",

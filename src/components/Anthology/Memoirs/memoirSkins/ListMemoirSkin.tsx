@@ -9,6 +9,7 @@ import { MemoirActions } from "../../MemoirActions";
 import { formatUnixTime } from "@utils/formatUnixTime";
 import { extractEmbed } from "@src/utils/embeds";
 import { EmbedRenderer } from "../thirdPartyEmbeds";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 interface ListMemoirSkinProps {
   anthologyAddr: Address;
@@ -21,6 +22,7 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
   order,
   search,
 }) => {
+  const { t } = useTranslation();
   const { memoirs, orderedMemoirsIndexes } = useOrderedMemoirs(
     anthologyAddr,
     order,
@@ -36,7 +38,7 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
   );
 
   if (!memoirs || memoirs.length === 0) {
-    return <p style={{ margin: "30px" }}>No memoirs available.</p>;
+    return <p style={{ margin: "30px" }}>{t("memoirs.none")}</p>;
   }
 
   return (
@@ -71,7 +73,10 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
               position: "relative",
             }}
           >
-            <span
+            <button
+              type="button"
+              translate="no"
+              aria-expanded={extracted ? isExpanded : undefined}
               style={{
                 fontWeight: "600",
                 fontSize: "1rem",
@@ -81,6 +86,10 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
                 wordBreak: "break-word",
                 textAlign: "center",
                 cursor: extracted ? "pointer" : "default",
+                background: "none",
+                border: "none",
+                width: "100%",
+                padding: 0,
               }}
               onClick={
                 extracted
@@ -92,11 +101,12 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
                   : undefined
               }
             >
-              {index + 1}. {title || "Untitled"}
-              {extracted && <span>{isExpanded ? " ▾" : " ▸"}</span>}
-            </span>
+              {index + 1}. {title || t("common.untitled")}
+              {extracted && <span aria-hidden="true">{isExpanded ? " ▾" : " ▸"}</span>}
+            </button>
 
             <div
+              translate="no"
               style={{
                 margin: 0,
                 whiteSpace: "pre-wrap",

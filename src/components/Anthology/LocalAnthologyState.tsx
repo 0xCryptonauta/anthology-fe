@@ -10,6 +10,7 @@ import { useToast } from "@src/components/Layout/Toast";
 import { deleteUserLocalAnthology } from "@src/store/slices/localAnthologySlice";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
 import { LOCAL_USER_ADDR, LOCAL_USER_PATH } from "@src/utils/constants";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 interface LocalAnthologyStateProps {
   contractAddr: Address;
@@ -18,6 +19,7 @@ interface LocalAnthologyStateProps {
 export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
   contractAddr,
 }) => {
+  const { t } = useTranslation();
   const currentTitle = useAppSelector(
     (state) => state.localAnthology.contractsTitles[contractAddr]
   );
@@ -63,8 +65,8 @@ export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
     );
 
     addToast({
-      title: "Anthology deleted",
-      content: "The anthology and all its memoirs were deleted.",
+      title: t("localState.deletedTitle"),
+      content: t("localState.deletedDesc"),
       variant: "success",
       delay: 5000,
     });
@@ -86,43 +88,55 @@ export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
         flexWrap: "wrap",
       }}
     >
-      <Card title="Title" content={currentTitle} />
+      <Card title={t("anthologyState.title")} content={currentTitle} />
 
-      <Card title="Anthology length" content={anthology?.length ?? 0} />
+      <Card title={t("anthologyState.memoirCount")} content={anthology?.length ?? 0} />
 
-      <Card title="maxMemoirs" content="100" />
+      <Card title={t("localState.maxMemoirs")} content="100" />
 
-      <Card title="Default Skin" content={defaultSkin} />
+      <Card title={t("anthologyState.defaultSkin")} content={defaultSkin} />
 
       <Card
-        title="Download Anthology"
+        title={t("localState.download")}
         content={
-          <span
-            style={{ cursor: "pointer", fontSize: "20px" }}
+          <button
+            type="button"
+            title={t("localState.download")}
+            aria-label={t("localState.download")}
+            style={{
+              cursor: "pointer",
+              fontSize: "20px",
+              background: "none",
+              border: "none",
+              padding: 0,
+            }}
             onClick={downloadLocalAnthology}
           >
             💾
-          </span>
+          </button>
         }
       />
 
       <Card
-        title="Delete Anthology"
+        title={t("localState.delete")}
         content={
           <Modal
             show={showDeleteModal}
             onHide={() => setShowDeleteModal(false)}
             trigger={
-              <span
-                style={{ cursor: "pointer" }}
+              <button
+                type="button"
+                className="icon-button"
+                title={t("localState.delete")}
+                aria-label={t("localState.delete")}
                 onClick={() => setShowDeleteModal(true)}
               >
                 <img
                   src="/icons/delete-icon.svg"
-                  alt="Delete anthology"
+                  alt=""
                   style={{ width: "20px", height: "20px", display: "block" }}
                 />
-              </span>
+              </button>
             }
           >
             <div
@@ -135,11 +149,10 @@ export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
               }}
             >
               <span style={{ fontWeight: "bold", textAlign: "center" }}>
-                Delete this anthology?
+                {t("localState.deleteTitle")}
               </span>
               <span style={{ textAlign: "center" }}>
-                All its memoirs will be deleted too. This action cannot be
-                undone.
+                {t("localState.deleteDesc")}
               </span>
             </div>
 
@@ -162,7 +175,7 @@ export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
                 }}
                 onClick={() => setShowDeleteModal(false)}
               >
-                Cancel
+                {t("common.cancel")}
               </button>
               <button
                 style={{
@@ -175,7 +188,7 @@ export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
                 }}
                 onClick={handleDeleteAnthology}
               >
-                Delete Anthology
+                {t("localState.delete")}
               </button>
             </div>
           </Modal>

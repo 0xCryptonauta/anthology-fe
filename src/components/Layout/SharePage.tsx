@@ -17,6 +17,13 @@ export const SharePage = () => {
 
   const title = searchParams.get("title") || undefined;
   const text = searchParams.get("text") || undefined;
+  const url = searchParams.get("url") || undefined;
+  const sharedContent =
+    text && url
+      ? text.includes(url)
+        ? text
+        : `${text}\n${url}`
+      : text || url;
 
   return (
     <div
@@ -41,7 +48,7 @@ export const SharePage = () => {
         <AddMemoir
           contractAddr={selectedContract}
           title={title}
-          content={text}
+          content={sharedContent}
         />
       )}
     </div>

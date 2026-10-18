@@ -1,8 +1,10 @@
-import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
-import { toggleCategoryBackgrounds } from "@src/store/slices/dappSlice";
+import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
+import { toggleCategoryBackgrounds } from "@store/slices/dappSlice";
+import { useTranslation } from "@src/i18n/useTranslation";
 import { Form } from "react-bootstrap";
 
 export const CategoryBackgroundsToggle = () => {
+  const { t } = useTranslation();
   const enabled = useAppSelector((s) => s.dapp.categoryBackgroundsEnabled);
   const dispatch = useAppDispatch();
 
@@ -10,7 +12,7 @@ export const CategoryBackgroundsToggle = () => {
     <Form.Check
       type="switch"
       reverse
-      label="Category Backgrounds"
+      label={t("backgrounds.toggle")}
       checked={enabled}
       onChange={() => dispatch(toggleCategoryBackgrounds())}
       className="text-white"

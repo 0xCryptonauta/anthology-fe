@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Modal } from "./Modal";
 import { useToast } from "./Toast";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 export const ClearCacheButton = () => {
+  const { t } = useTranslation();
   const [show, setShow] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
   const { addToast } = useToast();
@@ -21,9 +23,8 @@ export const ClearCacheButton = () => {
       }
 
       addToast({
-        title: "Cached files cleared",
-        content:
-          "Images and cached pages were removed. Your data was not touched.",
+        title: t("cache.clearedTitle"),
+        content: t("cache.clearedDesc"),
         variant: "info",
       });
       setShow(false);
@@ -38,7 +39,8 @@ export const ClearCacheButton = () => {
       show={show}
       onHide={() => setShow(false)}
       trigger={
-        <span
+        <button
+          type="button"
           style={{
             cursor: "pointer",
             border: "1px solid #ccc",
@@ -52,8 +54,8 @@ export const ClearCacheButton = () => {
           }}
           onClick={() => setShow(true)}
         >
-          Clear cached files
-        </span>
+          {t("cache.clearTrigger")}
+        </button>
       }
     >
       <div
@@ -77,10 +79,9 @@ export const ClearCacheButton = () => {
             gap: "8px",
           }}
         >
-          <span style={{ fontWeight: "bold" }}>Clear cached files?</span>
+          <span style={{ fontWeight: "bold" }}>{t("cache.clearTitle")}</span>
           <span style={{ fontSize: "13px", textAlign: "center" }}>
-            Removes cached images, thumbnails and cached pages. Your memoirs
-            and settings are not affected.
+            {t("cache.clearDesc")}
           </span>
         </div>
 
@@ -103,7 +104,7 @@ export const ClearCacheButton = () => {
             }}
             onClick={() => setShow(false)}
           >
-            Cancel
+            {t("common.cancel")}
           </button>
 
           <button
@@ -119,7 +120,7 @@ export const ClearCacheButton = () => {
             disabled={isClearing}
             onClick={clearCaches}
           >
-            {isClearing ? "Clearing..." : "Clear files"}
+            {isClearing ? t("cache.clearing") : t("cache.clearFiles")}
           </button>
         </div>
       </div>

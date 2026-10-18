@@ -12,6 +12,7 @@ import { useAccount } from "wagmi";
 import { useToast } from "../Layout/Toast";
 import { Modal } from "../Layout/Modal";
 import { ContractSelector } from "../Layout/ContractSelector";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 export const MoveMemoir = ({
   anthologyAddr,
@@ -22,6 +23,7 @@ export const MoveMemoir = ({
   index: number;
   memoir: MemoirInterface;
 }) => {
+  const { t } = useTranslation();
   const [show, setShow] = useState(false);
   const [destination, setDestination] = useState<Address | "">("");
   const [mode, setMode] = useState<"copy" | "move">("copy");
@@ -52,8 +54,8 @@ export const MoveMemoir = ({
 
     if (destination === anthologyAddr) {
       addToast({
-        title: "Pick a different anthology",
-        content: "The destination is the current anthology.",
+        title: t("move.pickDifferent"),
+        content: t("move.pickDifferentDesc"),
         variant: "info",
       });
       return;
@@ -61,8 +63,8 @@ export const MoveMemoir = ({
 
     if (!destIsLocal && !isConnected) {
       addToast({
-        title: "Connect your wallet",
-        content: "A blockchain destination needs a connected wallet.",
+        title: t("move.connectWallet"),
+        content: t("move.connectWalletDesc"),
         variant: "info",
       });
       return;
@@ -70,8 +72,8 @@ export const MoveMemoir = ({
 
     if (!canWriteToDest) {
       addToast({
-        title: "Not whitelisted",
-        content: "You are not whitelisted in the destination anthology.",
+        title: t("move.notWhitelisted"),
+        content: t("move.notWhitelistedDesc"),
         variant: "info",
       });
       return;
@@ -94,8 +96,8 @@ export const MoveMemoir = ({
 
         if (!txHash) {
           addToast({
-            title: "Copy failed",
-            content: "The transaction was not sent.",
+            title: t("memoir.copyFailed"),
+            content: t("move.txNotSent"),
             variant: "danger",
           });
           return;
@@ -112,10 +114,8 @@ export const MoveMemoir = ({
       }
 
       addToast({
-        title: mode === "move" ? "Memoir moved" : "Memoir copied",
-        content: destIsLocal
-          ? "Saved to the selected local anthology"
-          : "Saved to the selected blockchain anthology",
+        title: mode === "move" ? t("move.moved") : t("move.copied"),
+        content: destIsLocal ? t("move.savedLocal") : t("move.savedChain"),
         variant: "success",
         delay: 5000,
       });
@@ -124,8 +124,8 @@ export const MoveMemoir = ({
     } catch (error) {
       console.error("Error copying/moving memoir:", error);
       addToast({
-        title: "Something went wrong",
-        content: "The memoir could not be copied or moved.",
+        title: t("move.errorTitle"),
+        content: t("move.errorDesc"),
         variant: "danger",
       });
     } finally {
@@ -140,17 +140,20 @@ export const MoveMemoir = ({
       onHide={() => setShow(false)}
       height="min(700px, 90dvh)"
       trigger={
-        <span
-          title="Copy/Move to another anthology"
-          style={{ cursor: "pointer", fontSize: "1rem" }}
+        <button
+          type="button"
+          className="icon-button"
+          title={t("move.title")}
+          aria-label={t("move.title")}
+          style={{ fontSize: "1rem" }}
           onClick={() => setShow(true)}
         >
           <img
             src="/icons/copy-clipboard-icon.svg"
-            alt="Copy or move memoir"
+            alt=""
             style={{ width: "18px", height: "18px", display: "block" }}
           />
-        </span>
+        </button>
       }
     >
       <div
@@ -165,7 +168,7 @@ export const MoveMemoir = ({
           boxSizing: "border-box",
         }}
       >
-        <h4 style={{ textAlign: "center", margin: 0 }}>Copy / Move Memoir</h4>
+        <h4 style={{ textAlign: "center", margin: 0 }}>{t("move.title")}</h4>
 
         <div style={{ flex: "1 1 auto", minHeight: 0, overflowY: "auto" }}>
           <ContractSelector
@@ -191,7 +194,7 @@ export const MoveMemoir = ({
               checked={mode === "copy"}
               onChange={() => setMode("copy")}
             />
-            Copy to
+            {t("move.copyTo")}
           </label>
           <label
             style={{
@@ -206,7 +209,7 @@ export const MoveMemoir = ({
               checked={mode === "move"}
               onChange={() => setMode("move")}
             />
-            Move to
+            {t("move.moveTo")}
           </label>
         </div>
 
@@ -226,10 +229,10 @@ export const MoveMemoir = ({
           }}
         >
           {isSubmitting
-            ? "Saving..."
+            ? t("move.saving")
             : mode === "move"
-            ? "Move Memoir"
-            : "Copy Memoir"}
+            ? t("move.move")
+            : t("move.copy")}
         </button>
       </div>
     </Modal>

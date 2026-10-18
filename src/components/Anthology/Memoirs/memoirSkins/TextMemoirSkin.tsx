@@ -10,6 +10,7 @@ import { useAccount } from "wagmi";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 import { MemoirActions } from "../../MemoirActions";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 interface TextMemoirSkinProps {
   anthologyAddr: Address;
@@ -22,6 +23,7 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
   order,
   search,
 }) => {
+  const { t } = useTranslation();
   const { memoirs, orderedMemoirsIndexes } = useOrderedMemoirs(
     anthologyAddr,
     order,
@@ -76,6 +78,7 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
           >
             {/* Title */}
             <div
+              translate="no"
               style={{
                 textAlign: "center",
                 fontWeight: 600,
@@ -86,11 +89,12 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
                 color: "black",
               }}
             >
-              {memoir.title || "Untitled"}
+              {memoir.title || t("common.untitled")}
             </div>
 
             {/* Content */}
             <div
+              translate="no"
               style={{
                 textAlign: "center",
                 padding: "6px 0",
@@ -126,14 +130,16 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
               }}
             >
               {currentUser === LOCAL_USER_ADDR && (
-                <span
-                  style={{ cursor: "pointer" }}
+                <button
+                  type="button"
+                  className="bg-transparent border-none p-0"
+                  style={{ cursor: "pointer", color: "black" }}
                   onClick={() =>
                     dispatch(updateCurrentPath(`user/${memoir.sender}`))
                   }
                 >
                   {shortenAddress(memoir.sender, 10, 8)}
-                </span>
+                </button>
               )}
 
               <span>{formatUnixTime(Number(memoir.timestamp))}</span>

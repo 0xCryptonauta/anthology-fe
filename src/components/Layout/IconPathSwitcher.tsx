@@ -4,8 +4,10 @@ import { toggleIsIconToLocal } from "@src/store/slices/dappSlice";
 import { useAccount } from "wagmi";
 import { Modal } from "./Modal";
 import { useState } from "react";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 export const IconPathSwitcher = () => {
+  const { t } = useTranslation();
   const { isIconToLocal } = useAppSelector((state) => state.dapp);
   const dispatch = useAppDispatch();
   const { addToast } = useToast();
@@ -18,10 +20,10 @@ export const IconPathSwitcher = () => {
     if (toLocal !== isIconToLocal) {
       dispatch(toggleIsIconToLocal());
       addToast({
-        title: "Icon path changed",
+        title: t("iconPath.changedTitle"),
         content: toLocal
-          ? "Now pointing to local anthologies"
-          : "Now pointing to on-chain anthologies",
+          ? t("iconPath.changedLocal")
+          : t("iconPath.changedWeb3"),
         variant: "success",
         delay: 3000,
       });
@@ -35,7 +37,8 @@ export const IconPathSwitcher = () => {
       onHide={handleClose}
       trigger={
         isConnected ? (
-          <span
+          <button
+            type="button"
             style={{
               cursor: "pointer",
               border: "1px solid #ccc",
@@ -49,8 +52,8 @@ export const IconPathSwitcher = () => {
             }}
             onClick={() => setShow(true)}
           >
-            Icon Path Switcher
-          </span>
+            {t("iconPath.trigger")}
+          </button>
         ) : (
           <></>
         )
@@ -69,7 +72,7 @@ export const IconPathSwitcher = () => {
         }}
       >
         <h3 style={{ textAlign: "center", marginBottom: "20px" }}>
-          Icon Path Switcher
+          {t("iconPath.title")}
         </h3>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
@@ -81,7 +84,7 @@ export const IconPathSwitcher = () => {
               onChange={() => handleToggle(true)}
               style={radioInputStyle}
             />
-            <span>Local User Anthologies</span>
+            <span>{t("iconPath.local")}</span>
           </label>
 
           <label style={radioLabelStyle}>
@@ -92,7 +95,7 @@ export const IconPathSwitcher = () => {
               onChange={() => handleToggle(false)}
               style={radioInputStyle}
             />
-            <span>Web3 Anthologies</span>
+            <span>{t("iconPath.web3")}</span>
           </label>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { ListMemoirSkin } from "./ListMemoirSkin";
 import { useOrderedMemoirs } from "@src/hooks/useOrderedMemoirs";
 import { OrderType } from "@src/components/Layout/OrderSelector";
 import { Address } from "@src/types/common";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 export const PlaylistMemoirSkin = ({
   anthologyAddr,
@@ -14,6 +15,7 @@ export const PlaylistMemoirSkin = ({
   order: OrderType;
   search?: string;
 }) => {
+  const { t } = useTranslation();
   const { memoirs, orderedMemoirsIndexes } = useOrderedMemoirs(
     anthologyAddr,
     order,
@@ -60,9 +62,9 @@ export const PlaylistMemoirSkin = ({
   ) : (
     <div style={{ marginTop: "30px" }}>
       <div style={{ display: "flex", justifyContent: "center", color: "red" }}>
-        Youtube videos not found
+        {t("memoirs.playlistNotFound")}
       </div>
-      <ListMemoirSkin anthologyAddr={anthologyAddr} order={order} />
+      <ListMemoirSkin anthologyAddr={anthologyAddr} order={order} search={search} />
     </div>
   );
 };

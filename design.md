@@ -18,6 +18,38 @@ this file.
 - **No emojis for actions.** Action controls use the SVG icon set (see Icons).
 - **Minimal chrome.** Small labels, quiet secondary text, color reserved for
   meaning.
+- **Accessible by default (WCAG 2.2 AA / ISO/IEC 40500:2025).** Every new
+  control ships keyboard-operable with a translated `aria-label`; see the
+  Accessibility section below.
+
+## Accessibility (WCAG 2.2 AA)
+
+- **Landmarks**: skip link (`a11y.skipToMain` → `#main-content`) in `RootView`;
+  `<main id="main-content">`, `<footer>`, Bootstrap `<nav>` for the header.
+- **Focus**: keyboard-only ring (`#22d3ee`, 3px) in `index.css`, **scoped to
+  `@media (hover: hover) and (pointer: fine)`** so touch devices never show a
+  ring; `:focus:not(:focus-visible)` removes click outlines everywhere, the
+  mobile tap highlight (`-webkit-tap-highlight-color`) is disabled globally,
+  and Bootstrap's blue focus glow on form controls is neutralized. Text
+  inputs/selects keep the ring on desktop click (browsers treat them as
+  keyboard targets — you are about to type).
+- **Target size**: icon-only controls use `.icon-button` (min 24×24, centered).
+- **Buttons over spans**: interactive controls are `<button type="button">`.
+  Embed play overlays (YouTube/Vimeo/archive/Spotify) use
+  `role="button"` + `tabIndex` + `Enter`/`Space` because they must contain an
+  iframe when active.
+- **Forms**: `<label htmlFor>` + `useId()` everywhere; validation uses
+  `aria-invalid` + `aria-describedby`; errors/warnings use `role="alert"` /
+  `role="status"`; checkboxes are wrapped in their `<label>`.
+- **State**: expandable category cards and list-skin memoirs expose
+  `aria-expanded`; anthology items in the selector expose `aria-pressed`.
+- **Media**: every iframe has a `title`; decorative images/SVGs are
+  `aria-hidden`/`alt=""` with the control carrying the accessible name.
+- **Contrast**: footer text `#a1a1aa` on `#242424` (≈5.4:1); placeholders and
+  `[+]/[-]` indicators use `zinc-400`/`zinc-300` on dark surfaces.
+- **Tooling**: `eslint-plugin-jsx-a11y` runs in `bun run lint` (0 errors
+  required); rules for keyboard events, static-element interactions, labels,
+  iframe titles and alt text are errors, not warnings.
 
 ## Colors
 
@@ -130,9 +162,42 @@ category color.
   filter and the global search.
 - **Never use `<datalist>`** on mobile (system autofill can't be suppressed) —
   build custom dropdowns (`TitleEditor`).
-- Destructive actions always get a confirm modal that names what is deleted
+- **Mobile-first control rows**: toolbars stay on a single line down to 320px —
+  compact controls only (36px height, 14px font, `whiteSpace: nowrap`, 8px
+  gaps, max ~3 per row). Long labels get their own line above the controls
+  (`ChangeAnthologyDefaultSkin`). The skin selector labels stay in English
+  (product terms: Media/Text/Json/List/Playlist) so the row never widens in
+  other languages.
+- **Destructive actions** always get a confirm modal that names what is deleted
   (e.g. "Delete private memory — All anthologies"; "All its memoirs will be
   deleted too").
+- **Auto-fill title:** When a URL is present in Add/Edit Memoir, an "Auto-fill
+  title" button fetches the media title via public oEmbed/metadata APIs.
+- **Deep links & QR codes:** On-chain anthologies share via
+  `/?contract=0x...` URLs (encoded in the QR code so both native phone cameras
+  and the in-app scanner open the anthology directly) and can be cloned offline
+  via "Save to Private Memory".
+
+## Localization
+
+- Built-in dictionaries: **English (`en`, source of truth) and Spanish (`es`)**
+  in `src/i18n/translations.ts`. The `es` object is typed
+  `Record<TranslationKey, string>` so a missing translation fails the build.
+- All UI copy goes through `t("key")` from `useTranslation()`
+  (`src/i18n/useTranslation.ts`). Never hardcode user-facing strings.
+- Locale preference lives in `dappSlice.locale` (`"auto" | "en" | "es"`,
+  persisted). `"auto"` (default) resolves from `navigator.languages`: any
+  `es*` language selects Spanish, everything else falls back to English.
+- The hook syncs `<html lang>` with the resolved locale, which lets the
+  browser/OS offer **real-time translation** for languages without a bundled
+  dictionary. Supported locales show no translate prompt.
+- **`translate="no"` guards**: user-generated content (anthology titles,
+  categories, subcategories, memoir titles/content, JSON dumps) must carry
+  `translate="no"` so native browser translation never rewrites saved data.
+- **"Memoir" is a product term** — never translate it. Every dictionary keeps
+  `memoir` / `memoirs` verbatim (Spanish uses *memoir/memoirs*, not
+  *recuerdo*). Same for "Anthology" as the product name.
+- The language picker is `LanguageSelector` in `/settings`.
 
 ## Known limitations
 
