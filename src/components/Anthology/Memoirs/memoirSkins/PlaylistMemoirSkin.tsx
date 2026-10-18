@@ -62,7 +62,7 @@ export const PlaylistMemoirSkin = ({
       <div style={{ display: "flex", justifyContent: "center", color: "red" }}>
         Youtube videos not found
       </div>
-      <ListMemoirSkin anthologyAddr={anthologyAddr} order={order} />
+      <ListMemoirSkin anthologyAddr={anthologyAddr} order={order} search={search} />
     </div>
   );
 };
