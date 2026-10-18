@@ -1,28 +1,34 @@
+import { useState } from "react";
 import { OrderType } from "@src/components/Layout/OrderSelector";
 import { useOrderedMemoirs } from "@src/hooks/useOrderedMemoirs";
 import { useAppSelector } from "@src/store/utils/hooks";
 import { Address } from "@src/types/common";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 import { useAccount } from "wagmi";
-import { DeleteMemoir } from "../../DeleteMemoir";
-import { useState } from "react";
-import { Mediaskin } from "./MediaSkin";
+import { MemoirActions } from "../../MemoirActions";
+import { formatUnixTime } from "@utils/formatUnixTime";
+import { extractEmbed } from "@src/utils/embeds";
+import { EmbedRenderer } from "../thirdPartyEmbeds";
 
 interface ListMemoirSkinProps {
   anthologyAddr: Address;
   order: OrderType;
+  search?: string;
 }
 
 export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
   anthologyAddr,
   order,
-  //handleDelete,
+  search,
 }) => {
   const { memoirs, orderedMemoirsIndexes } = useOrderedMemoirs(
     anthologyAddr,
-    order
+    order,
+    search
   );
-  const [selectedMemoirIndex, setSelectedMemoirIndex] = useState(-1);
+  const [expandedMemoirs, setExpandedMemoirs] = useState<
+    Record<number, boolean>
+  >({});
 
   const { address: currentUser } = useAccount();
   const anthologyOwner = useAppSelector(
@@ -40,17 +46,21 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        width: "100%",
+        minWidth: 0,
+        boxSizing: "border-box",
       }}
     >
       {orderedMemoirsIndexes.map((i, index) => {
         const { title, content } = memoirs[i];
+        const extracted = extractEmbed(content);
+        const isExpanded = !!expandedMemoirs[i];
 
         return (
           <div
             key={i}
             style={{
               width: "100%",
-              minWidth: "300px",
               maxWidth: "600px",
               marginBottom: "1.5rem",
               padding: "0.5rem",
@@ -61,20 +71,30 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
               position: "relative",
             }}
           >
-            {selectedMemoirIndex !== i && (
-              <span
-                style={{
-                  fontWeight: "600",
-                  fontSize: "1rem",
-                  color: "#333",
-                  display: "block",
-                  marginBottom: "0.25rem",
-                  wordBreak: "break-word",
-                }}
-              >
-                {index + 1}. {title || "Untitled"}
-              </span>
-            )}
+            <span
+              style={{
+                fontWeight: "600",
+                fontSize: "1rem",
+                color: "#333",
+                display: "block",
+                marginBottom: "0.25rem",
+                wordBreak: "break-word",
+                textAlign: "center",
+                cursor: extracted ? "pointer" : "default",
+              }}
+              onClick={
+                extracted
+                  ? () =>
+                      setExpandedMemoirs((prev) => ({
+                        ...prev,
+                        [i]: !prev[i],
+                      }))
+                  : undefined
+              }
+            >
+              {index + 1}. {title || "Untitled"}
+              {extracted && <span>{isExpanded ? " ▾" : " ▸"}</span>}
+            </span>
 
             <div
               style={{
@@ -84,38 +104,46 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
                 color: "#555",
                 fontSize: "0.9rem",
                 wordBreak: "break-word",
-                cursor: "pointer",
-              }}
-              onClick={() => {
-                setSelectedMemoirIndex(i);
+                textAlign: "center",
               }}
             >
-              {selectedMemoirIndex === i ? (
-                <Mediaskin memoir={memoirs[i]} />
+              {isExpanded && extracted ? (
+                <>
+                  {extracted.caption && (
+                    <div style={{ marginBottom: "0.5rem" }}>
+                      {extracted.caption}
+                    </div>
+                  )}
+                  <EmbedRenderer embed={extracted.embed} />
+                </>
               ) : (
                 content
               )}
             </div>
-            {(currentUser === anthologyOwner ||
-              isLocalAnthology(anthologyAddr) ||
-              currentUser === memoirs[i].sender) && (
-              <div
-                style={{
-                  cursor: "pointer",
-                  position: "absolute",
-                  right: "10px",
-                  top: "10px",
-                }}
-                /*  onClick={() =>
-                  handleDelete({
-                    anthologyAddr,
-                    index: i,
-                  })
-                } */
-              >
-                <DeleteMemoir anthologyAddr={anthologyAddr} index={i} />
-              </div>
-            )}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                fontSize: "12px",
+                color: "#666",
+                marginTop: "8px",
+              }}
+            >
+              <span>{formatUnixTime(Number(memoirs[i].timestamp))}</span>
+
+              {(currentUser === anthologyOwner ||
+                isLocalAnthology(anthologyAddr) ||
+                currentUser === memoirs[i].sender) && (
+                <div style={{ marginTop: "6px" }}>
+                  <MemoirActions
+                    anthologyAddr={anthologyAddr}
+                    index={i}
+                    memoir={memoirs[i]}
+                  />
+                </div>
+              )}
+            </div>
           </div>
         );
       })}

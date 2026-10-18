@@ -70,7 +70,16 @@ export const MemoirBuffer = ({ contractAddr }: { contractAddr: string }) => {
                   );
                 }}
               >
-                ❌
+                <img
+                  src="/icons/delete-icon.svg"
+                  alt="Decline memoir"
+                  style={{
+                    width: "16px",
+                    height: "16px",
+                    display: "block",
+                    filter: "invert(1)",
+                  }}
+                />
               </span>
             </div>
           </div>

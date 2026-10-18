@@ -81,7 +81,7 @@ export const localAnthologySlice = createSlice({
         state.userContracts[user].push(contract);
         state.contractsTitles[contract] = title;
         state.anthologies[contract] = state.anthologies[contract] || [];
-        state.defaultSkin[contract] = "media";
+        state.defaultSkin[contract] = DEFAULT_SKIN;
       }
     },
     addMemoirToUserLocalAnthology(
@@ -149,6 +149,31 @@ export const localAnthologySlice = createSlice({
         );
       }
     },
+    updateMemoirInUserLocalAnthology(
+      state,
+      action: PayloadAction<{
+        contract: Address;
+        index: number;
+        title: string;
+        content: string;
+      }>
+    ) {
+      const { contract, index, title, content } = action.payload;
+      const memoirs = state.anthologies[contract];
+      if (!memoirs || !memoirs[index]) return;
+
+      memoirs[index] = { ...memoirs[index], title, content };
+    },
+    deleteMemoirAtIndexFromUserLocalAnthology(
+      state,
+      action: PayloadAction<{ contract: Address; index: number }>
+    ) {
+      const { contract, index } = action.payload;
+      const memoirs = state.anthologies[contract];
+      if (!memoirs || !memoirs[index]) return;
+
+      memoirs.splice(index, 1);
+    },
     deleteUserLocalAnthology(
       state,
       action: PayloadAction<{ user: Address; contract: Address }>
@@ -163,10 +188,14 @@ export const localAnthologySlice = createSlice({
         );
         if (state.userContracts[user].length === 0) {
           delete state.userContracts[user];
-          delete state.contractsTitles[contract];
           state.users = state.users.filter((u) => u !== user);
         }
       }
+
+      // Remove the anthology's data (title, memoirs, skin) with it
+      delete state.contractsTitles[contract];
+      delete state.anthologies[contract];
+      delete state.defaultSkin[contract];
     },
     updateUserLocalAnthologyTitle(
       state,
@@ -248,6 +277,8 @@ export const {
   addManyMemoirsToUserLocalAnthology,
   addAnthologiesToLocalMemory,
   deleteMemoirFromUserLocalAnthology,
+  deleteMemoirAtIndexFromUserLocalAnthology,
+  updateMemoirInUserLocalAnthology,
   updateUserLocalAnthologyTitle,
   setDefaultSkin,
   updateLocalUserContracts,

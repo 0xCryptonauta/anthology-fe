@@ -64,7 +64,8 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate", // || prompt
       devOptions: {
-        enabled: false,
+        enabled: true,
+        type: "module",
       },
       includeAssets: ["/IB_icon.png", "/pwa-192x192.png", "/pwa-512x512.png"],
       manifest: manifest as ManifestOptions,
@@ -76,8 +77,10 @@ export default defineConfig({
         globPatterns: ["**/*.{js,css,html,woff2,webp}"],
         runtimeCaching: [
           {
+            // Note: "script" is intentionally NOT cached here — caching Vite's
+            // dev modules makes reloads serve stale code (and prod app scripts
+            // are already covered by the workbox precache).
             urlPattern: ({ request }) =>
-              request.destination === "script" ||
               request.destination === "style" ||
               request.destination === "font" ||
               request.destination === "image",

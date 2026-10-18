@@ -5,15 +5,18 @@ import { Address } from "@src/types/common";
 export const JsonMemoirSkin = ({
   anthologyAddr,
   order,
+  search,
 }: {
   anthologyAddr: Address;
   order: OrderType;
+  search?: string;
   //memoirs: MemoirInterface[];
   //orderedMemoirsIndexes: number[];
 }) => {
   const { memoirs, orderedMemoirsIndexes } = useOrderedMemoirs(
     anthologyAddr,
-    order
+    order,
+    search
   );
 
   return (

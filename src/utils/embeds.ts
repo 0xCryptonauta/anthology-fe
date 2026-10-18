@@ -15,6 +15,8 @@ export type SpotifyContentType =
 
 export type EmbedMatch =
   | { provider: "youtube"; videoId: string }
+  | { provider: "vimeo"; videoId: string; hash?: string }
+  | { provider: "archiveorg"; itemId: string }
   | { provider: "spotify"; contentType: SpotifyContentType; contentId: string }
   | { provider: "twitter"; username: string; postId: string }
   | { provider: "reddit"; postUrl: string }
@@ -201,6 +203,50 @@ const parseInstagram = (url: URL): EmbedMatch | null => {
   };
 };
 
+/* ---------------------------------- Vimeo ---------------------------------- */
+
+const VIMEO_DOMAINS = ["vimeo.com"];
+const VIMEO_ID_REGEX = /^\d+$/;
+
+const parseVimeo = (url: URL): EmbedMatch | null => {
+  if (!hostMatches(url.hostname, VIMEO_DOMAINS)) return null;
+
+  const segments = pathSegments(url);
+
+  // player.vimeo.com/video/<id> or vimeo.com/<id>[/<private hash>]
+  const videoIndex = segments.indexOf("video");
+  const videoId = videoIndex !== -1 ? segments[videoIndex + 1] : segments[0];
+  const hash = videoIndex !== -1 ? undefined : segments[1];
+
+  if (!videoId || !VIMEO_ID_REGEX.test(videoId)) return null;
+
+  return {
+    provider: "vimeo",
+    videoId,
+    hash: hash && /^[a-zA-Z0-9]+$/.test(hash) ? hash : undefined,
+  };
+};
+
+/* ------------------------------- Archive.org ------------------------------- */
+
+const ARCHIVE_DOMAINS = ["archive.org"];
+const ARCHIVE_ID_REGEX = /^[A-Za-z0-9._-]+$/;
+
+const parseArchiveOrg = (url: URL): EmbedMatch | null => {
+  if (!hostMatches(url.hostname, ARCHIVE_DOMAINS)) return null;
+
+  const segments = pathSegments(url);
+  const prefixIndex = segments.findIndex(
+    (segment) => segment === "details" || segment === "embed"
+  );
+  if (prefixIndex === -1) return null;
+
+  const itemId = segments[prefixIndex + 1];
+  if (!itemId || !ARCHIVE_ID_REGEX.test(itemId)) return null;
+
+  return { provider: "archiveorg", itemId };
+};
+
 /* -------------------------------- Dispatcher ------------------------------- */
 
 /**
@@ -215,6 +261,8 @@ export const detectEmbed = (content: string): EmbedMatch | null => {
 
   return (
     parseYouTube(url) ??
+    parseVimeo(url) ??
+    parseArchiveOrg(url) ??
     parseTwitter(url) ??
     parseReddit(url) ??
     parseFacebook(url) ??
@@ -222,4 +270,53 @@ export const detectEmbed = (content: string): EmbedMatch | null => {
     parseSpotify(url) ??
     null
   );
+};
+
+/* -------------------------------- Extraction ------------------------------- */
+
+const URL_IN_TEXT_REGEX = /https?:\/\/\S+/i;
+const TRAILING_PUNCTUATION_REGEX = /[.,;:!?)\]}"']+$/;
+
+/** Returns the first URL found in a string (trailing punctuation stripped). */
+export const extractFirstUrl = (content: string): string | null => {
+  if (typeof content !== "string") return null;
+  const match = content.match(URL_IN_TEXT_REGEX);
+  if (!match) return null;
+  return match[0].replace(TRAILING_PUNCTUATION_REGEX, "");
+};
+
+export interface ExtractedEmbed {
+  embed: EmbedMatch;
+  /** Remaining text with the URL removed ("" when the content is only a URL). */
+  caption: string;
+}
+
+/**
+ * Extracts the first embeddable URL from a content string, whether the content
+ * is exactly a URL or text mixed with one. Returns the detected embed plus the
+ * leftover text as caption.
+ */
+export const extractEmbed = (content: string): ExtractedEmbed | null => {
+  if (typeof content !== "string") return null;
+
+  // Fast path: the whole content is one embeddable URL
+  const direct = detectEmbed(content);
+  if (direct) return { embed: direct, caption: "" };
+
+  const match = content.match(URL_IN_TEXT_REGEX);
+  if (!match) return null;
+
+  // Strip punctuation that commonly follows URLs in prose
+  const url = match[0].replace(TRAILING_PUNCTUATION_REGEX, "");
+
+  const embed = detectEmbed(url);
+  if (!embed) return null;
+
+  const caption = content
+    .replace(match[0], "")
+    .replace(/[ \t]{2,}/g, " ")
+    .trim()
+    .replace(/[([{]$/, "");
+
+  return { embed, caption };
 };

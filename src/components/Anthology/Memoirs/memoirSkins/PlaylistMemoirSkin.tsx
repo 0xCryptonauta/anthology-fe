@@ -1,5 +1,5 @@
 import { MemoirInterface } from "@src/store/slices/anthologySlice";
-import { detectEmbed } from "@src/utils/embeds";
+import { extractEmbed } from "@src/utils/embeds";
 import { ListMemoirSkin } from "./ListMemoirSkin";
 import { useOrderedMemoirs } from "@src/hooks/useOrderedMemoirs";
 import { OrderType } from "@src/components/Layout/OrderSelector";
@@ -8,19 +8,24 @@ import { Address } from "@src/types/common";
 export const PlaylistMemoirSkin = ({
   anthologyAddr,
   order,
+  search,
 }: {
   anthologyAddr: Address;
   order: OrderType;
+  search?: string;
 }) => {
   const { memoirs, orderedMemoirsIndexes } = useOrderedMemoirs(
     anthologyAddr,
-    order
+    order,
+    search
   );
 
   const extractYoutubeIds = (videoLinks: MemoirInterface[]) => {
     return videoLinks.map((vlink) => {
-      const embed = detectEmbed(vlink.content);
-      return embed?.provider === "youtube" ? embed.videoId : "";
+      const extracted = extractEmbed(vlink.content);
+      return extracted?.embed.provider === "youtube"
+        ? extracted.embed.videoId
+        : "";
     });
   };
 

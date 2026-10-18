@@ -3,28 +3,31 @@ import { formatUnixTime } from "@utils/formatUnixTime";
 import { Address } from "@src/types/common";
 import { isValidURL } from "@src/utils/isValidURL";
 import { EmbedRenderer } from "../thirdPartyEmbeds";
-import { detectEmbed } from "@src/utils/embeds";
+import { extractEmbed } from "@src/utils/embeds";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
 import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 import { OrderType } from "@src/components/Layout/OrderSelector";
 import { useOrderedMemoirs } from "@src/hooks/useOrderedMemoirs";
 import { useAccount } from "wagmi";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
-import { DeleteMemoir } from "../../DeleteMemoir";
+import { MemoirActions } from "../../MemoirActions";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
 
 interface MediaMemoirSkinProps {
   anthologyAddr: Address;
   order: OrderType;
+  search?: string;
 }
 
 export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
   anthologyAddr,
   order,
+  search,
 }) => {
   const { memoirs, orderedMemoirsIndexes } = useOrderedMemoirs(
     anthologyAddr,
-    order
+    order,
+    search
   );
   const { address: currentUser } = useAccount();
   const anthologyOwner = useAppSelector(
@@ -49,10 +52,22 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
       {orderedMemoirsIndexes.map((i) => {
         const memoir = memoirs[i];
 
-        const embed = detectEmbed(memoir.content);
+        const extracted = extractEmbed(memoir.content);
 
         const renderContent = () => {
-          if (embed) return <EmbedRenderer embed={embed} />;
+          if (extracted)
+            return (
+              <>
+                {extracted.caption && (
+                  <div
+                    style={{ marginBottom: "0.5rem", overflowWrap: "break-word" }}
+                  >
+                    {extracted.caption}
+                  </div>
+                )}
+                <EmbedRenderer embed={extracted.embed} />
+              </>
+            );
 
           return isValidURL(memoir.content) ? (
             <a
@@ -108,7 +123,8 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
             <div
               style={{
                 display: "flex",
-                width: "300px",
+                width: "100%",
+                maxWidth: "300px",
                 flexDirection: "column",
                 alignItems: "center",
                 fontSize: "12px",
@@ -127,28 +143,19 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
               )}
 
               <span>{formatUnixTime(Number(memoir.timestamp))}</span>
-            </div>
 
-            {(currentUser === anthologyOwner ||
-              isLocalAnthology(anthologyAddr) ||
-              currentUser === memoir.sender) && (
-              <div
-                style={{
-                  cursor: "pointer",
-                  position: "absolute",
-                  right: "10px",
-                  bottom: "10px",
-                }}
-                /* onClick={() =>
-                  handleDelete({
-                    anthologyAddr,
-                    index: i,
-                  })
-                } */
-              >
-                <DeleteMemoir anthologyAddr={anthologyAddr} index={i} />
-              </div>
-            )}
+              {(currentUser === anthologyOwner ||
+                isLocalAnthology(anthologyAddr) ||
+                currentUser === memoir.sender) && (
+                <div style={{ marginTop: "6px" }}>
+                  <MemoirActions
+                    anthologyAddr={anthologyAddr}
+                    index={i}
+                    memoir={memoir}
+                  />
+                </div>
+              )}
+            </div>
           </div>
         );
       })}

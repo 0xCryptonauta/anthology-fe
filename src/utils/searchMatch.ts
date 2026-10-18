@@ -1,0 +1,50 @@
+/**
+ * Search matching: every query word must match a text word either as a
+ * prefix ("tes" finds "test") or with at least SEARCH_ACCURACY similarity
+ * (Levenshtein) — 0.9 tolerates a typo in longer words.
+ *
+ * There is no mid-word substring matching — "test" does not match "latest"
+ * or "contest".
+ */
+
+export const SEARCH_ACCURACY = 0.9;
+
+const levenshtein = (a: string, b: string): number => {
+  const cols = b.length + 1;
+  let prev = Array.from({ length: cols }, (_, i) => i);
+
+  for (let i = 1; i <= a.length; i++) {
+    const curr = [i, ...Array(cols - 1).fill(0)];
+    for (let j = 1; j < cols; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      curr[j] = Math.min(curr[j - 1] + 1, prev[j] + 1, prev[j - 1] + cost);
+    }
+    prev = curr;
+  }
+  return prev[cols - 1];
+};
+
+const similarity = (a: string, b: string): number => {
+  const maxLength = Math.max(a.length, b.length);
+  if (maxLength === 0) return 1;
+  return 1 - levenshtein(a, b) / maxLength;
+};
+
+export const matchesSearch = (text: string, query: string): boolean => {
+  if (typeof text !== "string") return false;
+
+  const normalizedText = text.toLowerCase();
+  const normalizedQuery = query.trim().toLowerCase();
+  if (!normalizedQuery) return false;
+
+  const queryWords = normalizedQuery.split(/\s+/).filter(Boolean);
+  const textWords = normalizedText.split(/[^\p{L}\p{N}]+/u).filter(Boolean);
+
+  return queryWords.every((queryWord) =>
+    textWords.some(
+      (textWord) =>
+        textWord.startsWith(queryWord) ||
+        similarity(queryWord, textWord) >= SEARCH_ACCURACY
+    )
+  );
+};

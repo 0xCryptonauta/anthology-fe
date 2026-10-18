@@ -6,10 +6,14 @@ import { LOCAL_USER_ADDR } from "@src/utils/constants";
 import { useAppSelector } from "@src/store/utils/hooks";
 interface ContractSelectorProps {
   setSelectedContract: (addr: Address | "") => void;
+  variant?: "dark" | "light";
+  showUserSelect?: boolean;
 }
 
 export const ContractSelector: React.FC<ContractSelectorProps> = ({
   setSelectedContract,
+  variant = "dark",
+  showUserSelect = true,
 }) => {
   const { users, userContracts, contractsTitles } = useAppSelector(
     (state) => state.factory
@@ -105,38 +109,56 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
         display: "flex",
         flexDirection: "column",
         gap: "10px",
-        minWidth: "300px",
+        width: "100%",
         padding: "10px",
         maxWidth: "350px",
+        boxSizing: "border-box",
+        backgroundColor:
+          variant === "light" ? "#cbd5e1" : "rgba(255, 255, 255, 0.06)",
+        borderRadius: "10px",
       }}
     >
-      <label>User: </label>
-      <select
-        value={selectedUser}
-        style={{ minHeight: "30px" }}
-        onChange={(e) => {
-          setSelectedUser(e.target.value as Address);
-          setSelectedCategory("");
-          setSelectedSubcategory("");
-          setSelectedAddress("");
-          setSelectedContract("");
-        }}
-      >
-        <option key={"localUser"} value={LOCAL_USER_ADDR}>
-          Local User
-        </option>
-        {users.map((user) => (
-          <option key={user} value={user}>
-            {shortenAddress(user, 10, 10)}
-          </option>
-        ))}
-      </select>
+      {showUserSelect && (
+        <>
+          <label>User: </label>
+          <select
+            value={selectedUser}
+            style={{
+            minHeight: "30px",
+            border: "1px solid #94a3b8",
+            borderRadius: "6px",
+            padding: "4px 8px",
+          }}
+            onChange={(e) => {
+              setSelectedUser(e.target.value as Address);
+              setSelectedCategory("");
+              setSelectedSubcategory("");
+              setSelectedAddress("");
+              setSelectedContract("");
+            }}
+          >
+            <option key={"localUser"} value={LOCAL_USER_ADDR}>
+              Local User
+            </option>
+            {users.map((user) => (
+              <option key={user} value={user}>
+                {shortenAddress(user, 10, 10)}
+              </option>
+            ))}
+          </select>
+        </>
+      )}
 
       <label>Category: </label>
       <select
         value={selectedCategory}
         onChange={handleCategoryChange}
-        style={{ minHeight: "30px" }}
+        style={{
+            minHeight: "30px",
+            border: "1px solid #94a3b8",
+            borderRadius: "6px",
+            padding: "4px 8px",
+          }}
       >
         {/* <option value="">No Category</option> */}
         {
@@ -165,7 +187,13 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
           <select
             value={selectedSubcategory}
             onChange={handleSubcategoryChange}
-            style={{ minHeight: "30px", marginTop: "10px" }}
+            style={{
+              minHeight: "30px",
+              marginTop: "10px",
+              border: "1px solid #94a3b8",
+              borderRadius: "6px",
+              padding: "4px 8px",
+            }}
           >
             <option value="">No subcategory</option>
             {subcategoryOptions.map((subcategory) => (
@@ -203,7 +231,16 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
               }}
               style={{
                 cursor: "pointer",
-                color: selectedAddress === contract.address ? "gray" : "white",
+                color:
+                  selectedAddress === contract.address
+                    ? variant === "light"
+                      ? "#0891b2"
+                      : "#22d3ee"
+                    : variant === "light"
+                    ? "#1a1a1a"
+                    : "white",
+                fontWeight:
+                  selectedAddress === contract.address ? 600 : 400,
               }}
             >
               {contract.title}

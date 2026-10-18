@@ -8,21 +8,24 @@ import { OrderType } from "@src/components/Layout/OrderSelector";
 import { useOrderedMemoirs } from "@src/hooks/useOrderedMemoirs";
 import { useAccount } from "wagmi";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
-import { DeleteMemoir } from "../../DeleteMemoir";
+import { MemoirActions } from "../../MemoirActions";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
 
 interface TextMemoirSkinProps {
   anthologyAddr: Address;
   order: OrderType;
+  search?: string;
 }
 
 export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
   anthologyAddr,
   order,
+  search,
 }) => {
   const { memoirs, orderedMemoirsIndexes } = useOrderedMemoirs(
     anthologyAddr,
-    order
+    order,
+    search
   );
   const { address: currentUser } = useAccount();
   const anthologyOwner = useAppSelector(
@@ -64,7 +67,9 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
               backgroundColor: "#f9f9f9",
               padding: "12px",
               margin: "15px 1px",
-              width: "360px",
+              width: "100%",
+              maxWidth: "360px",
+              boxSizing: "border-box",
               position: "relative",
               boxShadow: "0 1px 4px rgba(0, 0, 0, 0.05)",
             }}
@@ -132,30 +137,17 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
               )}
 
               <span>{formatUnixTime(Number(memoir.timestamp))}</span>
-            </div>
 
-            {/* Delete Button */}
-            {isDeletable && (
-              <div
-                title="Delete memoir"
-                style={{
-                  cursor: "pointer",
-                  position: "absolute",
-                  right: "10px",
-                  bottom: "10px",
-                  fontSize: "16px",
-                  color: "#cc0000",
-                }}
-                /* onClick={() =>
-                  handleDelete({
-                    anthologyAddr,
-                    index: i,
-                  })
-                } */
-              >
-                <DeleteMemoir anthologyAddr={anthologyAddr} index={i} />
-              </div>
-            )}
+              {isDeletable && (
+                <div style={{ marginTop: "6px" }}>
+                  <MemoirActions
+                    anthologyAddr={anthologyAddr}
+                    index={i}
+                    memoir={memoir}
+                  />
+                </div>
+              )}
+            </div>
           </div>
         );
       })}

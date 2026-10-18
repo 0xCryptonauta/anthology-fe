@@ -9,6 +9,7 @@ import { LOCAL_USER_ADDR } from "@src/utils/constants";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
 import "@src/styles/backgrounds.css";
 import { getBgClass, hashString } from "@utils/backgrounds";
+import { MemoirSearchResults } from "@src/components/Anthology/MemoirSearchResults";
 
 interface UserContractsProps {
   userAddr: Address;
@@ -43,6 +44,8 @@ export const UserContracts: React.FC<UserContractsProps> = ({
   const dispatch = useAppDispatch();
   const currentUserAddr = useAppSelector((state) => state.user.userAddr);
   const categoryBackgroundsEnabled = useAppSelector((s) => s.dapp.categoryBackgroundsEnabled);
+
+  const [search, setSearch] = useState("");
 
   const EXPANDED_KEY = `anthology-expanded-${userAddr}`;
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>(() => {
@@ -114,7 +117,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                   }
                 }}
               >
-                {userAddr === LOCAL_USER_ADDR ? "Private Anthology" : shortenAddress(userAddr, 12, 9)}
+                {userAddr === LOCAL_USER_ADDR ? "Private Memory" : shortenAddress(userAddr, 12, 9)}
               </span>
               {userAddr === LOCAL_USER_ADDR && (
                 <span className="text-xs font-bold tracking-wider bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-md select-none">
@@ -128,8 +131,30 @@ export const UserContracts: React.FC<UserContractsProps> = ({
           )}
         </div>
 
-        {/* --- LISTA DE CATEGORÍAS (MASONRY LAYOUT) --- */}
-        {/* 🟢 CAMBIO AQUI: Usamos columns-1, md:columns-2, etc., en lugar de flex */}
+        {userAddr === LOCAL_USER_ADDR && (
+          <div className="w-full max-w-2xl mx-auto mb-6 relative">
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search all memoirs..."
+              className="w-full px-4 py-2 pr-10 rounded-xl bg-[#161b22] border border-sky-500/40 text-zinc-100 placeholder-zinc-500 outline-none"
+            />
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                aria-label="Clear search"
+                style={{ padding: 0 }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-none p-0 text-zinc-400 hover:text-zinc-100 text-sm leading-none cursor-pointer"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+        )}
+
+        {search.trim() ? (
+          <MemoirSearchResults term={search} />
+        ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full items-start">
           {processedData.categories.map(([category, categoryData]) => {
             const { items, subcategories } = categoryData;
@@ -230,6 +255,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
             </div>
           )}
         </div>
+        )}
       </div>
     </div>
   );
