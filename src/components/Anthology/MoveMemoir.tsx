@@ -190,7 +190,7 @@ export const MoveMemoir = ({
               checked={mode === "copy"}
               onChange={() => setMode("copy")}
             />
-            Copy
+            Copy to
           </label>
           <label
             style={{
@@ -205,7 +205,7 @@ export const MoveMemoir = ({
               checked={mode === "move"}
               onChange={() => setMode("move")}
             />
-            Move
+            Move to
           </label>
         </div>
 
