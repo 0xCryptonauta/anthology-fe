@@ -59,6 +59,7 @@ export const WalletConnector = () => {
         style={{ marginLeft: "5px", margin: "0px 5px" }}
       ></img>
       <span
+        title={t("wallet.disconnect")}
         style={{ marginLeft: "5px", cursor: "pointer", margin: "0px 5px" }}
         onClick={() => handleDisconnect()}
       >

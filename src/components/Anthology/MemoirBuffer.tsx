@@ -56,6 +56,7 @@ export const MemoirBuffer = ({ contractAddr }: { contractAddr: string }) => {
                 ✅
               </span>
               <span
+                title={t("memoirs.decline")}
                 style={{ cursor: "pointer" }}
                 onClick={async () => {
                   const txHash = await writeAnthology(
