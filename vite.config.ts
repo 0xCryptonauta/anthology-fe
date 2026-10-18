@@ -27,28 +27,6 @@ export default defineConfig({
           if (id.includes("node_modules/react-dom")) {
             return "react-dom";
           }
-          if (
-            id.includes("node_modules/@walletconnect/core/dist/index.es.js")
-          ) {
-            return "walletconnect-core";
-          }
-          if (
-            id.includes(
-              "node_modules/@walletconnect/sign-client/dist/index.es.js"
-            )
-          ) {
-            return "walletconnect-sign-client";
-          }
-          if (
-            id.includes(
-              "node_modules/@walletconnect/universal-provider/dist/index.es.js"
-            )
-          ) {
-            return "walletconnect-universal-provider";
-          }
-          if (id.includes("node_modules/@walletconnect/utils")) {
-            return "walletconnect-utils";
-          }
         },
       },
     },
