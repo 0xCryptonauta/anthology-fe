@@ -3,6 +3,9 @@
 See `CLAUDE.md` for tech stack, commands, and architecture overview. This file adds
 repo-specific gotchas and patterns that are easy to miss.
 
+**Design system**: `design.md` (repo root) is the single source of truth for
+colors, typography, components and interaction rules. Follow it for any UI work.
+
 ## Gotchas
 
 - **Pre-existing TS errors**: 12 errors in `AnthologyWhitelistedUsers`,
