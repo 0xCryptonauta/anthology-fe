@@ -31,23 +31,19 @@ export const OrderSelector = ({ value, onChange }: SelectorProps) => {
       onChange={handleChange}
       aria-label={t("a11y.orderSelector")}
       style={{
-        //appearance: "none",
+        height: "36px",
         backgroundColor: "#f9f9f9",
         color: "#111",
-        padding: "6px",
+        padding: "0 8px",
         borderRadius: "8px",
         border: "1px solid #e2e2e2",
-        fontSize: "16px",
+        fontSize: "14px",
         fontWeight: 500,
         cursor: "pointer",
         outline: "none",
         transition: "all 0.2s ease",
         boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-        //WebkitAppearance: "none",
-        //MozAppearance: "none",
       }}
-      onFocus={(e) => (e.currentTarget.style.borderColor = "#6366f1")}
-      onBlur={(e) => (e.currentTarget.style.borderColor = "#e2e2e2")}
     >
       {orderOptions.map((option) => (
         <option

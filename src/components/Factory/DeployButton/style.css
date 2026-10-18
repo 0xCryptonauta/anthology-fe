@@ -135,6 +135,8 @@
   justify-content: center;
   width: 36px;
   height: 36px;
+  padding: 0;
+  border: none;
   border-radius: 9999px;
   background: linear-gradient(135deg, #06b6d4, #2563eb);
   cursor: pointer;
@@ -146,6 +148,7 @@
 .btn-new-pill svg {
   width: 20px;
   height: 20px;
+  flex-shrink: 0;
   color: #fff;
 }
 

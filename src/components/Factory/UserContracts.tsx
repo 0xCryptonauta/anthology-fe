@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { shortenAddress } from "@utils/shortenAddress";
 import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
 import { syncUserContractsToStore } from "@src/store/utils/thunks";
@@ -37,6 +37,88 @@ const CATEGORY_COLORS = [
 
 const getCategoryStyles = (category: string) =>
   CATEGORY_COLORS[hashString(category) % CATEGORY_COLORS.length];
+
+// Scale the header font down for longer category names so they fit the 60px
+// card unit without truncating with an ellipsis.
+const getCategoryTitleSizeClass = (length: number): string => {
+  if (length <= 14) return "text-lg";
+  if (length <= 20) return "text-base";
+  if (length <= 26) return "text-sm";
+  return "text-xs";
+};
+
+/* ------------------------------- Card units ------------------------------- */
+// One unopened card = exactly one grid row. Expanded cards snap their height
+// to whole card units so their bottom edge lines up with the closed cards in
+// the neighbouring columns, and `grid-auto-flow: dense` moves the cards below
+// into the free slots beside them.
+const CARD_ROW_PX = 60; // unopened card height (p-4 padding + header)
+const CARD_PADDING_PX = 32; // p-4 top + bottom
+const CARD_GAP_PX = 16; // gap-4 between rows
+const CARD_PITCH_PX = CARD_ROW_PX + CARD_GAP_PX;
+
+interface CategoryCardProps {
+  title: React.ReactNode;
+  expanded: boolean;
+  onToggle: () => void;
+  className: string;
+  indicatorClassName: string;
+  children: React.ReactNode;
+}
+
+const CategoryCard: React.FC<CategoryCardProps> = ({
+  title,
+  expanded,
+  onToggle,
+  className,
+  indicatorClassName,
+  children,
+}) => {
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const [contentHeight, setContentHeight] = useState(0);
+
+  // Measure the card's natural content (header + expanded section) so the
+  // row span can be snapped to whole card units — re-measures on resize.
+  useEffect(() => {
+    const el = contentRef.current;
+    if (!el || !expanded) return;
+
+    const update = () => setContentHeight(el.scrollHeight);
+    update();
+
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [expanded]);
+
+  // N rows occupy N * pitch - gap px, and must fit the content plus padding.
+  const totalHeight = contentHeight + CARD_PADDING_PX;
+  const rowSpan = expanded
+    ? Math.max(2, Math.ceil((totalHeight + CARD_GAP_PX) / CARD_PITCH_PX))
+    : 1;
+
+  return (
+    <div
+      className={`${className} ${expanded ? "" : "flex flex-col justify-center"}`}
+      style={{ gridRow: `span ${rowSpan}`, overflow: "hidden" }}
+    >
+      <div ref={contentRef}>
+        <button
+          type="button"
+          aria-expanded={expanded}
+          className="flex justify-between items-center gap-2 cursor-pointer select-none w-full bg-transparent border-none p-0"
+          onClick={onToggle}
+        >
+          {title}
+          <span aria-hidden="true" className={indicatorClassName}>
+            {expanded ? "[-]" : "[+]"}
+          </span>
+        </button>
+        {expanded && children}
+      </div>
+    </div>
+  );
+};
 
 export const UserContracts: React.FC<UserContractsProps> = ({
   userAddr,
@@ -96,6 +178,106 @@ export const UserContracts: React.FC<UserContractsProps> = ({
     return { categories: sortedCategories, uncategorized: sortedUncategorized };
   }, [userTitles]);
 
+  // One card per category, plus the "Other" card. Expanded cards snap to
+  // whole card units (see CategoryCard) and `grid-auto-flow: dense` moves the
+  // cards below into the free slots beside them.
+  const categoryCards: React.ReactNode[] = processedData.categories.map(
+    ([category, categoryData]) => {
+      const { items, subcategories } = categoryData;
+      const isExpanded = expandedCategories[category] || false;
+      const neonStyles = getCategoryStyles(category);
+
+      return (
+        <CategoryCard
+          key={category}
+          expanded={isExpanded}
+          onToggle={() => toggleCategory(category)}
+          className={`p-4 ${categoryBackgroundsEnabled ? `${getBgClass(category)} text-shadow-dark` : ""} rounded-xl transition-all duration-200 ${neonStyles}`}
+          indicatorClassName="shrink-0 text-xs text-zinc-300 font-mono tracking-wider px-2 py-1 rounded"
+          title={
+            <h3
+              className={`m-0 font-bold tracking-wide ${getCategoryTitleSizeClass(category.length)}`}
+              translate="no"
+            >
+              {category}
+            </h3>
+          }
+        >
+          <div className="animate-fadeIn mt-4">
+            <ul className="space-y-2 ml-2">
+              {items.map(({ address, title }) => (
+                <li key={address}>
+                  <button
+                    type="button"
+                    translate="no"
+                    className="text-lg cursor-pointer text-white hover:text-white transition-colors bg-transparent border-none p-0 text-left"
+                    onClick={() => handleOnClick(`contract/${address}`)}
+                  >
+                    &middot; {title}
+                  </button>
+                </li>
+              ))}
+            </ul>
+
+            {Object.entries(subcategories).map(([sub, subItems]) => (
+              <div key={sub} className="mt-4 p-3 rounded-lg border-zinc-800">
+                <h5 className="text-lg font-semibold text-white mb-2" translate="no">{sub}</h5>
+                <ul className="space-y-1.5 ml-1">
+                  {subItems.map(({ address, title }) => (
+                    <li key={address}>
+                      <button
+                        type="button"
+                        translate="no"
+                        className="text-lg cursor-pointer text-white hover:text-white transition-colors bg-transparent border-none p-0 text-left"
+                        onClick={() => handleOnClick(`contract/${address}`)}
+                      >
+                        &middot; {title}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </CategoryCard>
+      );
+    }
+  );
+
+  if (processedData.uncategorized.length > 0) {
+    const isUncategorizedExpanded =
+      expandedCategories["Uncategorized_General_Key"] || false;
+
+    categoryCards.push(
+      <CategoryCard
+        key="uncategorized"
+        expanded={isUncategorizedExpanded}
+        onToggle={() => toggleCategory("Uncategorized_General_Key")}
+        className={`p-4 ${categoryBackgroundsEnabled ? `${getBgClass("uncategorized")} text-shadow-dark` : ""} rounded-xl border-zinc-800`}
+        indicatorClassName="shrink-0 text-xs text-zinc-300 font-mono bg-zinc-800/60 px-2 py-1 rounded"
+        title={
+          <h3 className="m-0 text-lg font-bold text-white">
+            {t("common.other")}
+          </h3>
+        }
+      >
+        <ul className="space-y-2 ml-2 animate-fadeIn mt-4">
+          {processedData.uncategorized.map(({ address, title }) => (
+            <li key={address}>
+              <button
+                type="button"
+                translate="no"
+                className="text-sm cursor-pointer text-white hover:text-white transition-colors bg-transparent border-none p-0 text-left"
+                onClick={() => handleOnClick(`contract/${address}`)}
+              >
+                &middot; {title.trim() ? title : shortenAddress(address, 12, 9)}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </CategoryCard>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center w-full p-6 text-zinc-100 min-h-screen">
@@ -162,115 +344,14 @@ export const UserContracts: React.FC<UserContractsProps> = ({
         {search.trim() ? (
           <MemoirSearchResults term={search} />
         ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 w-full items-start">
-          {processedData.categories.map(([category, categoryData]) => {
-            const { items, subcategories } = categoryData;
-            const isExpanded = expandedCategories[category] || false; 
-            const neonStyles = getCategoryStyles(category);
-
-            return (
-              <div
-                key={category}
-                /* 🟢 CAMBIO AQUI: break-inside-avoid e inline-block son críticos para que 
-                   la tarjeta no se corte a la mitad entre dos columnas */
-                className={`p-4 ${categoryBackgroundsEnabled ? `${getBgClass(category)} text-shadow-dark` : ""} rounded-xl transition-all duration-200 ${neonStyles}`}
-              >
-                <button
-                  type="button"
-                  aria-expanded={isExpanded}
-                  className="flex justify-between items-center cursor-pointer select-none w-full bg-transparent border-none"
-                  onClick={() => toggleCategory(category)}
-                >
-                  <h3 className="text-lg font-bold tracking-wide" translate="no">{category}</h3>
-                  <span aria-hidden="true" className="text-xs text-zinc-300 font-mono tracking-wider px-2 py-1 rounded">
-                    {isExpanded ? "[-]" : "[+]"}
-                  </span>
-                </button>
-
-                {isExpanded && (
-                  <div className="animate-fadeIn mt-4">
-                    <ul className="space-y-2 ml-2">
-                      {items.map(({ address, title }) => (
-                        <li key={address}>
-                          <button
-                            type="button"
-                            translate="no"
-                            className="text-lg cursor-pointer text-white hover:text-white transition-colors bg-transparent border-none p-0 text-left"
-                            onClick={() => handleOnClick(`contract/${address}`)}
-                          >
-                            &middot; {title}
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-
-                    {Object.entries(subcategories).map(([sub, subItems]) => (
-                      <div key={sub} className="mt-4 p-3 rounded-lg border-zinc-800">
-                        <h5 className="text-lg font-semibold text-white mb-2" translate="no">{sub}</h5>
-                        <ul className="space-y-1.5 ml-1">
-                          {subItems.map(({ address, title }) => (
-                            <li key={address}>
-                              <button
-                                type="button"
-                                translate="no"
-                                className="text-lg cursor-pointer text-white hover:text-white transition-colors bg-transparent border-none p-0 text-left"
-                                onClick={() => handleOnClick(`contract/${address}`)}
-                              >
-                                &middot; {title}
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-
-          {/* --- (UNCATEGORIZED) --- */}
-          {processedData.uncategorized.length > 0 && (
-            <div className={`p-4 ${categoryBackgroundsEnabled ? `${getBgClass("uncategorized")} text-shadow-dark` : ""} rounded-xl border-zinc-800`}>
-              {
-                (() => {
-                  const isUncategorizedExpanded = expandedCategories["Uncategorized_General_Key"] || false;
-                  return (
-                    <>
-                      <button
-                        type="button"
-                        aria-expanded={isUncategorizedExpanded}
-                        className="flex justify-between items-center cursor-pointer select-none w-full bg-transparent border-none"
-                        onClick={() => toggleCategory("Uncategorized_General_Key")}
-                      >
-                        <h3 className="text-lg font-bold text-white">{t("common.other")}</h3>
-                        <span aria-hidden="true" className="text-xs text-zinc-300 font-mono bg-zinc-800/60 px-2 py-1 rounded">
-                          {isUncategorizedExpanded ? "[-]" : "[+]"}
-                        </span>
-                      </button>
-
-                      {isUncategorizedExpanded && (
-                        <ul className="space-y-2 ml-2 animate-fadeIn mt-4">
-                          {processedData.uncategorized.map(({ address, title }) => (
-                            <li key={address}>
-                              <button
-                                type="button"
-                                translate="no"
-                                className="text-sm cursor-pointer text-white hover:text-white transition-colors bg-transparent border-none p-0 text-left"
-                                onClick={() => handleOnClick(`contract/${address}`)}
-                              >
-                                &middot; {title.trim() ? title : shortenAddress(address, 12, 9)}
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </>
-                  );
-                })()
-              }
-            </div>
-          )}
+        <div
+          /* Unit grid: fixed 60px rows + dense flow. An expanded card spans
+             whole card units, so its bottom edge aligns with the closed cards
+             beside it and the cards below slide into the free slots. */
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid-flow-dense gap-4 w-full"
+          style={{ gridAutoRows: `${CARD_ROW_PX}px` }}
+        >
+          {categoryCards}
         </div>
         )}
       </div>
