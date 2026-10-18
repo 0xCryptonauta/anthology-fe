@@ -1,14 +1,13 @@
 /**
- * Search matching with a configurable accuracy threshold.
+ * Search matching: every query word must match a text word with at least
+ * SEARCH_ACCURACY similarity (Levenshtein). 1.0 = exact words only; 0.9
+ * tolerates a typo in longer words (e.g. "completon" ≈ "completion").
  *
- * SEARCH_ACCURACY = 1 → exact mode: every query word must appear as a
- * standalone word in the text ("test" matches "a test", not "latest" or
- * "testing").
- *
- * Lower the constant (e.g. 0.9) to allow substring and approximate matches.
+ * There is no substring matching — "test" does not match "latest" or
+ * "testing".
  */
 
-export const SEARCH_ACCURACY = 1;
+export const SEARCH_ACCURACY = 0.9;
 
 const levenshtein = (a: string, b: string): number => {
   const cols = b.length + 1;
@@ -41,20 +40,9 @@ export const matchesSearch = (text: string, query: string): boolean => {
   const queryWords = normalizedQuery.split(/\s+/).filter(Boolean);
   const textWords = normalizedText.split(/[^\p{L}\p{N}]+/u).filter(Boolean);
 
-  // Exact mode: every query word must appear as a standalone word
-  if (SEARCH_ACCURACY >= 1) {
-    return queryWords.every((queryWord) => textWords.includes(queryWord));
-  }
-
-  // Loose mode: whole-query substring, partial words, or approximate words
-  if (normalizedText.includes(normalizedQuery)) return true;
-
   return queryWords.every((queryWord) =>
-    textWords.some((textWord) => {
-      if (textWord.includes(queryWord) || queryWord.includes(textWord)) {
-        return true;
-      }
-      return similarity(queryWord, textWord) >= SEARCH_ACCURACY;
-    })
+    textWords.some(
+      (textWord) => similarity(queryWord, textWord) >= SEARCH_ACCURACY
+    )
   );
 };
