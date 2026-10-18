@@ -148,7 +148,7 @@ export const SidePanel = () => {
               textDecoration: "none",
             }}
           >
-            Private Anthologies
+            Private Memory
           </Link>
         </div>
         <div

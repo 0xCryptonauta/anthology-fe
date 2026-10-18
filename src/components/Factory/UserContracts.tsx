@@ -117,7 +117,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                   }
                 }}
               >
-                {userAddr === LOCAL_USER_ADDR ? "Private Anthology" : shortenAddress(userAddr, 12, 9)}
+                {userAddr === LOCAL_USER_ADDR ? "Private Memory" : shortenAddress(userAddr, 12, 9)}
               </span>
               {userAddr === LOCAL_USER_ADDR && (
                 <span className="text-xs font-bold tracking-wider bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-md select-none">
@@ -136,7 +136,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search all memoirs (local + blockchain) by title or content..."
+              placeholder="Search all memoirs..."
               className="w-full px-4 py-2 pr-10 rounded-xl bg-[#161b22] border border-sky-500/40 text-zinc-100 placeholder-zinc-500 outline-none"
             />
             {search && (
