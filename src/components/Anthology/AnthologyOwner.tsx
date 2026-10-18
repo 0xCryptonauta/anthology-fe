@@ -1,7 +1,6 @@
 import { useState, useMemo } from "react";
 import { parseEther } from "viem";
 import { writeAnthology } from "@src/contract-functions/anthologyFunctions";
-//import { ChangeAnthologyTitle } from "./ChangeAnthologyTitle";
 import { useToast } from "@components/Layout/Toast";
 
 import { useAppSelector, useAppDispatch } from "@store/utils/hooks";
@@ -18,6 +17,49 @@ import { ChangeAnthologyDefaultSkin } from "./ChangeAnthologyDefaultSkin";
 import { TitleEditor } from "@components/Factory/TitleEditor";
 import { Modal } from "@src/components/Layout/Modal";
 
+const sectionStyle: React.CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  gap: "6px",
+  width: "100%",
+  padding: "10px",
+  borderRadius: "8px",
+  backgroundColor: "rgba(255, 255, 255, 0.06)",
+  border: "1px solid rgba(255, 255, 255, 0.15)",
+  boxSizing: "border-box",
+};
+
+const inputRowStyle: React.CSSProperties = {
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "center",
+  gap: "8px",
+  width: "100%",
+};
+
+const inputStyle: React.CSSProperties = {
+  flex: 1,
+  padding: "6px 10px",
+  borderRadius: "6px",
+  border: "1px solid #cbd5e1",
+  backgroundColor: "#fff",
+  color: "#111",
+  fontSize: "14px",
+  outline: "none",
+};
+
+const actionBtnStyle: React.CSSProperties = {
+  backgroundColor: "#111827",
+  color: "#fff",
+  border: "1px solid rgba(255, 255, 255, 0.2)",
+  padding: "6px 12px",
+  borderRadius: "6px",
+  fontSize: "13px",
+  fontWeight: 500,
+  cursor: "pointer",
+  whiteSpace: "nowrap",
+};
+
 export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
   const { addToast } = useToast();
 
@@ -27,8 +69,10 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
 
   const dispatch = useAppDispatch();
 
-  const { contractsTitles: factoryTitles, userContracts: factoryUserContracts } =
-    useAppSelector((state) => state.factory);
+  const {
+    contractsTitles: factoryTitles,
+    userContracts: factoryUserContracts,
+  } = useAppSelector((state) => state.factory);
 
   const userTitles: MemoirContent[] = useMemo(() => {
     const owner = anthologyState?.owner;
@@ -41,13 +85,16 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
     }));
   }, [factoryTitles, factoryUserContracts, anthologyState?.owner]);
 
-  // input fields value
   const [addressToAdd, setAddresToAdd] = useState("");
   const [addressToRemove, setAddressToRemove] = useState("");
   const [erc20TokenAddr, setErc20TokenAddr] = useState("");
   const [memoirPrice, setMemoirPrice] = useState<string>("0");
   const [newMaxMemoirs, setNewMaxMemoirs] = useState("");
   const [showTitleModal, setShowTitleModal] = useState(false);
+  const [confirmCleanType, setConfirmCleanType] = useState<
+    "memoirs" | "buffer" | "whitelist" | null
+  >(null);
+
   const handleCloseTitleModal = () => setShowTitleModal(false);
 
   const handleTitleSubmit = async (combinedTitle: string) => {
@@ -87,21 +134,73 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
     }
   };
 
+  const handleConfirmedClean = async () => {
+    if (!confirmCleanType) return;
+    const currentType = confirmCleanType;
+    setConfirmCleanType(null);
+
+    try {
+      if (currentType === "memoirs") {
+        const txHash = await writeAnthology(contractAddr, "cleanMemoirs");
+        if (txHash) {
+          addToast({
+            title: "Cleaning memoirs",
+            content: "txHash: " + txHash,
+            variant: "success",
+            delay: 5000,
+          });
+        }
+      } else if (currentType === "buffer") {
+        const txHash = await writeAnthology(contractAddr, "cleanMemoirBuffer");
+        if (txHash) {
+          addToast({
+            title: "Cleaning memoir buffer",
+            content: "txHash: " + txHash,
+            variant: "success",
+            delay: 5000,
+          });
+        }
+      } else if (currentType === "whitelist") {
+        const txHash = await writeAnthology(contractAddr, "cleanWhitelist");
+        if (txHash) {
+          addToast({
+            title: "Cleaning whitelist",
+            content: "txHash: " + txHash,
+            variant: "success",
+            delay: 5000,
+          });
+        }
+      }
+    } catch (error) {
+      addToast({
+        title: `Error cleaning ${currentType}`,
+        content: "Unknown error",
+        variant: "warning",
+        delay: 5000,
+      });
+      console.error(`Error cleaning ${currentType}`, error);
+    }
+  };
+
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "space-around",
-        border: "1px solid white",
-        width: "fit-content",
-        padding: "7px",
-        borderRadius: "7px",
+        gap: "12px",
+        width: "100%",
+        maxWidth: "360px",
+        padding: "14px",
+        borderRadius: "10px",
         margin: "20px 5px",
+        boxSizing: "border-box",
       }}
     >
-      <h2>Anthology Owner</h2>
+      <h3 style={{ fontSize: "1.2rem", fontWeight: 600, margin: 0 }}>
+        Anthology Settings
+      </h3>
+
       {/* ------------------------------- Update Anthology title ------------------------------ */}
       <Modal
         placement="bottom"
@@ -110,7 +209,6 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
         trigger={
           <button
             style={{
-              margin: "5px",
               backgroundColor: "dodgerblue",
               border: "none",
               color: "white",
@@ -118,6 +216,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
               borderRadius: "6px",
               cursor: "pointer",
               fontSize: "0.9rem",
+              width: "100%",
             }}
             onClick={() => setShowTitleModal(true)}
           >
@@ -156,70 +255,110 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
         </div>
       </Modal>
 
+      {/* ------------------------------- setDefaultSkin ------------------------------ */}
+      <ChangeAnthologyDefaultSkin contractAddr={contractAddr} />
+
       {/* ------------------------------- Update Anthology price ------------------------------ */}
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          border: "1px solid white",
-          width: "fit-content",
-          padding: "7px",
-          borderRadius: "7px",
-          margin: "5px",
-        }}
-      >
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <span>Set new anthology price</span>
+      <div style={sectionStyle}>
+        <span style={{ fontSize: "14px", fontWeight: 500 }}>
+          Price per memoir
+        </span>
+        <div style={inputRowStyle}>
           <input
             type="number"
-            placeholder="Add address to WL"
+            placeholder="0"
             value={memoirPrice}
-            onChange={(event) => {
-              setMemoirPrice(event.target.value);
-            }}
+            onChange={(event) => setMemoirPrice(event.target.value)}
             autoComplete="new-password"
-          ></input>
-        </div>
-
-        <span
-          style={{ marginLeft: "7px", cursor: "pointer" }}
-          onClick={async () => {
-            try {
-              //Check first if users include address before call
-              const txHash = await writeAnthology(
-                contractAddr,
-                "setMemoirPrice",
-                [parseEther(memoirPrice)]
-              );
-              console.log("updating price", txHash);
-              if (txHash) {
+            style={inputStyle}
+          />
+          <button
+            style={actionBtnStyle}
+            onClick={async () => {
+              try {
+                const txHash = await writeAnthology(
+                  contractAddr,
+                  "setMemoirPrice",
+                  [parseEther(memoirPrice)]
+                );
+                if (txHash) {
+                  addToast({
+                    title: "New price:",
+                    content: memoirPrice,
+                    variant: "success",
+                    delay: 5000,
+                  });
+                }
+              } catch (error) {
                 addToast({
-                  title: "New price:",
-                  content: memoirPrice,
-                  variant: "success",
+                  title: "Error setting new price",
+                  content: "Unknown error",
+                  variant: "warning",
                   delay: 5000,
                 });
+                console.error("Error setting new price", error);
               }
-            } catch (error) {
-              addToast({
-                title: "Error setting new price",
-                content: "Unknown error",
-                variant: "warning",
-                delay: 5000,
-              });
-              console.error("Error setting new price", error);
-            }
-          }}
-        >
-          💰
-        </span>
+            }}
+          >
+            Save
+          </button>
+        </div>
       </div>
 
-      {/* ---------------------------------- Toggle useERC20 ---------------------------------- */}
+      {/* ------------------------------- setMaxMemoirs ------------------------------ */}
+      <div style={sectionStyle}>
+        <span style={{ fontSize: "14px", fontWeight: 500 }}>
+          Max memoirs allowed
+        </span>
+        <div style={inputRowStyle}>
+          <input
+            type="number"
+            placeholder="Max memoirs"
+            value={newMaxMemoirs}
+            onChange={(event) => setNewMaxMemoirs(event.target.value)}
+            autoComplete="new-password"
+            style={inputStyle}
+          />
+          <button
+            style={actionBtnStyle}
+            onClick={async () => {
+              try {
+                const txHash = await writeAnthology(
+                  contractAddr,
+                  "setMaxMemoirs",
+                  [newMaxMemoirs]
+                );
+                if (txHash) {
+                  addToast({
+                    title: "New max number of memoirs:",
+                    content: newMaxMemoirs + "\n\nTxHash: " + txHash,
+                    variant: "success",
+                    delay: 5000,
+                  });
+                }
+              } catch (error) {
+                addToast({
+                  title: "Error setting max memoirs",
+                  content: "Unknown error",
+                  variant: "warning",
+                  delay: 5000,
+                });
+                console.error("Error setting new maxMemoirs", error);
+              }
+            }}
+          >
+            Save
+          </button>
+        </div>
+      </div>
 
-      <div style={{ margin: "5px" }}>
+      {/* ---------------------------------- Toggle useERC20 & Token ---------------------------------- */}
+      <div style={sectionStyle}>
+        <span style={{ fontSize: "14px", fontWeight: 500 }}>
+          Payment method
+        </span>
         <button
+          style={{ ...actionBtnStyle, width: "100%" }}
           onClick={async () => {
             try {
               const txHash = await writeAnthology(contractAddr, "setUseERC20", [
@@ -241,7 +380,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
               }
             } catch (error) {
               addToast({
-                title: "Error setting ",
+                title: "Error updating payment method",
                 content: "Unknown error",
                 variant: "warning",
                 delay: 5000,
@@ -251,75 +390,57 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
           }}
         >
           {anthologyState && anthologyState.useERC20
-            ? "Change to ETH payment"
-            : "Change to ERC20 payment"}
+            ? "Switch to ETH payment"
+            : "Switch to Token (ERC20) payment"}
         </button>
-      </div>
 
-      {/* ----------------------------------- setERC20Token ----------------------------------- */}
-
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          border: "1px solid white",
-          width: "fit-content",
-          padding: "7px",
-          borderRadius: "7px",
-          margin: "5px",
-        }}
-      >
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <span>Set ERC20 token Address</span>
+        <div style={{ ...inputRowStyle, marginTop: "4px" }}>
           <input
             type="text"
-            placeholder="ERC20 Address"
+            placeholder="Token contract address (0x...)"
             value={erc20TokenAddr}
-            onChange={(event) => {
-              setErc20TokenAddr(event.target.value);
-            }}
+            onChange={(event) => setErc20TokenAddr(event.target.value)}
             autoComplete="new-password"
-          ></input>
-        </div>
-
-        <span
-          style={{ marginLeft: "7px", cursor: "pointer" }}
-          onClick={async () => {
-            try {
-              //Check first if users include address before call
-              const txHash = await writeAnthology(
-                contractAddr,
-                "setERC20Token",
-                [erc20TokenAddr]
-              );
-              if (txHash) {
+            style={inputStyle}
+          />
+          <button
+            style={actionBtnStyle}
+            onClick={async () => {
+              try {
+                const txHash = await writeAnthology(
+                  contractAddr,
+                  "setERC20Token",
+                  [erc20TokenAddr]
+                );
+                if (txHash) {
+                  addToast({
+                    title: "Token address set to:",
+                    content: erc20TokenAddr + "\n\nTxHash: " + txHash,
+                    variant: "success",
+                    delay: 5000,
+                  });
+                }
+              } catch (error) {
                 addToast({
-                  title: "ERC20 address set to:",
-                  content: erc20TokenAddr + "\n\nTxHash: " + txHash,
-                  variant: "success",
+                  title: "Error setting token address",
+                  content: "Unknown error",
+                  variant: "warning",
                   delay: 5000,
                 });
+                console.error("Error setting erc20 address", error);
               }
-            } catch (error) {
-              addToast({
-                title: "Error setting new price",
-                content: "Unknown error",
-                variant: "warning",
-                delay: 5000,
-              });
-              console.error("Error setting erc20 address", error);
-            }
-          }}
-        >
-          📝
-        </span>
+            }}
+          >
+            Set Token
+          </button>
+        </div>
       </div>
 
-      {/* ---------------------------------- Toggle whitelist --------------------------------- */}
-
-      <div style={{ margin: "5px" }}>
+      {/* ---------------------------------- Whitelist Controls --------------------------------- */}
+      <div style={sectionStyle}>
+        <span style={{ fontSize: "14px", fontWeight: 500 }}>Whitelist</span>
         <button
+          style={{ ...actionBtnStyle, width: "100%" }}
           onClick={async () => {
             try {
               const txHash = await writeAnthology(
@@ -345,7 +466,7 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
               }
             } catch (error) {
               addToast({
-                title: "error setting whitelist",
+                title: "Error updating whitelist",
                 content: "Unknown error",
                 variant: "warning",
                 delay: 5000,
@@ -355,143 +476,100 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
           }}
         >
           {anthologyState && anthologyState?.whitelistEnabled
-            ? "Deactivate whitelist"
-            : "Activate Whitelist"}
+            ? "Disable whitelist"
+            : "Enable whitelist"}
         </button>
-      </div>
 
-      {/* ---------------------------------- Add to Whitelist --------------------------------- */}
-
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          border: "1px solid white",
-          width: "fit-content",
-          padding: "7px",
-          borderRadius: "7px",
-          margin: "5px",
-        }}
-      >
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        <div style={{ ...inputRowStyle, marginTop: "4px" }}>
           <input
             type="text"
-            placeholder="Add address to WL"
+            placeholder="Address to allow (0x...)"
             value={addressToAdd}
-            onChange={(event) => {
-              setAddresToAdd(event.target.value);
-            }}
+            onChange={(event) => setAddresToAdd(event.target.value)}
             autoComplete="new-password"
-          ></input>
-        </div>
-
-        <span
-          style={{ marginLeft: "7px", cursor: "pointer" }}
-          onClick={async () => {
-            //Check first if users include address before call
-
-            try {
-              const txHash = await writeAnthology(
-                contractAddr,
-                "addToWhitelist",
-                [addressToAdd]
-              );
-              if (txHash) {
+            style={inputStyle}
+          />
+          <button
+            style={actionBtnStyle}
+            onClick={async () => {
+              try {
+                const txHash = await writeAnthology(
+                  contractAddr,
+                  "addToWhitelist",
+                  [addressToAdd]
+                );
+                if (txHash) {
+                  addToast({
+                    title: "Address added to whitelist",
+                    content: addressToAdd + "\n\nTxHash: " + txHash,
+                    variant: "success",
+                    delay: 5000,
+                  });
+                }
+              } catch (error) {
                 addToast({
-                  title: "Address added to whitelist",
-                  content: addressToAdd + "\n\nTxHash: " + txHash,
-                  variant: "success",
+                  title: "Error adding to whitelist",
+                  content: "Unknown error",
+                  variant: "warning",
                   delay: 5000,
                 });
+                console.error("Error adding to whitelist", error);
               }
-            } catch (error) {
-              addToast({
-                title: "Error addng to whitelist",
-                content: "Unknown error",
-                variant: "warning",
-                delay: 5000,
-              });
-              console.error("Error adding to whitelist", error);
-            }
-          }}
-        >
-          📥
-        </span>
-      </div>
+            }}
+          >
+            Add
+          </button>
+        </div>
 
-      {/* -------------------------------- Remove From Whitelist ------------------------------ */}
-
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          border: "1px solid white",
-          width: "fit-content",
-          padding: "7px",
-          borderRadius: "7px",
-          margin: "5px",
-        }}
-      >
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        <div style={inputRowStyle}>
           <input
             type="text"
-            placeholder="Remove from WL"
+            placeholder="Address to remove (0x...)"
             value={addressToRemove}
-            onChange={(event) => {
-              setAddressToRemove(event.target.value);
-            }}
+            onChange={(event) => setAddressToRemove(event.target.value)}
             autoComplete="new-password"
-          ></input>
-        </div>
-
-        <span
-          style={{ marginLeft: "7px", cursor: "pointer" }}
-          onClick={async () => {
-            try {
-              //Check first if users include address before call
-              const txHash = await writeAnthology(
-                contractAddr,
-                "removeFromWhitelist",
-                [addressToRemove]
-              );
-              if (txHash) {
+            style={inputStyle}
+          />
+          <button
+            style={actionBtnStyle}
+            onClick={async () => {
+              try {
+                const txHash = await writeAnthology(
+                  contractAddr,
+                  "removeFromWhitelist",
+                  [addressToRemove]
+                );
+                if (txHash) {
+                  addToast({
+                    title: "Address removed from whitelist",
+                    content: addressToRemove + "\n\nTxHash: " + txHash,
+                    variant: "success",
+                    delay: 5000,
+                  });
+                }
+              } catch (error) {
                 addToast({
-                  title: "Address removed from whitelist",
-                  content: addressToRemove + "\n\nTxHash: " + txHash,
-                  variant: "success",
+                  title: "Error removing from whitelist",
+                  content: "Unknown error",
+                  variant: "warning",
                   delay: 5000,
                 });
+                console.error("Error removing from whitelist", error);
               }
-            } catch (error) {
-              addToast({
-                title: "Error removing from whitelist",
-                content: "Unknown error",
-                variant: "warning",
-                delay: 5000,
-              });
-              console.error("Error removing from whitelist", error);
-            }
-          }}
-        >
-          <img
-            src="/icons/share-icon.svg"
-            alt="Remove from whitelist"
-            style={{
-              width: "18px",
-              height: "18px",
-              display: "block",
-              filter: "invert(1)",
             }}
-          />
-        </span>
+          >
+            Remove
+          </button>
+        </div>
       </div>
 
       {/* ----------------------------------- Set useBuffer ------------------------------------ */}
-
-      <div>
+      <div style={sectionStyle}>
+        <span style={{ fontSize: "14px", fontWeight: 500 }}>
+          Moderation buffer
+        </span>
         <button
+          style={{ ...actionBtnStyle, width: "100%" }}
           onClick={async () => {
             try {
               const txHash = await writeAnthology(
@@ -526,189 +604,143 @@ export const AnthologyOwner = ({ contractAddr }: { contractAddr: Address }) => {
             }
           }}
         >
-          <span>
-            {anthologyState?.useBuffer
-              ? "Deactivate buffer"
-              : "Activate buffer"}
-          </span>
+          {anthologyState?.useBuffer
+            ? "Disable moderation buffer"
+            : "Enable moderation buffer"}
         </button>
       </div>
-      {/* ----------------------------------- Set isFrozen ------------------------------------ */}
 
-      {/* <div>
-        <button
-          onClick={async () => {
-            const _newValue = !isFrozen;
-            const txHash = await callSetIsFrozen(_newValue);
-            console.log("Updating isFrozen:", txHash);
-            if (txHash) dispatch(updateIsFrozen(_newValue));
-          }}
-        >
-          <span>{isFrozen ? "Unfreeze contract" : "Freeze contract"}</span>
-        </button>
-      </div> */}
-
-      {/* ------------------------------- setMaxMemoirs ------------------------------ */}
+      {/* ----------------------------------- Destructive Actions ------------------------------------ */}
       <div
         style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          border: "1px solid white",
-          width: "fit-content",
-          padding: "7px",
-          borderRadius: "7px",
-          margin: "5px",
+          ...sectionStyle,
+          borderColor: "rgba(220, 38, 38, 0.4)",
+          gap: "8px",
         }}
       >
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <span>Set new maxMemoirs</span>
-          <input
-            type="number"
-            placeholder="new max memoir"
-            value={newMaxMemoirs}
-            onChange={(event) => {
-              setNewMaxMemoirs(event.target.value);
+        <span style={{ fontSize: "14px", fontWeight: 500, color: "#fca5a5" }}>
+          Danger Zone
+        </span>
+        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+          <button
+            style={{
+              backgroundColor: "red",
+              color: "white",
+              border: "none",
+              padding: "6px 12px",
+              borderRadius: "6px",
+              fontSize: "13px",
+              cursor: "pointer",
+              flex: 1,
             }}
-            autoComplete="new-password"
-          ></input>
+            onClick={() => setConfirmCleanType("memoirs")}
+          >
+            Delete all memoirs
+          </button>
+          <button
+            style={{
+              backgroundColor: "red",
+              color: "white",
+              border: "none",
+              padding: "6px 12px",
+              borderRadius: "6px",
+              fontSize: "13px",
+              cursor: "pointer",
+              flex: 1,
+            }}
+            onClick={() => setConfirmCleanType("buffer")}
+          >
+            Clear buffer
+          </button>
+          <button
+            style={{
+              backgroundColor: "red",
+              color: "white",
+              border: "none",
+              padding: "6px 12px",
+              borderRadius: "6px",
+              fontSize: "13px",
+              cursor: "pointer",
+              flex: 1,
+            }}
+            onClick={() => setConfirmCleanType("whitelist")}
+          >
+            Clear whitelist
+          </button>
+        </div>
+      </div>
+
+      <Modal
+        placement="bottom"
+        show={confirmCleanType !== null}
+        onHide={() => setConfirmCleanType(null)}
+        trigger={<span style={{ display: "none" }} />}
+      >
+        <div
+          style={{
+            margin: "24px 10px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "8px",
+            color: "#1a1a1a",
+          }}
+        >
+          <span style={{ fontWeight: "bold", textAlign: "center" }}>
+            {confirmCleanType === "memoirs"
+              ? "Delete all memoirs in this anthology?"
+              : confirmCleanType === "buffer"
+              ? "Clear all pending memoirs in the moderation buffer?"
+              : "Remove all addresses from the whitelist?"}
+          </span>
+          <span style={{ textAlign: "center" }}>
+            This will send a blockchain transaction to clear the{" "}
+            {confirmCleanType === "memoirs"
+              ? "memoirs"
+              : confirmCleanType === "buffer"
+              ? "moderation buffer"
+              : "whitelist"}{" "}
+            in <strong>{anthologyState?.title || "this anthology"}</strong>.
+            This action cannot be undone.
+          </span>
         </div>
 
-        <span
-          style={{ marginLeft: "7px", cursor: "pointer" }}
-          onClick={async () => {
-            try {
-              //Check first if users include address before call
-              const txHash = await writeAnthology(
-                contractAddr,
-                "setMaxMemoirs",
-                [newMaxMemoirs]
-              );
-              if (txHash) {
-                addToast({
-                  title: "New max number of memoirs:",
-                  content: newMaxMemoirs + "\n\nTxHash: " + txHash,
-                  variant: "success",
-                  delay: 5000,
-                });
-              }
-            } catch (error) {
-              addToast({
-                title: "Error setting new maxMemoirs",
-                content: "Unknown error",
-                variant: "warning",
-                delay: 5000,
-              });
-              console.error("Error setting new maxMemoirs", error);
-            }
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "10px",
+            marginTop: "10px",
           }}
         >
-          💰
-        </span>
-      </div>
-
-      {/* ------------------------------- setDefaultSkin ------------------------------ */}
-
-      <ChangeAnthologyDefaultSkin contractAddr={contractAddr} />
-
-      {/* ----------------------------------- cleanMemoirs ------------------------------------ */}
-
-      <div style={{ margin: "5px" }}>
-        <button
-          style={{ backgroundColor: "red" }}
-          onClick={async () => {
-            try {
-              const txHash = await writeAnthology(contractAddr, "cleanMemoirs");
-              if (txHash) {
-                addToast({
-                  title: "Cleaning memoirs",
-                  content: "txHash: " + txHash,
-                  variant: "success",
-                  delay: 5000,
-                });
-              }
-            } catch (error) {
-              addToast({
-                title: "Error cleaning memoirs",
-                content: "Unknown error",
-                variant: "warning",
-                delay: 5000,
-              });
-              console.error("Error cleaning memoirs", error);
-            }
-          }}
-        >
-          Clean Memoirs
-        </button>
-      </div>
-
-      {/* ----------------------------------- cleanMemoirBuffer ------------------------------------ */}
-
-      <div style={{ margin: "5px" }}>
-        <button
-          style={{ backgroundColor: "red" }}
-          onClick={async () => {
-            try {
-              const txHash = await writeAnthology(
-                contractAddr,
-                "cleanMemoirBuffer"
-              );
-              if (txHash) {
-                addToast({
-                  title: "Cleaning memoir buffer",
-                  content: "txHash: " + txHash,
-                  variant: "success",
-                  delay: 5000,
-                });
-              }
-            } catch (error) {
-              addToast({
-                title: "Error cleaning memoirs buffer",
-                content: "Unknown error",
-                variant: "warning",
-                delay: 5000,
-              });
-              console.error("Error cleaning memoirs buffer", error);
-            }
-          }}
-        >
-          Clean Buffer
-        </button>
-      </div>
-
-      {/* ----------------------------------- cleanWhitelist ------------------------------------ */}
-
-      <div style={{ margin: "5px" }}>
-        <button
-          style={{ backgroundColor: "red" }}
-          onClick={async () => {
-            try {
-              const txHash = await writeAnthology(
-                contractAddr,
-                "cleanWhitelist"
-              );
-              if (txHash) {
-                addToast({
-                  title: "Cleaning whitelist",
-                  content: "txHash: " + txHash,
-                  variant: "success",
-                  delay: 5000,
-                });
-              }
-            } catch (error) {
-              addToast({
-                title: "Error cleaning whitelist",
-                content: "Unknown error",
-                variant: "warning",
-                delay: 5000,
-              });
-              console.error("Error cleaning whitelist", error);
-            }
-          }}
-        >
-          Clean Whitelist
-        </button>
-      </div>
+          <button
+            style={{
+              backgroundColor: "#e2e8f0",
+              color: "#1a1a1a",
+              padding: "10px 20px",
+              borderRadius: "5px",
+              border: "none",
+              cursor: "pointer",
+            }}
+            onClick={() => setConfirmCleanType(null)}
+          >
+            Cancel
+          </button>
+          <button
+            style={{
+              backgroundColor: "red",
+              color: "white",
+              padding: "10px 20px",
+              borderRadius: "5px",
+              border: "none",
+              cursor: "pointer",
+            }}
+            onClick={handleConfirmedClean}
+          >
+            Confirm
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 };

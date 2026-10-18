@@ -88,9 +88,9 @@ export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
     >
       <Card title="Title" content={currentTitle} />
 
-      <Card title="Anthology length" content={anthology?.length ?? 0} />
+      <Card title="Memoirs count" content={anthology?.length ?? 0} />
 
-      <Card title="maxMemoirs" content="100" />
+      <Card title="Max memoirs" content="100" />
 
       <Card title="Default Skin" content={defaultSkin} />
 

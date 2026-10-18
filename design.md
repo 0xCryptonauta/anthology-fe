@@ -130,9 +130,15 @@ category color.
   filter and the global search.
 - **Never use `<datalist>`** on mobile (system autofill can't be suppressed) —
   build custom dropdowns (`TitleEditor`).
-- Destructive actions always get a confirm modal that names what is deleted
+- **Destructive actions** always get a confirm modal that names what is deleted
   (e.g. "Delete private memory — All anthologies"; "All its memoirs will be
   deleted too").
+- **Auto-fill title:** When a URL is present in Add/Edit Memoir, an "Auto-fill
+  title" button fetches the media title via public oEmbed/metadata APIs.
+- **Deep links & QR codes:** On-chain anthologies share via
+  `/?contract=0x...` URLs (encoded in the QR code so both native phone cameras
+  and the in-app scanner open the anthology directly) and can be cloned offline
+  via "Save to Private Memory".
 
 ## Known limitations
 
