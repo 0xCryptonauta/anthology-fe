@@ -120,6 +120,7 @@ export const MemoirSearchResults = ({ term }: { term: string }) => {
               }}
             >
               <span
+                translate="no"
                 style={{
                   display: "block",
                   fontWeight: 600,
@@ -140,9 +141,9 @@ export const MemoirSearchResults = ({ term }: { term: string }) => {
                 onClick={() => openAnthology(result.anthologyAddr)}
               >
                 {result.isLocal ? t("search.local") : t("search.blockchain")} ·{" "}
-                {result.anthologyTitle}
+                <span translate="no">{result.anthologyTitle}</span>
               </span>
-              <div style={{ fontSize: "0.9rem", wordBreak: "break-word" }}>
+              <div translate="no" style={{ fontSize: "0.9rem", wordBreak: "break-word" }}>
                 {extracted ? (
                   <>
                     {extracted.caption && (

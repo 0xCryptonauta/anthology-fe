@@ -39,6 +39,7 @@ export const JsonMemoirSkin = ({
       }}
     >
       <pre
+        translate="no"
         style={{
           margin: 0,
           whiteSpace: "inherit", // inherit pre-wrap to keep indentation + wrap

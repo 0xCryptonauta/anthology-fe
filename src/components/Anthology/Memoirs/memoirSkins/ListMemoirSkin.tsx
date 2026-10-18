@@ -74,6 +74,7 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
             }}
           >
             <span
+              translate="no"
               style={{
                 fontWeight: "600",
                 fontSize: "1rem",
@@ -99,6 +100,7 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
             </span>
 
             <div
+              translate="no"
               style={{
                 margin: 0,
                 whiteSpace: "pre-wrap",

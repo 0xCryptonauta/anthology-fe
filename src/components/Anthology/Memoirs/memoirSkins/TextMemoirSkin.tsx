@@ -78,6 +78,7 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
           >
             {/* Title */}
             <div
+              translate="no"
               style={{
                 textAlign: "center",
                 fontWeight: 600,
@@ -93,6 +94,7 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
 
             {/* Content */}
             <div
+              translate="no"
               style={{
                 textAlign: "center",
                 padding: "6px 0",

@@ -174,7 +174,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                   className="flex justify-between items-center cursor-pointer select-none"
                   onClick={() => toggleCategory(category)}
                 >
-                  <h3 className="text-lg font-bold tracking-wide">{category}</h3>
+                  <h3 className="text-lg font-bold tracking-wide" translate="no">{category}</h3>
                   <span className="text-xs text-white/50 font-mono tracking-wider px-2 py-1 rounded">
                     {isExpanded ? "[-]" : "[+]"}
                   </span>
@@ -186,6 +186,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                       {items.map(({ address, title }) => (
                         <li key={address}>
                           <span
+                            translate="no"
                             className="text-lg cursor-pointer text-white hover:text-white transition-colors"
                             onClick={() => handleOnClick(`contract/${address}`)}
                           >
@@ -197,11 +198,12 @@ export const UserContracts: React.FC<UserContractsProps> = ({
 
                     {Object.entries(subcategories).map(([sub, subItems]) => (
                       <div key={sub} className="mt-4 p-3 rounded-lg border-zinc-800">
-                        <h5 className="text-lg font-semibold text-white mb-2">{sub}</h5>
+                        <h5 className="text-lg font-semibold text-white mb-2" translate="no">{sub}</h5>
                         <ul className="space-y-1.5 ml-1">
                           {subItems.map(({ address, title }) => (
                             <li key={address}>
                               <span
+                                translate="no"
                                 className="text-lg cursor-pointer text-white hover:text-white transition-colors"
                                 onClick={() => handleOnClick(`contract/${address}`)}
                               >
@@ -241,6 +243,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                           {processedData.uncategorized.map(({ address, title }) => (
                             <li key={address}>
                               <span
+                                translate="no"
                                 className="text-sm cursor-pointer text-white hover:text-white transition-colors"
                                 onClick={() => handleOnClick(`contract/${address}`)}
                               >
