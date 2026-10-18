@@ -58,14 +58,17 @@ export const WalletConnector = () => {
         height={25}
         style={{ marginLeft: "5px", margin: "0px 5px" }}
       ></img>
-      <span
+      <button
+        type="button"
+        className="icon-button"
         title={t("wallet.disconnect")}
-        style={{ marginLeft: "5px", cursor: "pointer", margin: "0px 5px" }}
+        aria-label={t("wallet.disconnect")}
+        style={{ marginLeft: "5px", margin: "0px 5px" }}
         onClick={() => handleDisconnect()}
       >
         <img
           src="/icons/delete-icon.svg"
-          alt={t("wallet.disconnect")}
+          alt=""
           style={{
             width: "16px",
             height: "16px",
@@ -73,7 +76,7 @@ export const WalletConnector = () => {
             filter: "invert(1)",
           }}
         />
-      </span>
+      </button>
     </div>
   ) : (
     <div

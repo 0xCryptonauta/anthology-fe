@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useEmbedPlayback } from "./embedPlayback";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 export const ArchiveOrgEmbed = ({ itemId }: { itemId: string }) => {
+  const { t } = useTranslation();
   const { isActive, activate } = useEmbedPlayback();
   const [posterFailed, setPosterFailed] = useState(false);
 
@@ -16,7 +18,20 @@ export const ArchiveOrgEmbed = ({ itemId }: { itemId: string }) => {
         backgroundColor: "#1a1a2e",
         cursor: isActive ? "default" : "pointer",
       }}
+      role={isActive ? undefined : "button"}
+      tabIndex={isActive ? -1 : 0}
+      aria-label={isActive ? undefined : t("a11y.playVideo")}
       onClick={isActive ? undefined : activate}
+      onKeyDown={
+        isActive
+          ? undefined
+          : (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                activate();
+              }
+            }
+      }
     >
       {isActive ? (
         <iframe
@@ -66,6 +81,7 @@ export const ArchiveOrgEmbed = ({ itemId }: { itemId: string }) => {
             >
               <svg
                 viewBox="0 0 24 24"
+                aria-hidden="true"
                 style={{
                   width: "22px",
                   height: "22px",

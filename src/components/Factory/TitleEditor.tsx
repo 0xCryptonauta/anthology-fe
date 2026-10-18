@@ -143,18 +143,25 @@ export const TitleEditor: React.FC<TitleEditorProps> = ({
             autoComplete="off"
           />
           {catDropdownOpen && filteredCategories.length > 0 && (
-            <div className="title-editor-dropdown">
+            <div className="title-editor-dropdown" role="listbox" aria-label={t("title.category")}>
               {filteredCategories.map((c) => (
-                <div
+                <button
+                  type="button"
                   key={c}
                   className="title-editor-dropdown-item"
+                  role="option"
+                  aria-selected={category === c}
                   onMouseDown={() => {
+                    setCategory(c);
+                    setCatDropdownOpen(false);
+                  }}
+                  onClick={() => {
                     setCategory(c);
                     setCatDropdownOpen(false);
                   }}
                 >
                   {c}
-                </div>
+                </button>
               ))}
             </div>
           )}
@@ -176,18 +183,25 @@ export const TitleEditor: React.FC<TitleEditorProps> = ({
             disabled={!category.trim()}
           />
           {subDropdownOpen && filteredSubcategories.length > 0 && (
-            <div className="title-editor-dropdown">
+            <div className="title-editor-dropdown" role="listbox" aria-label={t("title.subcategory")}>
               {filteredSubcategories.map((s) => (
-                <div
+                <button
+                  type="button"
                   key={s}
                   className="title-editor-dropdown-item"
+                  role="option"
+                  aria-selected={subcategory === s}
                   onMouseDown={() => {
+                    setSubcategory(s);
+                    setSubDropdownOpen(false);
+                  }}
+                  onClick={() => {
                     setSubcategory(s);
                     setSubDropdownOpen(false);
                   }}
                 >
                   {s}
-                </div>
+                </button>
               ))}
             </div>
           )}

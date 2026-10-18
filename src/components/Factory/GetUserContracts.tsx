@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { readFactory } from "@src/contract-functions/factoryFunctions";
 import { transformData } from "@utils/transformData";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 export const GetUserContracts = () => {
+  const { t } = useTranslation();
   const [userToGetContract, setUserToGetContract] = useState("");
 
   return (
@@ -21,6 +23,7 @@ export const GetUserContracts = () => {
         <input
           type="text"
           placeholder="User Address"
+          aria-label="User Address"
           value={userToGetContract}
           onChange={(event) => {
             setUserToGetContract(event.target.value);
@@ -28,8 +31,12 @@ export const GetUserContracts = () => {
         ></input>
       </div>
 
-      <span
-        style={{ marginLeft: "7px", cursor: "pointer" }}
+      <button
+        type="button"
+        className="icon-button"
+        style={{ marginLeft: "7px" }}
+        aria-label={t("selector.user")}
+        title={t("selector.user")}
         onClick={async () => {
           const userDB = await readFactory("getUsersContractsWithTitles", [
             [userToGetContract],
@@ -48,7 +55,7 @@ export const GetUserContracts = () => {
         }}
       >
         🔎
-      </span>
+      </button>
     </div>
   );
 };

@@ -130,14 +130,16 @@ export const TextMemoirSkin: React.FC<TextMemoirSkinProps> = ({
               }}
             >
               {currentUser === LOCAL_USER_ADDR && (
-                <span
-                  style={{ cursor: "pointer" }}
+                <button
+                  type="button"
+                  className="bg-transparent border-none p-0"
+                  style={{ cursor: "pointer", color: "black" }}
                   onClick={() =>
                     dispatch(updateCurrentPath(`user/${memoir.sender}`))
                   }
                 >
                   {shortenAddress(memoir.sender, 10, 8)}
-                </span>
+                </button>
               )}
 
               <span>{formatUnixTime(Number(memoir.timestamp))}</span>

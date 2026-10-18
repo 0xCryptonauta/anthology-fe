@@ -1,17 +1,36 @@
 import { useInView } from "react-intersection-observer";
 import "./YoutubeEmbed.css";
 import { useEmbedPlayback } from "./embedPlayback";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 type YoutubeEmbedProps = {
   videoId: string;
 };
 
 export const YoutubeEmbed: React.FC<YoutubeEmbedProps> = ({ videoId }) => {
+  const { t } = useTranslation();
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0 });
   const { isActive, activate } = useEmbedPlayback();
 
   return (
-    <div ref={ref} className="yt-embed-container" onClick={activate}>
+    <div
+      ref={ref}
+      className="yt-embed-container"
+      role={isActive ? undefined : "button"}
+      tabIndex={isActive ? -1 : 0}
+      aria-label={isActive ? undefined : t("a11y.playVideo")}
+      onClick={isActive ? undefined : activate}
+      onKeyDown={
+        isActive
+          ? undefined
+          : (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                activate();
+              }
+            }
+      }
+    >
       <div className="yt-embed-aspect">
         {inView ? (
           isActive ? (
@@ -37,7 +56,7 @@ export const YoutubeEmbed: React.FC<YoutubeEmbedProps> = ({ videoId }) => {
               />
               <div className="yt-embed-overlay">
                 <div className="yt-embed-play-btn">
-                  <svg viewBox="0 0 24 24">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M8 5v14l11-7z" />
                   </svg>
                 </div>

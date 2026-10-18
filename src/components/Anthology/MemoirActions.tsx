@@ -105,29 +105,35 @@ export const MemoirActions = ({
         </>
       )}
 
-      <span
+      <button
+        type="button"
+        className="icon-button"
         title={t("memoir.copyTitle")}
-        style={{ cursor: "pointer", fontSize: "1rem" }}
+        aria-label={t("memoir.copyTitle")}
+        style={{ fontSize: "1rem" }}
         onClick={handleCopy}
       >
         <img
           src="/icons/copy-icon.svg"
-          alt={t("memoir.copyTitle")}
+          alt=""
           style={{ width: "18px", height: "18px", display: "block" }}
         />
-      </span>
+      </button>
 
-      <span
+      <button
+        type="button"
+        className="icon-button"
         title={t("memoir.shareTitle")}
-        style={{ cursor: "pointer", fontSize: "1rem" }}
+        aria-label={t("memoir.shareTitle")}
+        style={{ fontSize: "1rem" }}
         onClick={handleShare}
       >
         <img
           src="/icons/share-icon.svg"
-          alt={t("memoir.shareTitle")}
+          alt=""
           style={{ width: "18px", height: "18px", display: "block" }}
         />
-      </span>
+      </button>
 
       <DeleteMemoir anthologyAddr={anthologyAddr} index={index} />
 

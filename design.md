@@ -18,6 +18,33 @@ this file.
 - **No emojis for actions.** Action controls use the SVG icon set (see Icons).
 - **Minimal chrome.** Small labels, quiet secondary text, color reserved for
   meaning.
+- **Accessible by default (WCAG 2.2 AA / ISO/IEC 40500:2025).** Every new
+  control ships keyboard-operable with a translated `aria-label`; see the
+  Accessibility section below.
+
+## Accessibility (WCAG 2.2 AA)
+
+- **Landmarks**: skip link (`a11y.skipToMain` → `#main-content`) in `RootView`;
+  `<main id="main-content">`, `<footer>`, Bootstrap `<nav>` for the header.
+- **Focus**: global `:focus-visible` ring (`#22d3ee`, 3px) in `index.css` —
+  inline `outline: none` never kills keyboard focus indication.
+- **Target size**: icon-only controls use `.icon-button` (min 24×24, centered).
+- **Buttons over spans**: interactive controls are `<button type="button">`.
+  Embed play overlays (YouTube/Vimeo/archive/Spotify) use
+  `role="button"` + `tabIndex` + `Enter`/`Space` because they must contain an
+  iframe when active.
+- **Forms**: `<label htmlFor>` + `useId()` everywhere; validation uses
+  `aria-invalid` + `aria-describedby`; errors/warnings use `role="alert"` /
+  `role="status"`; checkboxes are wrapped in their `<label>`.
+- **State**: expandable category cards and list-skin memoirs expose
+  `aria-expanded`; anthology items in the selector expose `aria-pressed`.
+- **Media**: every iframe has a `title`; decorative images/SVGs are
+  `aria-hidden`/`alt=""` with the control carrying the accessible name.
+- **Contrast**: footer text `#a1a1aa` on `#242424` (≈5.4:1); placeholders and
+  `[+]/[-]` indicators use `zinc-400`/`zinc-300` on dark surfaces.
+- **Tooling**: `eslint-plugin-jsx-a11y` runs in `bun run lint` (0 errors
+  required); rules for keyboard events, static-element interactions, labels,
+  iframe titles and alt text are errors, not warnings.
 
 ## Colors
 

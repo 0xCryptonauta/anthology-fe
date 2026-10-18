@@ -31,6 +31,7 @@ export const SkinSelector = ({ value, onChange }: SelectorProps) => {
     <select
       value={value}
       onChange={handleChange}
+      aria-label={t("a11y.skinSelector")}
       style={{
         //appearance: "none",
         backgroundColor: "#f9f9f9",

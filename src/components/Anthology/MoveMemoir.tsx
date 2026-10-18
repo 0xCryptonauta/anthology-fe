@@ -140,17 +140,20 @@ export const MoveMemoir = ({
       onHide={() => setShow(false)}
       height="min(700px, 90dvh)"
       trigger={
-        <span
+        <button
+          type="button"
+          className="icon-button"
           title={t("move.title")}
-          style={{ cursor: "pointer", fontSize: "1rem" }}
+          aria-label={t("move.title")}
+          style={{ fontSize: "1rem" }}
           onClick={() => setShow(true)}
         >
           <img
             src="/icons/copy-clipboard-icon.svg"
-            alt={t("move.title")}
+            alt=""
             style={{ width: "18px", height: "18px", display: "block" }}
           />
-        </span>
+        </button>
       }
     >
       <div

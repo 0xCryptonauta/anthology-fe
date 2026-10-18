@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useId } from "react";
 import { Address } from "@src/types/common";
 import { MemoirInterface } from "@src/store/slices/anthologySlice";
 import { updateMemoirInUserLocalAnthology } from "@src/store/slices/localAnthologySlice";
@@ -33,6 +33,13 @@ export const EditMemoir = ({
   const [urlError, setUrlError] = useState("");
   const [urlWarning, setUrlWarning] = useState("");
   const [isFetchingTitle, setIsFetchingTitle] = useState(false);
+
+  // WCAG 3.3.2 / 4.1.2 — explicit label/form connections.
+  const titleInputId = useId();
+  const contentInputId = useId();
+  const titleErrorId = useId();
+  const urlErrorId = useId();
+  const urlWarningId = useId();
 
   const localAnthologies = useAppSelector((s) => s.localAnthology.anthologies);
   const onchainAnthologies = useAppSelector((s) => s.anthology);
@@ -162,17 +169,19 @@ export const EditMemoir = ({
       show={show}
       onHide={() => setShow(false)}
       trigger={
-        <span
+        <button
+          type="button"
+          className="icon-button"
           title={t("memoir.editTitle")}
-          style={{ cursor: "pointer", fontSize: "1rem" }}
+          aria-label={t("memoir.editTitle")}
           onClick={handleOpen}
         >
           <img
             src="/icons/edit-icon.svg"
-            alt={t("memoir.editTitle")}
+            alt=""
             style={{ width: "18px", height: "18px", display: "block" }}
           />
-        </span>
+        </button>
       }
     >
       <div
@@ -194,7 +203,12 @@ export const EditMemoir = ({
             alignItems: "center",
           }}
         >
-          <label style={{ fontWeight: 500, fontSize: "1.2rem" }}>{t("memoir.title")}</label>
+          <label
+            htmlFor={titleInputId}
+            style={{ fontWeight: 500, fontSize: "1.2rem" }}
+          >
+            {t("memoir.title")}
+          </label>
           {extractFirstUrl(filteredContent) && (
             <button
               type="button"
@@ -229,9 +243,12 @@ export const EditMemoir = ({
           )}
         </div>
         <input
+          id={titleInputId}
           value={title}
           maxLength={50}
           placeholder={t("memoir.enterTitle")}
+          aria-invalid={!!titleError}
+          aria-describedby={titleError ? titleErrorId : undefined}
           onChange={(e) => setTitle(e.target.value)}
           style={{
             padding: "0.75rem 1rem",
@@ -245,6 +262,8 @@ export const EditMemoir = ({
         />
         {titleError && (
           <span
+            id={titleErrorId}
+            role="alert"
             style={{
               color: "#dc2626",
               fontSize: "0.8rem",
@@ -256,7 +275,12 @@ export const EditMemoir = ({
           </span>
         )}
 
-        <label style={{ fontWeight: 500, fontSize: "1.2rem" }}>{t("memoir.content")}</label>
+        <label
+          htmlFor={contentInputId}
+          style={{ fontWeight: 500, fontSize: "1.2rem" }}
+        >
+          {t("memoir.content")}
+        </label>
         <div
           style={{
             position: "relative",
@@ -293,8 +317,13 @@ export const EditMemoir = ({
 
           <textarea
             ref={textareaRef}
+            id={contentInputId}
             value={content}
             maxLength={255}
+            aria-invalid={!!urlError}
+            aria-describedby={
+              urlError ? urlErrorId : urlWarning ? urlWarningId : undefined
+            }
             onChange={(e) => setContent(e.target.value)}
             style={{
               position: "relative",
@@ -316,6 +345,8 @@ export const EditMemoir = ({
         </div>
         {urlError && (
           <span
+            id={urlErrorId}
+            role="alert"
             style={{
               color: "#dc2626",
               fontSize: "0.8rem",
@@ -328,6 +359,8 @@ export const EditMemoir = ({
         )}
         {!urlError && urlWarning && (
           <span
+            id={urlWarningId}
+            role="status"
             style={{
               color: "#b45309",
               fontSize: "0.8rem",
@@ -339,19 +372,23 @@ export const EditMemoir = ({
           </span>
         )}
 
-        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+        <label
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            cursor: "pointer",
+          }}
+        >
           <input
             type="checkbox"
             checked={shouldFilterTracking}
             onChange={() => setShouldFilterTracking(!shouldFilterTracking)}
           />
-          <span
-            style={{ cursor: "pointer", userSelect: "none" }}
-            onClick={() => setShouldFilterTracking(!shouldFilterTracking)}
-          >
+          <span style={{ userSelect: "none" }}>
             {t("memoir.removeTracking")}
           </span>
-        </div>
+        </label>
 
         <button
           onClick={handleSave}

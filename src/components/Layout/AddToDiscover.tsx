@@ -186,9 +186,15 @@ export const AddToDiscover = () => {
         show={show}
         onHide={handleClose}
         trigger={
-          <span onClick={() => setShow(true)} className="addMemoirButton">
+          <button
+            type="button"
+            className="addMemoirButton"
+            aria-label={t("discover.title")}
+            style={{ cursor: "pointer", background: "none", border: "none" }}
+            onClick={() => setShow(true)}
+          >
             🕵🏻‍♂️
-          </span>
+          </button>
         }
       >
         <div
@@ -220,6 +226,7 @@ export const AddToDiscover = () => {
             <input
               type="text"
               placeholder={t("discover.addrPlaceholder")}
+              aria-label={t("discover.addrPlaceholder")}
               value={addressToAdd}
               onChange={(event) => setAddressToAdd(event.target.value)}
               autoComplete="new-password"
@@ -243,6 +250,7 @@ export const AddToDiscover = () => {
           <select
             value={selectedSearchOption}
             onChange={(event) => setSelectedSearchOption(event.target.value)}
+            aria-label={t("a11y.searchType")}
             style={{
               width: "100%",
               maxWidth: "300px",

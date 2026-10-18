@@ -96,6 +96,9 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({
             delay={toast.delay}
             style={{ width: "300px" }}
             autohide
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
           >
             <BootstrapToast.Header closeButton>
               <strong className="me-auto">{toast.title}</strong>

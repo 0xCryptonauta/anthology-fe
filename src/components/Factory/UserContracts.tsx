@@ -111,8 +111,11 @@ export const UserContracts: React.FC<UserContractsProps> = ({
               )} */}
             
             <div className="flex items-center gap-2">
-              <span
-                className="text-2xl font-medium hover:text-white transition-colors"
+              <button
+                type="button"
+                className="text-2xl font-medium hover:text-white transition-colors bg-transparent border-none text-zinc-100"
+                title={t("a11y.syncAnthologies")}
+                aria-label={t("a11y.syncAnthologies")}
                 onClick={() => {
                   if (userAddr === currentUserAddr) {
                     dispatch(syncUserContractsToStore(userAddr));
@@ -120,7 +123,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                 }}
               >
                 {userAddr === LOCAL_USER_ADDR ? t("nav.privateMemory") : shortenAddress(userAddr, 12, 9)}
-              </span>
+              </button>
               {userAddr === LOCAL_USER_ADDR && (
                 <span className="text-xs font-bold tracking-wider bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-md select-none">
                   {t("directory.local")}
@@ -139,7 +142,9 @@ export const UserContracts: React.FC<UserContractsProps> = ({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={t("directory.searchAll")}
-              className="w-full px-4 py-2 pr-10 rounded-xl bg-[#161b22] border border-sky-500/40 text-zinc-100 placeholder-zinc-500 outline-none"
+              type="search"
+              aria-label={t("a11y.searchMemoirs")}
+              className="w-full px-4 py-2 pr-10 rounded-xl bg-[#161b22] border border-sky-500/40 text-zinc-100 placeholder-zinc-400 outline-none"
             />
             {search && (
               <button
@@ -170,28 +175,31 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                    la tarjeta no se corte a la mitad entre dos columnas */
                 className={`p-4 ${categoryBackgroundsEnabled ? `${getBgClass(category)} text-shadow-dark` : ""} rounded-xl transition-all duration-200 ${neonStyles}`}
               >
-                <div 
-                  className="flex justify-between items-center cursor-pointer select-none"
+                <button
+                  type="button"
+                  aria-expanded={isExpanded}
+                  className="flex justify-between items-center cursor-pointer select-none w-full bg-transparent border-none"
                   onClick={() => toggleCategory(category)}
                 >
                   <h3 className="text-lg font-bold tracking-wide" translate="no">{category}</h3>
-                  <span className="text-xs text-white/50 font-mono tracking-wider px-2 py-1 rounded">
+                  <span aria-hidden="true" className="text-xs text-zinc-300 font-mono tracking-wider px-2 py-1 rounded">
                     {isExpanded ? "[-]" : "[+]"}
                   </span>
-                </div>
+                </button>
 
                 {isExpanded && (
                   <div className="animate-fadeIn mt-4">
                     <ul className="space-y-2 ml-2">
                       {items.map(({ address, title }) => (
                         <li key={address}>
-                          <span
+                          <button
+                            type="button"
                             translate="no"
-                            className="text-lg cursor-pointer text-white hover:text-white transition-colors"
+                            className="text-lg cursor-pointer text-white hover:text-white transition-colors bg-transparent border-none p-0 text-left"
                             onClick={() => handleOnClick(`contract/${address}`)}
                           >
                             &middot; {title}
-                          </span>
+                          </button>
                         </li>
                       ))}
                     </ul>
@@ -202,13 +210,14 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                         <ul className="space-y-1.5 ml-1">
                           {subItems.map(({ address, title }) => (
                             <li key={address}>
-                              <span
+                              <button
+                                type="button"
                                 translate="no"
-                                className="text-lg cursor-pointer text-white hover:text-white transition-colors"
+                                className="text-lg cursor-pointer text-white hover:text-white transition-colors bg-transparent border-none p-0 text-left"
                                 onClick={() => handleOnClick(`contract/${address}`)}
                               >
                                 &middot; {title}
-                              </span>
+                              </button>
                             </li>
                           ))}
                         </ul>
@@ -228,27 +237,30 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                   const isUncategorizedExpanded = expandedCategories["Uncategorized_General_Key"] || false;
                   return (
                     <>
-                      <div 
-                        className="flex justify-between items-center cursor-pointer select-none"
+                      <button
+                        type="button"
+                        aria-expanded={isUncategorizedExpanded}
+                        className="flex justify-between items-center cursor-pointer select-none w-full bg-transparent border-none"
                         onClick={() => toggleCategory("Uncategorized_General_Key")}
                       >
-                        <h3 className="text-lg font-bold">{t("common.other")}</h3>
-                        <span className="text-xs text-white/50 font-mono bg-zinc-800/60 px-2 py-1 rounded">
+                        <h3 className="text-lg font-bold text-white">{t("common.other")}</h3>
+                        <span aria-hidden="true" className="text-xs text-zinc-300 font-mono bg-zinc-800/60 px-2 py-1 rounded">
                           {isUncategorizedExpanded ? "[-]" : "[+]"}
                         </span>
-                      </div>
+                      </button>
 
                       {isUncategorizedExpanded && (
                         <ul className="space-y-2 ml-2 animate-fadeIn mt-4">
                           {processedData.uncategorized.map(({ address, title }) => (
                             <li key={address}>
-                              <span
+                              <button
+                                type="button"
                                 translate="no"
-                                className="text-sm cursor-pointer text-white hover:text-white transition-colors"
+                                className="text-sm cursor-pointer text-white hover:text-white transition-colors bg-transparent border-none p-0 text-left"
                                 onClick={() => handleOnClick(`contract/${address}`)}
                               >
                                 &middot; {title.trim() ? title : shortenAddress(address, 12, 9)}
-                              </span>
+                              </button>
                             </li>
                           ))}
                         </ul>

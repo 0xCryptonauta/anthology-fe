@@ -152,7 +152,8 @@ export const LoadReduxStore = () => {
       show={show}
       onHide={handleClose}
       trigger={
-        <span
+        <button
+          type="button"
           style={{
             cursor: "pointer",
             border: "1px solid #ccc",
@@ -167,7 +168,7 @@ export const LoadReduxStore = () => {
           onClick={() => setShow(true)}
         >
           {t("load.trigger")}
-        </span>
+        </button>
       }
     >
       <div
@@ -257,17 +258,21 @@ export const LoadReduxStore = () => {
                 )}
               </div>
             ) : (
-              <div
+              <button
+                type="button"
                 style={{
                   color: "#e53e3e",
                   fontWeight: "500",
                   marginBottom: "16px",
                   cursor: "pointer",
+                  background: "none",
+                  border: "none",
+                  padding: 0,
                 }}
                 onClick={() => setIsValidJson(undefined)}
               >
                 {t("load.invalid")}
-              </div>
+              </button>
             )}
           </>
         )}
@@ -310,17 +315,22 @@ export const LoadReduxStore = () => {
               width: "100%",
             }}
           >
-            <span
+            <button
+              type="button"
               style={{
                 fontSize: "20px",
                 cursor: "pointer",
                 marginRight: "16px",
+                background: "none",
+                border: "none",
+                padding: 0,
               }}
               onClick={() => setIsValidJson(undefined)}
-              title={t("load.trigger")}
+              title={t("common.back")}
+              aria-label={t("common.back")}
             >
               🔙
-            </span>
+            </button>
             <button
               style={{
                 padding: "10px 20px",

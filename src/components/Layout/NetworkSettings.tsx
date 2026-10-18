@@ -62,7 +62,8 @@ export const NetworkSettings = () => {
       onHide={handleClose}
       trigger={
         isConnected ? (
-          <span
+          <button
+            type="button"
             style={{
               cursor: "pointer",
               border: "1px solid #ccc",
@@ -77,7 +78,7 @@ export const NetworkSettings = () => {
             onClick={() => setShow(true)}
           >
             {t("network.trigger")}
-          </span>
+          </button>
         ) : (
           <></>
         )

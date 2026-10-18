@@ -24,6 +24,22 @@ export const en = {
   "common.other": "Other",
   "common.unknownError": "Unknown error",
 
+  /* ------------------------------ Accessibility ---------------------------- */
+  "a11y.skipToMain": "Skip to main content",
+  "a11y.sidePanel": "Open menu",
+  "a11y.addMemoir": "Add memoir",
+  "a11y.skinSelector": "View",
+  "a11y.orderSelector": "Order",
+  "a11y.searchType": "Search type",
+  "a11y.searchMemoirs": "Search memoirs",
+  "a11y.playVideo": "Play video",
+  "a11y.playSpotify": "Play on Spotify",
+  "a11y.qrCode": "Show QR code",
+  "a11y.scanQr": "Scan QR code",
+  "a11y.syncAnthologies": "Refresh anthologies",
+  "a11y.checkAddress": "Check address",
+  "a11y.connectorLogo": "Wallet connection option",
+
   /* ------------------------------ Navigation ------------------------------- */
   "nav.myAnthologies": "My Anthologies",
   "nav.discover": "Discover",
@@ -422,6 +438,7 @@ export const en = {
   "memoirs.sentBy": "Sent by:",
   "memoirs.whenAdded": "When added:",
   "memoirs.decline": "Decline memoir",
+  "memoir.accept": "Accept memoir",
   "memoirs.playlistNotFound": "Youtube videos not found",
 
   /* --------------------------------- Search --------------------------------- */
@@ -449,6 +466,22 @@ export const es: Record<TranslationKey, string> = {
   "common.untitled": "Sin título",
   "common.other": "Otros",
   "common.unknownError": "Error desconocido",
+
+  /* ------------------------------ Accessibility ---------------------------- */
+  "a11y.skipToMain": "Saltar al contenido principal",
+  "a11y.sidePanel": "Abrir menú",
+  "a11y.addMemoir": "Añadir memoir",
+  "a11y.skinSelector": "Vista",
+  "a11y.orderSelector": "Orden",
+  "a11y.searchType": "Tipo de búsqueda",
+  "a11y.searchMemoirs": "Buscar memoirs",
+  "a11y.playVideo": "Reproducir video",
+  "a11y.playSpotify": "Reproducir en Spotify",
+  "a11y.qrCode": "Mostrar código QR",
+  "a11y.scanQr": "Escanear código QR",
+  "a11y.syncAnthologies": "Actualizar antologías",
+  "a11y.checkAddress": "Verificar dirección",
+  "a11y.connectorLogo": "Opción de conexión de billetera",
 
   /* ------------------------------ Navigation ------------------------------- */
   "nav.myAnthologies": "Mis antologías",
@@ -852,6 +885,7 @@ export const es: Record<TranslationKey, string> = {
   "memoirs.sentBy": "Enviado por:",
   "memoirs.whenAdded": "Añadido:",
   "memoirs.decline": "Rechazar memoir",
+  "memoir.accept": "Aceptar memoir",
   "memoirs.playlistNotFound": "No se encontraron videos de YouTube",
 
   /* --------------------------------- Search --------------------------------- */

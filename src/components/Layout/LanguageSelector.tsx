@@ -20,7 +20,8 @@ export const LanguageSelector = () => {
       show={show}
       onHide={handleClose}
       trigger={
-        <span
+        <button
+          type="button"
           style={{
             cursor: "pointer",
             border: "1px solid #ccc",
@@ -35,7 +36,7 @@ export const LanguageSelector = () => {
           onClick={() => setShow(true)}
         >
           {t("language.title")}
-        </span>
+        </button>
       }
     >
       <div

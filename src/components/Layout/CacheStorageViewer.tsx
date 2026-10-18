@@ -91,7 +91,8 @@ export const CacheStorageViewer = () => {
       show={show}
       onHide={() => setShow(false)}
       trigger={
-        <span
+        <button
+          type="button"
           style={{
             cursor: "pointer",
             border: "1px solid #ccc",
@@ -106,7 +107,7 @@ export const CacheStorageViewer = () => {
           onClick={() => setShow(true)}
         >
           {t("storage.viewUsage")}
-        </span>
+        </button>
       }
     >
       <div
