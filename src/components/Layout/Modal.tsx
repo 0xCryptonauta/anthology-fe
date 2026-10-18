@@ -66,12 +66,8 @@ export const Modal = ({
   }, [handleClose]);
 
   const isSidePanel = variant === "sidepanel";
-  const resolvedPlacement =
-    placement === "end"
-      ? "end"
-      : window.innerHeight > window.innerWidth
-      ? "top"
-      : "bottom";
+  const isPortrait = window.innerHeight > window.innerWidth;
+  const resolvedPlacement = placement === "end" ? "end" : "bottom";
 
   return (
     <>
@@ -94,7 +90,7 @@ export const Modal = ({
         data-bs-theme={isSidePanel ? "dark" : undefined}
         style={{
           width: isSidePanel ? "200px" : undefined,
-          height: !isSidePanel && placement !== "end" ? "600px" : undefined,
+          height: !isSidePanel && placement !== "end" ? "min(600px, 90dvh)" : undefined,
           backgroundColor: "transparent",
           border: "unset",
           display: "flex",
@@ -117,7 +113,7 @@ export const Modal = ({
             justifyContent:
               isSidePanel || transparent
                 ? undefined
-                : (stickToBottom ? "bottom" : resolvedPlacement) === "top"
+                : isPortrait
                 ? "flex-start"
                 : "flex-end",
             backgroundColor: "transparent",
