@@ -156,6 +156,9 @@ category color.
 - **`translate="no"` guards**: user-generated content (anthology titles,
   categories, subcategories, memoir titles/content, JSON dumps) must carry
   `translate="no"` so native browser translation never rewrites saved data.
+- **"Memoir" is a product term** — never translate it. Every dictionary keeps
+  `memoir` / `memoirs` verbatim (Spanish uses *memoir/memoirs*, not
+  *recuerdo*). Same for "Anthology" as the product name.
 - The language picker is `LanguageSelector` in `/settings`.
 
 ## Known limitations
