@@ -40,7 +40,7 @@ export const IndexView = () => {
           <AnthologyView />
         )
       ) : (
-        <div>Default View</div>
+        <LocalUserView />
       )}
     </div>
     </>

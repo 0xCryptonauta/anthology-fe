@@ -15,7 +15,7 @@ import {
 } from "@src/store/slices/anthologySlice";
 import { readAnthology } from "@src/contract-functions/anthologyFunctions";
 import QRScanner from "./QRScanner";
-import { isQrReturnValid } from "@src/utils/isQrReturnValid";
+import { parseQrReturn } from "@src/utils/isQrReturnValid";
 import { Modal } from "./Modal";
 
 //import { useNavigate } from "react-router-dom";
@@ -48,11 +48,17 @@ export const AddToDiscover = () => {
   ) => addToast({ title, content, variant: variant ?? "info", delay: 3000 });
 
   const onScan = (qrReturn: string) => {
-    if (!isQrReturnValid(qrReturn)) {
+    const parsed = parseQrReturn(qrReturn);
+    const trimmed = qrReturn.trim();
+    const fallbackType: "anthology" | "user" | null =
+      !parsed && isAddress(trimmed) ? "anthology" : null;
+
+    if (!parsed && !fallbackType) {
       return showToast("Invalid QR Code", "Please scan a valid QR Code.");
     }
 
-    const { type, address } = JSON.parse(qrReturn);
+    const type = parsed ? parsed.type : fallbackType!;
+    const address = parsed ? parsed.address : trimmed;
 
     if (!isAddress(address)) {
       return showToast(

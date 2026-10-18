@@ -15,6 +15,7 @@ import {
   normalizeUrlForComparison,
 } from "@src/utils/memoirDuplicates";
 import { extractFirstUrl } from "@src/utils/embeds";
+import { fetchUrlTitle } from "@src/utils/fetchUrlTitle";
 import { MemoirInterface } from "@src/store/slices/anthologySlice";
 import { HighlightDifferences } from "../Layout/HighlightDifferences";
 import { Modal } from "../Layout/Modal";
@@ -37,6 +38,7 @@ export const AddMemoir = ({
   const [titleError, setTitleError] = useState("");
   const [urlError, setUrlError] = useState("");
   const [urlWarning, setUrlWarning] = useState("");
+  const [isFetchingTitle, setIsFetchingTitle] = useState(false);
   const handleClose = () => setShow(false);
 
   const { userAddr, currentPath } = useAppSelector((state) => state.user);
@@ -218,7 +220,47 @@ export const AddMemoir = ({
             boxSizing: "border-box",
           }}
         >
-          <label style={{ fontWeight: 500, fontSize: "1.2rem" }}>Title</label>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <label style={{ fontWeight: 500, fontSize: "1.2rem" }}>Title</label>
+            {extractFirstUrl(filteredContent) && (
+              <button
+                type="button"
+                disabled={isFetchingTitle}
+                onClick={async () => {
+                  setIsFetchingTitle(true);
+                  const fetched = await fetchUrlTitle(filteredContent);
+                  setIsFetchingTitle(false);
+                  if (fetched) {
+                    setAnthologyTitle(fetched);
+                  } else {
+                    addToast({
+                      title: "Title not found",
+                      content: "Could not fetch a title for this link.",
+                      variant: "info",
+                    });
+                  }
+                }}
+                style={{
+                  background: "none",
+                  border: "1px solid #cbd5e1",
+                  borderRadius: "6px",
+                  padding: "2px 8px",
+                  fontSize: "0.75rem",
+                  color: "#0891b2",
+                  fontWeight: 500,
+                  cursor: isFetchingTitle ? "wait" : "pointer",
+                }}
+              >
+                {isFetchingTitle ? "Fetching..." : "Auto-fill title"}
+              </button>
+            )}
+          </div>
           <input
             value={anthologyTitle}
             maxLength={50}
