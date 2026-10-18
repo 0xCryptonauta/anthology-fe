@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Seo } from "@components/Layout/Seo";
 import { useTranslation } from "@src/i18n/useTranslation";
 
@@ -35,6 +36,7 @@ const quoteStyle = {
 
 export const AboutView = () => {
   const { t } = useTranslation();
+  const [showFull, setShowFull] = useState(false);
 
   return (
     <>
@@ -65,7 +67,7 @@ export const AboutView = () => {
           <h1
             style={{
               fontSize: "1.8rem",
-              marginBottom: "1.5rem",
+              marginBottom: "1rem",
               textAlign: "center",
               color: "#1a1a1a",
             }}
@@ -73,67 +75,129 @@ export const AboutView = () => {
             Anthology
           </h1>
 
-          <p style={paragraphStyle}>{t("about.intro")}</p>
+          {/* ------------------- Short / full version toggle ---------------------- */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: "1.5rem",
+            }}
+          >
+            <button
+              type="button"
+              aria-pressed={showFull}
+              onClick={() => setShowFull((value) => !value)}
+              style={{
+                height: "36px",
+                padding: "0 14px",
+                borderRadius: "8px",
+                border: "1px solid #ccc",
+                backgroundColor: "#f7fafc",
+                color: "#2b6cb0",
+                fontSize: "14px",
+                fontWeight: "bold",
+                cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+              }}
+            >
+              {showFull ? t("about.showShort") : t("about.showFull")}
+            </button>
+          </div>
 
-          {/* ----------------------------- Why memory? ----------------------------- */}
-          <h2 style={headingStyle}>{t("about.whyTitle")}</h2>
-          <p style={paragraphStyle}>{t("about.whyIntro")}</p>
-          <p style={paragraphStyle}>{t("about.whyPerson")}</p>
-          <p style={paragraphStyle}>{t("about.whyForget")}</p>
-          <p style={paragraphStyle}>{t("about.whyFilter")}</p>
-          <p style={quoteStyle}>{t("about.whyFilter1")}</p>
-          <p style={quoteStyle}>{t("about.whyFilter2")}</p>
-          <p style={quoteStyle}>{t("about.whyFilter3")}</p>
+          {!showFull ? (
+            /* --------------------------- Short version ------------------------- */
+            <>
+              <h2 style={headingStyle}>{t("about.shortTitle")}</h2>
+              <p style={paragraphStyle}>{t("about.shortIntro")}</p>
 
-          <h3 style={subHeadingStyle}>{t("about.whyIdeasTitle")}</h3>
-          <p style={paragraphStyle}>
-            <strong>{t("about.whyIdeas1Title")}.</strong>{" "}
-            {t("about.whyIdeas1")}
-          </p>
-          <p style={paragraphStyle}>
-            <strong>{t("about.whyIdeas2Title")}.</strong>{" "}
-            {t("about.whyIdeas2")}
-          </p>
-          <p style={paragraphStyle}>
-            <strong>{t("about.whyIdeas3Title")}.</strong>{" "}
-            {t("about.whyIdeas3")}
-          </p>
+              <h2 style={headingStyle}>{t("about.glossaryTitle")}</h2>
+              <p style={paragraphStyle}>
+                <strong>{t("about.glossaryMemoir")}:</strong>{" "}
+                {t("about.shortGlossaryMemoirDesc")}
+              </p>
+              <p style={paragraphStyle}>
+                <strong>{t("about.glossaryAnthology")}:</strong>{" "}
+                {t("about.shortGlossaryAnthologyDesc")}
+              </p>
+              <p style={paragraphStyle}>
+                <strong>{t("about.glossaryMemory")}:</strong>{" "}
+                {t("about.shortGlossaryMemoryDesc")}
+              </p>
 
-          {/* ------------------------------ Glossary ------------------------------- */}
-          <h2 style={headingStyle}>{t("about.glossaryTitle")}</h2>
-          <p style={paragraphStyle}>
-            <strong>{t("about.glossaryMemoir")}:</strong>{" "}
-            {t("about.glossaryMemoirDesc")}
-          </p>
-          <p style={paragraphStyle}>
-            <strong>{t("about.glossaryAnthology")}:</strong>{" "}
-            {t("about.glossaryAnthologyDesc")}
-          </p>
-          <p style={paragraphStyle}>
-            <strong>{t("about.glossaryMemory")}:</strong>{" "}
-            {t("about.glossaryMemoryDesc")}
-          </p>
+              <h2 style={headingStyle}>{t("about.shortHowTitle")}</h2>
+              <p style={paragraphStyle}>{t("about.shortHowNoServer")}</p>
+              <p style={paragraphStyle}>{t("about.shortHowLocal")}</p>
+              <p style={{ ...paragraphStyle, marginBottom: 0 }}>
+                {t("about.shortHowChain")}
+              </p>
+            </>
+          ) : (
+            /* ---------------------------- Full version ------------------------- */
+            <>
+              <p style={paragraphStyle}>{t("about.intro")}</p>
 
-          {/* --------------------------- 100% static ------------------------------- */}
-          <h2 style={headingStyle}>{t("about.staticTitle")}</h2>
-          <p style={paragraphStyle}>{t("about.staticNoBackend")}</p>
-          <p style={paragraphStyle}>{t("about.staticLocal")}</p>
-          <p style={paragraphStyle}>{t("about.staticChain")}</p>
-          <p style={paragraphStyle}>{t("about.staticCleanLinks")}</p>
+              {/* --------------------------- Why memory? --------------------------- */}
+              <h2 style={headingStyle}>{t("about.whyTitle")}</h2>
+              <p style={paragraphStyle}>{t("about.whyIntro")}</p>
+              <p style={paragraphStyle}>{t("about.whyPerson")}</p>
+              <p style={paragraphStyle}>{t("about.whyForget")}</p>
+              <p style={paragraphStyle}>{t("about.whyFilter")}</p>
+              <p style={quoteStyle}>{t("about.whyFilter1")}</p>
+              <p style={quoteStyle}>{t("about.whyFilter2")}</p>
+              <p style={quoteStyle}>{t("about.whyFilter3")}</p>
 
-          {/* -------------------- Wallets & smart contracts ------------------------ */}
-          <h2 style={headingStyle}>{t("about.walletTitle")}</h2>
-          <p style={paragraphStyle}>{t("about.walletIdentity")}</p>
-          <p style={paragraphStyle}>{t("about.walletContracts")}</p>
+              <h3 style={subHeadingStyle}>{t("about.whyIdeasTitle")}</h3>
+              <p style={paragraphStyle}>
+                <strong>{t("about.whyIdeas1Title")}.</strong>{" "}
+                {t("about.whyIdeas1")}
+              </p>
+              <p style={paragraphStyle}>
+                <strong>{t("about.whyIdeas2Title")}.</strong>{" "}
+                {t("about.whyIdeas2")}
+              </p>
+              <p style={paragraphStyle}>
+                <strong>{t("about.whyIdeas3Title")}.</strong>{" "}
+                {t("about.whyIdeas3")}
+              </p>
 
-          {/* ---------------------- The two smart contracts ------------------------ */}
-          <h2 style={headingStyle}>{t("about.contractsTitle")}</h2>
-          <h3 style={subHeadingStyle}>{t("about.factoryTitle")}</h3>
-          <p style={paragraphStyle}>{t("about.factoryDesc")}</p>
-          <h3 style={subHeadingStyle}>{t("about.anthologyTitle")}</h3>
-          <p style={{ ...paragraphStyle, marginBottom: 0 }}>
-            {t("about.anthologyDesc")}
-          </p>
+              {/* ---------------------------- Glossary ----------------------------- */}
+              <h2 style={headingStyle}>{t("about.glossaryTitle")}</h2>
+              <p style={paragraphStyle}>
+                <strong>{t("about.glossaryMemoir")}:</strong>{" "}
+                {t("about.glossaryMemoirDesc")}
+              </p>
+              <p style={paragraphStyle}>
+                <strong>{t("about.glossaryAnthology")}:</strong>{" "}
+                {t("about.glossaryAnthologyDesc")}
+              </p>
+              <p style={paragraphStyle}>
+                <strong>{t("about.glossaryMemory")}:</strong>{" "}
+                {t("about.glossaryMemoryDesc")}
+              </p>
+
+              {/* -------------------------- 100% static ---------------------------- */}
+              <h2 style={headingStyle}>{t("about.staticTitle")}</h2>
+              <p style={paragraphStyle}>{t("about.staticNoBackend")}</p>
+              <p style={paragraphStyle}>{t("about.staticLocal")}</p>
+              <p style={paragraphStyle}>{t("about.staticChain")}</p>
+              <p style={paragraphStyle}>{t("about.staticCleanLinks")}</p>
+
+              {/* ------------------ Wallets & smart contracts ---------------------- */}
+              <h2 style={headingStyle}>{t("about.walletTitle")}</h2>
+              <p style={paragraphStyle}>{t("about.walletIdentity")}</p>
+              <p style={paragraphStyle}>{t("about.walletContracts")}</p>
+
+              {/* -------------------- The two smart contracts ---------------------- */}
+              <h2 style={headingStyle}>{t("about.contractsTitle")}</h2>
+              <h3 style={subHeadingStyle}>{t("about.factoryTitle")}</h3>
+              <p style={paragraphStyle}>{t("about.factoryDesc")}</p>
+              <h3 style={subHeadingStyle}>{t("about.anthologyTitle")}</h3>
+              <p style={{ ...paragraphStyle, marginBottom: 0 }}>
+                {t("about.anthologyDesc")}
+              </p>
+            </>
+          )}
         </div>
       </div>
     </>
