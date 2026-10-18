@@ -114,7 +114,7 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
         maxWidth: "350px",
         boxSizing: "border-box",
         backgroundColor:
-          variant === "light" ? "#f1f5f9" : "rgba(255, 255, 255, 0.06)",
+          variant === "light" ? "#cbd5e1" : "rgba(255, 255, 255, 0.06)",
         borderRadius: "10px",
       }}
     >
@@ -125,7 +125,7 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
             value={selectedUser}
             style={{
             minHeight: "30px",
-            border: "1px solid #cbd5e1",
+            border: "1px solid #94a3b8",
             borderRadius: "6px",
             padding: "4px 8px",
           }}
@@ -155,7 +155,7 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
         onChange={handleCategoryChange}
         style={{
             minHeight: "30px",
-            border: "1px solid #cbd5e1",
+            border: "1px solid #94a3b8",
             borderRadius: "6px",
             padding: "4px 8px",
           }}
@@ -190,7 +190,7 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
             style={{
               minHeight: "30px",
               marginTop: "10px",
-              border: "1px solid #cbd5e1",
+              border: "1px solid #94a3b8",
               borderRadius: "6px",
               padding: "4px 8px",
             }}
