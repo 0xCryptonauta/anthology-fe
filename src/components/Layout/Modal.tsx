@@ -133,7 +133,7 @@ export const Modal = ({
               width: transparent ? "unset" : "100%",
               height: isSidePanel ? "100%" : "unset",
               maxWidth: isSidePanel || transparent ? "100%" : "315px",
-              maxHeight: "90vh",
+              maxHeight: "calc(100% - 6px)",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",

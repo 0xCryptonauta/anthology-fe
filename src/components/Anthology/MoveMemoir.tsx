@@ -159,18 +159,20 @@ export const MoveMemoir = ({
           gap: "1rem",
           width: "100%",
           maxWidth: "280px",
-          maxHeight: "70vh",
-          overflowY: "auto",
+          maxHeight: "100%",
+          minHeight: 0,
           boxSizing: "border-box",
         }}
       >
         <h4 style={{ textAlign: "center", margin: 0 }}>Copy / Move Memoir</h4>
 
-        <ContractSelector
-          setSelectedContract={setDestination}
-          variant="light"
-          showUserSelect={false}
-        />
+        <div style={{ flex: "1 1 auto", minHeight: 0, overflowY: "auto" }}>
+          <ContractSelector
+            setSelectedContract={setDestination}
+            variant="light"
+            showUserSelect={false}
+          />
+        </div>
 
         <div
           style={{ display: "flex", gap: "1rem", justifyContent: "center" }}
