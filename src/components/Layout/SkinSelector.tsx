@@ -1,5 +1,7 @@
 import { SkinType } from "@src/types/common";
 import React from "react";
+import { useTranslation } from "@src/i18n/useTranslation";
+import { TranslationKey } from "@src/i18n/translations";
 
 // Define the component props interface
 interface SelectorProps {
@@ -7,10 +9,18 @@ interface SelectorProps {
   onChange: (value: SkinType) => void;
 }
 
-const skinOptions = ["media", "text", "json", "list", "playlist"];
+const skinOptions: { value: SkinType; labelKey: TranslationKey }[] = [
+  { value: "media", labelKey: "skin.media" },
+  { value: "text", labelKey: "skin.text" },
+  { value: "json", labelKey: "skin.json" },
+  { value: "list", labelKey: "skin.list" },
+  { value: "playlist", labelKey: "skin.playlist" },
+];
 
 // Define the component
 export const SkinSelector = ({ value, onChange }: SelectorProps) => {
+  const { t } = useTranslation();
+
   // Handle the change event
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = event.target.value as unknown as SkinType;
@@ -43,8 +53,12 @@ export const SkinSelector = ({ value, onChange }: SelectorProps) => {
       onBlur={(e) => (e.currentTarget.style.borderColor = "#e2e2e2")}
     >
       {skinOptions.map((option) => (
-        <option key={option} value={option} style={{ backgroundColor: "#fff" }}>
-          {option[0].toUpperCase() + option.slice(1)}
+        <option
+          key={option.value}
+          value={option.value}
+          style={{ backgroundColor: "#fff" }}
+        >
+          {t(option.labelKey)}
         </option>
       ))}
     </select>

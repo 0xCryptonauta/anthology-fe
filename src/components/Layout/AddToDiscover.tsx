@@ -17,6 +17,7 @@ import { readAnthology } from "@src/contract-functions/anthologyFunctions";
 import QRScanner from "./QRScanner";
 import { parseQrReturn } from "@src/utils/isQrReturnValid";
 import { Modal } from "./Modal";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 //import { useNavigate } from "react-router-dom";
 
@@ -26,6 +27,7 @@ const searchOptions = [
 ];
 
 export const AddToDiscover = () => {
+  const { t } = useTranslation();
   const [show, setShow] = useState(false);
 
   const dispatch = useAppDispatch();
@@ -54,7 +56,7 @@ export const AddToDiscover = () => {
       !parsed && isAddress(trimmed) ? "anthology" : null;
 
     if (!parsed && !fallbackType) {
-      return showToast("Invalid QR Code", "Please scan a valid QR Code.");
+      return showToast(t("discover.invalidQr"), t("discover.invalidQrDesc"));
     }
 
     const type = parsed ? parsed.type : fallbackType!;
@@ -62,8 +64,13 @@ export const AddToDiscover = () => {
 
     if (!isAddress(address)) {
       return showToast(
-        type === "user" ? "Invalid User Address" : "Invalid Anthology Address",
-        `Please scan a valid ${type === "user" ? "User" : "Anthology"} address.`
+        type === "user" ? t("discover.invalidUser") : t("discover.invalidAnthology"),
+        t("discover.scanValid", {
+          type:
+            type === "user"
+              ? t("discover.userType")
+              : t("discover.anthologyType"),
+        })
       );
     }
 
@@ -74,8 +81,8 @@ export const AddToDiscover = () => {
       );
     } else {
       showToast(
-        "Unknown QR Code Type",
-        "The scanned QR Code is not recognized."
+        t("discover.unknownQrType"),
+        t("discover.unknownQrTypeDesc")
       );
     }
   };
@@ -83,8 +90,8 @@ export const AddToDiscover = () => {
   const addDiscovery = async () => {
     if (!isAddress(addressToAdd)) {
       return addToast({
-        title: "Enter address",
-        content: "Please enter a valid address",
+        title: t("discover.enterAddress"),
+        content: t("discover.enterValid"),
         variant: "info",
         delay: 3000,
       });
@@ -95,8 +102,8 @@ export const AddToDiscover = () => {
     if (selectedSearchOption === "User Address") {
       if (users.includes(address)) {
         showToast(
-          "User already in directory",
-          `User: ${address} is already in the directory.`,
+          t("discover.userAlready"),
+          t("discover.userAlreadyDesc", { address }),
           "info"
         );
       } else {
@@ -107,14 +114,14 @@ export const AddToDiscover = () => {
         if (contracts !== undefined) {
           dispatch(updateUsers([address]));
           showToast(
-            "User found",
-            `User ${address} has been added successfully.`,
+            t("discover.userFound"),
+            t("discover.userFoundDesc", { address }),
             "success"
           );
         } else {
           showToast(
-            "User not found",
-            `No user found with address ${address}.`,
+            t("discover.userNotFound"),
+            t("discover.userNotFoundDesc", { address }),
             "info"
           );
         }
@@ -124,8 +131,8 @@ export const AddToDiscover = () => {
     if (selectedSearchOption === "Anthology Address") {
       if (contractsTitles[address]) {
         showToast(
-          "Anthology already in directory",
-          `Anthology: ${address} is already in the directory.`,
+          t("discover.anthologyAlready"),
+          t("discover.anthologyAlreadyDesc", { address }),
           "info"
         );
       } else {
@@ -155,14 +162,14 @@ export const AddToDiscover = () => {
             })
           );
           showToast(
-            "Anthology found",
-            `Anthology ${address} has been added successfully.`,
+            t("discover.anthologyFound"),
+            t("discover.anthologyFoundDesc", { address }),
             "success"
           );
         } else {
           showToast(
-            "Anthology not found",
-            `No anthology found with address ${address}.`,
+            t("discover.anthologyNotFound"),
+            t("discover.anthologyNotFoundDesc", { address }),
             "info"
           );
         }
@@ -204,7 +211,7 @@ export const AddToDiscover = () => {
               display: "inline-block",
             }}
           >
-            Discover
+            {t("discover.title")}
           </span>
         </div>
 
@@ -212,7 +219,7 @@ export const AddToDiscover = () => {
           <div style={{ display: "flex", flexDirection: "column" }}>
             <input
               type="text"
-              placeholder="Anthology/User Addr"
+              placeholder={t("discover.addrPlaceholder")}
               value={addressToAdd}
               onChange={(event) => setAddressToAdd(event.target.value)}
               autoComplete="new-password"
@@ -281,7 +288,7 @@ export const AddToDiscover = () => {
             }}
             onClick={addDiscovery}
           >
-            Add
+            {t("common.add")}
           </button>
         </div>
       </Modal>

@@ -2,6 +2,7 @@ import { useState, useMemo, useId, useRef, useEffect } from "react";
 import { MAX_TITLE_LENGTH } from "@src/utils/constants";
 import { MemoirContent } from "@src/types/common";
 import { parseContractsCategoriesSorted } from "@src/utils/parseContractsCategories";
+import { useTranslation } from "@src/i18n/useTranslation";
 import "./TitleEditor.css";
 
 interface TitleEditorProps {
@@ -29,6 +30,7 @@ export const TitleEditor: React.FC<TitleEditorProps> = ({
   submitLabel,
   onSubmit,
 }) => {
+  const { t } = useTranslation();
   const parsed = useMemo(() => parseExistingTitle(initialTitle), [initialTitle]);
 
   const [category, setCategory] = useState(parsed.category);
@@ -125,12 +127,12 @@ export const TitleEditor: React.FC<TitleEditorProps> = ({
   return (
     <div className="title-editor">
       <div className="title-editor-field">
-        <label htmlFor={catId}>Category (Optional)</label>
+        <label htmlFor={catId}>{t("title.category")}</label>
         <div className="title-editor-input-wrap" ref={catRef}>
           <input
             id={catId}
             type="text"
-            placeholder="e.g. Art, Music, Tech..."
+            placeholder={t("title.categoryPlaceholder")}
             value={category}
             onChange={(e) => {
               setCategory(e.target.value);
@@ -160,12 +162,12 @@ export const TitleEditor: React.FC<TitleEditorProps> = ({
       </div>
 
       <div className="title-editor-field">
-        <label htmlFor={subId}>Subcategory (Optional)</label>
+        <label htmlFor={subId}>{t("title.subcategory")}</label>
         <div className="title-editor-input-wrap" ref={subRef}>
           <input
             id={subId}
             type="text"
-            placeholder={category.trim() ? "e.g. Paintings, 80s..." : "Enter a category first"}
+            placeholder={category.trim() ? t("title.subcategoryPlaceholder") : t("title.enterCategoryFirst")}
             value={subcategory}
             onChange={(e) => setSubcategory(e.target.value)}
             onFocus={() => setSubDropdownOpen(true)}
@@ -193,11 +195,11 @@ export const TitleEditor: React.FC<TitleEditorProps> = ({
       </div>
 
       <div className="title-editor-field">
-        <label htmlFor={titleId} style={{color: "black", fontWeight: "bold"}}>Title</label>
+        <label htmlFor={titleId} style={{color: "black", fontWeight: "bold"}}>{t("title.title")}</label>
         <input
           id={titleId}
           type="text"
-          placeholder="My Anthology"
+          placeholder={t("title.titlePlaceholder")}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -226,7 +228,7 @@ export const TitleEditor: React.FC<TitleEditorProps> = ({
         </div> */}
 
         <div className="title-editor-tree">
-          <div className="title-editor-tree-label">Structure</div>
+          <div className="title-editor-tree-label">{t("title.structure")}</div>
           {title.trim() || category.trim() ? (
             <div className="title-editor-tree-content">
               {category.trim() && (
@@ -246,7 +248,7 @@ export const TitleEditor: React.FC<TitleEditorProps> = ({
               )}
             </div>
           ) : (
-            <div className="title-editor-tree-empty">No structure to show</div>
+            <div className="title-editor-tree-empty">{t("title.noStructure")}</div>
           )}
         </div>
       </div>

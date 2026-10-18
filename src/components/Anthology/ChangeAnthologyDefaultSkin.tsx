@@ -7,12 +7,14 @@ import { useToast } from "../Layout/Toast";
 import { SkinSelector } from "../Layout/SkinSelector";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 import { setDefaultSkin } from "@src/store/slices/localAnthologySlice";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 export const ChangeAnthologyDefaultSkin = ({
   contractAddr,
 }: {
   contractAddr: Address;
 }) => {
+  const { t } = useTranslation();
   const isLocal = isLocalAnthology(contractAddr);
   const { addToast } = useToast();
 
@@ -32,7 +34,7 @@ export const ChangeAnthologyDefaultSkin = ({
 
   return (
     <div style={{ display: "flex", alignItems: "center", margin: "20px" }}>
-      <div style={{ marginRight: "15px" }}>Default Skin: </div>
+      <div style={{ marginRight: "15px" }}>{t("skin.default")} </div>
       <div>
         <SkinSelector
           value={newDefaultSkin}
@@ -53,7 +55,7 @@ export const ChangeAnthologyDefaultSkin = ({
                 })
               );
               addToast({
-                title: "Default skin changed to",
+                title: t("skin.changedTitle"),
                 content: newDefaultSkin,
                 variant: "success",
                 delay: 3000,
@@ -66,7 +68,7 @@ export const ChangeAnthologyDefaultSkin = ({
               ]);
               if (txHash) {
                 addToast({
-                  title: "Default skin changed to",
+                  title: t("skin.changedTitle"),
                   content: newDefaultSkin + "\n\nTxHash: " + txHash,
                   variant: "success",
                   delay: 3000,
@@ -75,8 +77,8 @@ export const ChangeAnthologyDefaultSkin = ({
             }
           } catch (error) {
             addToast({
-              title: "Error setting new default skin",
-              content: "Unknown error",
+              title: t("skin.errorChanged"),
+              content: t("common.unknownError"),
               variant: "warning",
               delay: 3000,
             });
@@ -84,7 +86,7 @@ export const ChangeAnthologyDefaultSkin = ({
           }
         }}
       >
-        Change
+        {t("common.change")}
       </button>
     </div>
   );

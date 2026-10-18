@@ -10,6 +10,7 @@ import {
   AnthologyInterface,
   MemoirInterface,
 } from "@src/store/slices/anthologySlice";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 interface SearchResult {
   anthologyAddr: Address;
@@ -21,6 +22,7 @@ interface SearchResult {
 }
 
 export const MemoirSearchResults = ({ term }: { term: string }) => {
+  const { t } = useTranslation();
   const localAnthologies = useAppSelector((s) => s.localAnthology.anthologies);
   const localTitles = useAppSelector((s) => s.localAnthology.contractsTitles);
   const onchainAnthologies = useAppSelector((s) => s.anthology);
@@ -94,12 +96,13 @@ export const MemoirSearchResults = ({ term }: { term: string }) => {
       }}
     >
       <span style={{ textAlign: "center", fontSize: "13px" }}>
-        {results.length} {results.length === 1 ? "result" : "results"}
+        {results.length}{" "}
+        {results.length === 1 ? t("search.result") : t("search.results")}
       </span>
 
       {results.length === 0 ? (
         <p style={{ textAlign: "center" }}>
-          No memoirs match "{term.trim()}".
+          {t("search.noMatch", { term: term.trim() })}
         </p>
       ) : (
         results.map((result) => {
@@ -124,7 +127,7 @@ export const MemoirSearchResults = ({ term }: { term: string }) => {
                   wordBreak: "break-word",
                 }}
               >
-                {result.title || "Untitled"}
+                {result.title || t("common.untitled")}
               </span>
               <span
                 style={{
@@ -136,7 +139,7 @@ export const MemoirSearchResults = ({ term }: { term: string }) => {
                 }}
                 onClick={() => openAnthology(result.anthologyAddr)}
               >
-                {result.isLocal ? "Local" : "Blockchain"} ·{" "}
+                {result.isLocal ? t("search.local") : t("search.blockchain")} ·{" "}
                 {result.anthologyTitle}
               </span>
               <div style={{ fontSize: "0.9rem", wordBreak: "break-word" }}>

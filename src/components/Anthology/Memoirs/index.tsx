@@ -6,6 +6,7 @@ import { MemoirRenderer } from "./MemoirRenderer";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 import { Loading } from "@src/components/Layout/Loading";
 import { Address, SkinType } from "@src/types/common";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 interface MemoirsProps {
   anthologyAddr: Address;
@@ -18,6 +19,7 @@ export const Memoirs: React.FC<MemoirsProps> = ({
   order,
   skin,
 }) => {
+  const { t } = useTranslation();
   const [search, setSearch] = useState("");
 
   const anthology = useAppSelector((state) =>
@@ -87,7 +89,7 @@ export const Memoirs: React.FC<MemoirsProps> = ({
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search memoirs by title or content..."
+              placeholder={t("memoirs.searchPlaceholder")}
               style={{
                 padding: "8px 32px 8px 12px",
                 borderRadius: "8px",
