@@ -26,11 +26,12 @@ this file.
 
 - **Landmarks**: skip link (`a11y.skipToMain` → `#main-content`) in `RootView`;
   `<main id="main-content">`, `<footer>`, Bootstrap `<nav>` for the header.
-- **Focus**: global `:focus-visible` ring (`#22d3ee`, 3px) in `index.css` —
-  inline `outline: none` never kills keyboard focus indication. Mouse/touch
-  clicks show **no** ring (`:focus:not(:focus-visible)` reset; the Vite
-  starter `button:focus`/`button:hover` border rules were removed). Text
-  inputs/selects intentionally keep the ring on click (browsers treat them as
+- **Focus**: keyboard-only ring (`#22d3ee`, 3px) in `index.css`, **scoped to
+  `@media (hover: hover) and (pointer: fine)`** so touch devices never show a
+  ring; `:focus:not(:focus-visible)` removes click outlines everywhere, the
+  mobile tap highlight (`-webkit-tap-highlight-color`) is disabled globally,
+  and Bootstrap's blue focus glow on form controls is neutralized. Text
+  inputs/selects keep the ring on desktop click (browsers treat them as
   keyboard targets — you are about to type).
 - **Target size**: icon-only controls use `.icon-button` (min 24×24, centered).
 - **Buttons over spans**: interactive controls are `<button type="button">`.

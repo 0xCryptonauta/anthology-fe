@@ -58,9 +58,26 @@ button {
 }
 /* Mouse/touch clicks must not show a focus ring — only keyboard navigation
    does (WCAG 2.4.7 Focus Visible applies to keyboard focus). The keyboard
-   ring comes from the global :focus-visible rule below. */
+   ring comes from the :focus-visible rule below. */
 :focus:not(:focus-visible) {
   outline: none;
+}
+
+/* No tap flash on mobile — the browser's default tap highlight reads as a
+   blue border on every touch (iOS Safari / Android Chrome). */
+*,
+*::before,
+*::after {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Bootstrap paints its own blue focus glow on some controls — neutralize it
+   (the keyboard ring below still marks focus on desktop). */
+.form-check-input:focus,
+.form-control:focus,
+.form-select:focus,
+.btn-close:focus {
+  box-shadow: none;
 }
 
 /* ---------------------------------------------------------------- */
@@ -89,11 +106,14 @@ button {
   left: 0;
 }
 
-/* SC 2.4.7 Focus Visible — keyboard focus ring that survives inline
-   `outline: none` styles (mouse clicks stay clean via :focus-visible). */
-:focus-visible {
-  outline: 3px solid #22d3ee !important;
-  outline-offset: 2px !important;
+/* SC 2.4.7 Focus Visible — keyboard focus ring, scoped to desktop
+   (pointer-fine) devices. Touch devices get no ring at all: WCAG requires a
+   visible indicator for keyboard focus, and taps already have none. */
+@media (hover: hover) and (pointer: fine) {
+  :focus-visible {
+    outline: 3px solid #22d3ee !important;
+    outline-offset: 2px !important;
+  }
 }
 
 /* SC 2.4.11 Focus Not Obscured — keep anchored content clear of the ring */
