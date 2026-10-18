@@ -90,6 +90,8 @@ export const Memoirs: React.FC<MemoirsProps> = ({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={t("memoirs.searchPlaceholder")}
+              type="search"
+              aria-label={t("a11y.searchMemoirs")}
               style={{
                 padding: "8px 32px 8px 12px",
                 borderRadius: "8px",

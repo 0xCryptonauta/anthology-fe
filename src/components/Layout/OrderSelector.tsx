@@ -29,6 +29,7 @@ export const OrderSelector = ({ value, onChange }: SelectorProps) => {
     <select
       value={value}
       onChange={handleChange}
+      aria-label={t("a11y.orderSelector")}
       style={{
         //appearance: "none",
         backgroundColor: "#f9f9f9",

@@ -96,17 +96,20 @@ export const DeleteMemoir: React.FC<DeleteMemoirProps> = ({
       show={show}
       onHide={handleClose}
       trigger={
-        <span
+        <button
+          type="button"
+          className="icon-button"
           title={t("memoir.deleteTitle")}
-          style={{ cursor: "pointer", fontSize: "1rem", display: "block" }}
+          aria-label={t("memoir.deleteTitle")}
+          style={{ fontSize: "1rem" }}
           onClick={() => setShow(true)}
         >
           <img
             src="/icons/delete-icon.svg"
-            alt={t("memoir.deleteTitle")}
+            alt=""
             style={{ width: "18px", height: "18px", display: "block" }}
           />
-        </span>
+        </button>
       }
     >
       <div

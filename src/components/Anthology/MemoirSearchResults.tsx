@@ -130,19 +130,24 @@ export const MemoirSearchResults = ({ term }: { term: string }) => {
               >
                 {result.title || t("common.untitled")}
               </span>
-              <span
+              <button
+                type="button"
                 style={{
                   display: "block",
                   fontSize: "12px",
                   color: "#2b6cb0",
                   cursor: "pointer",
                   marginBottom: "6px",
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  textAlign: "left",
                 }}
                 onClick={() => openAnthology(result.anthologyAddr)}
               >
                 {result.isLocal ? t("search.local") : t("search.blockchain")} ·{" "}
                 <span translate="no">{result.anthologyTitle}</span>
-              </span>
+              </button>
               <div translate="no" style={{ fontSize: "0.9rem", wordBreak: "break-word" }}>
                 {extracted ? (
                   <>

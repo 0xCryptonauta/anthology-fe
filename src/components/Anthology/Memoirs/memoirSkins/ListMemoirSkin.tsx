@@ -73,8 +73,10 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
               position: "relative",
             }}
           >
-            <span
+            <button
+              type="button"
               translate="no"
+              aria-expanded={extracted ? isExpanded : undefined}
               style={{
                 fontWeight: "600",
                 fontSize: "1rem",
@@ -84,6 +86,10 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
                 wordBreak: "break-word",
                 textAlign: "center",
                 cursor: extracted ? "pointer" : "default",
+                background: "none",
+                border: "none",
+                width: "100%",
+                padding: 0,
               }}
               onClick={
                 extracted
@@ -96,8 +102,8 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
               }
             >
               {index + 1}. {title || t("common.untitled")}
-              {extracted && <span>{isExpanded ? " ▾" : " ▸"}</span>}
-            </span>
+              {extracted && <span aria-hidden="true">{isExpanded ? " ▾" : " ▸"}</span>}
+            </button>
 
             <div
               translate="no"

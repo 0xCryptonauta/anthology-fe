@@ -35,8 +35,11 @@ export const MemoirBuffer = ({ contractAddr }: { contractAddr: string }) => {
             <span>{t("memoirs.whenAdded")} </span>
             <span>{memoir.timestamp}</span>
             <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-              <span
-                style={{ cursor: "pointer" }}
+              <button
+                type="button"
+                className="icon-button"
+                title={t("memoir.accept")}
+                aria-label={t("memoir.accept")}
                 onClick={async () => {
                   const txHash = await writeAnthology(
                     contractAddr,
@@ -54,10 +57,12 @@ export const MemoirBuffer = ({ contractAddr }: { contractAddr: string }) => {
                 }}
               >
                 ✅
-              </span>
-              <span
+              </button>
+              <button
+                type="button"
+                className="icon-button"
                 title={t("memoirs.decline")}
-                style={{ cursor: "pointer" }}
+                aria-label={t("memoirs.decline")}
                 onClick={async () => {
                   const txHash = await writeAnthology(
                     contractAddr,
@@ -75,7 +80,7 @@ export const MemoirBuffer = ({ contractAddr }: { contractAddr: string }) => {
               >
                 <img
                   src="/icons/delete-icon.svg"
-                  alt={t("memoirs.decline")}
+                  alt=""
                   style={{
                     width: "16px",
                     height: "16px",
@@ -83,7 +88,7 @@ export const MemoirBuffer = ({ contractAddr }: { contractAddr: string }) => {
                     filter: "invert(1)",
                   }}
                 />
-              </span>
+              </button>
             </div>
           </div>
         );

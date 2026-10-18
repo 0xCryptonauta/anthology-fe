@@ -1,5 +1,5 @@
 import { shortenAddress } from "@src/utils/shortenAddress";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useId } from "react";
 import { parseContractsCategoriesSorted } from "@src/utils/parseContractsCategories";
 import { Address } from "@src/types/common";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
@@ -31,6 +31,12 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
   const [selectedUser, setSelectedUser] = useState<Address>(
     LOCAL_USER_ADDR || ""
   );
+
+  // WCAG 3.3.2 / 4.1.2 — label/control associations.
+  const userSelectId = useId();
+  const categorySelectId = useId();
+  const subcategorySelectId = useId();
+  const addressInputId = useId();
 
   const isLocalUser = selectedUser === LOCAL_USER_ADDR;
 
@@ -123,8 +129,9 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
     >
       {showUserSelect && (
         <>
-          <label>{t("selector.user")} </label>
+          <label htmlFor={userSelectId}>{t("selector.user")} </label>
           <select
+            id={userSelectId}
             value={selectedUser}
             style={{
             minHeight: "30px",
@@ -152,8 +159,9 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
         </>
       )}
 
-      <label>{t("selector.category")} </label>
+      <label htmlFor={categorySelectId}>{t("selector.category")} </label>
       <select
+        id={categorySelectId}
         value={selectedCategory}
         onChange={handleCategoryChange}
         style={{
@@ -189,9 +197,10 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
       > */}
       {subcategoryOptions.length > 0 && (
         <>
-          <label>{t("selector.subcategory")} </label>
+          <label htmlFor={subcategorySelectId}>{t("selector.subcategory")} </label>
 
           <select
+            id={subcategorySelectId}
             value={selectedSubcategory}
             onChange={handleSubcategoryChange}
             style={{
@@ -230,28 +239,35 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
           }}
         >
           {filteredContracts.map((contract) => (
-            <li
-              translate="no"
-              key={contract.address}
-              onClick={() => {
-                setSelectedAddress(contract.address);
-                setSelectedContract(contract.address as Address);
-              }}
-              style={{
-                cursor: "pointer",
-                color:
-                  selectedAddress === contract.address
-                    ? variant === "light"
-                      ? "#0891b2"
-                      : "#22d3ee"
-                    : variant === "light"
-                    ? "#1a1a1a"
-                    : "white",
-                fontWeight:
-                  selectedAddress === contract.address ? 600 : 400,
-              }}
-            >
-              {contract.title}
+            <li key={contract.address}>
+              <button
+                type="button"
+                translate="no"
+                onClick={() => {
+                  setSelectedAddress(contract.address);
+                  setSelectedContract(contract.address as Address);
+                }}
+                aria-pressed={selectedAddress === contract.address}
+                style={{
+                  cursor: "pointer",
+                  background: "none",
+                  border: "none",
+                  padding: 0,
+                  textAlign: "left",
+                  color:
+                    selectedAddress === contract.address
+                      ? variant === "light"
+                        ? "#0891b2"
+                        : "#22d3ee"
+                      : variant === "light"
+                      ? "#1a1a1a"
+                      : "white",
+                  fontWeight:
+                    selectedAddress === contract.address ? 600 : 400,
+                }}
+              >
+                {contract.title}
+              </button>
             </li>
           ))}
         </ul>
@@ -265,8 +281,9 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
             alignItems: "center",
           }}
         >
-          <label>{t("selector.anthologyAddress")} </label>
+          <label htmlFor={addressInputId}>{t("selector.anthologyAddress")} </label>
           <input
+            id={addressInputId}
             type="text"
             value={
               selectedAddress

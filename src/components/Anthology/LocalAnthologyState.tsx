@@ -99,12 +99,21 @@ export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
       <Card
         title={t("localState.download")}
         content={
-          <span
-            style={{ cursor: "pointer", fontSize: "20px" }}
+          <button
+            type="button"
+            title={t("localState.download")}
+            aria-label={t("localState.download")}
+            style={{
+              cursor: "pointer",
+              fontSize: "20px",
+              background: "none",
+              border: "none",
+              padding: 0,
+            }}
             onClick={downloadLocalAnthology}
           >
             💾
-          </span>
+          </button>
         }
       />
 
@@ -115,17 +124,19 @@ export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
             show={showDeleteModal}
             onHide={() => setShowDeleteModal(false)}
             trigger={
-              <span
+              <button
+                type="button"
+                className="icon-button"
                 title={t("localState.delete")}
-                style={{ cursor: "pointer" }}
+                aria-label={t("localState.delete")}
                 onClick={() => setShowDeleteModal(true)}
               >
                 <img
                   src="/icons/delete-icon.svg"
-                  alt={t("localState.delete")}
+                  alt=""
                   style={{ width: "20px", height: "20px", display: "block" }}
                 />
-              </span>
+              </button>
             }
           >
             <div

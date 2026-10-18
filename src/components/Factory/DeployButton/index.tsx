@@ -80,15 +80,16 @@ export const DeployButton: React.FC<DeployButtonProps> = ({
       onHide={handleClose}
       trigger={
         isLocal || canCreateOnChain ? (
-          <span
+          <button
+            type="button"
             className="btn-new-pill"
             onClick={() => setShow(true)}
             aria-label={t("deploy.newAnthology")}
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" aria-hidden="true">
               <path d="M12 5v14M5 12h14" />
             </svg>
-          </span>
+          </button>
         ) : (
           <></>
         )

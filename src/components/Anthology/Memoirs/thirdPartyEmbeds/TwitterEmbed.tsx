@@ -66,7 +66,12 @@ export const TwitterEmbed = ({
       }}
     >
       <blockquote className="twitter-tweet">
-        <a href={"https://twitter.com/" + username + "/status/" + postId}></a>
+        <a
+          href={"https://twitter.com/" + username + "/status/" + postId}
+          aria-label={"View post on X: @" + username}
+        >
+          View post on X
+        </a>
       </blockquote>
     </div>
   );

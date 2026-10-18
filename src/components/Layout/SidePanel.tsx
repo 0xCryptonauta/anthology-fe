@@ -42,8 +42,11 @@ export const SidePanel = () => {
       show={show}
       onHide={handleClose}
       trigger={
-        <div
-          onClick={handleShow}
+        <button
+          type="button"
+          aria-label={t("a11y.sidePanel")}
+          aria-haspopup="dialog"
+          aria-expanded={show}
           style={{
             display: "flex",
             justifyContent: "center",
@@ -60,19 +63,10 @@ export const SidePanel = () => {
             boxShadow: "0 2px 6px rgba(0, 0, 0, 0.2)",
             transition: "background 0.2s, transform 0.2s",
           }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLDivElement).style.background =
-              "rgba(255, 255, 255, 0.1)";
-            (e.currentTarget as HTMLDivElement).style.transform = "scale(1.05)";
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLDivElement).style.background =
-              "rgba(255, 255, 255, 0.05)";
-            (e.currentTarget as HTMLDivElement).style.transform = "scale(1)";
-          }}
+          onClick={handleShow}
         >
           <span style={{ marginBottom: isMobile ? "0px" : "5px" }}>☰</span>
-        </div>
+        </button>
       }
       header={
         <Link

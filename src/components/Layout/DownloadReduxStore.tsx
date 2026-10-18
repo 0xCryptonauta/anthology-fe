@@ -148,7 +148,8 @@ export const DownloadReduxStore = () => {
       show={show}
       onHide={handleClose}
       trigger={
-        <span
+        <button
+          type="button"
           style={{
             cursor: "pointer",
             border: "1px solid #ccc",
@@ -163,7 +164,7 @@ export const DownloadReduxStore = () => {
           onClick={() => setShow(true)}
         >
           {t("settings.downloadData")}
-        </span>
+        </button>
       }
     >
       <div
@@ -288,6 +289,12 @@ export const DownloadReduxStore = () => {
                   (e.currentTarget.style.backgroundColor = "#2563eb")
                 }
                 onMouseOut={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#3b82f6")
+                }
+                onFocus={(e) =>
+                  (e.currentTarget.style.backgroundColor = "#2563eb")
+                }
+                onBlur={(e) =>
                   (e.currentTarget.style.backgroundColor = "#3b82f6")
                 }
               >

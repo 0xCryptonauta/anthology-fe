@@ -75,7 +75,9 @@ export const LocalAnthologyView = () => {
       </div>
 
       <div style={{ display: "flex" }}>
-        <div
+        <button
+          type="button"
+          aria-expanded={showInfo}
           onClick={() => setShowInfo(!showInfo)}
           style={{
             backgroundColor: "rgb(143 200 129)",
@@ -93,7 +95,7 @@ export const LocalAnthologyView = () => {
           }}
         >
           {showInfo ? t("anthology.show") : t("anthology.info")}
-        </div>
+        </button>
 
         {!showInfo && (
           <div>
@@ -110,7 +112,9 @@ export const LocalAnthologyView = () => {
         )}
 
         {showInfo && (
-          <div
+          <button
+            type="button"
+            aria-expanded={sudoMode}
             onClick={() => setSudoMode(!sudoMode)}
             style={{
               border: "1px solid darkred",
@@ -118,10 +122,11 @@ export const LocalAnthologyView = () => {
               borderRadius: "7px",
               cursor: "pointer",
               backgroundColor: "darkred",
+              color: "white",
             }}
           >
             {sudoMode ? t("anthology.info") : t("nav.settings")}
-          </div>
+          </button>
         )}
       </div>
 

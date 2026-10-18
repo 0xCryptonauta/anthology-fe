@@ -37,7 +37,8 @@ export const IconPathSwitcher = () => {
       onHide={handleClose}
       trigger={
         isConnected ? (
-          <span
+          <button
+            type="button"
             style={{
               cursor: "pointer",
               border: "1px solid #ccc",
@@ -52,7 +53,7 @@ export const IconPathSwitcher = () => {
             onClick={() => setShow(true)}
           >
             {t("iconPath.trigger")}
-          </span>
+          </button>
         ) : (
           <></>
         )

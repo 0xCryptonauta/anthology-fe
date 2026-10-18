@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useId } from "react";
 import { writeAnthology } from "@src/contract-functions/anthologyFunctions";
 import "./style.css";
 import { useToast } from "@components/Layout/Toast";
@@ -42,6 +42,13 @@ export const AddMemoir = ({
   const [urlWarning, setUrlWarning] = useState("");
   const [isFetchingTitle, setIsFetchingTitle] = useState(false);
   const handleClose = () => setShow(false);
+
+  // WCAG 3.3.2 / 4.1.2 — explicit label/form connections.
+  const titleInputId = useId();
+  const contentInputId = useId();
+  const titleErrorId = useId();
+  const urlErrorId = useId();
+  const urlWarningId = useId();
 
   const { userAddr, currentPath } = useAppSelector((state) => state.user);
   const { whitelistEnabled, owner } = useAppSelector(
@@ -198,17 +205,21 @@ export const AddMemoir = ({
         show={show}
         onHide={handleClose}
         trigger={
-          <span
+          <button
+            type="button"
             className="addMemoirButton"
+            aria-label={t("a11y.addMemoir")}
             style={{
               fontSize: "2.5rem",
               cursor: "pointer",
               padding: "0.25rem 0.75rem",
+              background: "none",
+              border: "none",
             }}
             onClick={() => setShow(true)}
           >
             📝
-          </span>
+          </button>
         }
       >
         <div
@@ -228,7 +239,12 @@ export const AddMemoir = ({
               alignItems: "center",
             }}
           >
-            <label style={{ fontWeight: 500, fontSize: "1.2rem" }}>{t("memoir.title")}</label>
+            <label
+              htmlFor={titleInputId}
+              style={{ fontWeight: 500, fontSize: "1.2rem" }}
+            >
+              {t("memoir.title")}
+            </label>
             {extractFirstUrl(filteredContent) && (
               <button
                 type="button"
@@ -263,9 +279,12 @@ export const AddMemoir = ({
             )}
           </div>
           <input
+            id={titleInputId}
             value={anthologyTitle}
             maxLength={50}
             placeholder={t("memoir.enterTitle")}
+            aria-invalid={!!titleError}
+            aria-describedby={titleError ? titleErrorId : undefined}
             onChange={(e) => setAnthologyTitle(e.target.value)}
             style={{
               padding: "0.75rem 1rem",
@@ -279,6 +298,8 @@ export const AddMemoir = ({
           />
           {titleError && (
             <span
+              id={titleErrorId}
+              role="alert"
               style={{
                 color: "#dc2626",
                 fontSize: "0.8rem",
@@ -290,7 +311,12 @@ export const AddMemoir = ({
             </span>
           )}
 
-          <label style={{ fontWeight: 500, fontSize: "1.2rem" }}>{t("memoir.content")}</label>
+          <label
+            htmlFor={contentInputId}
+            style={{ fontWeight: 500, fontSize: "1.2rem" }}
+          >
+            {t("memoir.content")}
+          </label>
           <div
             style={{
               position: "relative",
@@ -327,7 +353,12 @@ export const AddMemoir = ({
 
             <textarea
               ref={textareaRef}
+              id={contentInputId}
               value={anthologyContent}
+              aria-invalid={!!urlError}
+              aria-describedby={
+                urlError ? urlErrorId : urlWarning ? urlWarningId : undefined
+              }
               onChange={(e) => setAnthologyContent(e.target.value)}
               maxLength={255}
               style={{
@@ -350,6 +381,8 @@ export const AddMemoir = ({
           </div>
           {urlError && (
             <span
+              id={urlErrorId}
+              role="alert"
               style={{
                 color: "#dc2626",
                 fontSize: "0.8rem",
@@ -362,6 +395,8 @@ export const AddMemoir = ({
           )}
           {!urlError && urlWarning && (
             <span
+              id={urlWarningId}
+              role="status"
               style={{
                 color: "#b45309",
                 fontSize: "0.8rem",
@@ -373,19 +408,23 @@ export const AddMemoir = ({
             </span>
           )}
 
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <label
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              cursor: "pointer",
+            }}
+          >
             <input
               type="checkbox"
               checked={shouldFilterTracking}
               onChange={() => setShouldFilterTracking(!shouldFilterTracking)}
             />
-            <span
-              style={{ cursor: "pointer", userSelect: "none" }}
-              onClick={() => setShouldFilterTracking(!shouldFilterTracking)}
-            >
+            <span style={{ userSelect: "none" }}>
               {t("memoir.removeTracking")}
             </span>
-          </div>
+          </label>
 
           <button
             onClick={handleAddMemoir}

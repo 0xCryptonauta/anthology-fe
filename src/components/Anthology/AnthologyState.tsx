@@ -142,19 +142,16 @@ export const AnthologyState: React.FC<AnthologyStateProps> = ({
       <Card
         title={t("anthologyState.shareLink")}
         content={
-          <span
+          <button
+            type="button"
+            className="icon-button"
             title={t("anthologyState.shareLink")}
-            style={{
-              cursor: "pointer",
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
+            aria-label={t("anthologyState.shareLink")}
             onClick={handleCopyShareLink}
           >
             <img
               src="/icons/copy-icon.svg"
-              alt={t("anthologyState.shareLink")}
+              alt=""
               style={{
                 width: "20px",
                 height: "20px",
@@ -162,20 +159,28 @@ export const AnthologyState: React.FC<AnthologyStateProps> = ({
                 filter: "invert(1)",
               }}
             />
-          </span>
+          </button>
         }
       />
 
       <Card
         title={t("anthologyState.saveToLocal")}
         content={
-          <span
+          <button
+            type="button"
             title={t("anthologyState.saveToLocal")}
-            style={{ cursor: "pointer", fontSize: "20px" }}
+            aria-label={t("anthologyState.saveToLocal")}
+            style={{
+              cursor: "pointer",
+              fontSize: "20px",
+              background: "none",
+              border: "none",
+              padding: 0,
+            }}
             onClick={handleCloneToLocal}
           >
             💾
-          </span>
+          </button>
         }
       />
 

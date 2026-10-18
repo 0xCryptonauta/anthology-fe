@@ -71,6 +71,13 @@ export const Modal = ({
   const isPortrait = window.innerHeight > window.innerWidth;
   const resolvedPlacement = placement === "end" ? "end" : "bottom";
 
+  // WCAG 2.1.1 / 4.1.2 — custom (non-button) triggers get keyboard support.
+  const nativeInteractiveTags = ["button", "a", "input", "select", "textarea"];
+  const triggerNeedsKeyboard =
+    !!trigger &&
+    typeof trigger.type === "string" &&
+    !nativeInteractiveTags.includes(trigger.type as string);
+
   return (
     <>
       {trigger && (
@@ -80,6 +87,20 @@ export const Modal = ({
               trigger.props.onClick?.(e);
               handleShow();
             },
+            ...(triggerNeedsKeyboard
+              ? {
+                  role: "button",
+                  tabIndex: 0,
+                  "aria-haspopup": "dialog" as const,
+                  onKeyDown: (e: React.KeyboardEvent) => {
+                    trigger.props.onKeyDown?.(e);
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      handleShow();
+                    }
+                  },
+                }
+              : {}),
           })}
         </div>
       )}
@@ -124,7 +145,6 @@ export const Modal = ({
         >
           <div
             ref={offcanvasRef}
-            onClick={(e) => e.stopPropagation()}
             style={{
               backgroundColor:
                 isSidePanel || transparent ? "transparent" : "white",

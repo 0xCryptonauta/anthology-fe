@@ -39,7 +39,8 @@ export const ClearCacheButton = () => {
       show={show}
       onHide={() => setShow(false)}
       trigger={
-        <span
+        <button
+          type="button"
           style={{
             cursor: "pointer",
             border: "1px solid #ccc",
@@ -54,7 +55,7 @@ export const ClearCacheButton = () => {
           onClick={() => setShow(true)}
         >
           {t("cache.clearTrigger")}
-        </span>
+        </button>
       }
     >
       <div

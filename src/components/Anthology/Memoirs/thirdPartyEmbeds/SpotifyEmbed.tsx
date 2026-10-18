@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { SpotifyContentType } from "@src/utils/embeds";
 import { useEmbedPlayback } from "./embedPlayback";
+import { useTranslation } from "@src/i18n/useTranslation";
 
 export const SpotifyEmbed = ({
   contentType,
@@ -9,6 +10,7 @@ export const SpotifyEmbed = ({
   contentType: SpotifyContentType;
   contentId: string;
 }) => {
+  const { t } = useTranslation();
   const { isActive, activate } = useEmbedPlayback();
   const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
 
@@ -48,13 +50,23 @@ export const SpotifyEmbed = ({
         frameBorder="0"
         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
         loading="lazy"
+        title={t("a11y.playSpotify")}
       ></iframe>
     );
   }
 
   return (
     <div
+      role="button"
+      tabIndex={0}
+      aria-label={t("a11y.playSpotify")}
       onClick={activate}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          activate();
+        }
+      }}
       style={{
         position: "relative",
         width: "100%",
@@ -97,6 +109,7 @@ export const SpotifyEmbed = ({
       >
         <svg
           viewBox="0 0 24 24"
+          aria-hidden="true"
           style={{
             width: "22px",
             height: "22px",
