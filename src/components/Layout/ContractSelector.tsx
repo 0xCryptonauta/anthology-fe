@@ -233,10 +233,14 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
                 cursor: "pointer",
                 color:
                   selectedAddress === contract.address
-                    ? "gray"
+                    ? variant === "light"
+                      ? "#0891b2"
+                      : "#22d3ee"
                     : variant === "light"
                     ? "#1a1a1a"
                     : "white",
+                fontWeight:
+                  selectedAddress === contract.address ? 600 : 400,
               }}
             >
               {contract.title}
