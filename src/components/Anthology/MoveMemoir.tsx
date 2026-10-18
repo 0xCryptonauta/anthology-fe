@@ -138,6 +138,7 @@ export const MoveMemoir = ({
       placement="bottom"
       show={show}
       onHide={() => setShow(false)}
+      height="min(700px, 90dvh)"
       trigger={
         <span
           title="Copy/Move to another anthology"

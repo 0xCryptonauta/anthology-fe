@@ -55,8 +55,9 @@ category color.
 
 ### Modal / sheet (`src/components/Layout/Modal.tsx`)
 - Bottom sheet at all sizes; sidepanel variant for the nav (`placement="end"`).
-- Height `min(600px, 90dvh)`; portrait sheets sit `40px` above the screen
-  bottom.
+- Height `min(600px, 90dvh)` by default; pass `height` to override (the
+  copy/move modal uses `min(700px, 90dvh)`). Portrait sheets sit `40px` above
+  the screen bottom.
 - Portrait: content anchored to the top of the sheet (grows **downward**);
   desktop: bottom-anchored. Card capped to the sheet (`calc(100% - 6px)`).
 - **Only inner content scrolls** — the frame (title, actions) stays fixed.

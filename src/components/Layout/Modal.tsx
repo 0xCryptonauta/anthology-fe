@@ -18,6 +18,7 @@ type ModalProps = {
   transparent?: boolean;
   stickToBottom?: boolean;
   containerClassName?: string;
+  height?: string;
 };
 
 export const Modal = ({
@@ -31,6 +32,7 @@ export const Modal = ({
   transparent = false,
   stickToBottom = false,
   containerClassName,
+  height,
 }: ModalProps) => {
   const [internalShow, setInternalShow] = useState(false);
   const show = externalShow ?? internalShow;
@@ -90,7 +92,7 @@ export const Modal = ({
         data-bs-theme={isSidePanel ? "dark" : undefined}
         style={{
           width: isSidePanel ? "200px" : undefined,
-          height: !isSidePanel && placement !== "end" ? "min(600px, 90dvh)" : undefined,
+          height: !isSidePanel && placement !== "end" ? height ?? "min(600px, 90dvh)" : undefined,
           bottom: !isSidePanel && isPortrait ? "40px" : undefined,
           backgroundColor: "transparent",
           border: "unset",
