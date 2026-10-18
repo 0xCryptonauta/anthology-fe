@@ -66,14 +66,6 @@ export const AboutView = () => {
             all still there. It even works offline.
           </p>
 
-          <h2 style={headingStyle}>Share it if you want</h2>
-          <p style={paragraphStyle}>
-            Collections you publish to the blockchain can be shared as a QR
-            code — scan it on another device and it's imported instantly.
-            Private collections stay in your browser, and can be exported as a
-            file whenever you want.
-          </p>
-
           <h2 style={headingStyle}>Make it permanent (optional)</h2>
           <p style={paragraphStyle}>
             If you want a collection to outlive your browser — or be public for
@@ -81,6 +73,14 @@ export const AboutView = () => {
             Think of it as carving it into stone instead of writing it in a
             notebook. It costs a small network fee, and it's completely
             optional.
+          </p>
+
+          <h2 style={headingStyle}>Share it if you want</h2>
+          <p style={paragraphStyle}>
+            Collections you publish to the blockchain can be shared as a QR
+            code — scan it on another device and it's imported instantly.
+            Private collections stay in your browser, and can be exported as a
+            file whenever you want.
           </p>
 
           <h2 style={headingStyle}>Why "anthology"?</h2>
