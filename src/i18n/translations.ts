@@ -122,6 +122,8 @@ export const en = {
 
   "about.showFull": "Read full version",
   "about.showShort": "Read short version",
+  "about.onboarding": "Onboarding",
+  "about.onboardingIframeTitle": "Anthology Onboarding Guide",
   "about.shortTitle": "What is Anthology?",
   "about.shortIntro":
     "A local-first filter for what's worth remembering: notes, links, videos and ideas — saved the moment something makes you think \"everyone should know this\" or \"worth remembering in 10 years\". You curate by topic and value; no algorithm decides your feed.",
@@ -628,6 +630,8 @@ export const es: Record<TranslationKey, string> = {
 
   "about.showFull": "Leer versión completa",
   "about.showShort": "Leer versión corta",
+  "about.onboarding": "Onboarding",
+  "about.onboardingIframeTitle": "Guía de onboarding de Anthology",
   "about.shortTitle": "¿Qué es Anthology?",
   "about.shortIntro":
     "Un filtro local-first para lo que vale la pena recordar: notas, enlaces, videos e ideas — guardado en el momento en que algo te hace pensar «esto debería saberlo todo el mundo» o «vale la pena recordarlo en 10 años». Tú curas por tema y valor; ningún algoritmo decide tu feed.",

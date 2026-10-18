@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Seo } from "@components/Layout/Seo";
 import { useTranslation } from "@src/i18n/useTranslation";
 
@@ -35,8 +35,40 @@ const quoteStyle = {
 };
 
 export const AboutView = () => {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const [showFull, setShowFull] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [iframeHeight, setIframeHeight] = useState(1400);
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
+  const observerRef = useRef<ResizeObserver | null>(null);
+
+  const syncIframeHeight = useCallback(() => {
+    const doc = iframeRef.current?.contentDocument;
+    if (!doc) return;
+    const h = Math.max(
+      doc.body?.scrollHeight || 0,
+      doc.documentElement?.scrollHeight || 0
+    );
+    if (h > 0) setIframeHeight(h + 16);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      observerRef.current?.disconnect();
+    };
+  }, []);
+
+  const handleIframeLoad = () => {
+    observerRef.current?.disconnect();
+    syncIframeHeight();
+    const doc = iframeRef.current?.contentDocument;
+    if (doc?.documentElement && typeof ResizeObserver !== "undefined") {
+      const ro = new ResizeObserver(() => syncIframeHeight());
+      ro.observe(doc.documentElement);
+      if (doc.body) ro.observe(doc.body);
+      observerRef.current = ro;
+    }
+  };
 
   return (
     <>
@@ -48,20 +80,21 @@ export const AboutView = () => {
           alignItems: "center",
           justifyContent: "center",
           minHeight: "50vh",
-          padding: "2rem",
+          padding: "2rem 1rem",
           flexWrap: "wrap",
           gap: "1.5rem",
         }}
       >
         <div
           style={{
-            maxWidth: "640px",
+            maxWidth: showOnboarding ? "1040px" : "640px",
             width: "100%",
             backgroundColor: "rgba(255, 255, 255, 0.35)",
             backdropFilter: "blur(6px)",
             borderRadius: "12px",
-            padding: "24px",
+            padding: showOnboarding ? "20px 12px" : "24px",
             boxSizing: "border-box",
+            transition: "max-width 0.2s ease",
           }}
         >
           <h1
@@ -75,27 +108,37 @@ export const AboutView = () => {
             Anthology
           </h1>
 
-          {/* ------------------- Short / full version toggle ---------------------- */}
+          {/* ------------------- Short / full version + Onboarding toggles ---------------------- */}
           <div
             style={{
               display: "flex",
               justifyContent: "center",
+              alignItems: "center",
+              flexWrap: "wrap",
+              gap: "8px",
               marginBottom: "1.5rem",
             }}
           >
             <button
               type="button"
-              aria-pressed={showFull}
-              onClick={() => setShowFull((value) => !value)}
+              aria-pressed={!showOnboarding && showFull}
+              onClick={() => {
+                if (showOnboarding) {
+                  setShowOnboarding(false);
+                } else {
+                  setShowFull((value) => !value);
+                }
+              }}
               style={{
                 height: "36px",
                 padding: "0 14px",
                 borderRadius: "8px",
                 border: "1px solid #ccc",
-                backgroundColor: "#f7fafc",
+                backgroundColor: !showOnboarding ? "#f7fafc" : "rgba(247, 250, 252, 0.75)",
                 color: "#2b6cb0",
                 fontSize: "14px",
                 fontWeight: "bold",
+                whiteSpace: "nowrap",
                 cursor: "pointer",
                 display: "inline-flex",
                 alignItems: "center",
@@ -103,9 +146,47 @@ export const AboutView = () => {
             >
               {showFull ? t("about.showShort") : t("about.showFull")}
             </button>
+
+            <button
+              type="button"
+              aria-pressed={showOnboarding}
+              onClick={() => setShowOnboarding((value) => !value)}
+              style={{
+                height: "36px",
+                padding: "0 14px",
+                borderRadius: "8px",
+                border: showOnboarding ? "1px solid #0891b2" : "1px solid #ccc",
+                backgroundColor: showOnboarding ? "#0891b2" : "#f7fafc",
+                color: showOnboarding ? "#ffffff" : "#0891b2",
+                fontSize: "14px",
+                fontWeight: "bold",
+                whiteSpace: "nowrap",
+                cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+              }}
+            >
+              {t("about.onboarding")}
+            </button>
           </div>
 
-          {!showFull ? (
+          {showOnboarding ? (
+            <iframe
+              ref={iframeRef}
+              key={locale}
+              src={`/onboarding.html?lang=${locale}`}
+              title={t("about.onboardingIframeTitle")}
+              onLoad={handleIframeLoad}
+              style={{
+                width: "100%",
+                height: `${iframeHeight}px`,
+                border: "none",
+                borderRadius: "10px",
+                display: "block",
+                backgroundColor: "#fdfaf4",
+              }}
+            />
+          ) : !showFull ? (
             /* --------------------------- Short version ------------------------- */
             <>
               <h2 style={headingStyle}>{t("about.shortTitle")}</h2>
