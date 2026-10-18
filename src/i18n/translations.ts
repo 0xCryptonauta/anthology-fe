@@ -61,19 +61,64 @@ export const en = {
 
   /* ---------------------------------- About --------------------------------- */
   "about.intro":
-    "Anthology is a place to keep what you want to remember — notes, links, videos, ideas — organized into collections. Each collection is called an anthology: like a book of your own writing, except it can hold anything.",
-  "about.localTitle": "Yours, on your device",
-  "about.local":
-    "Everything you save lives in your browser. No account, no server, nobody else reading it. Close the tab, come back next week — it's all still there. It even works offline.",
-  "about.permanentTitle": "Make it permanent (optional)",
-  "about.permanent":
-    "If you want a collection to outlive your browser — or be public for anyone to read — you can publish it to the blockchain (Arbitrum). Think of it as carving it into stone instead of writing it in a notebook. It costs a small network fee, and it's completely optional.",
-  "about.shareTitle": "Share it if you want",
-  "about.share":
-    "Collections you publish to the blockchain can be shared as a QR code — scan it on another device and it's imported instantly. Private collections stay in your browser, and can be exported as a file whenever you want.",
-  "about.whyTitle": "Why \"anthology\"?",
-  "about.why":
-    "An anthology is a collection of writing — poems, stories, songs. This one is your collection of whatever matters to you.",
+    "Anthology is a local-first place to keep what you want to remember — notes, links, videos, ideas — organized into collections. Everything works offline, and publishing to the blockchain is optional.",
+
+  "about.whyTitle": "Why memory?",
+  "about.whyIntro":
+    "Every story has more than one side, and every piece of information passes through someone's lens. Before the internet, media was centralized — radio, TV, newspapers — so even with editorial bias, most people shared a baseline and could contrast sources. Today information is fragmented: you mostly see what you already click on, and if a topic never crosses your feed, an algorithm quietly decides what you believe about it.",
+  "about.whyPerson":
+    "Someone can be brilliant at one specific thing — a historian who documents sources, a researcher explaining their field — while their opinions on everything else hardly matter. Anthology organizes knowledge by topic and by value, not by idolizing people.",
+  "about.whyForget":
+    "Human memory is forgetful. Names fade, yesterday's meals disappear, and university lectures turn into vague notions — only the core ideas and feelings stay. And people usually search for information after they need it, not when they stumble upon it.",
+  "about.whyFilter":
+    "Anthology is a filter for those moments when something new appears during \"productive procrastination\" — history, geopolitics, music, cinema, art, technology — and one of these thoughts shows up:",
+  "about.whyFilter1": "Everyone should know this.",
+  "about.whyFilter2": "Why isn't this common knowledge?",
+  "about.whyFilter3": "This is worth remembering in 5 or 10 years.",
+  "about.whyIdeasTitle": "What a curated memory enables",
+  "about.whyIdeas1Title": "Someone already said it",
+  "about.whyIdeas1":
+    "Instead of rebuilding an argument from scratch, point straight to the memoir — a clip, an article, a quote — where someone already said it best.",
+  "about.whyIdeas2Title": "Question chains",
+  "about.whyIdeas2":
+    "People don't know what they don't know, and they distrust strangers. A curated chain of memoirs and questions lets anyone walk a topic step by step and reach their own conclusions.",
+  "about.whyIdeas3Title": "Human-curated rabbit holes",
+  "about.whyIdeas3":
+    "Instead of an opaque corporate algorithm deciding the feed, an anthology is a transparent playlist of videos, posts and notes about a topic — curated by a person with a genuine interest in it.",
+
+  "about.glossaryTitle": "Glossary",
+  "about.glossaryMemoir": "Memoir",
+  "about.glossaryMemoirDesc":
+    "A single piece of information — a title and content (a note, link, video or post) — saved inside an anthology.",
+  "about.glossaryAnthology": "Anthology",
+  "about.glossaryAnthologyDesc":
+    "A collection of memoirs about a topic. It can live privately in your browser or as an independent smart contract on the blockchain.",
+  "about.glossaryMemory": "Memory",
+  "about.glossaryMemoryDesc": "All of your anthologies together.",
+
+  "about.staticTitle": "100% static — what runs where",
+  "about.staticNoBackend":
+    "memory.inbytes.xyz is a 100% static web app. There is no backend server, no user database and no tracking — the app runs entirely in your browser.",
+  "about.staticLocal":
+    "Private Memory (local): everything you save lives in your browser, on your device. It works offline, never leaves the device, and can be exported as a file whenever you want.",
+  "about.staticChain":
+    "Public Memory (on-chain): with a wallet connected, the browser talks directly to the Arbitrum blockchain through an RPC endpoint — changeable in Settings. Published anthologies can be shared as links or QR codes: scan one on another device and it opens instantly.",
+  "about.staticCleanLinks":
+    "Clean links: social platforms attach tracking IDs (?si=..., ?igsh=...) to shared links. Anthology highlights and strips them automatically when you save a memoir.",
+
+  "about.walletTitle": "Wallets & smart contracts",
+  "about.walletIdentity":
+    "Web3 apps don't use passwords stored on a company server. A wallet holds a private key that only you control, and a public address (0x...) derived with secp256k1 cryptography — the same address identifies you across Ethereum, Arbitrum and every EVM chain. Because no central authority exists, only you are responsible for your keys.",
+  "about.walletContracts":
+    "A blockchain like Ethereum is a shared public computer (the EVM). Smart contracts are programs deployed onto it: decentralized (no single company runs them), transparent (the code and state are public) and immutable (the rules can't be secretly changed after deployment).",
+
+  "about.contractsTitle": "The two smart contracts behind Anthology",
+  "about.factoryTitle": "The Factory contract",
+  "about.factoryDesc":
+    "The directory contract that deploys new on-chain anthologies. Its administrator can manage the deployer whitelist, pause new deployments and set a deployment fee (ETH or ERC20) — but cannot edit, freeze or delete any anthology already created. Check its current state at /info.",
+  "about.anthologyTitle": "Your Anthology contract",
+  "about.anthologyDesc":
+    "Deploying through the Factory creates a dedicated smart contract owned by your wallet. Only you can change its title or default view, add or delete memoirs, set a contribution price (anti-spam), manage the contributor whitelist, or enable the moderation buffer — where submitted memoirs wait for you to accept or decline them. Check its current state in \"Anthology Info\".",
 
   /* -------------------------------- Language -------------------------------- */
   "language.title": "Language",
@@ -349,8 +394,8 @@ export const en = {
   "skin.playlist": "Playlist",
 
   /* ------------------------------ Order selector ---------------------------- */
-  "order.newer": "Newer first",
-  "order.older": "Older first",
+  "order.newer": "Newer",
+  "order.older": "Older",
   "order.random": "Random",
   "order.az": "A → Z",
   "order.za": "Z → A",
@@ -504,19 +549,64 @@ export const es: Record<TranslationKey, string> = {
 
   /* ---------------------------------- About --------------------------------- */
   "about.intro":
-    "Anthology es un lugar para guardar lo que quieres recordar — notas, enlaces, videos, ideas — organizado en colecciones. Cada colección se llama antología: como un libro escrito por ti, solo que puede contener cualquier cosa.",
-  "about.localTitle": "Tuyo, en tu dispositivo",
-  "about.local":
-    "Todo lo que guardas vive en tu navegador. Sin cuenta, sin servidor, nadie más lo lee. Cierra la pestaña, vuelve la próxima semana — todo sigue ahí. Incluso funciona sin conexión.",
-  "about.permanentTitle": "Hazlo permanente (opcional)",
-  "about.permanent":
-    "Si quieres que una colección sobreviva a tu navegador — o que sea pública para que cualquiera la lea — puedes publicarla en la blockchain (Arbitrum). Piénsalo como tallarlo en piedra en lugar de escribirlo en un cuaderno. Cuesta una pequeña comisión de red y es totalmente opcional.",
-  "about.shareTitle": "Compártelo si quieres",
-  "about.share":
-    "Las colecciones que publicas en la blockchain se pueden compartir como código QR — escanéalo en otro dispositivo y se importa al instante. Las colecciones privadas se quedan en tu navegador y puedes exportarlas como archivo cuando quieras.",
-  "about.whyTitle": "¿Por qué «antología»?",
-  "about.why":
-    "Una antología es una colección de escritos — poemas, historias, canciones. Esta es tu colección de lo que sea que te importe.",
+    "Anthology es un lugar local-first para guardar lo que quieres recordar — notas, enlaces, videos, ideas — organizado en colecciones. Todo funciona sin conexión y publicar en la blockchain es opcional.",
+
+  "about.whyTitle": "¿Por qué la memoria?",
+  "about.whyIntro":
+    "Toda historia tiene más de un lado, y cada pieza de información pasa por el lente de alguien. Antes de internet, los medios estaban centralizados — radio, TV, periódicos — así que incluso con sesgo editorial, la mayoría compartía una base común y podía contrastar fuentes. Hoy la información está fragmentada: ves sobre todo lo que ya clickeas, y si un tema nunca cruza tu feed, un algoritmo decide en silencio qué crees sobre él.",
+  "about.whyPerson":
+    "Alguien puede ser brillante en una cosa concreta — un historiador que documenta fuentes, un investigador que explica su campo — mientras que sus opiniones sobre todo lo demás importan poco. Anthology organiza el conocimiento por tema y por valor, no idolatrando personas.",
+  "about.whyForget":
+    "La memoria humana olvida. Los nombres se desvanecen, la comida de ayer desaparece y las clases de la universidad se vuelven nociones vagas — solo quedan las ideas y sentimientos centrales. Además, la gente suele buscar información después de necesitarla, no cuando se la topa.",
+  "about.whyFilter":
+    "Anthology es un filtro para esos momentos en que algo nuevo aparece durante la \"procrastinación productiva\" — historia, geopolítica, música, cine, arte, tecnología — y surge uno de estos pensamientos:",
+  "about.whyFilter1": "Esto debería saberlo todo el mundo.",
+  "about.whyFilter2": "¿Por qué esto no es conocimiento público?",
+  "about.whyFilter3": "Quiero recordar esto en 5 o 10 años.",
+  "about.whyIdeasTitle": "Lo que permite una memoria curada",
+  "about.whyIdeas1Title": "Alguien ya lo dijo",
+  "about.whyIdeas1":
+    "En lugar de reconstruir un argumento desde cero, apunta directo al memoir — un clip, un artículo, una cita — donde alguien ya lo dijo mejor.",
+  "about.whyIdeas2Title": "Cadenas de preguntas",
+  "about.whyIdeas2":
+    "La gente no sabe lo que no sabe, y desconfía de los desconocidos. Una cadena curada de memoirs y preguntas permite recorrer un tema paso a paso y llegar a las propias conclusiones.",
+  "about.whyIdeas3Title": "Madrigueras curadas por personas",
+  "about.whyIdeas3":
+    "En vez de que un algoritmo corporativo opaco decida el feed, una antología es una lista transparente de videos, posts y notas sobre un tema — curada por una persona con interés genuino en él.",
+
+  "about.glossaryTitle": "Glosario",
+  "about.glossaryMemoir": "Memoir",
+  "about.glossaryMemoirDesc":
+    "Una pieza de información — título y contenido (una nota, enlace, video o post) — guardada dentro de una antología.",
+  "about.glossaryAnthology": "Antología",
+  "about.glossaryAnthologyDesc":
+    "Una colección de memoirs sobre un tema. Puede vivir en privado en tu navegador o como un contrato inteligente independiente en la blockchain.",
+  "about.glossaryMemory": "Memoria",
+  "about.glossaryMemoryDesc": "Todas tus antologías juntas.",
+
+  "about.staticTitle": "100% estático — qué corre dónde",
+  "about.staticNoBackend":
+    "memory.inbytes.xyz es una web app 100% estática. No hay servidor backend, ni base de datos de usuarios, ni rastreo — la app corre por completo en tu navegador.",
+  "about.staticLocal":
+    "Memoria privada (local): todo lo que guardas vive en tu navegador, en tu dispositivo. Funciona sin conexión, nunca sale del dispositivo y puedes exportarla como archivo cuando quieras.",
+  "about.staticChain":
+    "Memoria pública (on-chain): con una billetera conectada, el navegador habla directamente con la blockchain de Arbitrum a través de un endpoint RPC — configurable en Ajustes. Las antologías publicadas se comparten como enlaces o códigos QR: escanea uno en otro dispositivo y se abre al instante.",
+  "about.staticCleanLinks":
+    "Enlaces limpios: las plataformas sociales adjuntan identificadores de rastreo (?si=..., ?igsh=...) a los enlaces compartidos. Anthology los resalta y los quita automáticamente cuando guardas un memoir.",
+
+  "about.walletTitle": "Billeteras y contratos inteligentes",
+  "about.walletIdentity":
+    "Las apps Web3 no usan contraseñas guardadas en un servidor. Una billetera guarda una clave privada que solo tú controlas y una dirección pública (0x...) derivada con criptografía secp256k1 — la misma dirección te identifica en Ethereum, Arbitrum y cualquier cadena EVM. Como no existe una autoridad central, solo tú eres responsable de tus claves.",
+  "about.walletContracts":
+    "Una blockchain como Ethereum es una computadora pública compartida (la EVM). Los contratos inteligentes son programas desplegados en ella: descentralizados (ninguna empresa los ejecuta), transparentes (el código y el estado son públicos) e inmutables (las reglas no pueden cambiarse en secreto tras el despliegue).",
+
+  "about.contractsTitle": "Los dos contratos inteligentes detrás de Anthology",
+  "about.factoryTitle": "El contrato Factory",
+  "about.factoryDesc":
+    "El contrato directorio que despliega nuevas antologías on-chain. Su administrador puede gestionar la lista blanca de creadores, pausar nuevos despliegues y fijar una comisión de despliegue (ETH o ERC20) — pero no puede editar, congelar ni borrar ninguna antología ya creada. Consulta su estado actual en /info.",
+  "about.anthologyTitle": "Tu contrato de antología",
+  "about.anthologyDesc":
+    "Desplegar a través de la Factory crea un contrato inteligente propio, con tu billetera como dueña. Solo tú puedes cambiar su título o vista predeterminada, añadir o borrar memoirs, fijar un precio por contribución (anti-spam), gestionar la lista blanca de colaboradores o activar el búfer de moderación — donde los memoirs enviados esperan a que los aceptes o rechaces. Consulta su estado en \"Info Antología\".",
 
   /* -------------------------------- Language -------------------------------- */
   "language.title": "Idioma",
@@ -676,8 +766,8 @@ export const es: Record<TranslationKey, string> = {
   "title.noStructure": "Aún no hay estructura que mostrar",
 
   /* ------------------------------ Anthology info ---------------------------- */
-  "anthology.info": "Info de la antología",
-  "anthology.show": "Ver antología",
+  "anthology.info": "Info Antología",
+  "anthology.show": "Ver Antología",
 
   /* ----------------------------- Anthology state ---------------------------- */
   "anthologyState.address": "Dirección de la antología",
@@ -795,8 +885,8 @@ export const es: Record<TranslationKey, string> = {
   "skin.playlist": "Reproducción",
 
   /* ------------------------------ Order selector ---------------------------- */
-  "order.newer": "Más recientes",
-  "order.older": "Más antiguos",
+  "order.newer": "Recientes",
+  "order.older": "Antiguos",
   "order.random": "Aleatorio",
   "order.az": "A → Z",
   "order.za": "Z → A",
