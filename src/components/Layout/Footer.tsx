@@ -1,11 +1,6 @@
-import { useAppSelector } from "@store/utils/hooks";
-
 export const Footer = () => {
-  const footerBgClass = useAppSelector((s) => s.dapp.anthologyFooterBgClass);
-
   return (
     <div
-      className={footerBgClass}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -16,7 +11,7 @@ export const Footer = () => {
       }}
     >
       <span>© 2026 - InBytes.xyz</span>
-      
+
       <span style={{ fontSize: "0.7rem" }}>
         Recording the collective memory.
       </span>
