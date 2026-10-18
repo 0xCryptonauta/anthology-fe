@@ -74,7 +74,20 @@ export const LocalAnthologyView = () => {
         {FormatAnthologyTitle(contractTitle)}
       </div>
 
-      <div style={{ display: "flex" }}>
+      <div
+        /* Mobile-first control bar: one compact row (36px controls, 8px gaps)
+           that fits down to 320px in both languages. */
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexWrap: "wrap",
+          gap: "8px",
+          padding: "0 8px",
+          maxWidth: "100%",
+          boxSizing: "border-box",
+        }}
+      >
         <button
           type="button"
           aria-expanded={showInfo}
@@ -82,23 +95,25 @@ export const LocalAnthologyView = () => {
           style={{
             backgroundColor: "rgb(143 200 129)",
             color: "#111",
-            padding: "6px",
-            marginRight: showInfo ? "10px" : "0px",
+            height: "36px",
+            padding: "0 10px",
             borderRadius: "8px",
             border: "1px solid rgb(143 200 129)",
             fontSize: "14px",
             fontWeight: 500,
             cursor: "pointer",
-            outline: "none",
             transition: "all 0.2s ease",
             boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+            whiteSpace: "nowrap",
+            display: "inline-flex",
+            alignItems: "center",
           }}
         >
           {showInfo ? t("anthology.show") : t("anthology.info")}
         </button>
 
         {!showInfo && (
-          <div>
+          <>
             <SkinSelector
               value={currentSkin}
               onChange={(newValue) => setCurrentSkin(newValue)}
@@ -108,7 +123,7 @@ export const LocalAnthologyView = () => {
               value={currentOrder}
               onChange={(newValue) => setCurrentOrder(newValue)}
             />
-          </div>
+          </>
         )}
 
         {showInfo && (
@@ -118,11 +133,17 @@ export const LocalAnthologyView = () => {
             onClick={() => setSudoMode(!sudoMode)}
             style={{
               border: "1px solid darkred",
-              padding: "5px",
-              borderRadius: "7px",
+              height: "36px",
+              padding: "0 10px",
+              borderRadius: "8px",
               cursor: "pointer",
               backgroundColor: "darkred",
               color: "white",
+              fontSize: "14px",
+              fontWeight: 500,
+              whiteSpace: "nowrap",
+              display: "inline-flex",
+              alignItems: "center",
             }}
           >
             {sudoMode ? t("anthology.info") : t("nav.settings")}

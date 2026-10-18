@@ -27,7 +27,11 @@ this file.
 - **Landmarks**: skip link (`a11y.skipToMain` → `#main-content`) in `RootView`;
   `<main id="main-content">`, `<footer>`, Bootstrap `<nav>` for the header.
 - **Focus**: global `:focus-visible` ring (`#22d3ee`, 3px) in `index.css` —
-  inline `outline: none` never kills keyboard focus indication.
+  inline `outline: none` never kills keyboard focus indication. Mouse/touch
+  clicks show **no** ring (`:focus:not(:focus-visible)` reset; the Vite
+  starter `button:focus`/`button:hover` border rules were removed). Text
+  inputs/selects intentionally keep the ring on click (browsers treat them as
+  keyboard targets — you are about to type).
 - **Target size**: icon-only controls use `.icon-button` (min 24×24, centered).
 - **Buttons over spans**: interactive controls are `<button type="button">`.
   Embed play overlays (YouTube/Vimeo/archive/Spotify) use
@@ -157,6 +161,12 @@ category color.
   filter and the global search.
 - **Never use `<datalist>`** on mobile (system autofill can't be suppressed) —
   build custom dropdowns (`TitleEditor`).
+- **Mobile-first control rows**: toolbars stay on a single line down to 320px —
+  compact controls only (36px height, 14px font, `whiteSpace: nowrap`, 8px
+  gaps, max ~3 per row). Long labels get their own line above the controls
+  (`ChangeAnthologyDefaultSkin`). The skin selector labels stay in English
+  (product terms: Media/Text/Json/List/Playlist) so the row never widens in
+  other languages.
 - **Destructive actions** always get a confirm modal that names what is deleted
   (e.g. "Delete private memory — All anthologies"; "All its memoirs will be
   deleted too").

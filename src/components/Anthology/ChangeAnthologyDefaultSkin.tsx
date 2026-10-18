@@ -33,61 +33,96 @@ export const ChangeAnthologyDefaultSkin = ({
   );
 
   return (
-    <div style={{ display: "flex", alignItems: "center", margin: "20px" }}>
-      <div style={{ marginRight: "15px" }}>{t("skin.default")} </div>
-      <div>
+    <div
+      /* Mobile-first: the label gets its own line so the selector + button row
+         never widens the page on small screens. */
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "8px",
+        margin: "12px 0",
+        width: "100%",
+        boxSizing: "border-box",
+      }}
+    >
+      <span style={{ fontWeight: 500 }}>{t("skin.default")}</span>
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "8px",
+          flexWrap: "wrap",
+        }}
+      >
         <SkinSelector
           value={newDefaultSkin}
           onChange={(newSkin) => {
             setNewDefaultSkin(newSkin);
           }}
         />
-      </div>
-      <button
-        style={{ backgroundColor: "dodgerblue" }}
-        onClick={async () => {
-          try {
-            if (isLocal) {
-              dispatch(
-                setDefaultSkin({
-                  contract: contractAddr,
-                  newDefaultSkin: newDefaultSkin,
-                })
-              );
-              addToast({
-                title: t("skin.changedTitle"),
-                content: newDefaultSkin,
-                variant: "success",
-                delay: 3000,
-              });
-            } else {
-              const encodedBytes8 = toBytes8Hex(newDefaultSkin);
-
-              const txHash = await writeAnthology(contractAddr, "setSkin", [
-                encodedBytes8,
-              ]);
-              if (txHash) {
+        <button
+          type="button"
+          style={{
+            backgroundColor: "dodgerblue",
+            color: "white",
+            border: "none",
+            height: "36px",
+            padding: "0 12px",
+            borderRadius: "8px",
+            fontSize: "14px",
+            fontWeight: 500,
+            cursor: "pointer",
+            whiteSpace: "nowrap",
+            display: "inline-flex",
+            alignItems: "center",
+          }}
+          onClick={async () => {
+            try {
+              if (isLocal) {
+                dispatch(
+                  setDefaultSkin({
+                    contract: contractAddr,
+                    newDefaultSkin: newDefaultSkin,
+                  })
+                );
                 addToast({
                   title: t("skin.changedTitle"),
-                  content: newDefaultSkin + "\n\nTxHash: " + txHash,
+                  content: newDefaultSkin,
                   variant: "success",
                   delay: 3000,
                 });
+              } else {
+                const encodedBytes8 = toBytes8Hex(newDefaultSkin);
+
+                const txHash = await writeAnthology(contractAddr, "setSkin", [
+                  encodedBytes8,
+                ]);
+                if (txHash) {
+                  addToast({
+                    title: t("skin.changedTitle"),
+                    content: newDefaultSkin + "\n\nTxHash: " + txHash,
+                    variant: "success",
+                    delay: 3000,
+                  });
+                }
               }
+            } catch (error) {
+              addToast({
+                title: t("skin.errorChanged"),
+                content: t("common.unknownError"),
+                variant: "warning",
+                delay: 3000,
+              });
+              console.error("Error setting new new default skin", error);
             }
-          } catch (error) {
-            addToast({
-              title: t("skin.errorChanged"),
-              content: t("common.unknownError"),
-              variant: "warning",
-              delay: 3000,
-            });
-            console.error("Error setting new new default skin", error);
-          }
-        }}
-      >
-        {t("common.change")}
-      </button>
+          }}
+        >
+          {t("common.change")}
+        </button>
+      </div>
     </div>
   );
 };
