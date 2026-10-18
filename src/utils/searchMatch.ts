@@ -1,10 +1,10 @@
 /**
- * Search matching: every query word must match a text word with at least
- * SEARCH_ACCURACY similarity (Levenshtein). 1.0 = exact words only; 0.9
- * tolerates a typo in longer words (e.g. "completon" ≈ "completion").
+ * Search matching: every query word must match a text word either as a
+ * prefix ("tes" finds "test") or with at least SEARCH_ACCURACY similarity
+ * (Levenshtein) — 0.9 tolerates a typo in longer words.
  *
- * There is no substring matching — "test" does not match "latest" or
- * "testing".
+ * There is no mid-word substring matching — "test" does not match "latest"
+ * or "contest".
  */
 
 export const SEARCH_ACCURACY = 0.9;
@@ -42,7 +42,9 @@ export const matchesSearch = (text: string, query: string): boolean => {
 
   return queryWords.every((queryWord) =>
     textWords.some(
-      (textWord) => similarity(queryWord, textWord) >= SEARCH_ACCURACY
+      (textWord) =>
+        textWord.startsWith(queryWord) ||
+        similarity(queryWord, textWord) >= SEARCH_ACCURACY
     )
   );
 };
