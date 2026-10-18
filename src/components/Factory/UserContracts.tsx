@@ -306,7 +306,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
       <div className="w-full max-w-7xl">
 
         {/* --- HEADER DE USUARIO --- */}
-        <div className={`flex justify-between items-center mb-8 p-4 ${categoryBackgroundsEnabled && userAddr === LOCAL_USER_ADDR ? "bg-overlay bg-nested-triangles text-shadow-dark" : "bg-[#161b22]"} rounded-xl border-sky-500/40 shadow-[0_0_15px_rgba(14,165,233,0.15)] mx-auto w-full max-w-2xl`}>
+        <div className={`flex flex-wrap justify-between items-center mb-8 gap-y-3 p-4 ${categoryBackgroundsEnabled && userAddr === LOCAL_USER_ADDR ? "bg-overlay bg-nested-triangles text-shadow-dark" : "bg-[#161b22]"} rounded-xl border-sky-500/40 shadow-[0_0_15px_rgba(14,165,233,0.15)] mx-auto w-full max-w-2xl`}>
           <div className="flex items-center gap-4">
 {/*             {userAddr === LOCAL_USER_ADDR && (
                 <div className="h-10 w-10 bg-zinc-800 rounded-full flex items-center justify-center font-bold text-zinc-400 select-none">
@@ -314,8 +314,13 @@ export const UserContracts: React.FC<UserContractsProps> = ({
             </div>
               )} */}
             
-            <div className="flex items-center gap-2">
-              <h1 className="m-0 text-2xl font-medium leading-none">
+            <div className="flex flex-wrap items-center gap-2">
+              {/* `text-2xl!` is required: the legacy unlayered
+                  `h1 { font-size: 3.2em }` rule in index.css beats Tailwind's
+                  layered utilities, which rendered this heading at 51px and
+                  widened the whole page past phone viewports. `wrap-anywhere`
+                  keeps long wallet addresses from forcing it wider still. */}
+              <h1 className="m-0 text-2xl! font-medium leading-none wrap-anywhere">
                 <button
                   type="button"
                   className="text-2xl font-medium hover:text-white transition-colors bg-transparent border-none text-zinc-100 p-0"
