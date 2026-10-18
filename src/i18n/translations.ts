@@ -120,6 +120,24 @@ export const en = {
   "about.anthologyDesc":
     "Deploying through the Factory creates a dedicated smart contract owned by your wallet. Only you can change its title or default view, add or delete memoirs, set a contribution price (anti-spam), manage the contributor whitelist, or enable the moderation buffer — where submitted memoirs wait for you to accept or decline them. Check its current state in \"Anthology Info\".",
 
+  "about.showFull": "Read full version",
+  "about.showShort": "Read short version",
+  "about.shortTitle": "What is Anthology?",
+  "about.shortIntro":
+    "A local-first filter for what's worth remembering: notes, links, videos and ideas — saved the moment something makes you think \"everyone should know this\" or \"worth remembering in 10 years\". You curate by topic and value; no algorithm decides your feed.",
+  "about.shortGlossaryMemoirDesc":
+    "One saved item — title plus a link, video or note.",
+  "about.shortGlossaryAnthologyDesc":
+    "A collection of memoirs about a topic.",
+  "about.shortGlossaryMemoryDesc": "All of your anthologies together.",
+  "about.shortHowTitle": "How it works (100% static)",
+  "about.shortHowNoServer":
+    "No server, no tracking — everything runs in your browser, and social tracking IDs (?si=, ?igsh=) are stripped automatically.",
+  "about.shortHowLocal":
+    "Private Memory: lives on your device, works offline, exports anytime.",
+  "about.shortHowChain":
+    "Public Memory: optional on-chain publishing. Connect a wallet to deploy your own Anthology contract on Arbitrum through the Factory contract — only your wallet controls its title, memoirs, price, whitelist and moderation buffer.",
+
   /* -------------------------------- Language -------------------------------- */
   "language.title": "Language",
   "language.auto": "Auto (System)",
@@ -607,6 +625,24 @@ export const es: Record<TranslationKey, string> = {
   "about.anthologyTitle": "Tu contrato de antología",
   "about.anthologyDesc":
     "Desplegar a través de la Factory crea un contrato inteligente propio, con tu billetera como dueña. Solo tú puedes cambiar su título o vista predeterminada, añadir o borrar memoirs, fijar un precio por contribución (anti-spam), gestionar la lista blanca de colaboradores o activar el búfer de moderación — donde los memoirs enviados esperan a que los aceptes o rechaces. Consulta su estado en \"Info Antología\".",
+
+  "about.showFull": "Leer versión completa",
+  "about.showShort": "Leer versión corta",
+  "about.shortTitle": "¿Qué es Anthology?",
+  "about.shortIntro":
+    "Un filtro local-first para lo que vale la pena recordar: notas, enlaces, videos e ideas — guardado en el momento en que algo te hace pensar «esto debería saberlo todo el mundo» o «vale la pena recordarlo en 10 años». Tú curas por tema y valor; ningún algoritmo decide tu feed.",
+  "about.shortGlossaryMemoirDesc":
+    "Una pieza guardada — título más un enlace, video o nota.",
+  "about.shortGlossaryAnthologyDesc":
+    "Una colección de memoirs sobre un tema.",
+  "about.shortGlossaryMemoryDesc": "Todas tus antologías juntas.",
+  "about.shortHowTitle": "Cómo funciona (100% estático)",
+  "about.shortHowNoServer":
+    "Sin servidor ni rastreo — todo corre en tu navegador, y los identificadores de rastreo social (?si=, ?igsh=) se quitan automáticamente.",
+  "about.shortHowLocal":
+    "Memoria privada: vive en tu dispositivo, funciona sin conexión y se exporta cuando quieras.",
+  "about.shortHowChain":
+    "Memoria pública: publicación on-chain opcional. Conecta una billetera para desplegar tu propio contrato de Antología en Arbitrum mediante el contrato Factory — solo tu billetera controla su título, memoirs, precio, lista blanca y búfer de moderación.",
 
   /* -------------------------------- Language -------------------------------- */
   "language.title": "Idioma",
