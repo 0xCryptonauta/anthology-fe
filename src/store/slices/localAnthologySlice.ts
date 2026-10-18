@@ -110,7 +110,18 @@ export const localAnthologySlice = createSlice({
         state.anthologies[contract] = [];
       }
 
-      state.anthologies[contract].push(...memoirs);
+      const existing = state.anthologies[contract];
+      for (const m of memoirs) {
+        const isDuplicate = existing.some(
+          (e) =>
+            e.title === m.title &&
+            e.content === m.content &&
+            e.timestamp === m.timestamp
+        );
+        if (!isDuplicate) {
+          existing.push(m);
+        }
+      }
     },
     addAnthologiesToLocalMemory(
       state,
@@ -121,34 +132,26 @@ export const localAnthologySlice = createSlice({
       const { anthologies } = action.payload;
 
       for (const contract in anthologies) {
-        if (!state.anthologies[contract as Address]) {
-          state.anthologies[contract as Address] = [];
+        const addr = contract as Address;
+        if (!state.anthologies[addr]) {
+          state.anthologies[addr] = [];
         }
 
-        state.anthologies[contract as Address].push(
-          ...anthologies[contract as Address]
-        );
+        const existing = state.anthologies[addr];
+        for (const m of anthologies[addr]) {
+          const isDuplicate = existing.some(
+            (e) =>
+              e.title === m.title &&
+              e.content === m.content &&
+              e.timestamp === m.timestamp
+          );
+          if (!isDuplicate) {
+            existing.push(m);
+          }
+        }
       }
     },
 
-    deleteMemoirFromUserLocalAnthology(
-      state,
-      action: PayloadAction<{
-        contract: Address;
-        memoir: MemoirInterface;
-      }>
-    ) {
-      const { contract, memoir } = action.payload;
-      if (state.anthologies[contract]) {
-        state.anthologies[contract] = state.anthologies[contract].filter(
-          (m) =>
-            m.sender !== memoir.sender ||
-            m.title !== memoir.title ||
-            m.content !== memoir.content ||
-            m.timestamp !== memoir.timestamp
-        );
-      }
-    },
     updateMemoirInUserLocalAnthology(
       state,
       action: PayloadAction<{
@@ -276,7 +279,6 @@ export const {
   addMemoirToUserLocalAnthology,
   addManyMemoirsToUserLocalAnthology,
   addAnthologiesToLocalMemory,
-  deleteMemoirFromUserLocalAnthology,
   deleteMemoirAtIndexFromUserLocalAnthology,
   updateMemoirInUserLocalAnthology,
   updateUserLocalAnthologyTitle,

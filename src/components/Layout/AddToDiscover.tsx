@@ -135,7 +135,7 @@ export const AddToDiscover = () => {
           );
           dispatch(
             addAnthology({
-              contract: info.owner,
+              contract: address,
               anthologyInfo: {
                 ...info,
                 totalCreatedMemoirs: Number(info.totalCreatedMemoirs),

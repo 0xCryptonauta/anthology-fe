@@ -72,6 +72,8 @@ export const LoadReduxStore = () => {
     setHasDiscovery(hasDiscoveryJson);
     setHasLocal(hasLocalJson);
     setIsOneAnthology(isOneAnthologyJson);
+    setLoadDiscoveries(hasDiscoveryJson);
+    setLoadLocalMemory(hasLocalJson);
 
     if (hasDiscoveryJson || hasLocalJson || isOneAnthologyJson) {
       setIsValidJson(true);
@@ -343,23 +345,38 @@ export const LoadReduxStore = () => {
                   return;
                 }
 
+                const shouldLoadDiscovery =
+                  hasDiscovery && (!hasLocal || loadDiscoveries);
+                const shouldLoadLocal =
+                  hasLocal && (!hasDiscovery || loadLocalMemory);
+
+                if (!shouldLoadDiscovery && !shouldLoadLocal) {
+                  addToast({
+                    title: "No options selected",
+                    content: "Please select at least one option to import.",
+                    variant: "info",
+                    delay: 3000,
+                  });
+                  return;
+                }
+
                 let newPath = "";
 
-                if (hasDiscovery) {
+                if (shouldLoadDiscovery) {
                   addDiscoveriesToMemory();
                   newPath = "discover";
                 }
 
-                if (hasLocal) {
+                if (shouldLoadLocal) {
                   addMemoryToMemory();
                   newPath = LOCAL_USER_PATH;
                 }
 
                 addToast({
                   title:
-                    (hasDiscovery ? "Discover" : "") +
-                    (hasDiscovery && hasLocal ? " & " : "") +
-                    (hasLocal ? "External Memory" : ""),
+                    (shouldLoadDiscovery ? "Discover" : "") +
+                    (shouldLoadDiscovery && shouldLoadLocal ? " & " : "") +
+                    (shouldLoadLocal ? "Private Memory" : ""),
                   content: "Added to your memory",
                   variant: "success",
                   delay: 3000,

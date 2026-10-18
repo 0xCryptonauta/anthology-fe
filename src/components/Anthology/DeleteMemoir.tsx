@@ -4,7 +4,7 @@ import { Modal } from "@src/components/Layout/Modal";
 import { Address } from "@src/types/common";
 import { useToast } from "../Layout/Toast";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
-import { deleteMemoirFromUserLocalAnthology } from "@src/store/slices/localAnthologySlice";
+import { deleteMemoirAtIndexFromUserLocalAnthology } from "@src/store/slices/localAnthologySlice";
 import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 import { writeAnthology } from "@src/contract-functions/anthologyFunctions";
 import { removeOneFromMemoirs } from "@src/store/slices/anthologySlice";
@@ -40,9 +40,9 @@ export const DeleteMemoir: React.FC<DeleteMemoirProps> = ({
     if (isLocalAnthology(anthologyAddr)) {
       try {
         dispatch(
-          deleteMemoirFromUserLocalAnthology({
+          deleteMemoirAtIndexFromUserLocalAnthology({
             contract: anthologyAddr,
-            memoir,
+            index,
           })
         );
         addToast({
