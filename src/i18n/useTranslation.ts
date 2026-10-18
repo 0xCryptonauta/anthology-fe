@@ -49,7 +49,9 @@ export type TranslateFn = (
 
 export const useTranslation = () => {
   const dispatch = useAppDispatch();
-  const localePref = useAppSelector((state) => state.dapp.locale);
+  const storedPref = useAppSelector((state) => state.dapp.locale);
+  // Older persisted stores have no `locale` field — treat as "auto".
+  const localePref: LocalePreference = storedPref ?? "auto";
 
   const locale = resolveLocale(localePref);
 
