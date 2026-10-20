@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { Address } from "@src/types/common";
 import { MemoirInterface } from "@src/store/slices/anthologySlice";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
@@ -10,7 +10,7 @@ import { EditMemoir } from "./EditMemoir";
 import { MoveMemoir } from "./MoveMemoir";
 import { useTranslation } from "@src/i18n/useTranslation";
 
-export const MemoirActions = ({
+const MemoirActionsBase = ({
   anthologyAddr,
   index,
   memoir,
@@ -135,7 +135,11 @@ export const MemoirActions = ({
         />
       </button>
 
-      <DeleteMemoir anthologyAddr={anthologyAddr} index={index} />
+      <DeleteMemoir
+        anthologyAddr={anthologyAddr}
+        index={index}
+        memoir={memoir}
+      />
 
       <Modal show={shareOpen} onHide={() => setShareOpen(false)}>
         <div
@@ -186,3 +190,5 @@ export const MemoirActions = ({
     </div>
   );
 };
+
+export const MemoirActions = memo(MemoirActionsBase);

@@ -99,6 +99,15 @@ const QRScanner: React.FC<QRScannerProps> = ({
     };
   }, []);
 
+  // The modal only mounts `#qr-reader` after `active` becomes true, so start
+  // the camera from an effect once the element is in the DOM.
+  useEffect(() => {
+    if (!active) return;
+
+    startScanner();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active]);
+
   useEffect(() => {
     if (!active) return;
 
@@ -138,10 +147,7 @@ const QRScanner: React.FC<QRScannerProps> = ({
           type="button"
           className="icon-button"
           aria-label={t("a11y.scanQr")}
-          onClick={async () => {
-            setActive(true);
-            await startScanner();
-          }}
+          onClick={() => setActive(true)}
         >
           <img src="icons/qrIcon.svg" width="32px" alt="" />
         </button>
