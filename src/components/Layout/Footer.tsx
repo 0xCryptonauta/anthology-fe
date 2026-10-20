@@ -10,7 +10,7 @@ export const Footer = () => {
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        color: "#a1a1aa",
+        color: "#f4f4f5",
         height: "60px",
       }}
     >

@@ -45,8 +45,10 @@ this file.
   `aria-expanded`; anthology items in the selector expose `aria-pressed`.
 - **Media**: every iframe has a `title`; decorative images/SVGs are
   `aria-hidden`/`alt=""` with the control carrying the accessible name.
-- **Contrast**: footer text `#a1a1aa` on `#242424` (≈5.4:1); placeholders and
-  `[+]/[-]` indicators use `zinc-400`/`zinc-300` on dark surfaces.
+- **Contrast**: text over patterns relies on the 60% `--bg-film-alpha`
+  (white text ≥5.7:1, `zinc-100` ≥5.2:1 even on a white pattern). Footer and
+  loader status text use `#f4f4f5`; card `[+]/[-]` indicators use `zinc-100`;
+  placeholders use `zinc-400` on solid dark inputs.
 - **Tooling**: `eslint-plugin-jsx-a11y` runs in `bun run lint` (0 errors
   required); rules for keyboard events, static-element interactions, labels,
   iframe titles and alt text are errors, not warnings.
@@ -154,10 +156,17 @@ category color.
 
 ## Backgrounds (`src/styles/backgrounds.css`)
 
-- Pattern classes + `.bg-overlay::before` 50% dark film; element must be
+- Pattern classes + `.bg-overlay::before` dark film; element must be
   `position: relative`.
+- The film uses `--bg-film-alpha: 0.6` (60% black). This is a contrast
+  requirement, not decoration: a pure-white pattern under 50% left white text
+  at 3.98:1 (fails AA); 60% gives 5.74:1. White and `text-zinc-100` text pass
+  on every current/future pattern. Never lower it for a text-bearing surface,
+  and never rely on `text-shadow-dark` for contrast. Muted text on patterns
+  must be at least `text-zinc-100` (`text-zinc-300/400` fail at 60%).
 - `getBgClass(key)` hashes a key to a pattern — deterministic per category or
-  anthology.
+  anthology. Future pattern classes automatically inherit the film as long as
+  they are paired with `.bg-overlay` (or added to `BG_CLASSES`).
 - Toggle: `dapp.categoryBackgroundsEnabled`; anthology pages sync the footer via
   `dapp.anthologyFooterBgClass`.
 - New patterns: add the class to `backgrounds.css` **and** `BG_CLASSES` in
