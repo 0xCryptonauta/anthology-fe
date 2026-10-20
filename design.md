@@ -149,6 +149,9 @@ category color.
 
 - SVG set in `public/icons/` (`edit`, `copy`, `copy-clipboard`, `share`,
   `delete`), referenced with **absolute paths** (`/icons/…`).
+- `copy-icon.svg` (overlapping pages) is the **copy/move memoir** action;
+  `copy-clipboard-icon.svg` (clipboard) is **copy to clipboard** (memoir text,
+  share link). Do not swap them.
 - Sizes: `18px` actions · `16px` inline (wallet disconnect, buffer decline).
 - Black SVGs: add `filter: invert(1)` when placed on dark surfaces.
 - Remaining emojis (allowed): 📝 add memoir, 💾 download, 📲 install,

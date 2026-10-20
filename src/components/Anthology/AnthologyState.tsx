@@ -150,7 +150,7 @@ export const AnthologyState: React.FC<AnthologyStateProps> = ({
             onClick={handleCopyShareLink}
           >
             <img
-              src="/icons/copy-icon.svg"
+              src="/icons/copy-clipboard-icon.svg"
               alt=""
               style={{
                 width: "20px",
