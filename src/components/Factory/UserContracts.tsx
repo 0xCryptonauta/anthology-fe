@@ -214,7 +214,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
           estimatedHeight={estimatedHeight}
           onToggle={() => toggleCategory(category)}
           className={`p-4 ${categoryBackgroundsEnabled ? `${getBgClass(category)} text-shadow-dark` : ""} rounded-xl transition-all duration-200 ${neonStyles}`}
-          indicatorClassName="shrink-0 text-xs text-zinc-300 font-mono tracking-wider px-2 py-1 rounded"
+          indicatorClassName="shrink-0 text-xs text-zinc-100 font-mono tracking-wider px-2 py-1 rounded"
           title={
             <h2
               className={`m-0 font-bold tracking-wide ${getCategoryTitleSizeClass(category.length)}`}
@@ -276,7 +276,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
         estimatedHeight={44 + processedData.uncategorized.length * 28}
         onToggle={() => toggleCategory("Uncategorized_General_Key")}
         className={`p-4 ${categoryBackgroundsEnabled ? `${getBgClass("uncategorized")} text-shadow-dark` : ""} rounded-xl border-zinc-800`}
-        indicatorClassName="shrink-0 text-xs text-zinc-300 font-mono bg-zinc-800/60 px-2 py-1 rounded"
+        indicatorClassName="shrink-0 text-xs text-zinc-100 font-mono bg-zinc-800/60 px-2 py-1 rounded"
         title={
           <h2 className="m-0 text-lg font-bold text-white">
             {t("common.other")}
@@ -344,7 +344,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                 </button>
               </h1>
               {userAddr === LOCAL_USER_ADDR && (
-                <span className="text-xs font-bold tracking-wider bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-md select-none">
+                <span className="text-xs font-bold tracking-wider bg-cyan-500/20 text-cyan-50 px-2 py-0.5 rounded-md select-none">
                   {t("directory.local")}
                 </span>
               )}
