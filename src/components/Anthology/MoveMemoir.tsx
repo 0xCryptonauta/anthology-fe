@@ -14,17 +14,66 @@ import { Modal } from "../Layout/Modal";
 import { ContractSelector } from "../Layout/ContractSelector";
 import { useTranslation } from "@src/i18n/useTranslation";
 
+interface MoveMemoirProps {
+  anthologyAddr: Address;
+  index: number;
+  memoir: MemoirInterface;
+}
+
+/**
+ * Lightweight trigger. The destination selector and Wagmi/Redux work only
+ * mount while the modal is open.
+ */
 export const MoveMemoir = ({
   anthologyAddr,
   index,
   memoir,
-}: {
-  anthologyAddr: Address;
-  index: number;
-  memoir: MemoirInterface;
-}) => {
+}: MoveMemoirProps) => {
   const { t } = useTranslation();
   const [show, setShow] = useState(false);
+
+  return (
+    <Modal
+      placement="bottom"
+      show={show}
+      onHide={() => setShow(false)}
+      height="min(700px, 90dvh)"
+      trigger={
+        <button
+          type="button"
+          className="icon-button"
+          title={t("move.title")}
+          aria-label={t("move.title")}
+          style={{ fontSize: "1rem" }}
+          onClick={() => setShow(true)}
+        >
+          <img
+            src="/icons/copy-clipboard-icon.svg"
+            alt=""
+            style={{ width: "18px", height: "18px", display: "block" }}
+          />
+        </button>
+      }
+    >
+      {show && (
+        <MoveMemoirForm
+          anthologyAddr={anthologyAddr}
+          index={index}
+          memoir={memoir}
+          onClose={() => setShow(false)}
+        />
+      )}
+    </Modal>
+  );
+};
+
+const MoveMemoirForm = ({
+  anthologyAddr,
+  index,
+  memoir,
+  onClose,
+}: MoveMemoirProps & { onClose: () => void }) => {
+  const { t } = useTranslation();
   const [destination, setDestination] = useState<Address | "">("");
   const [mode, setMode] = useState<"copy" | "move">("copy");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -120,7 +169,7 @@ export const MoveMemoir = ({
         delay: 5000,
       });
 
-      setShow(false);
+      onClose();
     } catch (error) {
       console.error("Error copying/moving memoir:", error);
       addToast({
@@ -134,107 +183,82 @@ export const MoveMemoir = ({
   };
 
   return (
-    <Modal
-      placement="bottom"
-      show={show}
-      onHide={() => setShow(false)}
-      height="min(700px, 90dvh)"
-      trigger={
-        <button
-          type="button"
-          className="icon-button"
-          title={t("move.title")}
-          aria-label={t("move.title")}
-          style={{ fontSize: "1rem" }}
-          onClick={() => setShow(true)}
-        >
-          <img
-            src="/icons/copy-clipboard-icon.svg"
-            alt=""
-            style={{ width: "18px", height: "18px", display: "block" }}
-          />
-        </button>
-      }
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "1rem",
+        width: "100%",
+        maxWidth: "280px",
+        maxHeight: "100%",
+        minHeight: 0,
+        boxSizing: "border-box",
+      }}
     >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "1rem",
-          width: "100%",
-          maxWidth: "280px",
-          maxHeight: "100%",
-          minHeight: 0,
-          boxSizing: "border-box",
-        }}
-      >
-        <h4 style={{ textAlign: "center", margin: 0 }}>{t("move.title")}</h4>
+      <h4 style={{ textAlign: "center", margin: 0 }}>{t("move.title")}</h4>
 
-        <div style={{ flex: "1 1 auto", minHeight: 0, overflowY: "auto" }}>
-          <ContractSelector
-            setSelectedContract={setDestination}
-            variant="light"
-            showUserSelect={false}
-          />
-        </div>
+      <div style={{ flex: "1 1 auto", minHeight: 0, overflowY: "auto" }}>
+        <ContractSelector
+          setSelectedContract={setDestination}
+          variant="light"
+          showUserSelect={false}
+        />
+      </div>
 
-        <div
-          style={{ display: "flex", gap: "1rem", justifyContent: "center" }}
-        >
-          <label
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              cursor: "pointer",
-            }}
-          >
-            <input
-              type="radio"
-              checked={mode === "copy"}
-              onChange={() => setMode("copy")}
-            />
-            {t("move.copyTo")}
-          </label>
-          <label
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              cursor: "pointer",
-            }}
-          >
-            <input
-              type="radio"
-              checked={mode === "move"}
-              onChange={() => setMode("move")}
-            />
-            {t("move.moveTo")}
-          </label>
-        </div>
-
-        <button
-          onClick={handleConfirm}
-          disabled={!destination || isSubmitting}
+      <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
+        <label
           style={{
-            padding: "0.75rem 1.25rem",
-            borderRadius: "0.75rem",
-            fontWeight: 600,
-            fontSize: "0.95rem",
-            backgroundColor: "#111827",
-            color: "#fff",
-            border: "none",
-            cursor: destination && !isSubmitting ? "pointer" : "not-allowed",
-            opacity: destination && !isSubmitting ? 1 : 0.6,
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+            cursor: "pointer",
           }}
         >
-          {isSubmitting
-            ? t("move.saving")
-            : mode === "move"
-            ? t("move.move")
-            : t("move.copy")}
-        </button>
+          <input
+            type="radio"
+            checked={mode === "copy"}
+            onChange={() => setMode("copy")}
+          />
+          {t("move.copyTo")}
+        </label>
+        <label
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+            cursor: "pointer",
+          }}
+        >
+          <input
+            type="radio"
+            checked={mode === "move"}
+            onChange={() => setMode("move")}
+          />
+          {t("move.moveTo")}
+        </label>
       </div>
-    </Modal>
+
+      <button
+        onClick={handleConfirm}
+        disabled={!destination || isSubmitting}
+        style={{
+          padding: "0.75rem 1.25rem",
+          borderRadius: "0.75rem",
+          fontWeight: 600,
+          fontSize: "0.95rem",
+          backgroundColor: "#111827",
+          color: "#fff",
+          border: "none",
+          cursor: destination && !isSubmitting ? "pointer" : "not-allowed",
+          opacity: destination && !isSubmitting ? 1 : 0.6,
+        }}
+      >
+        {isSubmitting
+          ? t("move.saving")
+          : mode === "move"
+          ? t("move.move")
+          : t("move.copy")}
+      </button>
+    </div>
   );
 };

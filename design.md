@@ -96,6 +96,8 @@ category color.
   Give the scrollable region `flex: 1 1 auto; min-height: 0; overflow-y: auto`.
 - Closes on `pointerdown` outside (mouse/touch/pen).
 - **Never nest Modals** — use an inline screen toggle (see `DownloadReduxStore`).
+- Closed modals render only their trigger; the `Offcanvas` tree and body mount
+  when opened, so long memoir lists don't pay for closed sheets.
 
 ### Buttons
 - Primary: `#111827`, white text, radius 0.75rem.
@@ -115,6 +117,16 @@ category color.
 - Title + content centered; meta (date) centered under the content.
 - Action row: icon order **edit · move · copy · share · delete**, `18px` gap,
   centered under the date. Local-only actions gated by `isLocalAnthology`.
+
+### Memoir loading
+- List, Media, and Text skins render memoirs in chunks of 50
+  (`MEMOIRS_CHUNK_SIZE`).
+- A sentinel 300px below the viewport auto-loads the next 50; a visible
+  **Load more** button is the keyboard/fallback control for the same action.
+- A live status shows `Showing {loaded} of {total} memoirs`; when every memoir
+  is mounted it changes to `All {total} memoirs loaded`.
+- Search and order changes reset to the first 50; deletions clamp the window.
+- JSON skin is exempt — it intentionally renders the complete anthology.
 
 ### Share sheet
 - Round brand buttons (44px) with official marks from `public/icons/`

@@ -194,7 +194,7 @@ export const AddMemoir = ({
 
     textarea.addEventListener("scroll", handleScroll);
     return () => textarea.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [show]);
 
   return (
     (!whitelistEnabled ||
