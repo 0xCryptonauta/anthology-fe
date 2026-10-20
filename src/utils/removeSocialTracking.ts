@@ -1,89 +1,122 @@
 import { isValidURL } from "./isValidURL";
 
 /**
- * Removes known social tracking parameters from URLs.
+ * Removes social tracking parameters from every HTTP(S) URL in a string.
  *
- * Supports YouTube, Instagram, Facebook, Twitter/X, Reddit, Spotify.
- *
+ * Each provider keeps only the query params needed to open the content
+ * (video/playlist IDs, timestamps, comment context, search terms). Every other
+ * param is dropped, so newly invented tracking names (`exln`, `mibextid`,
+ * `share_id`, …) are handled without a denylist entry. The cleanup runs in
+ * place, leaving any text around the URL untouched.
  */
-export const removeSocialTracking = (url: string): string => {
-  if (typeof url !== "string") {
+
+type SocialProvider = {
+  hosts: string[];
+  keepParams: string[];
+};
+
+const SOCIAL_PROVIDERS: SocialProvider[] = [
+  {
+    hosts: ["youtube.com", "youtu.be"],
+    keepParams: [
+      "v",
+      "list",
+      "index",
+      "t",
+      "start",
+      "end",
+      "time_continue",
+      "start_radio",
+      "playnext",
+      "search_query",
+      "sp",
+    ],
+  },
+  {
+    hosts: ["instagram.com"],
+    keepParams: ["img_index", "hl"],
+  },
+  {
+    hosts: ["facebook.com"],
+    keepParams: [
+      "v",
+      "story_fbid",
+      "id",
+      "fbid",
+      "set",
+      "type",
+      "comment_id",
+      "reply_comment_id",
+      "q",
+    ],
+  },
+  {
+    hosts: ["twitter.com", "x.com"],
+    keepParams: ["q", "f"],
+  },
+  {
+    hosts: ["reddit.com", "redd.it"],
+    keepParams: [
+      "context",
+      "sort",
+      "limit",
+      "q",
+      "restrict_sr",
+      "t",
+      "type",
+      "include_over_18",
+      "solution",
+    ],
+  },
+  {
+    hosts: ["spotify.com"],
+    keepParams: ["highlight", "context"],
+  },
+];
+
+const URL_IN_TEXT_REGEX = /https?:\/\/\S+/gi;
+// Punctuation that usually belongs to the surrounding prose, not the URL.
+const TRAILING_PUNCTUATION_REGEX = /[.,;:!?)\]}>"'`]+$/;
+
+const hostMatches = (hostname: string, domains: string[]): boolean =>
+  domains.some(
+    (domain) => hostname === domain || hostname.endsWith(`.${domain}`)
+  );
+
+const cleanSocialUrl = (rawUrl: string): string => {
+  if (!isValidURL(rawUrl)) return rawUrl;
+
+  try {
+    const urlObject = new URL(rawUrl);
+    const hostname = urlObject.hostname.toLowerCase();
+    const provider = SOCIAL_PROVIDERS.find(({ hosts }) =>
+      hostMatches(hostname, hosts)
+    );
+
+    if (!provider) return rawUrl;
+
+    const params = urlObject.searchParams;
+    for (const param of [...params.keys()]) {
+      if (!provider.keepParams.includes(param)) params.delete(param);
+    }
+
+    urlObject.search = params.toString() ? `?${params.toString()}` : "";
+
+    return urlObject.href;
+  } catch {
+    return rawUrl;
+  }
+};
+
+export const removeSocialTracking = (content: string): string => {
+  if (typeof content !== "string") {
     throw new Error("Input must be a string");
   }
 
-  if (!isValidURL(url)) {
-    //console.log("Invalid URL:", url);
-    return url;
-  }
+  return content.replace(URL_IN_TEXT_REGEX, (match) => {
+    const trailing = match.match(TRAILING_PUNCTUATION_REGEX)?.[0] ?? "";
+    const rawUrl = trailing ? match.slice(0, -trailing.length) : match;
 
-  // Only sanitize when the whole string is a URL. Mixed "url + text" content
-  // would otherwise lose the text (URL parsers treat it as part of a param).
-  if (/\s/.test(url)) {
-    return url;
-  }
-
-  try {
-    const urlObject = new URL(url);
-    const hostname = urlObject.hostname.toLowerCase();
-
-    const socialHostnames = [
-      "youtube.com",
-      "youtu.be",
-      "instagram.com",
-      "facebook.com",
-      "twitter.com",
-      "x.com",
-      "reddit.com",
-      "redd.it",
-      "spotify.com",
-    ];
-
-    const trackingParams = [
-      // YouTube - Spotify
-      "si",
-
-      // Instagram
-      "igsh",
-
-      // Facebook
-      "fbclid",
-
-      // Twitter/X
-      "t",
-      "s",
-
-      // Reddit
-      "utm_source",
-      "utm_medium",
-      "utm_name",
-      "context",
-      "ref_source",
-
-      // Generic UTM
-      "utm_campaign",
-      "utm_term",
-      "utm_content",
-    ];
-
-    const isSocialHost = socialHostnames.some((host) =>
-      hostname.endsWith(host)
-    );
-
-    if (isSocialHost) {
-      const params = urlObject.searchParams;
-
-      trackingParams.forEach((param) => params.delete(param));
-
-      urlObject.search = params.toString() ? "?" + params.toString() : "";
-
-      return urlObject.href;
-    }
-
-    return url;
-  } catch (error) {
-    if (error instanceof TypeError) {
-      throw new Error("Invalid URL");
-    }
-    throw error;
-  }
+    return cleanSocialUrl(rawUrl) + trailing;
+  });
 };
