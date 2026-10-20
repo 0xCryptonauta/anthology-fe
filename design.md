@@ -176,6 +176,11 @@ category color.
   for typos (`SEARCH_ACCURACY` in `src/utils/searchMatch.ts`); no mid-word
   substring matching ("test" won't match "latest"). Used by the anthology
   filter and the global search.
+- **Social tracking cleanup is allowlist-based**: `removeSocialTracking` keeps
+  only the params each provider needs (`v`, `list`, `t`, `story_fbid`,
+  `context`, …) and drops every other query param, so new random tracking
+  names (`exln`, `mibextid`, `share_id`, …) need no denylist entry. It cleans
+  every HTTP(S) URL in memoir content in place, preserving surrounding text.
 - **Never use `<datalist>`** on mobile (system autofill can't be suppressed) —
   build custom dropdowns (`TitleEditor`).
 - **Mobile-first control rows**: toolbars stay on a single line down to 320px —
