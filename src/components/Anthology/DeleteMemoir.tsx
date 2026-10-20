@@ -2,10 +2,11 @@ import { useState } from "react";
 import "./style.css";
 import { Modal } from "@src/components/Layout/Modal";
 import { Address } from "@src/types/common";
+import { MemoirInterface } from "@src/store/slices/anthologySlice";
 import { useToast } from "../Layout/Toast";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 import { deleteMemoirAtIndexFromUserLocalAnthology } from "@src/store/slices/localAnthologySlice";
-import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
+import { useAppDispatch } from "@src/store/utils/hooks";
 import { writeAnthology } from "@src/contract-functions/anthologyFunctions";
 import { removeOneFromMemoirs } from "@src/store/slices/anthologySlice";
 import { useTranslation } from "@src/i18n/useTranslation";
@@ -13,24 +14,20 @@ import { useTranslation } from "@src/i18n/useTranslation";
 interface DeleteMemoirProps {
   anthologyAddr: Address;
   index: number;
+  memoir: MemoirInterface;
 }
 
-export const DeleteMemoir: React.FC<DeleteMemoirProps> = ({
+export const DeleteMemoir = ({
   anthologyAddr,
   index,
-}) => {
+  memoir,
+}: DeleteMemoirProps) => {
   const { t } = useTranslation();
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
 
   const { addToast } = useToast();
   const dispatch = useAppDispatch();
-
-  const memoir = useAppSelector((state) =>
-    isLocalAnthology(anthologyAddr)
-      ? state.localAnthology.anthologies[anthologyAddr][index]
-      : state.anthology[anthologyAddr].memoirs[index]
-  );
 
   const handleDelete = async ({
     anthologyAddr,
@@ -112,61 +109,63 @@ export const DeleteMemoir: React.FC<DeleteMemoirProps> = ({
         </button>
       }
     >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          marginTop: "10px",
-        }}
-      >
-        <span style={{ fontSize: "16px", fontWeight: "bold" }}>
-          {t("delete.confirmTitle")}
-        </span>
-        <br />
+      {show && (
         <div
           style={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            minWidth: "250px",
-            border: "1px solid black",
-            borderRadius: "7px",
-            padding: "5px",
-            margin: "10px 0px",
+            marginTop: "10px",
           }}
         >
-          <span style={{ fontWeight: "bold", textAlign: "center" }}>
-            {memoir.title}
+          <span style={{ fontSize: "16px", fontWeight: "bold" }}>
+            {t("delete.confirmTitle")}
           </span>
-
-          <span
+          <br />
+          <div
             style={{
-              whiteSpace: "normal",
-              wordBreak: "break-all",
-              overflowWrap: "break-word",
-              margin: "15px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              minWidth: "250px",
+              border: "1px solid black",
+              borderRadius: "7px",
+              padding: "5px",
+              margin: "10px 0px",
             }}
           >
-            {memoir.content}
+            <span style={{ fontWeight: "bold", textAlign: "center" }}>
+              {memoir.title}
+            </span>
+
+            <span
+              style={{
+                whiteSpace: "normal",
+                wordBreak: "break-all",
+                overflowWrap: "break-word",
+                margin: "15px",
+              }}
+            >
+              {memoir.content}
+            </span>
+          </div>
+
+          <br />
+
+          <button
+            style={{ backgroundColor: "red" }}
+            onClick={() => {
+              handleDelete({ anthologyAddr, index });
+              handleClose();
+            }}
+          >
+            {t("delete.yesDelete")}
+          </button>
+          <span style={{ fontSize: "12px", color: "red" }}>
+            {t("delete.cannotUndo")}
           </span>
         </div>
-
-        <br />
-
-        <button
-          style={{ backgroundColor: "red" }}
-          onClick={() => {
-            handleDelete({ anthologyAddr, index });
-            handleClose();
-          }}
-        >
-          {t("delete.yesDelete")}
-        </button>
-        <span style={{ fontSize: "12px", color: "red" }}>
-          {t("delete.cannotUndo")}
-        </span>
-      </div>
+      )}
     </Modal>
   );
 };

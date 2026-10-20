@@ -505,6 +505,10 @@ export const en = {
   "memoirs.decline": "Decline memoir",
   "memoir.accept": "Accept memoir",
   "memoirs.playlistNotFound": "Youtube videos not found",
+  "memoirs.loadMore": "Load more",
+  "memoirs.loadingMore": "Loading more memoirs...",
+  "memoirs.showingCount": "Showing {loaded} of {total} memoirs",
+  "memoirs.allLoaded": "All {total} memoirs loaded",
 
   /* --------------------------------- Search --------------------------------- */
   "search.result": "result",
@@ -1017,6 +1021,10 @@ export const es: Record<TranslationKey, string> = {
   "memoirs.decline": "Rechazar memoir",
   "memoir.accept": "Aceptar memoir",
   "memoirs.playlistNotFound": "No se encontraron videos de YouTube",
+  "memoirs.loadMore": "Cargar más",
+  "memoirs.loadingMore": "Cargando más memoirs...",
+  "memoirs.showingCount": "Mostrando {loaded} de {total} memoirs",
+  "memoirs.allLoaded": "Se cargaron los {total} memoirs",
 
   /* --------------------------------- Search --------------------------------- */
   "search.result": "resultado",

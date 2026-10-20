@@ -9,6 +9,8 @@ export const MAX_CONTENT_LENGTH = 250;
 
 export const DEFAULT_SKIN = "list";
 
+export const MEMOIRS_CHUNK_SIZE = 50;
+
 export const CHAIN_SCAN_URL = "https://arbiscan.io/address/";
 
 export const CACHE_DURATION_MS = 5 * 60 * 1000; // 5min

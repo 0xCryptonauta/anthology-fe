@@ -51,6 +51,8 @@ export const Modal = ({
   // Close when a press starts outside the panel. Pointer events cover mouse,
   // touch and pen uniformly, so taps on mobile close the modal reliably.
   useEffect(() => {
+    if (!show) return;
+
     const handlePointerDown = (e: PointerEvent) => {
       if (
         offcanvasRef.current &&
@@ -65,7 +67,7 @@ export const Modal = ({
     return () => {
       document.removeEventListener("pointerdown", handlePointerDown);
     };
-  }, [handleClose]);
+  }, [handleClose, show]);
 
   const isSidePanel = variant === "sidepanel";
   const isPortrait = window.innerHeight > window.innerWidth;
@@ -105,66 +107,71 @@ export const Modal = ({
         </div>
       )}
 
-      <Offcanvas
-        show={show}
-        onHide={handleClose}
-        placement={stickToBottom ? "bottom" : resolvedPlacement}
-        className={isSidePanel ? (containerClassName || "") : ""}
-        data-bs-theme={isSidePanel ? "dark" : undefined}
-        style={{
-          width: isSidePanel ? "200px" : undefined,
-          height: !isSidePanel && placement !== "end" ? height ?? "min(600px, 90dvh)" : undefined,
-          bottom: !isSidePanel && isPortrait ? "40px" : undefined,
-          backgroundColor: "transparent",
-          border: "unset",
-          display: "flex",
-          flexDirection: isSidePanel ? "column" : "row",
-          alignItems: isSidePanel ? "center" : "stretch",
-        }}
-      >
-        {header && (
-          <Offcanvas.Header style={{ justifyContent: "center" }}>
-            {header}
-          </Offcanvas.Header>
-        )}
-
-        <Offcanvas.Body
+      {show && (
+        <Offcanvas
+          show={show}
+          onHide={handleClose}
+          placement={stickToBottom ? "bottom" : resolvedPlacement}
+          className={isSidePanel ? (containerClassName || "") : ""}
+          data-bs-theme={isSidePanel ? "dark" : undefined}
           style={{
-            display: transparent ? "unset" : "flex",
-            width: "100%",
-            alignItems: "center",
-            flexDirection: "column",
-            justifyContent:
-              isSidePanel || transparent
-                ? undefined
-                : isPortrait
-                ? "flex-start"
-                : "flex-end",
+            width: isSidePanel ? "200px" : undefined,
+            height:
+              !isSidePanel && placement !== "end"
+                ? height ?? "min(600px, 90dvh)"
+                : undefined,
+            bottom: !isSidePanel && isPortrait ? "40px" : undefined,
             backgroundColor: "transparent",
+            border: "unset",
+            display: "flex",
+            flexDirection: isSidePanel ? "column" : "row",
+            alignItems: isSidePanel ? "center" : "stretch",
           }}
         >
-          <div
-            ref={offcanvasRef}
+          {header && (
+            <Offcanvas.Header style={{ justifyContent: "center" }}>
+              {header}
+            </Offcanvas.Header>
+          )}
+
+          <Offcanvas.Body
             style={{
-              backgroundColor:
-                isSidePanel || transparent ? "transparent" : "white",
-              border: isSidePanel || transparent ? "none" : "1px solid black",
-              borderRadius: "7px",
-              padding: "10px",
-              margin: isSidePanel ? "0px" : "3px",
-              width: transparent ? "unset" : "100%",
-              height: isSidePanel ? "100%" : "unset",
-              maxWidth: isSidePanel || transparent ? "100%" : "315px",
-              maxHeight: "calc(100% - 6px)",
-              display: "flex",
-              flexDirection: "column",
+              display: transparent ? "unset" : "flex",
+              width: "100%",
               alignItems: "center",
+              flexDirection: "column",
+              justifyContent:
+                isSidePanel || transparent
+                  ? undefined
+                  : isPortrait
+                  ? "flex-start"
+                  : "flex-end",
+              backgroundColor: "transparent",
             }}
           >
-            {children}
-          </div>
-        </Offcanvas.Body>
-      </Offcanvas>
+            <div
+              ref={offcanvasRef}
+              style={{
+                backgroundColor:
+                  isSidePanel || transparent ? "transparent" : "white",
+                border: isSidePanel || transparent ? "none" : "1px solid black",
+                borderRadius: "7px",
+                padding: "10px",
+                margin: isSidePanel ? "0px" : "3px",
+                width: transparent ? "unset" : "100%",
+                height: isSidePanel ? "100%" : "unset",
+                maxWidth: isSidePanel || transparent ? "100%" : "315px",
+                maxHeight: "calc(100% - 6px)",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              {children}
+            </div>
+          </Offcanvas.Body>
+        </Offcanvas>
+      )}
     </>
   );
 };
