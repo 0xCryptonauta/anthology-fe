@@ -1,5 +1,13 @@
-/*  FROM: https://css-pattern.com */
+/* FROM: https://css-pattern.com */
 
+/* Text over a pattern must keep >= 4.5:1 contrast (WCAG 2.2 AA, normal text).
+   A pure-white pattern under a 50% black film leaves white text at 3.98:1;
+   60% raises it to 5.74:1. The film — not the font color or text shadow — is
+   what guarantees contrast on every current and future pattern. */
+.bg-overlay,
+.bg-dark-film {
+  --bg-film-alpha: 0.6;
+}
 .bg-overlay {
   position: relative;
 }
@@ -7,7 +15,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0,0,0,var(--bg-film-alpha));
   border-radius: inherit;
   z-index: 0;
   pointer-events: none;
@@ -17,6 +25,7 @@
   z-index: 1;
 }
 
+/* Perceived crispness only — contrast comes from --bg-film-alpha above. */
 .text-shadow-dark {
   text-shadow: 0 1px 4px rgba(0,0,0,0.6);
 }
@@ -215,7 +224,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0,0,0,var(--bg-film-alpha));
   z-index: 0;
   pointer-events: none;
   border-radius: inherit;

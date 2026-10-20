@@ -61,7 +61,7 @@ export const InfiniteMemoirLoader = ({
           margin: "12px 0 20px",
           textAlign: "center",
           fontSize: "12px",
-          color: "#a1a1aa",
+          color: "#f4f4f5",
         }}
       >
         {t("memoirs.allLoaded", { total })}
@@ -112,7 +112,7 @@ export const InfiniteMemoirLoader = ({
       <span
         role="status"
         aria-live="polite"
-        style={{ fontSize: "12px", color: "#a1a1aa" }}
+        style={{ fontSize: "12px", color: "#f4f4f5" }}
       >
         {isPending
           ? t("memoirs.loadingMore")
