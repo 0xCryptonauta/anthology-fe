@@ -48,7 +48,7 @@ export const MoveMemoir = ({
           onClick={() => setShow(true)}
         >
           <img
-            src="/icons/copy-clipboard-icon.svg"
+            src="/icons/copy-icon.svg"
             alt=""
             style={{ width: "18px", height: "18px", display: "block" }}
           />

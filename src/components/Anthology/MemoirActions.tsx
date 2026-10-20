@@ -114,7 +114,7 @@ const MemoirActionsBase = ({
         onClick={handleCopy}
       >
         <img
-          src="/icons/copy-icon.svg"
+          src="/icons/copy-clipboard-icon.svg"
           alt=""
           style={{ width: "18px", height: "18px", display: "block" }}
         />

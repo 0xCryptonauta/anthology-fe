@@ -33,6 +33,11 @@ const toURL = (raw: string): URL | null => {
   const trimmed = raw.trim();
   if (!trimmed) return null;
 
+  // URL parsers silently strip tabs/newlines, so "url\ntext" would become
+  // "url/text" and swallow the surrounding text. A URL has no literal
+  // whitespace; mixed content must be handled by the extraction path below.
+  if (/\s/.test(trimmed)) return null;
+
   const withScheme = /^https?:\/\//i.test(trimmed)
     ? trimmed
     : `https://${trimmed}`;
@@ -312,10 +317,16 @@ export const extractEmbed = (content: string): ExtractedEmbed | null => {
   const embed = detectEmbed(url);
   if (!embed) return null;
 
+  // Remove the URL and keep the remaining text as line-based caption. Removing
+  // a URL that sat on its own line leaves a blank line; drop empty lines so
+  // the surrounding text stays on consecutive lines instead of gaining a gap.
   const caption = content
     .replace(match[0], "")
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .join("\n")
     .replace(/[ \t]{2,}/g, " ")
-    .trim()
     .replace(/[([{]$/, "");
 
   return { embed, caption };

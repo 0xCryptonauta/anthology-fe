@@ -51,7 +51,11 @@ const MediaMemoirCard = memo(
           <>
             {extracted.caption && (
               <div
-                style={{ marginBottom: "0.5rem", overflowWrap: "break-word" }}
+                style={{
+                  marginBottom: "0.5rem",
+                  overflowWrap: "break-word",
+                  whiteSpace: "pre-wrap",
+                }}
               >
                 {extracted.caption}
               </div>
