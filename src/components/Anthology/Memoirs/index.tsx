@@ -44,8 +44,13 @@ export const Memoirs: React.FC<MemoirsProps> = ({
         //border: "1px solid white",
         padding: "5px",
         borderRadius: "7px",
-        margin: "3px",
+        // No horizontal margin: width:100% + side margins would make this
+        // wrapper wider than the page and create a permanent sideways scroll.
+        margin: "3px 0",
         width: "100%",
+        maxWidth: "100%",
+        minWidth: 0,
+        boxSizing: "border-box",
         display: "flex",
         flexWrap: "wrap",
         alignItems: "center",

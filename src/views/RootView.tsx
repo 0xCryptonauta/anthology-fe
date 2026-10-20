@@ -30,7 +30,12 @@ export const RootView = () => {
         <main
           id="main-content"
           tabIndex={-1}
-          style={{ color: "white", outline: "none" }}
+          style={{
+            color: "white",
+            outline: "none",
+            minWidth: 0,
+            maxWidth: "100%",
+          }}
         >
           <Outlet />
         </main>

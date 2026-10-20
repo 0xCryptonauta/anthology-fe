@@ -52,6 +52,12 @@ const ListMemoirCard = memo(
         style={{
           width: "100%",
           maxWidth: "600px",
+          minWidth: 0,
+          // Cards are size-contained by content-visibility while off-screen.
+          // Without inline-size containment, a long unbroken URL contributes
+          // its full min-content width as soon as the card scrolls into view,
+          // widening the page (and every width:100% card) on mobile.
+          contain: "inline-size",
           marginBottom: "1.5rem",
           padding: "0.5rem",
           borderRadius: "8px",
@@ -73,6 +79,9 @@ const ListMemoirCard = memo(
             color: "#333",
             display: "block",
             marginBottom: "0.25rem",
+            // anywhere (not just break-word) removes the URL from the card's
+            // min-content size, keeping the page width stable while scrolling.
+            overflowWrap: "anywhere",
             wordBreak: "break-word",
             textAlign: "center",
             cursor: extracted ? "pointer" : "default",
@@ -97,6 +106,7 @@ const ListMemoirCard = memo(
             lineHeight: 1.5,
             color: "#555",
             fontSize: "0.9rem",
+            overflowWrap: "anywhere",
             wordBreak: "break-word",
             textAlign: "center",
           }}
@@ -185,6 +195,7 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
         flexDirection: "column",
         alignItems: "center",
         width: "100%",
+        maxWidth: "100%",
         minWidth: 0,
         boxSizing: "border-box",
       }}

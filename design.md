@@ -117,6 +117,10 @@ category color.
 - Title + content centered; meta (date) centered under the content.
 - Action row: icon order **edit · move · copy · share · delete**, `18px` gap,
   centered under the date. Local-only actions gated by `isLocalAnthology`.
+- Long user content wraps with `overflow-wrap: anywhere` (not only
+  `word-break: break-word`) and cards carry `contain: inline-size`. Otherwise a
+  single unbroken URL can widen the whole page on mobile as
+  `content-visibility` renders each card during scroll.
 
 ### Memoir loading
 - List, Media, and Text skins render memoirs in chunks of 50
