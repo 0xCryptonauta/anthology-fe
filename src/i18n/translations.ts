@@ -50,6 +50,7 @@ export const en = {
 
   /* --------------------------------- Footer -------------------------------- */
   "footer.tagline": "Recording the collective memory.",
+  "footer.privacy": "Privacy",
 
   /* -------------------------------- NotFound -------------------------------- */
   "notFound.subtitle": "Page not found",
@@ -98,7 +99,7 @@ export const en = {
 
   "about.staticTitle": "100% static — what runs where",
   "about.staticNoBackend":
-    "memory.inbytes.xyz is a 100% static web app. There is no backend server, no user database and no tracking — the app runs entirely in your browser.",
+    "memory.inbytes.xyz is a 100% static web app. There is no backend server, no user database and no first-party tracking or analytics — the app runs entirely in your browser.",
   "about.staticLocal":
     "Private Memory (local): everything you save lives in your browser, on your device. It works offline, never leaves the device, and can be exported as a file whenever you want.",
   "about.staticChain":
@@ -134,11 +135,28 @@ export const en = {
   "about.shortGlossaryMemoryDesc": "All of your anthologies together.",
   "about.shortHowTitle": "How it works (100% static)",
   "about.shortHowNoServer":
-    "No server, no tracking — everything runs in your browser, and social tracking IDs (?si=, ?igsh=) are stripped automatically.",
+    "No server, no first-party tracking — everything runs in your browser, and social tracking IDs (?si=, ?igsh=) are stripped automatically.",
   "about.shortHowLocal":
     "Private Memory: lives on your device, works offline, exports anytime.",
   "about.shortHowChain":
     "Public Memory: optional on-chain publishing. Connect a wallet to deploy your own Anthology contract on Arbitrum through the Factory contract — only your wallet controls its title, memoirs, price, whitelist and moderation buffer.",
+
+  /* --------------------------------- Privacy -------------------------------- */
+  "about.privacyTitle": "Privacy — what stays local, what leaves",
+  "about.privacyLink": "Privacy details",
+  "about.privacyExplainerTitle": "How Anthology handles your data",
+  "about.privacyIntro":
+    "Anthology is local-first by design. We do not run a backend, create user accounts, set first-party analytics or advertising cookies, or include analytics, ads or tracking pixels. The app runs entirely in your browser.",
+  "about.privacyStorage":
+    "Local data: your anthologies, memoirs, settings, RPC cache and (if you connect one) wallet session are stored in this browser's localStorage. They never reach us. Use Settings to export everything as a file or delete it permanently.",
+  "about.privacyWallet":
+    "Wallet and RPC: connecting a wallet is optional. For Public Memory, your browser talks directly to the Arbitrum blockchain through the RPC endpoint you choose. Your wallet, the wallet-connector relay and the RPC provider can see your public address and network requests.",
+  "about.privacyEmbeds":
+    "Social embeds: YouTube, Instagram, X, Reddit, Facebook, Spotify, Vimeo and archive.org content is blocked until you allow that provider in Settings or click Load. Once loaded, the provider may set cookies or collect data under its own privacy policy. We strip tracking parameters from saved links, but cannot control what a provider does after you load an embed.",
+  "about.privacyHosting":
+    "Hosting: the site is served as static files. Our hosting/CDN may keep standard security and access logs (such as IP address and user agent) and set strictly necessary security cookies (for example, bot protection) for availability and abuse prevention.",
+  "about.privacyControl":
+    "You stay in control: export or delete all app data in Settings at any time. The service worker only caches the app shell so it can work offline; it does not track you.",
 
   /* -------------------------------- Language -------------------------------- */
   "language.title": "Language",
@@ -168,6 +186,25 @@ export const en = {
   "settings.noAnthologies": "No anthologies available",
   "settings.selectedCount": "{count} selected",
   "settings.downloadCount": "Download ({count})",
+  "settings.socialEmbeds": "Social embeds",
+  "settings.privacySettings": "Privacy Settings",
+  "settings.socialEmbedsDesc":
+    "Nothing from social platforms loads until you allow it here or choose Load once in an embed. Enabling a provider may let it set cookies or collect data under its own policy. Turning it off stops new embeds but does not delete cookies the provider already set.",
+  "settings.socialEmbedsPolicy": "Official privacy policy: {provider}",
+  "settings.socialEmbedsReset": "Turn all off",
+  "settings.socialEmbedsHint":
+    "You can open a policy link and ask an AI assistant to summarize it.",
+
+  /* ----------------------------- Embed consent ----------------------------- */
+  "embed.consentTitle": "Load {provider} content?",
+  "embed.consentBody":
+    "This embed is hosted by {provider}. Loading it may set cookies or collect data under its privacy policy.",
+  "embed.loadOnce": "Load once",
+  "embed.alwaysAllow": "Always allow {provider}",
+  "embed.openOn": "Open on {provider}",
+  "embed.officialPolicy": "Official privacy policy",
+  "embed.policyHint":
+    "You can ask an AI assistant to explain the policy in plain language.",
 
   /* --------------------------------- Storage -------------------------------- */
   "storage.viewUsage": "View app storage usage",
@@ -562,6 +599,7 @@ export const es: Record<TranslationKey, string> = {
 
   /* --------------------------------- Footer -------------------------------- */
   "footer.tagline": "Registrando la memoria colectiva.",
+  "footer.privacy": "Privacidad",
 
   /* -------------------------------- NotFound -------------------------------- */
   "notFound.subtitle": "Página no encontrada",
@@ -610,7 +648,7 @@ export const es: Record<TranslationKey, string> = {
 
   "about.staticTitle": "100% estático — qué corre dónde",
   "about.staticNoBackend":
-    "memory.inbytes.xyz es una web app 100% estática. No hay servidor backend, ni base de datos de usuarios, ni rastreo — la app corre por completo en tu navegador.",
+    "memory.inbytes.xyz es una web app 100% estática. No hay servidor backend, ni base de datos de usuarios, ni rastreo de primera parte ni analítica — la app corre por completo en tu navegador.",
   "about.staticLocal":
     "Memoria privada (local): todo lo que guardas vive en tu navegador, en tu dispositivo. Funciona sin conexión, nunca sale del dispositivo y puedes exportarla como archivo cuando quieras.",
   "about.staticChain":
@@ -646,11 +684,28 @@ export const es: Record<TranslationKey, string> = {
   "about.shortGlossaryMemoryDesc": "Todas tus antologías juntas.",
   "about.shortHowTitle": "Cómo funciona (100% estático)",
   "about.shortHowNoServer":
-    "Sin servidor ni rastreo — todo corre en tu navegador, y los identificadores de rastreo social (?si=, ?igsh=) se quitan automáticamente.",
+    "Sin servidor ni rastreo de primera parte — todo corre en tu navegador, y los identificadores de rastreo social (?si=, ?igsh=) se quitan automáticamente.",
   "about.shortHowLocal":
     "Memoria privada: vive en tu dispositivo, funciona sin conexión y se exporta cuando quieras.",
   "about.shortHowChain":
     "Memoria pública: publicación on-chain opcional. Conecta una billetera para desplegar tu propio contrato de Antología en Arbitrum mediante el contrato Factory — solo tu billetera controla su título, memoirs, precio, lista blanca y búfer de moderación.",
+
+  /* --------------------------------- Privacidad ----------------------------- */
+  "about.privacyTitle": "Privacidad — qué se queda local y qué sale",
+  "about.privacyLink": "Detalles de privacidad",
+  "about.privacyExplainerTitle": "Cómo maneja Anthology tus datos",
+  "about.privacyIntro":
+    "Anthology es local-first por diseño. No tenemos backend, no creamos cuentas, no usamos cookies propias de analítica o publicidad ni incluimos analítica, anuncios o píxeles de rastreo. La app corre por completo en tu navegador.",
+  "about.privacyStorage":
+    "Datos locales: tus antologías, memoirs, ajustes, caché de RPC y (si conectas una) la sesión de tu billetera se guardan en el localStorage de este navegador. Nunca llegan a nosotros. En Ajustes puedes exportarlo todo como archivo o borrarlo de forma permanente.",
+  "about.privacyWallet":
+    "Billetera y RPC: conectar una billetera es opcional. Para la Memoria pública, tu navegador habla directamente con la blockchain de Arbitrum a través del endpoint RPC que elijas. Tu billetera, el relay del conector de billetera y el proveedor de RPC pueden ver tu dirección pública y las peticiones de red.",
+  "about.privacyEmbeds":
+    "Embeds sociales: el contenido de YouTube, Instagram, X, Reddit, Facebook, Spotify, Vimeo y archive.org se bloquea hasta que permitas ese proveedor en Ajustes o pulses Cargar. Una vez cargado, el proveedor puede establecer cookies o recopilar datos según su propia política de privacidad. Quitamos los parámetros de seguimiento de los enlaces guardados, pero no controlamos lo que hace un proveedor después de cargar un embed.",
+  "about.privacyHosting":
+    "Alojamiento: el sitio se sirve como archivos estáticos. Nuestro hosting/CDN puede conservar registros estándar de seguridad y acceso (como dirección IP y user agent) y establecer cookies de seguridad estrictamente necesarias (por ejemplo, protección contra bots) para disponibilidad y prevención de abuso.",
+  "about.privacyControl":
+    "Tú tienes el control: exporta o borra todos los datos de la app en Ajustes cuando quieras. El service worker solo cachea la app para que funcione sin conexión; no te rastrea.",
 
   /* -------------------------------- Language -------------------------------- */
   "language.title": "Idioma",
@@ -680,6 +735,25 @@ export const es: Record<TranslationKey, string> = {
   "settings.noAnthologies": "No hay antologías disponibles",
   "settings.selectedCount": "{count} seleccionadas",
   "settings.downloadCount": "Descargar ({count})",
+  "settings.socialEmbeds": "Embeds sociales",
+  "settings.privacySettings": "Ajustes de privacidad",
+  "settings.socialEmbedsDesc":
+    "Nada de las plataformas sociales se carga hasta que lo permitas aquí o elijas Cargar una vez en un embed. Activar un proveedor puede permitirle establecer cookies o recopilar datos según su propia política. Desactivarlo detiene las nuevas cargas, pero no borra las cookies que el proveedor ya estableció.",
+  "settings.socialEmbedsPolicy": "Política de privacidad oficial: {provider}",
+  "settings.socialEmbedsReset": "Desactivar todos",
+  "settings.socialEmbedsHint":
+    "Puedes abrir un enlace de política y pedirle a un asistente de IA que lo resuma.",
+
+  /* --------------------------- Consentimiento embed ------------------------ */
+  "embed.consentTitle": "¿Cargar contenido de {provider}?",
+  "embed.consentBody":
+    "Este embed está alojado por {provider}. Cargarlo puede establecer cookies o recopilar datos según su política de privacidad.",
+  "embed.loadOnce": "Cargar una vez",
+  "embed.alwaysAllow": "Permitir siempre {provider}",
+  "embed.openOn": "Abrir en {provider}",
+  "embed.officialPolicy": "Política de privacidad oficial",
+  "embed.policyHint":
+    "Puedes pedirle a un asistente de IA que explique la política en lenguaje sencillo.",
 
   /* --------------------------------- Storage -------------------------------- */
   "storage.viewUsage": "Ver uso de almacenamiento",
