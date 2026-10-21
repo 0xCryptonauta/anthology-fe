@@ -140,9 +140,12 @@ category color.
   Facebook `#1877F2`. `title`/`aria-label` required; opens the platform intent
   link.
 
-### Reading panel (/about)
-- Translucent white `rgba(255,255,255,0.35)` + `backdrop-filter: blur(6px)`,
-  radius 12px, padding 24px.
+### Reading panels (/about, /privacy)
+- Shared `readingPanelStyle` (`src/styles/readingPanelStyles.ts`): solid white
+  (`rgba(255,255,255,1)`), radius 12px, padding 24px, max-width 720px.
+- About expands to 1040px with 20px/12px padding in onboarding mode.
+- Both pages use `readingPageStyle` with top alignment, `50vh` minimum
+  height and 2rem/1rem outer padding, so navigating between them doesn't jump.
 - Black text (`#1a1a1a`); section headings in amber `#b45309`.
 
 ## Icons

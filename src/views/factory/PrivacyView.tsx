@@ -2,6 +2,10 @@ import type { CSSProperties } from "react";
 import { Link } from "react-router-dom";
 import { Seo } from "@components/Layout/Seo";
 import { SocialEmbedsSettingsContent } from "@components/Layout/SocialEmbedsSettingsContent";
+import {
+  readingPageStyle,
+  readingPanelStyle,
+} from "@src/styles/readingPanelStyles";
 import { useTranslation } from "@src/i18n/useTranslation";
 
 export const PrivacyView = () => {
@@ -13,8 +17,8 @@ export const PrivacyView = () => {
         title={t("about.privacyTitle")}
         description="How Anthology handles local data, wallet connections and third-party social embeds"
       />
-      <div style={pageStyle}>
-        <div style={panelStyle}>
+      <div style={readingPageStyle}>
+        <div style={readingPanelStyle}>
           <h1 style={titleStyle}>{t("about.privacyTitle")}</h1>
 
           <section
@@ -22,17 +26,26 @@ export const PrivacyView = () => {
             aria-labelledby="social-embeds-heading"
             style={socialSectionStyle}
           >
-            <h2 id="social-embeds-heading" style={sectionHeadingStyle}>
+            <h2
+              id="social-embeds-heading"
+              style={{ ...sectionHeadingStyle, textAlign: "center" }}
+            >
               {t("settings.socialEmbeds")}
             </h2>
-            <SocialEmbedsSettingsContent />
+            <p style={paragraphStyle}>{t("settings.socialEmbedsDesc")}</p>
+            <div style={socialContentStyle}>
+              <SocialEmbedsSettingsContent />
+            </div>
           </section>
 
           <section
             aria-labelledby="privacy-explainer-heading"
             style={explainerSectionStyle}
           >
-            <h2 id="privacy-explainer-heading" style={sectionHeadingStyle}>
+            <h2
+              id="privacy-explainer-heading"
+              style={{ ...sectionHeadingStyle, textAlign: "center" }}
+            >
               {t("about.privacyExplainerTitle")}
             </h2>
             <p style={paragraphStyle}>{t("about.privacyIntro")}</p>
@@ -56,26 +69,6 @@ export const PrivacyView = () => {
   );
 };
 
-const pageStyle: CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "flex-start",
-  minHeight: "50vh",
-  padding: "2rem 1rem",
-  gap: "1.5rem",
-};
-
-const panelStyle: CSSProperties = {
-  maxWidth: "720px",
-  width: "100%",
-  backgroundColor: "rgba(255, 255, 255, 0.92)",
-  backdropFilter: "blur(6px)",
-  borderRadius: "12px",
-  padding: "24px",
-  boxSizing: "border-box",
-};
-
 const titleStyle: CSSProperties = {
   fontSize: "1.8rem",
   margin: "0 0 1rem",
@@ -92,6 +85,13 @@ const paragraphStyle: CSSProperties = {
 
 const socialSectionStyle: CSSProperties = {
   marginBottom: "2rem",
+};
+
+const socialContentStyle: CSSProperties = {
+  maxWidth: "420px",
+  margin: "0 auto",
+  textAlign: "center",
+  color: "#1a1a1a",
 };
 
 const explainerSectionStyle: CSSProperties = {

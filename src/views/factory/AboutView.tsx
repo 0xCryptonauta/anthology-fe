@@ -1,6 +1,10 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { Seo } from "@components/Layout/Seo";
+import {
+  readingPageStyle,
+  readingPanelStyle,
+} from "@src/styles/readingPanelStyles";
 import { useTranslation } from "@src/i18n/useTranslation";
 
 const headingStyle = {
@@ -74,27 +78,12 @@ export const AboutView = () => {
   return (
     <>
       <Seo title={t("nav.about")} description="Learn more about the Anthology project" />
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: "50vh",
-          padding: "2rem 1rem",
-          flexWrap: "wrap",
-          gap: "1.5rem",
-        }}
-      >
+      <div style={readingPageStyle}>
         <div
           style={{
-            maxWidth: showOnboarding ? "1040px" : "640px",
-            width: "100%",
-            backgroundColor: "rgba(255, 255, 255, 0.35)",
-            backdropFilter: "blur(6px)",
-            borderRadius: "12px",
-            padding: showOnboarding ? "20px 12px" : "24px",
-            boxSizing: "border-box",
+            ...readingPanelStyle,
+            maxWidth: showOnboarding ? "1040px" : readingPanelStyle.maxWidth,
+            padding: showOnboarding ? "20px 12px" : readingPanelStyle.padding,
             transition: "max-width 0.2s ease",
           }}
         >
