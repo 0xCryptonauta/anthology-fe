@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useTranslation } from "@src/i18n/useTranslation";
 
 export const Footer = () => {
@@ -12,11 +13,25 @@ export const Footer = () => {
         alignItems: "center",
         color: "#f4f4f5",
         height: "60px",
+        fontSize: "0.7rem",
       }}
     >
-      <span>© 2026 - InBytes.xyz</span>
+      <span>
+        © 2026 - InBytes.xyz ·{" "}
+        <Link
+          to="/privacy"
+          style={{
+            color: "#f4f4f5",
+            textDecoration: "underline",
+            fontSize: "inherit",
+            fontWeight: 400,
+          }}
+        >
+          {t("footer.privacy")}
+        </Link>
+      </span>
 
-      <span style={{ fontSize: "0.7rem" }}>{t("footer.tagline")}</span>
+      <span>{t("footer.tagline")}</span>
     </footer>
   );
 };

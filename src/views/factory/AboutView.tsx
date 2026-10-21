@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
 import { Seo } from "@components/Layout/Seo";
 import { useTranslation } from "@src/i18n/useTranslation";
 
@@ -279,6 +280,12 @@ export const AboutView = () => {
               </p>
             </>
           )}
+
+          <p style={{ ...paragraphStyle, margin: "1.5rem 0 0" }}>
+            <Link to="/privacy" style={{ color: "#1a1a1a" }}>
+              {t("about.privacyLink")} →
+            </Link>
+          </p>
         </div>
       </div>
     </>

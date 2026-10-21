@@ -184,6 +184,12 @@ category color.
   thumbnail, Vimeo/Spotify oEmbed thumbnails, archive.org image service);
   third-party scripts (Twitter, Reddit, Instagram) load only when scrolled
   into view.
+- **Third-party embeds are consent-gated**: `EmbedRenderer` shows a placeholder
+  until the provider is allowed in Settings or the user chooses **Load once**.
+  Default is off. Never mount an embed or fetch its thumbnail/oEmbed before
+  consent. Provider names and official policy links live in
+  `src/utils/socialEmbedProviders.ts` and are shared by About, Settings and the
+  consent placeholder.
 - **Search** matches words by prefix ("tes" finds "test") or ≥90% similarity
   for typos (`SEARCH_ACCURACY` in `src/utils/searchMatch.ts`); no mid-word
   substring matching ("test" won't match "latest"). Used by the anthology

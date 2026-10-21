@@ -23,6 +23,11 @@ const AboutView = lazy(() =>
     default: m.AboutView,
   }))
 );
+const PrivacyView = lazy(() =>
+  import("@views/factory/PrivacyView.tsx").then((m) => ({
+    default: m.PrivacyView,
+  }))
+);
 const AnthologyShareView = lazy(() =>
   import("@views/anthology/AnthologyShareView").then((m) => ({
     default: m.AnthologyShareView,
@@ -54,6 +59,14 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={null}>
             <AboutView />
+          </Suspense>
+        ),
+      },
+      {
+        path: "privacy",
+        element: (
+          <Suspense fallback={null}>
+            <PrivacyView />
           </Suspense>
         ),
       },

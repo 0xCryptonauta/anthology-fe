@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import type { SocialEmbedProvider } from "@src/utils/socialEmbedProviders";
 //import { Address } from "@src/types/common";
 
 export type LocalePreference = "auto" | "en" | "es";
@@ -11,6 +12,8 @@ export interface dappState {
   categoryBackgroundsEnabled: boolean;
   anthologyFooterBgClass: string;
   locale: LocalePreference;
+  /** Providers whose embeds the user explicitly allowed to load. */
+  allowedSocialEmbeds: SocialEmbedProvider[];
 }
 
 const initialState: dappState = {
@@ -19,6 +22,7 @@ const initialState: dappState = {
   categoryBackgroundsEnabled: true,
   anthologyFooterBgClass: "",
   locale: "auto",
+  allowedSocialEmbeds: [],
 };
 
 export const dappSlice = createSlice({
@@ -43,10 +47,37 @@ export const dappSlice = createSlice({
     setAnthologyFooterBgClass: (state, action: PayloadAction<string>) => {
       state.anthologyFooterBgClass = action.payload;
     },
+    setSocialEmbedAllowed: (
+      state,
+      action: PayloadAction<{
+        provider: SocialEmbedProvider;
+        allowed: boolean;
+      }>
+    ) => {
+      // Older persisted stores may not have the field yet.
+      const allowed = state.allowedSocialEmbeds ?? [];
+
+      state.allowedSocialEmbeds = action.payload.allowed
+        ? allowed.includes(action.payload.provider)
+          ? allowed
+          : [...allowed, action.payload.provider]
+        : allowed.filter((provider) => provider !== action.payload.provider);
+    },
+    resetSocialEmbedConsent: (state) => {
+      state.allowedSocialEmbeds = [];
+    },
   },
 });
 
-export const { updateFactoryRpc, toggleIsIconToLocal, toggleCategoryBackgrounds, setLocale, resetDappStore, setAnthologyFooterBgClass } =
-  dappSlice.actions;
+export const {
+  updateFactoryRpc,
+  toggleIsIconToLocal,
+  toggleCategoryBackgrounds,
+  setLocale,
+  resetDappStore,
+  setAnthologyFooterBgClass,
+  setSocialEmbedAllowed,
+  resetSocialEmbedConsent,
+} = dappSlice.actions;
 
 export default dappSlice.reducer;

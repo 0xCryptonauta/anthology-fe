@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+import { Link } from "react-router-dom";
 import InstallPWAButton from "@src/components/Layout/InstallPWAButton";
 import { NetworkSettings } from "@src/components/Layout/NetworkSettings";
 import { IconPathSwitcher } from "@src/components/Layout/IconPathSwitcher";
@@ -48,6 +50,9 @@ export const SettingsView = () => {
         <InstallPWAButton />
         <IconPathSwitcher />
         <CategoryBackgroundsToggle />
+        <Link to="/privacy" style={privacyLinkStyle}>
+          {t("settings.privacySettings")}
+        </Link>
         <NetworkSettings />
       </div>
 
@@ -55,4 +60,17 @@ export const SettingsView = () => {
       </div>
     </>
   );
+};
+
+const privacyLinkStyle: CSSProperties = {
+  cursor: "pointer",
+  border: "1px solid #ccc",
+  padding: "10px 16px",
+  borderRadius: "8px",
+  display: "inline-block",
+  fontSize: "14px",
+  fontWeight: "bold",
+  backgroundColor: "#f7fafc",
+  color: "#2b6cb0",
+  textDecoration: "none",
 };
