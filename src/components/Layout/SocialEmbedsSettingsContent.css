@@ -1,0 +1,19 @@
+/*
+ * Center Bootstrap's switch + label as one group. The default .form-check
+ * reserves 1.5em on the left and floats the input into that space; with a flex
+ * row we remove both so the group can be centered without overlap.
+ */
+.social-embed-check.form-check {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding-left: 0;
+  margin-bottom: 0;
+}
+
+.social-embed-check .form-check-input,
+.social-embed-check.form-check .form-check-input {
+  float: none;
+  margin-left: 0;
+}

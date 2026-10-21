@@ -140,9 +140,12 @@ category color.
   Facebook `#1877F2`. `title`/`aria-label` required; opens the platform intent
   link.
 
-### Reading panel (/about)
-- Translucent white `rgba(255,255,255,0.35)` + `backdrop-filter: blur(6px)`,
-  radius 12px, padding 24px.
+### Reading panels (/about, /privacy)
+- Shared `readingPanelStyle` (`src/styles/readingPanelStyles.ts`): solid white
+  (`rgba(255,255,255,1)`), radius 12px, padding 24px, max-width 720px.
+- About expands to 1040px with 20px/12px padding in onboarding mode.
+- Both pages use `readingPageStyle` with top alignment, `50vh` minimum
+  height and 2rem/1rem outer padding, so navigating between them doesn't jump.
 - Black text (`#1a1a1a`); section headings in amber `#b45309`.
 
 ## Icons
@@ -184,6 +187,12 @@ category color.
   thumbnail, Vimeo/Spotify oEmbed thumbnails, archive.org image service);
   third-party scripts (Twitter, Reddit, Instagram) load only when scrolled
   into view.
+- **Third-party embeds are consent-gated**: `EmbedRenderer` shows a placeholder
+  until the provider is allowed in Settings or the user chooses **Load once**.
+  Default is off. Never mount an embed or fetch its thumbnail/oEmbed before
+  consent. Provider names and official policy links live in
+  `src/utils/socialEmbedProviders.ts` and are shared by About, Settings and the
+  consent placeholder.
 - **Search** matches words by prefix ("tes" finds "test") or ≥90% similarity
   for typos (`SEARCH_ACCURACY` in `src/utils/searchMatch.ts`); no mid-word
   substring matching ("test" won't match "latest"). Used by the anthology
