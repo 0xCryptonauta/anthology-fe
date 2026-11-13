@@ -43,6 +43,7 @@ export const en = {
   /* ------------------------------ Navigation ------------------------------- */
   "nav.myAnthologies": "My Anthologies",
   "nav.discover": "Discover",
+  "nav.connect": "Connect",
   "nav.privateMemory": "Private Memory",
   "nav.about": "About",
   "nav.factoryInfo": "Factory Info",
@@ -551,6 +552,18 @@ export const en = {
   "memoirs.allLoaded": "All {total} memoirs loaded",
 
   /* --------------------------------- Connect -------------------------------- */
+  "connect.title": "Connect",
+  "connect.subtitle": "Share private anthologies in person, without a server.",
+  "connect.scan": "Scan to connect",
+  "connect.yourNamePrefix": "You:",
+  "connect.editName": "Edit name",
+  "connect.empty":
+    "No connections yet. Scan someone's QR to receive their private anthologies.",
+  "connect.anthologyCount": "{count} anthologies",
+  "connect.anthologyCountOne": "1 anthology",
+  "connect.memoirCount": "{count} memoirs",
+  "connect.memoirCountOne": "1 memoir",
+  "connect.lastConnected": "Last connected {date}",
   "connect.readOnlyBannerPrefix": "Shared by",
   "connect.readOnlyBannerSuffix": "— read-only",
   "connect.readOnlyHint":
@@ -656,6 +669,7 @@ export const es: Record<TranslationKey, string> = {
   /* ------------------------------ Navigation ------------------------------- */
   "nav.myAnthologies": "Mis antologías",
   "nav.discover": "Explorar",
+  "nav.connect": "Conectar",
   "nav.privateMemory": "Memoria privada",
   "nav.about": "Acerca de",
   "nav.factoryInfo": "Info de fábrica",
@@ -1169,6 +1183,19 @@ export const es: Record<TranslationKey, string> = {
   "memoirs.allLoaded": "Se cargaron los {total} memoirs",
 
   /* --------------------------------- Connect -------------------------------- */
+  "connect.title": "Conectar",
+  "connect.subtitle":
+    "Comparte antologías privadas en persona, sin servidor.",
+  "connect.scan": "Escanear para conectar",
+  "connect.yourNamePrefix": "Tú:",
+  "connect.editName": "Editar nombre",
+  "connect.empty":
+    "Aún no hay conexiones. Escanea el QR de alguien para recibir sus antologías privadas.",
+  "connect.anthologyCount": "{count} antologías",
+  "connect.anthologyCountOne": "1 antología",
+  "connect.memoirCount": "{count} memoirs",
+  "connect.memoirCountOne": "1 memoir",
+  "connect.lastConnected": "Última conexión: {date}",
   "connect.readOnlyBannerPrefix": "Compartido por",
   "connect.readOnlyBannerSuffix": "— solo lectura",
   "connect.readOnlyHint":
