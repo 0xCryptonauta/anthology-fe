@@ -20,6 +20,7 @@ import { MemoirInterface } from "@src/store/slices/anthologySlice";
 import { HighlightDifferences } from "../Layout/HighlightDifferences";
 import { Modal } from "../Layout/Modal";
 import { useTranslation } from "@src/i18n/useTranslation";
+import { useIsReadOnlyAnthology } from "@src/hooks/useIsReadOnlyAnthology";
 
 // Imports remain the same
 
@@ -33,6 +34,7 @@ export const AddMemoir = ({
   content?: string;
 }) => {
   const { t } = useTranslation();
+  const isReadOnly = useIsReadOnlyAnthology(contractAddr);
   const [anthologyTitle, setAnthologyTitle] = useState(title);
   const [anthologyContent, setAnthologyContent] = useState(content);
   const [shouldFilterTracking, setShouldFilterTracking] = useState(true);
@@ -126,6 +128,8 @@ export const AddMemoir = ({
   ]);
 
   const handleAddMemoir = async () => {
+    if (isReadOnly) return;
+
     if (titleError || urlError) {
       addToast({
         title: t("memoir.cannotAdd"),
@@ -197,6 +201,7 @@ export const AddMemoir = ({
   }, [show]);
 
   return (
+    !isReadOnly &&
     (!whitelistEnabled ||
       whitelist.includes(userAddr) ||
       userAddr === owner) && (

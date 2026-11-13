@@ -547,6 +547,17 @@ export const en = {
   "memoirs.showingCount": "Showing {loaded} of {total} memoirs",
   "memoirs.allLoaded": "All {total} memoirs loaded",
 
+  /* --------------------------------- Connect -------------------------------- */
+  "connect.readOnlyBannerPrefix": "Shared by",
+  "connect.readOnlyBannerSuffix": "— read-only",
+  "connect.readOnlyHint":
+    "You can read, copy, and share these memoirs, but not edit or add to them.",
+  "connect.connectedFrom": "Connected from",
+  "connect.receivedOn": "Received",
+  "connect.deleteCopyTitle": "Remove this connected anthology?",
+  "connect.deleteCopyDesc":
+    "This removes your copy only. The sender's anthology is unchanged.",
+
   /* --------------------------------- Search --------------------------------- */
   "search.result": "result",
   "search.results": "results",
@@ -1099,6 +1110,17 @@ export const es: Record<TranslationKey, string> = {
   "memoirs.loadingMore": "Cargando más memoirs...",
   "memoirs.showingCount": "Mostrando {loaded} de {total} memoirs",
   "memoirs.allLoaded": "Se cargaron los {total} memoirs",
+
+  /* --------------------------------- Connect -------------------------------- */
+  "connect.readOnlyBannerPrefix": "Compartido por",
+  "connect.readOnlyBannerSuffix": "— solo lectura",
+  "connect.readOnlyHint":
+    "Puedes leer, copiar y compartir estos memoirs, pero no editarlos ni añadirlos.",
+  "connect.connectedFrom": "Conectado desde",
+  "connect.receivedOn": "Recibido",
+  "connect.deleteCopyTitle": "¿Eliminar esta antología conectada?",
+  "connect.deleteCopyDesc":
+    "Esto elimina solo tu copia. La antología del remitente no cambia.",
 
   /* --------------------------------- Search --------------------------------- */
   "search.result": "resultado",

@@ -13,6 +13,7 @@ import { ChangeAnthologyDefaultSkin } from "./ChangeAnthologyDefaultSkin";
 import { TitleEditor } from "@components/Factory/TitleEditor";
 import { Modal } from "@src/components/Layout/Modal";
 import { useTranslation } from "@src/i18n/useTranslation";
+import { useReceivedFrom } from "@src/hooks/useIsReadOnlyAnthology";
 
 export const LocalAnthologyOwner = ({
   contractAddr,
@@ -21,6 +22,8 @@ export const LocalAnthologyOwner = ({
 }) => {
   const { t } = useTranslation();
   const { addToast } = useToast();
+  const receivedFrom = useReceivedFrom(contractAddr);
+  const isReadOnly = Boolean(receivedFrom);
 
   const { contractsTitles, userContracts, anthologies } = useAppSelector(
     (state) => state.localAnthology
@@ -95,8 +98,10 @@ export const LocalAnthologyOwner = ({
       }}
     >
       <br />
-      {/* ------------------------------- Update Anthology title ------------------------------ */}
-      <Modal
+      {!isReadOnly && (
+        <>
+          {/* ------------------------------- Update Anthology title ------------------------------ */}
+          <Modal
         placement="bottom"
         show={showTitleModal}
         onHide={handleCloseTitleModal}
@@ -147,12 +152,19 @@ export const LocalAnthologyOwner = ({
             onSubmit={handleTitleSubmit}
           />
         </div>
-      </Modal>
-      <br />
+          </Modal>
+          <br />
+        </>
+      )}
       <ChangeAnthologyDefaultSkin contractAddr={contractAddr} />
+      {isReadOnly && (
+        <p style={{ maxWidth: 280, textAlign: "center" }}>
+          {t("connect.readOnlyHint")}
+        </p>
+      )}
 
       {/* ----------------------------------- cleanMemoirs ------------------------------------ */}
-      {memoirCount > 0 && (
+      {!isReadOnly && memoirCount > 0 && (
         <div style={{ marginTop: "20px" }}>
           <Modal
             placement="bottom"

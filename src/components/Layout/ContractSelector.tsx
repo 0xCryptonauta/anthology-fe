@@ -21,8 +21,16 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
     (state) => state.factory
   );
 
-  const localContracts = useAppSelector(
+  const localContractsRaw = useAppSelector(
     (state) => state.localAnthology.userContracts[LOCAL_USER_ADDR]
+  );
+  const receivedFrom = useAppSelector(
+    (state) => state.localAnthology.receivedFrom
+  );
+  const localContracts = useMemo(
+    () =>
+      (localContractsRaw || []).filter((addr) => !receivedFrom?.[addr]),
+    [localContractsRaw, receivedFrom]
   );
   const localTitles = useAppSelector(
     (state) => state.localAnthology.contractsTitles

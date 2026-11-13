@@ -9,6 +9,7 @@ import { DeleteMemoir } from "./DeleteMemoir";
 import { EditMemoir } from "./EditMemoir";
 import { MoveMemoir } from "./MoveMemoir";
 import { useTranslation } from "@src/i18n/useTranslation";
+import { useIsReadOnlyAnthology } from "@src/hooks/useIsReadOnlyAnthology";
 
 const MemoirActionsBase = ({
   anthologyAddr,
@@ -21,6 +22,7 @@ const MemoirActionsBase = ({
 }) => {
   const { t } = useTranslation();
   const { addToast } = useToast();
+  const isReadOnly = useIsReadOnlyAnthology(anthologyAddr);
   const [shareOpen, setShareOpen] = useState(false);
 
   const shareText = memoir.title
@@ -90,7 +92,7 @@ const MemoirActionsBase = ({
 
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
-      {isLocalAnthology(anthologyAddr) && (
+      {isLocalAnthology(anthologyAddr) && !isReadOnly && (
         <>
           <EditMemoir
             anthologyAddr={anthologyAddr}
@@ -135,11 +137,13 @@ const MemoirActionsBase = ({
         />
       </button>
 
-      <DeleteMemoir
-        anthologyAddr={anthologyAddr}
-        index={index}
-        memoir={memoir}
-      />
+      {!isReadOnly && (
+        <DeleteMemoir
+          anthologyAddr={anthologyAddr}
+          index={index}
+          memoir={memoir}
+        />
+      )}
 
       <Modal show={shareOpen} onHide={() => setShareOpen(false)}>
         <div

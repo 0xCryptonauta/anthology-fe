@@ -18,11 +18,13 @@ import "@src/styles/backgrounds.css";
 import { getBgClass } from "@utils/backgrounds";
 import { setAnthologyFooterBgClass } from "@src/store/slices/dappSlice";
 import { useTranslation } from "@src/i18n/useTranslation";
+import { useReceivedFrom } from "@src/hooks/useIsReadOnlyAnthology";
 
 export const LocalAnthologyView = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { currentPath } = useAppSelector((state) => state.user);
+  const receivedFrom = useReceivedFrom(currentPath.split("/")[1] as Address);
   const categoryBackgroundsEnabled = useAppSelector((s) => s.dapp.categoryBackgroundsEnabled);
 
   //const { ethAddr, } = useParams();
@@ -76,6 +78,15 @@ export const LocalAnthologyView = () => {
         </span>
         {FormatAnthologyTitle(contractTitle)}
       </div>
+
+      {receivedFrom && (
+        <span style={{ fontSize: "0.8rem", opacity: 0.9 }}>
+          <span aria-hidden="true">🔒 </span>
+          {t("connect.readOnlyBannerPrefix")}{" "}
+          <span translate="no">{receivedFrom.nametag}</span>{" "}
+          {t("connect.readOnlyBannerSuffix")}
+        </span>
+      )}
 
       <div
         /* Mobile-first control bar: one compact row (36px controls, 8px gaps)

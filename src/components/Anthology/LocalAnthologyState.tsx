@@ -11,6 +11,7 @@ import { deleteUserLocalAnthology } from "@src/store/slices/localAnthologySlice"
 import { updateCurrentPath } from "@src/store/slices/userSlice";
 import { LOCAL_USER_ADDR, LOCAL_USER_PATH } from "@src/utils/constants";
 import { useTranslation } from "@src/i18n/useTranslation";
+import { useReceivedFrom } from "@src/hooks/useIsReadOnlyAnthology";
 
 interface LocalAnthologyStateProps {
   contractAddr: Address;
@@ -20,6 +21,7 @@ export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
   contractAddr,
 }) => {
   const { t } = useTranslation();
+  const receivedFrom = useReceivedFrom(contractAddr);
   const currentTitle = useAppSelector(
     (state) => state.localAnthology.contractsTitles[contractAddr]
   );
@@ -96,6 +98,19 @@ export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
 
       <Card title={t("anthologyState.defaultSkin")} content={defaultSkin} />
 
+      {receivedFrom && (
+        <>
+          <Card
+            title={t("connect.connectedFrom")}
+            content={<span translate="no">{receivedFrom.nametag}</span>}
+          />
+          <Card
+            title={t("connect.receivedOn")}
+            content={new Date(receivedFrom.receivedAt).toLocaleDateString()}
+          />
+        </>
+      )}
+
       <Card
         title={t("localState.download")}
         content={
@@ -149,10 +164,14 @@ export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
               }}
             >
               <span style={{ fontWeight: "bold", textAlign: "center" }}>
-                {t("localState.deleteTitle")}
+                {receivedFrom
+                  ? t("connect.deleteCopyTitle")
+                  : t("localState.deleteTitle")}
               </span>
               <span style={{ textAlign: "center" }}>
-                {t("localState.deleteDesc")}
+                {receivedFrom
+                  ? t("connect.deleteCopyDesc")
+                  : t("localState.deleteDesc")}
               </span>
             </div>
 
