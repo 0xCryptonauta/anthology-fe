@@ -11,6 +11,7 @@ import { CleanReduxStore } from "@src/components/Layout/CleanReduxStore";
 import { LoadReduxStore } from "@src/components/Layout/LoadReduxStore";
 import { CategoryBackgroundsToggle } from "@src/components/Layout/CategoryBackgroundsToggle";
 import { LanguageSelector } from "@src/components/Layout/LanguageSelector";
+import { NametagSettings } from "@src/components/Layout/NametagSettings";
 import { Seo } from "@components/Layout/Seo";
 import { useTranslation } from "@src/i18n/useTranslation";
 
@@ -43,6 +44,7 @@ export const SettingsView = () => {
         }}
       >
         <LanguageSelector />
+        <NametagSettings />
         <DownloadReduxStore />
         <CacheStorageViewer />
         <ClearCacheButton />

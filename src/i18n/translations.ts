@@ -554,6 +554,14 @@ export const en = {
     "You can read, copy, and share these memoirs, but not edit or add to them.",
   "connect.connectedFrom": "Connected from",
   "connect.receivedOn": "Received",
+  "connect.nametagTitle": "Your nametag",
+  "connect.nametagLabel": "Name others will see",
+  "connect.nametagHelp":
+    "Required to share. People you connect with will see this name.",
+  "connect.nametagEmpty": "Enter a name before sharing.",
+  "connect.nametagTooLong": "Use 32 characters or fewer.",
+  "connect.nametagSaved": "Nametag saved.",
+  "connect.deviceId": "Connection ID",
   "connect.deleteCopyTitle": "Remove this connected anthology?",
   "connect.deleteCopyDesc":
     "This removes your copy only. The sender's anthology is unchanged.",
@@ -1118,6 +1126,14 @@ export const es: Record<TranslationKey, string> = {
     "Puedes leer, copiar y compartir estos memoirs, pero no editarlos ni añadirlos.",
   "connect.connectedFrom": "Conectado desde",
   "connect.receivedOn": "Recibido",
+  "connect.nametagTitle": "Tu apodo",
+  "connect.nametagLabel": "Nombre que verán los demás",
+  "connect.nametagHelp":
+    "Obligatorio para compartir. Las personas con las que conectes verán este nombre.",
+  "connect.nametagEmpty": "Escribe un nombre antes de compartir.",
+  "connect.nametagTooLong": "Usa 32 caracteres o menos.",
+  "connect.nametagSaved": "Apodo guardado.",
+  "connect.deviceId": "ID de conexión",
   "connect.deleteCopyTitle": "¿Eliminar esta antología conectada?",
   "connect.deleteCopyDesc":
     "Esto elimina solo tu copia. La antología del remitente no cambia.",
