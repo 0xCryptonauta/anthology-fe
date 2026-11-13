@@ -75,8 +75,11 @@ export const groupConnections = (
   }
 
   return Array.from(groups.values())
-    .map(({ latestAt, ...group }) => ({
-      ...group,
+    .map((group) => ({
+      deviceId: group.deviceId,
+      nametag: group.nametag,
+      firstConnectedAt: group.firstConnectedAt,
+      lastConnectedAt: group.lastConnectedAt,
       anthologies: group.anthologies.sort(
         (left, right) => right.receivedAt - left.receivedAt
       ),

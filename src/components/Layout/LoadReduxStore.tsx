@@ -6,32 +6,15 @@ import {
   validateJsonContentType,
 } from "@src/utils/validateJsonContentType";
 import { useAppDispatch } from "@src/store/utils/hooks";
-import { LOCAL_USER_PATH, LOCAL_USER_ADDR } from "@src/utils/constants";
-import {
-  addAnthologiesToLocalMemory,
-  addManyMemoirsToUserLocalAnthology,
-  addUserLocalAnthology,
-  setDefaultSkin,
-  setManyDefaultSkin,
-  updateLocalContractTitles,
-  updateLocalUserContracts,
-} from "@src/store/slices/localAnthologySlice";
-import {
-  Address,
-  AnthologyType,
-  ContractTitlesType,
-  CurrentPaths,
-  SkinType,
-  UserContractsType,
-} from "@src/types/common";
-import { MemoirInterface } from "@src/store/slices/anthologySlice";
+import { LOCAL_USER_PATH } from "@src/utils/constants";
+import { CurrentPaths } from "@src/types/common";
 import { useNavigate } from "react-router-dom";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
 import {
-  updateContractTitles,
-  updateUserContracts,
-  updateUsers,
-} from "@src/store/slices/factorySlice";
+  addDiscoveriesToMemory,
+  addMemoryToMemory,
+  addOneAnthologyToLocal,
+} from "@src/utils/applyLoadedJson";
 import { useToast } from "./Toast";
 import { useTranslation } from "@src/i18n/useTranslation";
 
@@ -83,68 +66,6 @@ export const LoadReduxStore = () => {
     } else {
       setIsValidJson(false);
     }
-  };
-
-  const addOneAnthologyToLocal = () => {
-    dispatch(
-      addUserLocalAnthology({
-        user: LOCAL_USER_ADDR,
-        contract: loadedJsonState.anthology?.contractAddr as Address,
-        title: loadedJsonState.anthology?.title || "Error loading title",
-      })
-    );
-
-    dispatch(
-      addManyMemoirsToUserLocalAnthology({
-        contract: loadedJsonState.anthology?.contractAddr as Address,
-        memoirs: loadedJsonState.anthology?.anthology as MemoirInterface[],
-      })
-    );
-
-    dispatch(
-      setDefaultSkin({
-        contract: loadedJsonState.anthology?.contractAddr as Address,
-        newDefaultSkin: loadedJsonState.anthology?.defaultSkin as SkinType,
-      })
-    );
-  };
-
-  const addDiscoveriesToMemory = () => {
-    dispatch(updateUsers(loadedJsonState.discoveries?.users as Address[]));
-
-    dispatch(
-      updateUserContracts(
-        loadedJsonState.discoveries?.userContracts as UserContractsType
-      )
-    );
-    dispatch(
-      updateContractTitles(
-        loadedJsonState.discoveries?.contractsTitles as ContractTitlesType
-      )
-    );
-  };
-
-  const addMemoryToMemory = () => {
-    dispatch(
-      updateLocalUserContracts(
-        loadedJsonState.localMemory?.userContracts as UserContractsType
-      )
-    );
-    dispatch(
-      updateLocalContractTitles(
-        loadedJsonState.localMemory?.contractsTitles as ContractTitlesType
-      )
-    );
-    dispatch(
-      setManyDefaultSkin(
-        loadedJsonState.localMemory?.defaultSkin as { [key: Address]: SkinType }
-      )
-    );
-    dispatch(
-      addAnthologiesToLocalMemory({
-        anthologies: loadedJsonState.localMemory?.anthologies as AnthologyType,
-      })
-    );
   };
 
   return (
@@ -343,7 +264,7 @@ export const LoadReduxStore = () => {
               }}
               onClick={() => {
                 if (isOneAnthology) {
-                  addOneAnthologyToLocal();
+                  addOneAnthologyToLocal(dispatch, loadedJsonState);
                   const newPath =
                     "contract/" + loadedJsonState.anthology?.contractAddr;
                   navigate("/");
@@ -375,12 +296,12 @@ export const LoadReduxStore = () => {
                 let newPath = "";
 
                 if (shouldLoadDiscovery) {
-                  addDiscoveriesToMemory();
+                  addDiscoveriesToMemory(dispatch, loadedJsonState);
                   newPath = "discover";
                 }
 
                 if (shouldLoadLocal) {
-                  addMemoryToMemory();
+                  addMemoryToMemory(dispatch, loadedJsonState);
                   newPath = LOCAL_USER_PATH;
                 }
 
