@@ -10,6 +10,7 @@ import {
 import { DEFAULT_SKIN, LOCAL_USER_ADDR } from "@src/utils/constants";
 import { MemoirInterface } from "./anthologySlice";
 import { generateLocalContractAddr } from "@src/utils/generateLocalContractAddr";
+import type { LocalId, ReceivedFrom } from "@src/types/connect";
 
 export interface localAnthologyState {
   users: Address[];
@@ -17,7 +18,11 @@ export interface localAnthologyState {
   contractsTitles: ContractTitlesType; // Mapping of contract addresses to contract details (e.g., title)
   anthologies: AnthologyType;
   defaultSkin: { [key: Address]: SkinType };
+  receivedFrom: { [key: Address]: ReceivedFrom };
 }
+
+const isReadOnly = (state: localAnthologyState, contract: Address): boolean =>
+  Boolean(state.receivedFrom?.[contract]);
 
 const newLocalAddr = generateLocalContractAddr();
 
@@ -38,6 +43,7 @@ const initialState: localAnthologyState = {
     ],
   },
   defaultSkin: { [newLocalAddr]: DEFAULT_SKIN },
+  receivedFrom: {},
 };
 
 export const localAnthologySlice = createSlice({
@@ -92,6 +98,7 @@ export const localAnthologySlice = createSlice({
       }>
     ) {
       const { contract, memoir } = action.payload;
+      if (isReadOnly(state, contract)) return;
       if (!state.anthologies[contract]) {
         state.anthologies[contract] = [];
       }
@@ -152,6 +159,24 @@ export const localAnthologySlice = createSlice({
       }
     },
 
+    markAnthologiesReceived(
+      state,
+      action: PayloadAction<{
+        addresses: Address[];
+        deviceId: LocalId;
+        nametag: string;
+        receivedAt: number;
+      }>
+    ) {
+      if (!state.receivedFrom) state.receivedFrom = {};
+
+      const { addresses, deviceId, nametag, receivedAt } = action.payload;
+      for (const address of addresses) {
+        if (!state.anthologies?.[address]) continue;
+        state.receivedFrom[address] = { deviceId, nametag, receivedAt };
+      }
+    },
+
     updateMemoirInUserLocalAnthology(
       state,
       action: PayloadAction<{
@@ -162,6 +187,7 @@ export const localAnthologySlice = createSlice({
       }>
     ) {
       const { contract, index, title, content } = action.payload;
+      if (isReadOnly(state, contract)) return;
       const memoirs = state.anthologies[contract];
       if (!memoirs || !memoirs[index]) return;
 
@@ -172,6 +198,7 @@ export const localAnthologySlice = createSlice({
       action: PayloadAction<{ contract: Address; index: number }>
     ) {
       const { contract, index } = action.payload;
+      if (isReadOnly(state, contract)) return;
       const memoirs = state.anthologies[contract];
       if (!memoirs || !memoirs[index]) return;
 
@@ -182,6 +209,7 @@ export const localAnthologySlice = createSlice({
       action: PayloadAction<{ contract: Address }>
     ) {
       const { contract } = action.payload;
+      if (isReadOnly(state, contract)) return;
       if (state.anthologies[contract]) {
         state.anthologies[contract] = [];
       }
@@ -208,6 +236,7 @@ export const localAnthologySlice = createSlice({
       delete state.contractsTitles[contract];
       delete state.anthologies[contract];
       delete state.defaultSkin[contract];
+      if (state.receivedFrom) delete state.receivedFrom[contract];
     },
     updateUserLocalAnthologyTitle(
       state,
@@ -217,6 +246,7 @@ export const localAnthologySlice = createSlice({
       }>
     ) {
       const { contract, newTitle } = action.payload;
+      if (isReadOnly(state, contract)) return;
       if (newTitle) {
         state.contractsTitles[contract] = newTitle;
       }
@@ -288,6 +318,7 @@ export const {
   addMemoirToUserLocalAnthology,
   addManyMemoirsToUserLocalAnthology,
   addAnthologiesToLocalMemory,
+  markAnthologiesReceived,
   deleteMemoirAtIndexFromUserLocalAnthology,
   clearMemoirsInUserLocalAnthology,
   updateMemoirInUserLocalAnthology,

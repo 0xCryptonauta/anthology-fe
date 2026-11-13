@@ -9,15 +9,17 @@ import { Address, MemoirContent } from "@src/types/common";
 import { LOCAL_USER_ADDR, DEFAULT_SKIN } from "@src/utils/constants";
 import { localAnthologyState } from "@src/store/slices/localAnthologySlice";
 import { useTranslation } from "@src/i18n/useTranslation";
+import { pickLocalMemory } from "@src/utils/localMemoryPayload";
+import type { LocalMemoryPayload } from "@src/utils/validateJsonContentType";
 
 const filterLocalByAddresses = (
   local: localAnthologyState,
   selected: Set<string>
-): Partial<localAnthologyState> => {
+): LocalMemoryPayload => {
   const localContracts = local.userContracts?.[LOCAL_USER_ADDR] || [];
   const filteredContracts = localContracts.filter((addr: Address) => selected.has(addr));
 
-  const result: Partial<localAnthologyState> = {
+  const result: LocalMemoryPayload = {
     users: filteredContracts.length > 0 ? [LOCAL_USER_ADDR] : [],
     userContracts: { [LOCAL_USER_ADDR]: filteredContracts },
     contractsTitles: {},
@@ -26,9 +28,9 @@ const filterLocalByAddresses = (
   };
 
   for (const addr of filteredContracts) {
-    result.contractsTitles![addr] = local.contractsTitles[addr] || "";
-    result.anthologies![addr] = local.anthologies[addr] || [];
-    result.defaultSkin![addr] = local.defaultSkin[addr] || DEFAULT_SKIN;
+    result.contractsTitles[addr] = local.contractsTitles[addr] || "";
+    result.anthologies[addr] = local.anthologies[addr] || [];
+    result.defaultSkin[addr] = local.defaultSkin[addr] || DEFAULT_SKIN;
   }
 
   return result;
@@ -101,7 +103,7 @@ export const DownloadReduxStore = () => {
     if (addLocal) {
       dataToDownload = {
         ...dataToDownload,
-        localMemory: localAnthology,
+        localMemory: pickLocalMemory(localAnthology),
       };
     }
 
