@@ -8,6 +8,7 @@ import { resetFactoryStore } from "@src/store/slices/factorySlice";
 import { resetDappStore } from "@src/store/slices/dappSlice";
 import { resetUserStore } from "@src/store/slices/userSlice";
 import { resetLocalAnthologyStore } from "@src/store/slices/localAnthologySlice";
+import { resetConnectStore } from "@src/store/slices/connectSlice";
 import { useTranslation } from "@src/i18n/useTranslation";
 
 export const CleanReduxStore = () => {
@@ -69,6 +70,7 @@ export const CleanReduxStore = () => {
           dispatch(resetDappStore());
           dispatch(resetUserStore());
           dispatch(resetLocalAnthologyStore());
+          dispatch(resetConnectStore());
           //clear CP timestamps in local storage
           localStorage.clear();
 
