@@ -1,6 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import {
   buildShareEnvelope,
+  classifySharedBy,
   decodeSharePayload,
   validateNametag,
   validateSharedBy,
@@ -92,6 +93,20 @@ describe("shareEnvelope", () => {
       ok: false,
       reason: "invalid-payload",
     });
+  });
+
+  test("classifies an absent, valid, and invalid sender", () => {
+    expect(classifySharedBy(single).kind).toBe("absent");
+    expect(
+      classifySharedBy({ ...single, sharedBy: sender } as unknown as LoadedJson)
+        .kind
+    ).toBe("valid");
+    expect(
+      classifySharedBy({
+        ...single,
+        sharedBy: { ...sender, nametag: "x".repeat(33) },
+      } as unknown as LoadedJson).kind
+    ).toBe("invalid");
   });
 
   test("rejects a missing sender", () => {

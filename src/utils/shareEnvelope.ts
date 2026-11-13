@@ -135,6 +135,22 @@ export const validateSharedBy = (value: unknown): SharedBy | null => {
   };
 };
 
+export type SharedByClassification =
+  | { kind: "absent" }
+  | { kind: "invalid" }
+  | { kind: "valid"; sharedBy: SharedBy };
+
+export const classifySharedBy = (
+  value: LoadedJson
+): SharedByClassification => {
+  if (!Object.prototype.hasOwnProperty.call(value, "sharedBy")) {
+    return { kind: "absent" };
+  }
+
+  const sharedBy = validateSharedBy(value.sharedBy);
+  return sharedBy ? { kind: "valid", sharedBy } : { kind: "invalid" };
+};
+
 export const decodeSharePayload = (bytes: Uint8Array): DecodeShareResult => {
   let parsed: unknown;
 
@@ -155,15 +171,13 @@ export const decodeSharePayload = (bytes: Uint8Array): DecodeShareResult => {
     return { ok: false, reason: "invalid-payload" };
   }
 
-  const hasSender = Object.prototype.hasOwnProperty.call(data, "sharedBy");
-  if (!hasSender) {
+  const sender = classifySharedBy(data);
+  if (sender.kind === "absent") {
     return { ok: false, reason: "missing-sender" };
   }
-
-  const sharedBy = validateSharedBy(data.sharedBy);
-  if (!sharedBy) {
+  if (sender.kind === "invalid") {
     return { ok: false, reason: "invalid-sender" };
   }
 
-  return { ok: true, kind, data, sharedBy };
+  return { ok: true, kind, data, sharedBy: sender.sharedBy };
 };

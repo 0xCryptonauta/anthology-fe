@@ -17,7 +17,7 @@ import {
   addMemoryToMemory,
   addOneAnthologyToLocal,
 } from "@src/utils/applyLoadedJson";
-import { validateSharedBy } from "@src/utils/shareEnvelope";
+import { classifySharedBy } from "@src/utils/shareEnvelope";
 import { useToast } from "./Toast";
 import { useTranslation } from "@src/i18n/useTranslation";
 
@@ -89,16 +89,12 @@ export const LoadReduxStore = () => {
     setLoadLocalMemory(hasLocalJson);
 
     if (hasDiscoveryJson || hasLocalJson || isOneAnthologyJson) {
-      const hasSharedBy = Object.prototype.hasOwnProperty.call(
-        loadedState,
-        "sharedBy"
-      );
-      const parsedSharedBy = validateSharedBy(loadedState.sharedBy);
+      const sender = classifySharedBy(loadedState);
 
       setIsValidJson(true);
       setLoadedJsonState(loadedState);
-      setSharedBy(parsedSharedBy);
-      setInvalidSharedBy(hasSharedBy && !parsedSharedBy);
+      setSharedBy(sender.kind === "valid" ? sender.sharedBy : null);
+      setInvalidSharedBy(sender.kind === "invalid");
     } else {
       setIsValidJson(false);
     }
