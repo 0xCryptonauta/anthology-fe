@@ -562,6 +562,22 @@ export const en = {
   "connect.nametagTooLong": "Use 32 characters or fewer.",
   "connect.nametagSaved": "Nametag saved.",
   "connect.deviceId": "Connection ID",
+  "connect.shareTitle": "Share \"{title}\"",
+  "connect.shareQr": "Share by QR",
+  "connect.start": "Start stream",
+  "connect.stop": "Stop stream",
+  "connect.preparing": "Preparing…",
+  "connect.readyToStream": "Ready to stream",
+  "connect.streaming": "Streaming…",
+  "connect.estimated": "~{seconds} s · {size} KB",
+  "connect.tooLarge":
+    "This share is {size} KB. QR streaming is limited to 1 MB; download the share file instead.",
+  "connect.downloadShareFile": "Download share file instead",
+  "connect.qrAria": "Animated QR code containing this anthology share",
+  "connect.streamHint":
+    "Point the other device's camera at this code. Keep this screen open.",
+  "connect.unsupported":
+    "This browser can't stream QR codes. Download the share file instead.",
   "connect.deleteCopyTitle": "Remove this connected anthology?",
   "connect.deleteCopyDesc":
     "This removes your copy only. The sender's anthology is unchanged.",
@@ -1134,6 +1150,22 @@ export const es: Record<TranslationKey, string> = {
   "connect.nametagTooLong": "Usa 32 caracteres o menos.",
   "connect.nametagSaved": "Apodo guardado.",
   "connect.deviceId": "ID de conexión",
+  "connect.shareTitle": "Compartir \"{title}\"",
+  "connect.shareQr": "Compartir por QR",
+  "connect.start": "Iniciar transmisión",
+  "connect.stop": "Detener transmisión",
+  "connect.preparing": "Preparando…",
+  "connect.readyToStream": "Listo para transmitir",
+  "connect.streaming": "Transmitiendo…",
+  "connect.estimated": "~{seconds} s · {size} KB",
+  "connect.tooLarge":
+    "Esta compartición ocupa {size} KB. La transmisión QR está limitada a 1 MB; descarga el archivo para compartir.",
+  "connect.downloadShareFile": "Descargar archivo para compartir",
+  "connect.qrAria": "Código QR animado que contiene esta antología compartida",
+  "connect.streamHint":
+    "Apunta la cámara del otro dispositivo a este código. Mantén esta pantalla abierta.",
+  "connect.unsupported":
+    "Este navegador no puede transmitir códigos QR. Descarga el archivo para compartir.",
   "connect.deleteCopyTitle": "¿Eliminar esta antología conectada?",
   "connect.deleteCopyDesc":
     "Esto elimina solo tu copia. La antología del remitente no cambia.",

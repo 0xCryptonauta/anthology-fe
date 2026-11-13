@@ -3,15 +3,21 @@ import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
 import { useState } from "react";
 //import { useParams } from "react-router-dom";
 import "./style.css";
-import { Address } from "@src/types/common";
+import { Address, SkinType } from "@src/types/common";
 import { downloadObjAsJson } from "@src/utils/downloadObjAsJson";
 import { Modal } from "@src/components/Layout/Modal";
 import { useToast } from "@src/components/Layout/Toast";
 import { deleteUserLocalAnthology } from "@src/store/slices/localAnthologySlice";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
-import { LOCAL_USER_ADDR, LOCAL_USER_PATH } from "@src/utils/constants";
+import {
+  DEFAULT_SKIN,
+  LOCAL_USER_ADDR,
+  LOCAL_USER_PATH,
+} from "@src/utils/constants";
 import { useTranslation } from "@src/i18n/useTranslation";
 import { useReceivedFrom } from "@src/hooks/useIsReadOnlyAnthology";
+import { QrStreamShareModal } from "../Connect/QrStreamShareModal";
+import type { LoadedJson } from "@src/utils/validateJsonContentType";
 
 interface LocalAnthologyStateProps {
   contractAddr: Address;
@@ -36,19 +42,21 @@ export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
   const { addToast } = useToast();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+  const sharePayload: LoadedJson = {
+    anthology: {
+      contractAddr: contractAddr,
+      title: currentTitle || "",
+      anthology: anthology || [],
+      defaultSkin: (defaultSkin || DEFAULT_SKIN) as SkinType,
+    },
+  };
+  const shareFilename = `${(currentTitle || "anthology").replace(
+    /\s+/g,
+    "_"
+  )}_share.json`;
+
   const downloadLocalAnthology = () => {
-    const anthologyData = {
-      anthology: {
-        contractAddr: contractAddr,
-        title: currentTitle,
-        anthology: anthology,
-        defaultSkin: defaultSkin,
-      },
-    };
-    downloadObjAsJson(
-      anthologyData,
-      `${currentTitle.replace(/\s+/g, "_")}_anthology.json`
-    );
+    downloadObjAsJson(sharePayload, shareFilename);
   };
 
   const handleDeleteAnthology = () => {
@@ -114,21 +122,42 @@ export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
       <Card
         title={t("localState.download")}
         content={
-          <button
-            type="button"
-            title={t("localState.download")}
-            aria-label={t("localState.download")}
-            style={{
-              cursor: "pointer",
-              fontSize: "20px",
-              background: "none",
-              border: "none",
-              padding: 0,
-            }}
-            onClick={downloadLocalAnthology}
-          >
-            💾
-          </button>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <button
+              type="button"
+              title={t("localState.download")}
+              aria-label={t("localState.download")}
+              style={{
+                cursor: "pointer",
+                fontSize: "20px",
+                background: "none",
+                border: "none",
+                padding: 0,
+              }}
+              onClick={downloadLocalAnthology}
+            >
+              💾
+            </button>
+            <QrStreamShareModal
+              payload={sharePayload}
+              filename={shareFilename}
+              title={t("connect.shareTitle", { title: currentTitle || "" })}
+              trigger={
+                <button
+                  type="button"
+                  className="icon-button"
+                  title={t("connect.shareQr")}
+                  aria-label={t("connect.shareQr")}
+                >
+                  <img
+                    src="/icons/qrIcon.svg"
+                    alt=""
+                    style={{ width: "20px", height: "20px", display: "block" }}
+                  />
+                </button>
+              }
+            />
+          </div>
         }
       />
 
