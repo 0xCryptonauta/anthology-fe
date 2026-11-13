@@ -10,7 +10,11 @@ import { LOCAL_USER_ADDR, DEFAULT_SKIN } from "@src/utils/constants";
 import { localAnthologyState } from "@src/store/slices/localAnthologySlice";
 import { useTranslation } from "@src/i18n/useTranslation";
 import { pickLocalMemory } from "@src/utils/localMemoryPayload";
-import type { LocalMemoryPayload } from "@src/utils/validateJsonContentType";
+import type {
+  LoadedJson,
+  LocalMemoryPayload,
+} from "@src/utils/validateJsonContentType";
+import { QrStreamSharePanel } from "@components/Connect/QrStreamSharePanel";
 
 const filterLocalByAddresses = (
   local: localAnthologyState,
@@ -52,9 +56,16 @@ export const DownloadReduxStore = () => {
   const [newFileName, setNewFileName] = useState("");
 
   const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-
   const [selectionScreen, setSelectionScreen] = useState(false);
+  const [sharePayload, setSharePayload] = useState<{
+    payload: LoadedJson;
+    filename: string;
+  } | null>(null);
+
+  const handleClose = () => {
+    setShow(false);
+    setSharePayload(null);
+  };
 
   const localUserTitles: MemoirContent[] = useMemo(() => {
     const contracts = localAnthology.userContracts?.[LOCAL_USER_ADDR] || [];
@@ -64,6 +75,44 @@ export const DownloadReduxStore = () => {
       originalIndex: i,
     }));
   }, [localAnthology]);
+
+  const openShare = (selected?: Set<string>) => {
+    if (addNewFileName && newFileName.trim() === "") {
+      addToast({
+        title: t("settings.fileNameRequired"),
+        content: t("settings.fileNameRequiredDesc"),
+        variant: "info",
+      });
+      return;
+    }
+
+    const filename =
+      (addNewFileName ? newFileName : "local_anthology") + "_share.json";
+
+    if (selected) {
+      setSharePayload({
+        payload: {
+          localMemory: filterLocalByAddresses(localAnthology, selected),
+        },
+        filename,
+      });
+    } else if (addLocal) {
+      setSharePayload({
+        payload: { localMemory: pickLocalMemory(localAnthology) },
+        filename,
+      });
+    }
+
+    setSelectionScreen(false);
+  };
+
+  const handleShareClick = () => {
+    if (addCustomSelection) {
+      setSelectionScreen(true);
+      return;
+    }
+    openShare();
+  };
 
   const downloadUserSelection = () => {
     if (addNewFileName && newFileName.trim() === "") {
@@ -182,12 +231,28 @@ export const DownloadReduxStore = () => {
           color: "#1a1a1a",
         }}
       >
-        {selectionScreen ? (
+        {sharePayload ? (
+          <div
+            style={{
+              padding: "20px 16px",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <QrStreamSharePanel
+              payload={sharePayload.payload}
+              filename={sharePayload.filename}
+              title={t("connect.shareGroupTitle")}
+              onBack={() => setSharePayload(null)}
+            />
+          </div>
+        ) : selectionScreen ? (
           <SelectAnthologiesForDownload
             inline
             onHide={() => setSelectionScreen(false)}
             userTitles={localUserTitles}
             onDownload={handleCustomDownload}
+            onShare={(selected) => openShare(selected)}
           />
         ) : (
           <>
@@ -274,6 +339,7 @@ export const DownloadReduxStore = () => {
               )}
 
               <button
+                type="button"
                 onClick={downloadUserSelection}
                 style={{
                   marginTop: "20px",
@@ -304,6 +370,41 @@ export const DownloadReduxStore = () => {
                   ? t("settings.selectAnthologies")
                   : t("settings.download")}
               </button>
+
+              <button
+                type="button"
+                onClick={handleShareClick}
+                disabled={!addLocal && !addCustomSelection}
+                style={{
+                  marginTop: "-8px",
+                  backgroundColor: "#f9fafb",
+                  color: "#374151",
+                  fontWeight: "500",
+                  fontSize: "15px",
+                  padding: "12px",
+                  borderRadius: "8px",
+                  border: "1px solid #d1d5db",
+                  cursor:
+                    !addLocal && !addCustomSelection
+                      ? "not-allowed"
+                      : "pointer",
+                  opacity: !addLocal && !addCustomSelection ? 0.5 : 1,
+                }}
+              >
+                {t("settings.shareViaQr")}
+              </button>
+
+              {addDiscovery && !addLocal && !addCustomSelection && (
+                <span
+                  style={{
+                    color: "#718096",
+                    fontSize: "12px",
+                    textAlign: "center",
+                  }}
+                >
+                  {t("settings.sharePrivateOnly")}
+                </span>
+              )}
             </div>
           </>
         )}

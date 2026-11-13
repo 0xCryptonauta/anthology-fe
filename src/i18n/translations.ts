@@ -173,6 +173,9 @@ export const en = {
   "settings.customFileName": "Custom File Name",
   "settings.enterFileName": "Enter file name",
   "settings.download": "💾 Download",
+  "settings.shareViaQr": "Share via QR",
+  "settings.shareViaQrCount": "Share {count} via QR",
+  "settings.sharePrivateOnly": "QR sharing includes private anthologies only.",
   "settings.selectAnthologies": "Select Anthologies →",
   "settings.fileNameRequired": "File name required",
   "settings.fileNameRequiredDesc":
@@ -578,6 +581,7 @@ export const en = {
     "Point the other device's camera at this code. Keep this screen open.",
   "connect.unsupported":
     "This browser can't stream QR codes. Download the share file instead.",
+  "connect.shareGroupTitle": "Share private anthologies",
   "connect.deleteCopyTitle": "Remove this connected anthology?",
   "connect.deleteCopyDesc":
     "This removes your copy only. The sender's anthology is unchanged.",
@@ -757,6 +761,10 @@ export const es: Record<TranslationKey, string> = {
   "settings.customFileName": "Nombre de archivo personalizado",
   "settings.enterFileName": "Escribe un nombre de archivo",
   "settings.download": "💾 Descargar",
+  "settings.shareViaQr": "Compartir por QR",
+  "settings.shareViaQrCount": "Compartir {count} por QR",
+  "settings.sharePrivateOnly":
+    "Compartir por QR incluye solo antologías privadas.",
   "settings.selectAnthologies": "Seleccionar antologías →",
   "settings.fileNameRequired": "Nombre de archivo requerido",
   "settings.fileNameRequiredDesc":
@@ -1166,6 +1174,7 @@ export const es: Record<TranslationKey, string> = {
     "Apunta la cámara del otro dispositivo a este código. Mantén esta pantalla abierta.",
   "connect.unsupported":
     "Este navegador no puede transmitir códigos QR. Descarga el archivo para compartir.",
+  "connect.shareGroupTitle": "Compartir antologías privadas",
   "connect.deleteCopyTitle": "¿Eliminar esta antología conectada?",
   "connect.deleteCopyDesc":
     "Esto elimina solo tu copia. La antología del remitente no cambia.",
