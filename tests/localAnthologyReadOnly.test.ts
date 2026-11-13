@@ -7,6 +7,7 @@ import {
   deleteUserLocalAnthology,
   localAnthologySlice,
   markAnthologiesReceived,
+  updateLocalContractTitles,
   updateMemoirInUserLocalAnthology,
   updateUserLocalAnthologyTitle,
 } from "../src/store/slices/localAnthologySlice";
@@ -96,20 +97,35 @@ describe("read-only connected anthologies", () => {
   });
 
   test("markAnthologiesReceived only marks existing anthologies", () => {
+    const added = "0x99999999999999999999" as const;
     let state = base();
+    state = {
+      ...state,
+      anthologies: { ...state.anthologies, [added]: [memoir] },
+    };
     state = reducer(
       state,
       markAnthologiesReceived({
-        addresses: [other, "0xdeadbeefdeadbeefdead" as const],
+        addresses: [added, "0xdeadbeefdeadbeefdead" as const],
         deviceId: sender.deviceId,
         nametag: "Ana",
         receivedAt: 20,
       })
     );
-    expect(state.receivedFrom[other]?.nametag).toBe("Ana");
+    expect(state.receivedFrom[added]?.nametag).toBe("Ana");
     expect(
       state.receivedFrom["0xdeadbeefdeadbeefdead" as const]
     ).toBeUndefined();
+  });
+
+  test("updateLocalContractTitles skips connected titles", () => {
+    let state = base();
+    state = reducer(
+      state,
+      updateLocalContractTitles({ [contract]: "Renamed", [other]: "Mine2" })
+    );
+    expect(state.contractsTitles[contract]).toBe("Shared");
+    expect(state.contractsTitles[other]).toBe("Mine2");
   });
 
   test("deleteUserLocalAnthology removes provenance", () => {

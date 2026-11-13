@@ -6,7 +6,7 @@ import {
   validateJsonContentType,
 } from "@src/utils/validateJsonContentType";
 import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
-import { LOCAL_USER_PATH } from "@src/utils/constants";
+import { LOCAL_USER_ADDR, LOCAL_USER_PATH } from "@src/utils/constants";
 import { Address, CurrentPaths } from "@src/types/common";
 import type { SharedBy } from "@src/types/connect";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +26,11 @@ export const LoadReduxStore = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const ownDeviceId = useAppSelector((state) => state.connect.deviceId);
+  const localAnthology = useAppSelector((state) => state.localAnthology);
+  const importContext = {
+    existingOwn: localAnthology.userContracts?.[LOCAL_USER_ADDR] || [],
+    receivedFrom: localAnthology.receivedFrom ?? {},
+  };
 
   const { addToast } = useToast();
 
@@ -44,6 +49,7 @@ export const LoadReduxStore = () => {
 
   const [loadedJsonState, setLoadedJsonState] = useState<LoadedJson>({});
   const [sharedBy, setSharedBy] = useState<SharedBy | null>(null);
+  const [invalidSharedBy, setInvalidSharedBy] = useState(false);
 
   const handleJsonLoad = async () => {
     setIsValidJson(undefined);
@@ -52,8 +58,24 @@ export const LoadReduxStore = () => {
     setIsOneAnthology(false);
     setLoadedJsonState({});
     setSharedBy(null);
+    setInvalidSharedBy(false);
 
-    const loadedState = await loadJsonAsObj<LoadedJson>();
+    let loadedState: LoadedJson;
+    try {
+      loadedState = await loadJsonAsObj<LoadedJson>();
+    } catch (error) {
+      if (error instanceof Error && error.message === "No file selected") {
+        return;
+      }
+      addToast({
+        title: t("load.fileError"),
+        content: t("load.fileErrorDesc"),
+        variant: "danger",
+        delay: 5000,
+      });
+      return;
+    }
+
     const {
       hasDiscovery: hasDiscoveryJson,
       hasLocal: hasLocalJson,
@@ -67,9 +89,16 @@ export const LoadReduxStore = () => {
     setLoadLocalMemory(hasLocalJson);
 
     if (hasDiscoveryJson || hasLocalJson || isOneAnthologyJson) {
+      const hasSharedBy = Object.prototype.hasOwnProperty.call(
+        loadedState,
+        "sharedBy"
+      );
+      const parsedSharedBy = validateSharedBy(loadedState.sharedBy);
+
       setIsValidJson(true);
       setLoadedJsonState(loadedState);
-      setSharedBy(validateSharedBy(loadedState.sharedBy));
+      setSharedBy(parsedSharedBy);
+      setInvalidSharedBy(hasSharedBy && !parsedSharedBy);
     } else {
       setIsValidJson(false);
     }
@@ -197,6 +226,19 @@ export const LoadReduxStore = () => {
                     <span translate="no">{sharedBy.nametag}</span>
                   </div>
                 )}
+
+                {invalidSharedBy && (
+                  <div
+                    role="alert"
+                    style={{
+                      color: "#c53030",
+                      fontSize: "14px",
+                      marginTop: "8px",
+                    }}
+                  >
+                    {t("load.invalidSharedBy")}
+                  </div>
+                )}
               </div>
             ) : (
               <button
@@ -283,12 +325,23 @@ export const LoadReduxStore = () => {
                 fontWeight: "500",
               }}
               onClick={() => {
+                if (invalidSharedBy) {
+                  addToast({
+                    title: t("load.invalidSharedBy"),
+                    content: t("load.invalidSharedByDesc"),
+                    variant: "danger",
+                    delay: 5000,
+                  });
+                  return;
+                }
+
                 let importedAddresses: Address[] = [];
 
                 if (isOneAnthology) {
                   importedAddresses = addOneAnthologyToLocal(
                     dispatch,
-                    loadedJsonState
+                    loadedJsonState,
+                    importContext
                   );
 
                   if (sharedBy && sharedBy.deviceId !== ownDeviceId) {
@@ -340,7 +393,8 @@ export const LoadReduxStore = () => {
                 if (shouldLoadLocal) {
                   importedAddresses = addMemoryToMemory(
                     dispatch,
-                    loadedJsonState
+                    loadedJsonState,
+                    importContext
                   );
                   newPath = LOCAL_USER_PATH;
                 }

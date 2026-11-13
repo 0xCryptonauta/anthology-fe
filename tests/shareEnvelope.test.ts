@@ -5,6 +5,7 @@ import {
   validateNametag,
   validateSharedBy,
 } from "../src/utils/shareEnvelope";
+import type { LoadedJson } from "../src/utils/validateJsonContentType";
 
 const sender = { deviceId: "1x12345678901234567890", nametag: "Ana" } as const;
 const single = {
@@ -98,6 +99,96 @@ describe("shareEnvelope", () => {
     expect(decodeSharePayload(bytes)).toEqual({
       ok: false,
       reason: "missing-sender",
+    });
+  });
+
+  test("rejects a 33-character nametag as an invalid sender", () => {
+    const badSender = {
+      ...single,
+      sharedBy: {
+        deviceId: sender.deviceId,
+        nametag: "x".repeat(33),
+      },
+    } as unknown as LoadedJson;
+    const bytes = new TextEncoder().encode(JSON.stringify(badSender));
+    expect(decodeSharePayload(bytes)).toEqual({
+      ok: false,
+      reason: "invalid-sender",
+    });
+  });
+
+  test("rejects a group with a null memoir list", () => {
+    const bad = {
+      localMemory: {
+        ...group.localMemory,
+        anthologies: { "0x12345678901234567890": null },
+      },
+    } as unknown as LoadedJson;
+    const bytes = new TextEncoder().encode(
+      JSON.stringify(buildShareEnvelope(bad, sender))
+    );
+    expect(decodeSharePayload(bytes)).toEqual({
+      ok: false,
+      reason: "invalid-payload",
+    });
+  });
+
+  test("rejects a group with null userContracts", () => {
+    const bad = {
+      localMemory: {
+        ...group.localMemory,
+        userContracts: null,
+      },
+    } as unknown as LoadedJson;
+    const bytes = new TextEncoder().encode(
+      JSON.stringify(buildShareEnvelope(bad, sender))
+    );
+    expect(decodeSharePayload(bytes)).toEqual({
+      ok: false,
+      reason: "invalid-payload",
+    });
+  });
+
+  test("rejects a null memoir inside a group", () => {
+    const bad = {
+      localMemory: {
+        ...group.localMemory,
+        anthologies: { "0x12345678901234567890": [null] },
+      },
+    } as unknown as LoadedJson;
+    const bytes = new TextEncoder().encode(
+      JSON.stringify(buildShareEnvelope(bad, sender))
+    );
+    expect(decodeSharePayload(bytes)).toEqual({
+      ok: false,
+      reason: "invalid-payload",
+    });
+  });
+
+  test("rejects a payload with both anthology and localMemory", () => {
+    const both = { ...single, ...group } as unknown as LoadedJson;
+    const bytes = new TextEncoder().encode(
+      JSON.stringify(buildShareEnvelope(both, sender))
+    );
+    expect(decodeSharePayload(bytes)).toEqual({
+      ok: false,
+      reason: "invalid-payload",
+    });
+  });
+
+  test("rejects a memoir missing required string fields", () => {
+    const bad = {
+      anthology: {
+        ...single.anthology,
+        anthology: [{ sender: "0x0", title: "t", timestamp: "1" }],
+      },
+    } as unknown as LoadedJson;
+    const bytes = new TextEncoder().encode(
+      JSON.stringify(buildShareEnvelope(bad, sender))
+    );
+    expect(decodeSharePayload(bytes)).toEqual({
+      ok: false,
+      reason: "invalid-payload",
     });
   });
 });

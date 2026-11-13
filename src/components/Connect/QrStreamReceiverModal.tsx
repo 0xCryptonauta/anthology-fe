@@ -12,11 +12,15 @@ import { Modal } from "../Layout/Modal";
 import { useToast } from "../Layout/Toast";
 import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 import { markAnthologiesReceived } from "@src/store/slices/localAnthologySlice";
+import { LOCAL_USER_ADDR } from "@src/utils/constants";
 import {
   addMemoryToMemory,
   addOneAnthologyToLocal,
 } from "@src/utils/applyLoadedJson";
-import { decodeSharePayload } from "@src/utils/shareEnvelope";
+import {
+  decodeSharePayload,
+  type SharePayloadKind,
+} from "@src/utils/shareEnvelope";
 import type { SharedBy } from "@src/types/connect";
 import type { Address } from "@src/types/common";
 import type { LoadedJson } from "@src/utils/validateJsonContentType";
@@ -28,11 +32,13 @@ const DECODE_ERROR_KEYS = {
   "invalid-json": "connect.decode.invalid-json",
   "invalid-payload": "connect.decode.invalid-payload",
   "missing-sender": "connect.decode.missing-sender",
+  "invalid-sender": "connect.decode.invalid-sender",
 } as const;
 
 type Phase = "scanning" | "preview" | "error";
 
 interface ParsedShare {
+  kind: SharePayloadKind;
   data: LoadedJson;
   sharedBy: SharedBy;
 }
@@ -183,6 +189,11 @@ export const QrStreamReceiverModal = ({ onClose }: { onClose: () => void }) => {
   const dispatch = useAppDispatch();
   const { addToast } = useToast();
   const ownDeviceId = useAppSelector((state) => state.connect.deviceId);
+  const localAnthology = useAppSelector((state) => state.localAnthology);
+  const importContext = {
+    existingOwn: localAnthology.userContracts?.[LOCAL_USER_ADDR] || [],
+    receivedFrom: localAnthology.receivedFrom ?? {},
+  };
 
   const [phase, setPhase] = useState<Phase>("scanning");
   const [parsed, setParsed] = useState<ParsedShare | null>(null);
@@ -196,7 +207,11 @@ export const QrStreamReceiverModal = ({ onClose }: { onClose: () => void }) => {
         setPhase("error");
         return;
       }
-      setParsed({ data: decoded.data, sharedBy: decoded.sharedBy });
+      setParsed({
+        kind: decoded.kind,
+        data: decoded.data,
+        sharedBy: decoded.sharedBy,
+      });
       setPhase("preview");
     },
     [t]
@@ -213,7 +228,7 @@ export const QrStreamReceiverModal = ({ onClose }: { onClose: () => void }) => {
       return { anthologies: 0, memoirs: 0, titles: [] as string[] };
     }
 
-    if (parsed.data.anthology) {
+    if (parsed.kind === "single" && parsed.data.anthology) {
       return {
         anthologies: 1,
         memoirs: parsed.data.anthology.anthology.length,
@@ -238,9 +253,10 @@ export const QrStreamReceiverModal = ({ onClose }: { onClose: () => void }) => {
   const handleAccept = () => {
     if (!parsed) return;
 
-    const addresses = parsed.data.anthology
-      ? addOneAnthologyToLocal(dispatch, parsed.data)
-      : addMemoryToMemory(dispatch, parsed.data);
+    const addresses =
+      parsed.kind === "single"
+        ? addOneAnthologyToLocal(dispatch, parsed.data, importContext)
+        : addMemoryToMemory(dispatch, parsed.data, importContext);
 
     if (parsed.sharedBy.deviceId !== ownDeviceId) {
       dispatch(

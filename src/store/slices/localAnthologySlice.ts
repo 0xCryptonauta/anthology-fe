@@ -278,7 +278,12 @@ export const localAnthologySlice = createSlice({
       state,
       action: PayloadAction<{ [key: string]: string }>
     ) => {
-      state.contractsTitles = { ...state.contractsTitles, ...action.payload };
+      for (const address in action.payload) {
+        // Re-imports must not rename a connected anthology; its title is
+        // read-only like its memoirs.
+        if (state.receivedFrom?.[address as Address]) continue;
+        state.contractsTitles[address as Address] = action.payload[address];
+      }
     },
     setDefaultSkin: (
       state,

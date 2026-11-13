@@ -250,6 +250,11 @@ export const en = {
   "load.addToMemory": "Add to my memory",
   "load.anthologyAdded": "Anthology added to your memory",
   "load.sharedByPrefix": "Shared by",
+  "load.invalidSharedBy": "This share has an invalid sender name.",
+  "load.invalidSharedByDesc":
+    "Ask the sender to check their nametag, or import it as a backup at your own risk.",
+  "load.fileError": "Could not read the file",
+  "load.fileErrorDesc": "Use a valid JSON file under 10 MB.",
   "load.discoverPart": "Discover",
   "load.memoryPart": "Private Memory",
   "load.addedToMemory": "Added to your memory",
@@ -611,6 +616,8 @@ export const en = {
   "connect.decode.invalid-payload": "This QR isn't an Anthology share.",
   "connect.decode.missing-sender":
     "This share doesn't include a sender name. Ask the sender to update the app.",
+  "connect.decode.invalid-sender":
+    "This share has an invalid sender name. Ask the sender to check their nametag.",
   "connect.reviewTitle": "Review connection",
   "connect.wantsToConnect": "wants to connect",
   "connect.previewCounts": "{anthologies} anthologies · {memoirs} memoirs",
@@ -878,6 +885,12 @@ export const es: Record<TranslationKey, string> = {
   "load.addToMemory": "Añadir a mi memoria",
   "load.anthologyAdded": "Antología añadida a tu memoria",
   "load.sharedByPrefix": "Compartido por",
+  "load.invalidSharedBy":
+    "Esta compartición tiene un nombre de remitente no válido.",
+  "load.invalidSharedByDesc":
+    "Pide al remitente que revise su apodo o impórtalo como copia de seguridad bajo tu responsabilidad.",
+  "load.fileError": "No se pudo leer el archivo",
+  "load.fileErrorDesc": "Usa un archivo JSON válido de menos de 10 MB.",
   "load.discoverPart": "Explorar",
   "load.memoryPart": "Memoria privada",
   "load.addedToMemory": "Añadido a tu memoria",
@@ -1248,6 +1261,8 @@ export const es: Record<TranslationKey, string> = {
   "connect.decode.invalid-payload": "Este QR no es una antología compartida.",
   "connect.decode.missing-sender":
     "Esta compartición no incluye un nombre de remitente. Pide al remitente que actualice la app.",
+  "connect.decode.invalid-sender":
+    "Esta compartición tiene un nombre de remitente no válido. Pide al remitente que revise su apodo.",
   "connect.reviewTitle": "Revisar conexión",
   "connect.wantsToConnect": "quiere conectar",
   "connect.previewCounts": "{anthologies} antologías · {memoirs} memoirs",
