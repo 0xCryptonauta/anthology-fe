@@ -5,16 +5,19 @@ import {
   LoadedJson,
   validateJsonContentType,
 } from "@src/utils/validateJsonContentType";
-import { useAppDispatch } from "@src/store/utils/hooks";
+import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 import { LOCAL_USER_PATH } from "@src/utils/constants";
-import { CurrentPaths } from "@src/types/common";
+import { Address, CurrentPaths } from "@src/types/common";
+import type { SharedBy } from "@src/types/connect";
 import { useNavigate } from "react-router-dom";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
+import { markAnthologiesReceived } from "@src/store/slices/localAnthologySlice";
 import {
   addDiscoveriesToMemory,
   addMemoryToMemory,
   addOneAnthologyToLocal,
 } from "@src/utils/applyLoadedJson";
+import { validateSharedBy } from "@src/utils/shareEnvelope";
 import { useToast } from "./Toast";
 import { useTranslation } from "@src/i18n/useTranslation";
 
@@ -22,6 +25,7 @@ export const LoadReduxStore = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const ownDeviceId = useAppSelector((state) => state.connect.deviceId);
 
   const { addToast } = useToast();
 
@@ -39,6 +43,7 @@ export const LoadReduxStore = () => {
   const [loadLocalMemory, setLoadLocalMemory] = useState(false);
 
   const [loadedJsonState, setLoadedJsonState] = useState<LoadedJson>({});
+  const [sharedBy, setSharedBy] = useState<SharedBy | null>(null);
 
   const handleJsonLoad = async () => {
     setIsValidJson(undefined);
@@ -46,8 +51,9 @@ export const LoadReduxStore = () => {
     setHasLocal(false);
     setIsOneAnthology(false);
     setLoadedJsonState({});
+    setSharedBy(null);
 
-    const loadedState = await loadJsonAsObj();
+    const loadedState = await loadJsonAsObj<LoadedJson>();
     const {
       hasDiscovery: hasDiscoveryJson,
       hasLocal: hasLocalJson,
@@ -63,6 +69,7 @@ export const LoadReduxStore = () => {
     if (hasDiscoveryJson || hasLocalJson || isOneAnthologyJson) {
       setIsValidJson(true);
       setLoadedJsonState(loadedState);
+      setSharedBy(validateSharedBy(loadedState.sharedBy));
     } else {
       setIsValidJson(false);
     }
@@ -177,6 +184,19 @@ export const LoadReduxStore = () => {
                     <span>{loadedJsonState.anthology?.title}</span>
                   </div>
                 )}
+
+                {sharedBy && (
+                  <div
+                    style={{
+                      color: "#4a5568",
+                      fontSize: "14px",
+                      marginTop: "8px",
+                    }}
+                  >
+                    {t("load.sharedByPrefix")}{" "}
+                    <span translate="no">{sharedBy.nametag}</span>
+                  </div>
+                )}
               </div>
             ) : (
               <button
@@ -263,8 +283,25 @@ export const LoadReduxStore = () => {
                 fontWeight: "500",
               }}
               onClick={() => {
+                let importedAddresses: Address[] = [];
+
                 if (isOneAnthology) {
-                  addOneAnthologyToLocal(dispatch, loadedJsonState);
+                  importedAddresses = addOneAnthologyToLocal(
+                    dispatch,
+                    loadedJsonState
+                  );
+
+                  if (sharedBy && sharedBy.deviceId !== ownDeviceId) {
+                    dispatch(
+                      markAnthologiesReceived({
+                        addresses: importedAddresses,
+                        deviceId: sharedBy.deviceId,
+                        nametag: sharedBy.nametag,
+                        receivedAt: Date.now(),
+                      })
+                    );
+                  }
+
                   const newPath =
                     "contract/" + loadedJsonState.anthology?.contractAddr;
                   navigate("/");
@@ -301,8 +338,26 @@ export const LoadReduxStore = () => {
                 }
 
                 if (shouldLoadLocal) {
-                  addMemoryToMemory(dispatch, loadedJsonState);
+                  importedAddresses = addMemoryToMemory(
+                    dispatch,
+                    loadedJsonState
+                  );
                   newPath = LOCAL_USER_PATH;
+                }
+
+                if (
+                  sharedBy &&
+                  importedAddresses.length > 0 &&
+                  sharedBy.deviceId !== ownDeviceId
+                ) {
+                  dispatch(
+                    markAnthologiesReceived({
+                      addresses: importedAddresses,
+                      deviceId: sharedBy.deviceId,
+                      nametag: sharedBy.nametag,
+                      receivedAt: Date.now(),
+                    })
+                  );
                 }
 
                 addToast({
