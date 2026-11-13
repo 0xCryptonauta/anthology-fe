@@ -582,6 +582,31 @@ export const en = {
   "connect.unsupported":
     "This browser can't stream QR codes. Download the share file instead.",
   "connect.shareGroupTitle": "Share private anthologies",
+  "connect.receiveTitle": "Scan to connect",
+  "connect.scanningHint": "Point the camera at the other device's code.",
+  "connect.cameraPreview": "Camera preview for scanning a connection QR",
+  "connect.blocks": "{solved} / {total} blocks · {percent}% · {rate} frames/s",
+  "connect.cameraSwitch": "Switch camera",
+  "connect.switching": "Switching…",
+  "connect.cameraError": "Camera unavailable. Check permissions and try again.",
+  "connect.decoderError":
+    "The QR decoder could not load. Open the app once with internet, then try again.",
+  "connect.readerError": "The stream could not be read. Try scanning again.",
+  "connect.stale": "A different stream is being received. Scan again to switch.",
+  "connect.decode.invalid-json": "This QR isn't valid JSON.",
+  "connect.decode.invalid-payload": "This QR isn't an Anthology share.",
+  "connect.decode.missing-sender":
+    "This share doesn't include a sender name. Ask the sender to update the app.",
+  "connect.reviewTitle": "Review connection",
+  "connect.wantsToConnect": "wants to connect",
+  "connect.previewCounts": "{anthologies} anthologies · {memoirs} memoirs",
+  "connect.addToMemory": "Add to memory",
+  "connect.scanAgain": "Scan again",
+  "connect.imported": "Connected with {name}",
+  "connect.importedDesc":
+    "{anthologies} anthologies and {memoirs} memoirs added to your memory.",
+  "connect.selfShare":
+    "That's your own share — the content is already in your memory.",
   "connect.deleteCopyTitle": "Remove this connected anthology?",
   "connect.deleteCopyDesc":
     "This removes your copy only. The sender's anthology is unchanged.",
@@ -1175,6 +1200,35 @@ export const es: Record<TranslationKey, string> = {
   "connect.unsupported":
     "Este navegador no puede transmitir códigos QR. Descarga el archivo para compartir.",
   "connect.shareGroupTitle": "Compartir antologías privadas",
+  "connect.receiveTitle": "Escanear para conectar",
+  "connect.scanningHint": "Apunta la cámara al código del otro dispositivo.",
+  "connect.cameraPreview": "Vista de la cámara para escanear un QR de conexión",
+  "connect.blocks":
+    "{solved} / {total} bloques · {percent}% · {rate} fotogramas/s",
+  "connect.cameraSwitch": "Cambiar cámara",
+  "connect.switching": "Cambiando…",
+  "connect.cameraError":
+    "Cámara no disponible. Revisa los permisos e inténtalo de nuevo.",
+  "connect.decoderError":
+    "No se pudo cargar el decodificador QR. Abre la app una vez con internet e inténtalo de nuevo.",
+  "connect.readerError":
+    "No se pudo leer la transmisión. Intenta escanear de nuevo.",
+  "connect.stale":
+    "Se está recibiendo otra transmisión. Escanea de nuevo para cambiar.",
+  "connect.decode.invalid-json": "Este QR no es JSON válido.",
+  "connect.decode.invalid-payload": "Este QR no es una antología compartida.",
+  "connect.decode.missing-sender":
+    "Esta compartición no incluye un nombre de remitente. Pide al remitente que actualice la app.",
+  "connect.reviewTitle": "Revisar conexión",
+  "connect.wantsToConnect": "quiere conectar",
+  "connect.previewCounts": "{anthologies} antologías · {memoirs} memoirs",
+  "connect.addToMemory": "Añadir a la memoria",
+  "connect.scanAgain": "Escanear de nuevo",
+  "connect.imported": "Conectado con {name}",
+  "connect.importedDesc":
+    "{anthologies} antologías y {memoirs} memoirs añadidos a tu memoria.",
+  "connect.selfShare":
+    "Es tu propia compartición: el contenido ya está en tu memoria.",
   "connect.deleteCopyTitle": "¿Eliminar esta antología conectada?",
   "connect.deleteCopyDesc":
     "Esto elimina solo tu copia. La antología del remitente no cambia.",
