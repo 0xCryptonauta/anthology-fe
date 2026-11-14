@@ -237,11 +237,11 @@ The QR receiver uses `getUserMedia`, which browsers only allow on HTTPS (or `loc
 3. Open that URL on the phone (Tailscale on) and allow camera access.
 4. Test both directions: Mac sender (`http://localhost:4174`) → phone receiver, then phone sender → Mac receiver. Share a single anthology and a group; verify the Connect contact and the read-only view.
 5. Offline PWA: install the Tailscale URL on the phone, load once online, then enable airplane mode and reload.
-6. Stop with Ctrl+C. Tailscale Serve stays configured; remove it with `tailscale serve reset`, or run the script with `--reset-serve`.
+6. Stop with Ctrl+C. If the script created the Tailscale Serve entry, it removes it on exit. If Serve was already configured, it leaves the existing config in place and prints a warning; use `--reset-serve` to force a reset or `--keep-serve` to leave the entry the script created.
 
 `preview:tailscale` sets `preview.allowedHosts` from the Tailscale DNS name, so no repo or Vite config change is needed. `tailscale serve` is tailnet-only; use `tailscale funnel` if you need a public URL.
 
-Useful flags: `--build` (run the production build first), `--port <n>` (default 4174), `--reset-serve` (clear Tailscale Serve on exit).
+Useful flags: `--build` (run the production build first), `--port <n>` (default 4174), `--reset-serve` (force a reset even if Serve was already configured), `--keep-serve` (never reset).
 
 Troubleshooting:
 
