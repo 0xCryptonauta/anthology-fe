@@ -1,7 +1,16 @@
 import type { localAnthologyState } from "@src/store/slices/localAnthologySlice";
 import type { Address } from "@src/types/common";
 import type { ReceivedFrom } from "@src/types/connect";
+import { LOCAL_USER_ADDR } from "@src/utils/constants";
 import type { LocalMemoryPayload } from "@src/utils/validateJsonContentType";
+
+/** Anthologies created by the local user, excluding connected ones. */
+export const getOwnLocalAddresses = (
+  local: localAnthologyState
+): Address[] =>
+  (local.userContracts?.[LOCAL_USER_ADDR] || []).filter(
+    (address) => !local.receivedFrom?.[address]
+  );
 
 /**
  * Connected anthologies are not re-shareable. Keep the own addresses and

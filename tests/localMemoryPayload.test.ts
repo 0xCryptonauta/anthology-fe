@@ -1,5 +1,10 @@
 import { describe, expect, test } from "bun:test";
-import { filterShareableAddresses } from "../src/utils/localMemoryPayload";
+import {
+  filterShareableAddresses,
+  getOwnLocalAddresses,
+} from "../src/utils/localMemoryPayload";
+import { LOCAL_USER_ADDR } from "../src/utils/constants";
+import type { localAnthologyState } from "../src/store/slices/localAnthologySlice";
 
 const a = "0x11111111111111111111" as const;
 const b = "0x22222222222222222222" as const;
@@ -9,6 +14,26 @@ const received = {
   nametag: "Ana",
   receivedAt: 1,
 };
+
+describe("getOwnLocalAddresses", () => {
+  test("keeps only addresses without provenance", () => {
+    const local = {
+      userContracts: { [LOCAL_USER_ADDR]: [a, b, c] },
+      receivedFrom: { [b]: received },
+    } as unknown as localAnthologyState;
+
+    expect(getOwnLocalAddresses(local)).toEqual([a, c]);
+  });
+
+  test("returns an empty list when every local address is connected", () => {
+    const local = {
+      userContracts: { [LOCAL_USER_ADDR]: [a] },
+      receivedFrom: { [a]: received },
+    } as unknown as localAnthologyState;
+
+    expect(getOwnLocalAddresses(local)).toEqual([]);
+  });
+});
 
 describe("filterShareableAddresses", () => {
   test("excludes connected addresses and reports how many were skipped", () => {

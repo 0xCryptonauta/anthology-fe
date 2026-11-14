@@ -631,11 +631,7 @@ export const en = {
   "connect.deleteCopyTitle": "Remove this connected anthology?",
   "connect.deleteCopyDesc":
     "This removes your copy only. The sender's anthology is unchanged.",
-  "connect.downloadConnectedTitle":
-    "Download includes connected anthologies",
   "connect.downloadConnectedTitleOne": "Download a connected anthology",
-  "connect.downloadConnectedDesc":
-    "This includes {count} connected anthologies. The downloaded JSON can be edited on another device. Continue?",
   "connect.downloadConnectedDescOne":
     "The downloaded JSON can be edited on another device. Continue?",
   "connect.downloadConnectedConfirm": "Download",
@@ -1295,12 +1291,8 @@ export const es: Record<TranslationKey, string> = {
   "connect.deleteCopyTitle": "¿Eliminar esta antología conectada?",
   "connect.deleteCopyDesc":
     "Esto elimina solo tu copia. La antología del remitente no cambia.",
-  "connect.downloadConnectedTitle":
-    "La descarga incluye antologías conectadas",
   "connect.downloadConnectedTitleOne":
     "Descargar una antología conectada",
-  "connect.downloadConnectedDesc":
-    "Incluye {count} antologías conectadas. El JSON descargado se puede editar en otro dispositivo. ¿Continuar?",
   "connect.downloadConnectedDescOne":
     "El JSON descargado se puede editar en otro dispositivo. ¿Continuar?",
   "connect.downloadConnectedConfirm": "Descargar",

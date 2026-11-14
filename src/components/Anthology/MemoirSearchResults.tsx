@@ -25,6 +25,9 @@ export const MemoirSearchResults = ({ term }: { term: string }) => {
   const { t } = useTranslation();
   const localAnthologies = useAppSelector((s) => s.localAnthology.anthologies);
   const localTitles = useAppSelector((s) => s.localAnthology.contractsTitles);
+  const receivedFrom = useAppSelector(
+    (s) => s.localAnthology.receivedFrom ?? {}
+  );
   const onchainAnthologies = useAppSelector((s) => s.anthology);
 
   const dispatch = useAppDispatch();
@@ -39,6 +42,9 @@ export const MemoirSearchResults = ({ term }: { term: string }) => {
     (
       Object.entries(localAnthologies) as [Address, MemoirInterface[]][]
     ).forEach(([addr, memoirs]) => {
+      // Private Memory search must not surface connected anthologies.
+      if (receivedFrom[addr]) return;
+
       memoirs.forEach((memoir, index) => {
         if (
           matchesSearch(memoir.title, normalizedTerm) ||
@@ -77,7 +83,7 @@ export const MemoirSearchResults = ({ term }: { term: string }) => {
     });
 
     return out;
-  }, [term, localAnthologies, localTitles, onchainAnthologies]);
+  }, [term, localAnthologies, localTitles, receivedFrom, onchainAnthologies]);
 
   const openAnthology = (addr: Address) => {
     dispatch(updateCurrentPath(`contract/${addr}`));

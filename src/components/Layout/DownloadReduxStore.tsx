@@ -11,7 +11,7 @@ import { localAnthologyState } from "@src/store/slices/localAnthologySlice";
 import { useTranslation } from "@src/i18n/useTranslation";
 import {
   filterShareableAddresses,
-  pickLocalMemory,
+  getOwnLocalAddresses,
 } from "@src/utils/localMemoryPayload";
 import type {
   LoadedJson,
@@ -64,29 +64,28 @@ export const DownloadReduxStore = () => {
     payload: LoadedJson;
     filename: string;
   } | null>(null);
-  const [pendingDownload, setPendingDownload] = useState<{
-    data: Record<string, unknown>;
-    filename: string;
-    connectedCount: number;
-  } | null>(null);
 
   const receivedFrom = localAnthology.receivedFrom ?? {};
+  const ownAddresses = useMemo(
+    () => getOwnLocalAddresses(localAnthology),
+    [localAnthology]
+  );
 
   const handleClose = () => {
     setShow(false);
     setSharePayload(null);
-    setPendingDownload(null);
     setSelectionScreen(false);
   };
 
-  const localUserTitles: MemoirContent[] = useMemo(() => {
-    const contracts = localAnthology.userContracts?.[LOCAL_USER_ADDR] || [];
-    return contracts.map((addr, i) => ({
-      address: addr,
-      title: localAnthology.contractsTitles[addr] || "",
-      originalIndex: i,
-    }));
-  }, [localAnthology]);
+  const localUserTitles: MemoirContent[] = useMemo(
+    () =>
+      ownAddresses.map((addr, i) => ({
+        address: addr,
+        title: localAnthology.contractsTitles[addr] || "",
+        originalIndex: i,
+      })),
+    [ownAddresses, localAnthology.contractsTitles]
+  );
 
   const openShare = (selected?: Set<string>) => {
     if (addNewFileName && newFileName.trim() === "") {
@@ -103,11 +102,9 @@ export const DownloadReduxStore = () => {
 
     if (!selected && !addLocal) return;
 
-    const localAddresses =
-      localAnthology.userContracts?.[LOCAL_USER_ADDR] || [];
     const selectedAddresses = (selected
       ? [...selected]
-      : localAddresses) as Address[];
+      : ownAddresses) as Address[];
     const { shareable, skipped } = filterShareableAddresses(
       selectedAddresses,
       receivedFrom
@@ -190,7 +187,10 @@ export const DownloadReduxStore = () => {
     if (addLocal) {
       dataToDownload = {
         ...dataToDownload,
-        localMemory: pickLocalMemory(localAnthology),
+        localMemory: filterLocalByAddresses(
+          localAnthology,
+          new Set(ownAddresses)
+        ),
       };
     }
 
@@ -199,24 +199,10 @@ export const DownloadReduxStore = () => {
     fileName += addLocal && addDiscovery ? "_&_" : "";
     fileName += addLocal ? "local_anthology" : "";
 
-    const localAddresses = addLocal
-      ? localAnthology.userContracts?.[LOCAL_USER_ADDR] || []
-      : [];
-    const connectedCount = localAddresses.filter(
-      (address) => receivedFrom[address]
-    ).length;
-    const finalName = addNewFileName ? newFileName : fileName;
-
-    if (connectedCount > 0) {
-      setPendingDownload({
-        data: dataToDownload,
-        filename: finalName,
-        connectedCount,
-      });
-      return;
-    }
-
-    downloadObjAsJson(dataToDownload, finalName);
+    downloadObjAsJson(
+      dataToDownload,
+      addNewFileName ? newFileName : fileName
+    );
   };
 
   const handleCustomDownload = (selected: Set<string>) => {
@@ -244,22 +230,10 @@ export const DownloadReduxStore = () => {
     fileName += addDiscovery && selected.size > 0 ? "_&_" : "";
     fileName += selected.size > 0 ? "local_anthology" : "";
 
-    const connectedCount = [...selected].filter(
-      (address) => receivedFrom[address as Address]
-    ).length;
-    const finalName = addNewFileName ? newFileName : fileName;
-
-    if (connectedCount > 0) {
-      setPendingDownload({
-        data: dataToDownload,
-        filename: finalName,
-        connectedCount,
-      });
-      setSelectionScreen(false);
-      return;
-    }
-
-    downloadObjAsJson(dataToDownload, finalName);
+    downloadObjAsJson(
+      dataToDownload,
+      addNewFileName ? newFileName : fileName
+    );
     setSelectionScreen(false);
   };
 
@@ -301,64 +275,7 @@ export const DownloadReduxStore = () => {
           color: "#1a1a1a",
         }}
       >
-        {pendingDownload ? (
-          <div
-            style={{
-              padding: "20px 16px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "10px",
-              color: "#1a1a1a",
-              textAlign: "center",
-            }}
-          >
-            <h3 style={{ margin: 0 }}>
-              {t("connect.downloadConnectedTitle")}
-            </h3>
-            <p style={{ margin: 0 }}>
-              {t("connect.downloadConnectedDesc", {
-                count: pendingDownload.connectedCount,
-              })}
-            </p>
-            <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
-              <button
-                type="button"
-                onClick={() => setPendingDownload(null)}
-                style={{
-                  backgroundColor: "#e2e8f0",
-                  color: "#1a1a1a",
-                  padding: "10px 20px",
-                  borderRadius: "5px",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-              >
-                {t("common.cancel")}
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  downloadObjAsJson(
-                    pendingDownload.data,
-                    pendingDownload.filename
-                  );
-                  setPendingDownload(null);
-                }}
-                style={{
-                  backgroundColor: "#2b6cb0",
-                  color: "white",
-                  padding: "10px 20px",
-                  borderRadius: "5px",
-                  border: "none",
-                  cursor: "pointer",
-                }}
-              >
-                {t("connect.downloadConnectedConfirm")}
-              </button>
-            </div>
-          </div>
-        ) : sharePayload ? (
+        {sharePayload ? (
           <div
             style={{
               padding: "20px 16px",
