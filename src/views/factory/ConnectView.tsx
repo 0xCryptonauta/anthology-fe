@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 import { ensureDeviceId } from "@src/store/slices/connectSlice";
 import { groupConnections } from "@src/utils/groupConnections";
-import { shortenAddress } from "@src/utils/shortenAddress";
 import { QrStreamReceiverModal } from "@src/components/Connect/QrStreamReceiverModal";
 import { ConnectContactSection } from "@src/components/Connect/ConnectContactSection";
 import { useTranslation } from "@src/i18n/useTranslation";
@@ -31,6 +30,13 @@ export const ConnectView = () => {
     () => groupConnections(receivedFrom, anthologies, contractsTitles),
     [receivedFrom, anthologies, contractsTitles]
   );
+  const nametagCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const group of groups) {
+      counts[group.nametag] = (counts[group.nametag] ?? 0) + 1;
+    }
+    return counts;
+  }, [groups]);
 
   return (
     <div
@@ -65,20 +71,8 @@ export const ConnectView = () => {
         <span translate="no" style={{ fontWeight: 600 }}>
           {nametag || "—"}
         </span>
-        {deviceId && (
-          <span
-            translate="no"
-            style={{
-              fontFamily: "monospace",
-              fontSize: "12px",
-              color: "#94a3b8",
-            }}
-          >
-            {shortenAddress(deviceId, 8, 4)}
-          </span>
-        )}
         <Link to="/settings" style={{ color: "#7dd3fc" }}>
-          {t("connect.editName")}
+          {t("connect.changeNametag")}
         </Link>
       </div>
 
@@ -125,7 +119,11 @@ export const ConnectView = () => {
           }}
         >
           {groups.map((group) => (
-            <ConnectContactSection key={group.deviceId} group={group} />
+            <ConnectContactSection
+              key={group.deviceId}
+              group={group}
+              hasDuplicateNametag={(nametagCounts[group.nametag] ?? 0) > 1}
+            />
           ))}
         </div>
       )}

@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { MAX_INPUT_BYTES, PRESETS } from "@orozcoh/qr-stream";
 import { useQrStreamWriter } from "@orozcoh/qr-stream/react";
 import {
@@ -6,7 +6,7 @@ import {
   renderQrStream,
 } from "@orozcoh/qr-stream/browser";
 import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
-import { ensureDeviceId, setNametag } from "@src/store/slices/connectSlice";
+import { ensureDeviceId } from "@src/store/slices/connectSlice";
 import {
   buildShareEnvelope,
   validateNametag,
@@ -14,6 +14,7 @@ import {
 import type { LoadedJson } from "@src/utils/validateJsonContentType";
 import { downloadObjAsJson } from "@src/utils/downloadObjAsJson";
 import { useTranslation } from "@src/i18n/useTranslation";
+import { NametagForm } from "@src/components/Layout/NametagForm";
 
 interface QrStreamSharePanelProps {
   payload: LoadedJson;
@@ -34,35 +35,26 @@ export const QrStreamSharePanel = ({
   const dispatch = useAppDispatch();
   const { deviceId, nametag } = useAppSelector((state) => state.connect);
 
-  const [draft, setDraft] = useState(nametag);
   const [running, setRunning] = useState(false);
+  const [view, setView] = useState<"share" | "nametag">("share");
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const nameInputRef = useRef<HTMLInputElement>(null);
-  const nameInputId = useId();
-  const nameErrorId = useId();
 
   useEffect(() => {
     if (!deviceId) dispatch(ensureDeviceId());
   }, [deviceId, dispatch]);
 
   useEffect(() => {
-    setDraft(nametag);
-  }, [nametag]);
+    if (view !== "share") setRunning(false);
+  }, [view]);
 
-  const nameError = validateNametag(draft);
-  const nameErrorMessage =
-    nameError === "empty"
-      ? t("connect.nametagEmpty")
-      : nameError === "too-long"
-      ? t("connect.nametagTooLong")
-      : null;
+  const hasNametag = validateNametag(nametag) === null;
 
   const sharedBy = useMemo(
     () =>
-      deviceId && !nameError
-        ? { deviceId, nametag: draft.trim() }
+      deviceId && hasNametag
+        ? { deviceId, nametag: nametag.trim() }
         : null,
-    [deviceId, nameError, draft]
+    [deviceId, hasNametag, nametag]
   );
 
   const bytes = useMemo(
@@ -106,22 +98,10 @@ export const QrStreamSharePanel = ({
     ? estimateTransferSeconds(writer.k, STREAM_FPS)
     : null;
 
-  const handleSaveNametag = () => {
-    if (nameError) return;
-    dispatch(setNametag(draft));
-    setDraft(draft.trim());
-  };
-
   const handleDownloadShareFile = () => {
     if (!sharedBy) return;
     downloadObjAsJson(buildShareEnvelope(payload, sharedBy), filename);
   };
-
-  const showNameField = !nametag || draft !== nametag;
-
-  useEffect(() => {
-    if (showNameField) nameInputRef.current?.focus();
-  }, [showNameField]);
 
   return (
     <div
@@ -155,146 +135,137 @@ export const QrStreamSharePanel = ({
 
       <h3 style={{ margin: 0, textAlign: "center" }}>{title}</h3>
 
-      {showNameField && (
-        <div style={{ width: "100%", display: "grid", gap: "4px" }}>
-          <label htmlFor={nameInputId} style={{ fontSize: "12px", fontWeight: 500 }}>
-            {t("connect.nametagLabel")}
-          </label>
-          <div style={{ display: "flex", gap: "6px" }}>
-            <input
-              ref={nameInputRef}
-              id={nameInputId}
-              type="text"
-              value={draft}
-              maxLength={32}
-              translate="no"
-              aria-invalid={!!nameError}
-              aria-describedby={nameErrorMessage ? nameErrorId : undefined}
-              onChange={(event) => setDraft(event.target.value)}
+      {view === "nametag" ? (
+        <NametagForm
+          onSaved={() => setView("share")}
+          onCancel={() => setView("share")}
+        />
+      ) : (
+        <>
+          <button
+            type="button"
+            onClick={() => setView("nametag")}
+            style={{
+              background: "none",
+              border: "none",
+              padding: 0,
+              cursor: "pointer",
+              fontSize: "13px",
+              color: hasNametag ? "#4a5568" : "#c53030",
+              textDecoration: "underline",
+            }}
+          >
+            {hasNametag
+              ? t("connect.changeNametag")
+              : t("connect.setNametag")}
+          </button>
+
+          <div
+            style={{
+              width: 280,
+              height: 280,
+              maxWidth: "100%",
+              borderRadius: "10px",
+              backgroundColor: "#fff",
+              border: "1px solid #e2e8f0",
+              display: "grid",
+              placeItems: "center",
+              overflow: "hidden",
+              boxSizing: "border-box",
+            }}
+          >
+            <canvas
+              ref={canvasRef}
+              role="img"
+              aria-label={t("connect.qrAria")}
               style={{
-                flex: 1,
-                minWidth: 0,
-                padding: "8px 10px",
-                borderRadius: "6px",
-                border: nameError ? "1px solid #dc2626" : "1px solid #ccc",
-                fontSize: "14px",
-                color: "#1a1a1a",
-                backgroundColor: "#fff",
+                maxWidth: "100%",
+                maxHeight: "100%",
+                imageRendering: "pixelated",
               }}
             />
-            <button
-              type="button"
-              onClick={handleSaveNametag}
-              disabled={!!nameError}
-              style={{
-                padding: "8px 10px",
-                borderRadius: "6px",
-                border: "none",
-                backgroundColor: nameError ? "#a0aec0" : "#2b6cb0",
-                color: "#fff",
-                cursor: nameError ? "not-allowed" : "pointer",
-              }}
-            >
-              {t("common.save")}
-            </button>
           </div>
-          {nameErrorMessage && (
-            <span id={nameErrorId} role="alert" style={{ color: "#dc2626", fontSize: "12px" }}>
-              {nameErrorMessage}
+
+          <span
+            role="status"
+            aria-live="polite"
+            style={{ fontSize: "12px", color: "#4a5568" }}
+          >
+            {pending
+              ? t("connect.preparing")
+              : tooLarge
+              ? t("connect.tooLarge", { size: sizeKb })
+              : writerError
+              ? t("connect.unsupported")
+              : running
+              ? t("connect.streaming")
+              : t("connect.readyToStream")}
+          </span>
+
+          {!tooLarge && !writerError && estimate !== null && (
+            <span style={{ fontSize: "12px", color: "#4a5568" }}>
+              {t("connect.estimated", {
+                seconds: estimate,
+                size: sizeKb,
+              })}
             </span>
           )}
-        </div>
+
+          <button
+            type="button"
+            onClick={() => setRunning((value) => !value)}
+            disabled={!sharedBy || tooLarge || !writer || !!writerError}
+            style={{
+              width: "100%",
+              padding: "10px 16px",
+              borderRadius: "8px",
+              border: "none",
+              backgroundColor:
+                !sharedBy || tooLarge || !writer || writerError
+                  ? "#a0aec0"
+                  : running
+                  ? "#c53030"
+                  : "#2b6cb0",
+              color: "#fff",
+              fontWeight: 600,
+              cursor:
+                !sharedBy || tooLarge || !writer || writerError
+                  ? "not-allowed"
+                  : "pointer",
+            }}
+          >
+            {running ? t("connect.stop") : t("connect.start")}
+          </button>
+
+          <button
+            type="button"
+            onClick={handleDownloadShareFile}
+            disabled={!sharedBy}
+            style={{
+              background: "none",
+              border: "none",
+              color: sharedBy ? "#2b6cb0" : "#a0aec0",
+              cursor: sharedBy ? "pointer" : "not-allowed",
+              fontSize: "12px",
+              textDecoration: "underline",
+              padding: 0,
+            }}
+          >
+            {t("connect.downloadShareFile")}
+          </button>
+
+          <p
+            style={{
+              margin: 0,
+              fontSize: "11px",
+              color: "#718096",
+              textAlign: "center",
+            }}
+          >
+            {t("connect.streamHint")}
+          </p>
+        </>
       )}
-
-      <div
-        style={{
-          width: 280,
-          height: 280,
-          maxWidth: "100%",
-          borderRadius: "10px",
-          backgroundColor: "#fff",
-          border: "1px solid #e2e8f0",
-          display: "grid",
-          placeItems: "center",
-          overflow: "hidden",
-          boxSizing: "border-box",
-        }}
-      >
-        <canvas
-          ref={canvasRef}
-          role="img"
-          aria-label={t("connect.qrAria")}
-          style={{ maxWidth: "100%", maxHeight: "100%", imageRendering: "pixelated" }}
-        />
-      </div>
-
-      <span role="status" aria-live="polite" style={{ fontSize: "12px", color: "#4a5568" }}>
-        {pending
-          ? t("connect.preparing")
-          : tooLarge
-          ? t("connect.tooLarge", { size: sizeKb })
-          : writerError
-          ? t("connect.unsupported")
-          : running
-          ? t("connect.streaming")
-          : t("connect.readyToStream")}
-      </span>
-
-      {!tooLarge && !writerError && estimate !== null && (
-        <span style={{ fontSize: "12px", color: "#4a5568" }}>
-          {t("connect.estimated", {
-            seconds: estimate,
-            size: sizeKb,
-          })}
-        </span>
-      )}
-
-      <button
-        type="button"
-        onClick={() => setRunning((value) => !value)}
-        disabled={!sharedBy || tooLarge || !writer || !!writerError}
-        style={{
-          width: "100%",
-          padding: "10px 16px",
-          borderRadius: "8px",
-          border: "none",
-          backgroundColor:
-            !sharedBy || tooLarge || !writer || writerError
-              ? "#a0aec0"
-              : running
-              ? "#c53030"
-              : "#2b6cb0",
-          color: "#fff",
-          fontWeight: 600,
-          cursor:
-            !sharedBy || tooLarge || !writer || writerError
-              ? "not-allowed"
-              : "pointer",
-        }}
-      >
-        {running ? t("connect.stop") : t("connect.start")}
-      </button>
-
-      <button
-        type="button"
-        onClick={handleDownloadShareFile}
-        disabled={!sharedBy}
-        style={{
-          background: "none",
-          border: "none",
-          color: sharedBy ? "#2b6cb0" : "#a0aec0",
-          cursor: sharedBy ? "pointer" : "not-allowed",
-          fontSize: "12px",
-          textDecoration: "underline",
-          padding: 0,
-        }}
-      >
-        {t("connect.downloadShareFile")}
-      </button>
-
-      <p style={{ margin: 0, fontSize: "11px", color: "#718096", textAlign: "center" }}>
-        {t("connect.streamHint")}
-      </p>
     </div>
   );
 };

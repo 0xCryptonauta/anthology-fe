@@ -92,17 +92,20 @@ const MemoirActionsBase = ({
 
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "18px" }}>
-      {isLocalAnthology(anthologyAddr) && !isReadOnly && (
+      {isLocalAnthology(anthologyAddr) && (
         <>
-          <EditMemoir
-            anthologyAddr={anthologyAddr}
-            index={index}
-            memoir={memoir}
-          />
+          {!isReadOnly && (
+            <EditMemoir
+              anthologyAddr={anthologyAddr}
+              index={index}
+              memoir={memoir}
+            />
+          )}
           <MoveMemoir
             anthologyAddr={anthologyAddr}
             index={index}
             memoir={memoir}
+            copyOnly={isReadOnly}
           />
         </>
       )}

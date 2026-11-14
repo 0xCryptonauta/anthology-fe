@@ -3,6 +3,7 @@ import {
   useEffect,
   useMemo,
   useState,
+  type CSSProperties,
   type RefObject,
 } from "react";
 import { useCameraReader, useQrStreamReader } from "@orozcoh/qr-stream/react";
@@ -36,6 +37,22 @@ const DECODE_ERROR_KEYS = {
 } as const;
 
 type Phase = "scanning" | "preview" | "error";
+
+const secondaryButtonStyle: CSSProperties = {
+  padding: "8px 14px",
+  borderRadius: "8px",
+  border: "1px solid #cbd5e1",
+  backgroundColor: "#edf2f7",
+  color: "#1a1a1a",
+  fontWeight: 500,
+  cursor: "pointer",
+};
+
+const ghostButtonStyle: CSSProperties = {
+  ...secondaryButtonStyle,
+  backgroundColor: "transparent",
+  color: "#2b6cb0",
+};
 
 interface ParsedShare {
   kind: SharePayloadKind;
@@ -171,13 +188,17 @@ const ScannerView = ({
           type="button"
           onClick={() => void cycle()}
           disabled={switching}
-          style={{ cursor: switching ? "wait" : "pointer" }}
+          style={{
+            ...secondaryButtonStyle,
+            cursor: switching ? "wait" : "pointer",
+            opacity: switching ? 0.6 : 1,
+          }}
         >
           {switching ? t("connect.switching") : t("connect.cameraSwitch")}
         </button>
       )}
 
-      <button type="button" onClick={onClose}>
+      <button type="button" onClick={onClose} style={ghostButtonStyle}>
         {t("common.cancel")}
       </button>
     </div>
@@ -306,10 +327,14 @@ export const QrStreamReceiverModal = ({ onClose }: { onClose: () => void }) => {
           <p role="alert" style={{ margin: 0, color: "#c53030" }}>
             {parseError}
           </p>
-          <button type="button" onClick={resetToScanning}>
+          <button
+            type="button"
+            onClick={resetToScanning}
+            style={secondaryButtonStyle}
+          >
             {t("connect.scanAgain")}
           </button>
-          <button type="button" onClick={onClose}>
+          <button type="button" onClick={onClose} style={ghostButtonStyle}>
             {t("common.cancel")}
           </button>
         </div>
@@ -360,10 +385,14 @@ export const QrStreamReceiverModal = ({ onClose }: { onClose: () => void }) => {
           >
             {t("connect.addToMemory")}
           </button>
-          <button type="button" onClick={resetToScanning}>
+          <button
+            type="button"
+            onClick={resetToScanning}
+            style={secondaryButtonStyle}
+          >
             {t("connect.scanAgain")}
           </button>
-          <button type="button" onClick={onClose}>
+          <button type="button" onClick={onClose} style={ghostButtonStyle}>
             {t("common.cancel")}
           </button>
         </div>

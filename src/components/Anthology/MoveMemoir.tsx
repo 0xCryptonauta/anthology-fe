@@ -6,6 +6,8 @@ import {
   deleteMemoirAtIndexFromUserLocalAnthology,
 } from "@src/store/slices/localAnthologySlice";
 import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
+import { LOCAL_USER_ADDR } from "@src/utils/constants";
+import { buildCopiedMemoir } from "@src/utils/memoirCopy";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 import { writeAnthology } from "@src/contract-functions/anthologyFunctions";
 import { useAccount } from "wagmi";
@@ -18,6 +20,8 @@ interface MoveMemoirProps {
   anthologyAddr: Address;
   index: number;
   memoir: MemoirInterface;
+  /** Read-only sources can only copy; moving would alter the source. */
+  copyOnly?: boolean;
 }
 
 /**
@@ -28,6 +32,7 @@ export const MoveMemoir = ({
   anthologyAddr,
   index,
   memoir,
+  copyOnly = false,
 }: MoveMemoirProps) => {
   const { t } = useTranslation();
   const [show, setShow] = useState(false);
@@ -42,8 +47,12 @@ export const MoveMemoir = ({
         <button
           type="button"
           className="icon-button"
-          title={t("move.title")}
-          aria-label={t("move.title")}
+          title={
+            copyOnly ? t("connect.copyMemoirTitle") : t("move.title")
+          }
+          aria-label={
+            copyOnly ? t("connect.copyMemoirTitle") : t("move.title")
+          }
           style={{ fontSize: "1rem" }}
           onClick={() => setShow(true)}
         >
@@ -60,6 +69,7 @@ export const MoveMemoir = ({
           anthologyAddr={anthologyAddr}
           index={index}
           memoir={memoir}
+          copyOnly={copyOnly}
           onClose={() => setShow(false)}
         />
       )}
@@ -71,6 +81,7 @@ const MoveMemoirForm = ({
   anthologyAddr,
   index,
   memoir,
+  copyOnly = false,
   onClose,
 }: MoveMemoirProps & { onClose: () => void }) => {
   const { t } = useTranslation();
@@ -82,6 +93,15 @@ const MoveMemoirForm = ({
   const { addToast } = useToast();
   const { isConnected } = useAccount();
   const { userAddr } = useAppSelector((s) => s.user);
+  const localContracts = useAppSelector(
+    (s) => s.localAnthology.userContracts[LOCAL_USER_ADDR] || []
+  );
+  const receivedFrom = useAppSelector(
+    (s) => s.localAnthology.receivedFrom ?? {}
+  );
+  const hasWritableDestination = localContracts.some(
+    (address) => !receivedFrom[address]
+  );
 
   const destIsLocal = destination !== "" && isLocalAnthology(destination);
 
@@ -134,7 +154,7 @@ const MoveMemoirForm = ({
         dispatch(
           addMemoirToUserLocalAnthology({
             contract: destination,
-            memoir: { ...memoir },
+            memoir: copyOnly ? buildCopiedMemoir(memoir) : { ...memoir },
           })
         );
       } else {
@@ -195,7 +215,9 @@ const MoveMemoirForm = ({
         boxSizing: "border-box",
       }}
     >
-      <h4 style={{ textAlign: "center", margin: 0 }}>{t("move.title")}</h4>
+      <h4 style={{ textAlign: "center", margin: 0 }}>
+        {copyOnly ? t("connect.copyMemoirTitle") : t("move.title")}
+      </h4>
 
       <div style={{ flex: "1 1 auto", minHeight: 0, overflowY: "auto" }}>
         <ContractSelector
@@ -205,42 +227,62 @@ const MoveMemoirForm = ({
         />
       </div>
 
-      <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
-        <label
+      {copyOnly && !hasWritableDestination && (
+        <p
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-            cursor: "pointer",
+            margin: 0,
+            color: "#b45309",
+            fontSize: "0.8rem",
+            textAlign: "center",
           }}
         >
-          <input
-            type="radio"
-            checked={mode === "copy"}
-            onChange={() => setMode("copy")}
-          />
-          {t("move.copyTo")}
-        </label>
-        <label
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "6px",
-            cursor: "pointer",
-          }}
-        >
-          <input
-            type="radio"
-            checked={mode === "move"}
-            onChange={() => setMode("move")}
-          />
-          {t("move.moveTo")}
-        </label>
-      </div>
+          {t("connect.copyNoDestination")}
+        </p>
+      )}
+
+      {!copyOnly && (
+        <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
+          <label
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              cursor: "pointer",
+            }}
+          >
+            <input
+              type="radio"
+              checked={mode === "copy"}
+              onChange={() => setMode("copy")}
+            />
+            {t("move.copyTo")}
+          </label>
+          <label
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+              cursor: "pointer",
+            }}
+          >
+            <input
+              type="radio"
+              checked={mode === "move"}
+              onChange={() => setMode("move")}
+            />
+            {t("move.moveTo")}
+          </label>
+        </div>
+      )}
 
       <button
+        type="button"
         onClick={handleConfirm}
-        disabled={!destination || isSubmitting}
+        disabled={
+          !destination ||
+          isSubmitting ||
+          (copyOnly && !hasWritableDestination)
+        }
         style={{
           padding: "0.75rem 1.25rem",
           borderRadius: "0.75rem",
@@ -249,12 +291,20 @@ const MoveMemoirForm = ({
           backgroundColor: "#111827",
           color: "#fff",
           border: "none",
-          cursor: destination && !isSubmitting ? "pointer" : "not-allowed",
-          opacity: destination && !isSubmitting ? 1 : 0.6,
+          cursor:
+            destination && !isSubmitting && (!copyOnly || hasWritableDestination)
+              ? "pointer"
+              : "not-allowed",
+          opacity:
+            destination && !isSubmitting && (!copyOnly || hasWritableDestination)
+              ? 1
+              : 0.6,
         }}
       >
         {isSubmitting
           ? t("move.saving")
+          : copyOnly
+          ? t("move.copy")
           : mode === "move"
           ? t("move.move")
           : t("move.copy")}

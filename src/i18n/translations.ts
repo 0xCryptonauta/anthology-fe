@@ -562,7 +562,8 @@ export const en = {
   "connect.subtitle": "Share private anthologies in person, without a server.",
   "connect.scan": "Scan to connect",
   "connect.yourNamePrefix": "You:",
-  "connect.editName": "Edit name",
+  "connect.setNametag": "Set Name Tag",
+  "connect.changeNametag": "Change Name Tag",
   "connect.empty":
     "No connections yet. Scan someone's QR to receive their private anthologies.",
   "connect.anthologyCount": "{count} anthologies",
@@ -583,7 +584,6 @@ export const en = {
   "connect.nametagEmpty": "Enter a name before sharing.",
   "connect.nametagTooLong": "Use 32 characters or fewer.",
   "connect.nametagSaved": "Nametag saved.",
-  "connect.deviceId": "Connection ID",
   "connect.shareTitle": "Share \"{title}\"",
   "connect.shareQr": "Share by QR",
   "connect.start": "Start stream",
@@ -631,6 +631,25 @@ export const en = {
   "connect.deleteCopyTitle": "Remove this connected anthology?",
   "connect.deleteCopyDesc":
     "This removes your copy only. The sender's anthology is unchanged.",
+  "connect.downloadConnectedTitle":
+    "Download includes connected anthologies",
+  "connect.downloadConnectedTitleOne": "Download a connected anthology",
+  "connect.downloadConnectedDesc":
+    "This includes {count} connected anthologies. The downloaded JSON can be edited on another device. Continue?",
+  "connect.downloadConnectedDescOne":
+    "The downloaded JSON can be edited on another device. Continue?",
+  "connect.downloadConnectedConfirm": "Download",
+  "connect.shareSkippedConnected":
+    "{count} connected anthologies were skipped",
+  "connect.shareSkippedConnectedDesc":
+    "Only your own anthologies can be shared.",
+  "connect.shareOnlyConnected":
+    "Only connected anthologies were selected",
+  "connect.shareOnlyConnectedDesc":
+    "Connected anthologies can't be re-shared. Select one of your own.",
+  "connect.copyMemoirTitle": "Copy to my anthology",
+  "connect.copyNoDestination":
+    "Create a private anthology of your own first.",
 
   /* --------------------------------- Search --------------------------------- */
   "search.result": "result",
@@ -1203,7 +1222,8 @@ export const es: Record<TranslationKey, string> = {
     "Comparte antologías privadas en persona, sin servidor.",
   "connect.scan": "Escanear para conectar",
   "connect.yourNamePrefix": "Tú:",
-  "connect.editName": "Editar nombre",
+  "connect.setNametag": "Configurar apodo",
+  "connect.changeNametag": "Cambiar apodo",
   "connect.empty":
     "Aún no hay conexiones. Escanea el QR de alguien para recibir sus antologías privadas.",
   "connect.anthologyCount": "{count} antologías",
@@ -1224,7 +1244,6 @@ export const es: Record<TranslationKey, string> = {
   "connect.nametagEmpty": "Escribe un nombre antes de compartir.",
   "connect.nametagTooLong": "Usa 32 caracteres o menos.",
   "connect.nametagSaved": "Apodo guardado.",
-  "connect.deviceId": "ID de conexión",
   "connect.shareTitle": "Compartir \"{title}\"",
   "connect.shareQr": "Compartir por QR",
   "connect.start": "Iniciar transmisión",
@@ -1276,6 +1295,26 @@ export const es: Record<TranslationKey, string> = {
   "connect.deleteCopyTitle": "¿Eliminar esta antología conectada?",
   "connect.deleteCopyDesc":
     "Esto elimina solo tu copia. La antología del remitente no cambia.",
+  "connect.downloadConnectedTitle":
+    "La descarga incluye antologías conectadas",
+  "connect.downloadConnectedTitleOne":
+    "Descargar una antología conectada",
+  "connect.downloadConnectedDesc":
+    "Incluye {count} antologías conectadas. El JSON descargado se puede editar en otro dispositivo. ¿Continuar?",
+  "connect.downloadConnectedDescOne":
+    "El JSON descargado se puede editar en otro dispositivo. ¿Continuar?",
+  "connect.downloadConnectedConfirm": "Descargar",
+  "connect.shareSkippedConnected":
+    "Se omitieron {count} antologías conectadas",
+  "connect.shareSkippedConnectedDesc":
+    "Solo se pueden compartir tus propias antologías.",
+  "connect.shareOnlyConnected":
+    "Solo se seleccionaron antologías conectadas",
+  "connect.shareOnlyConnectedDesc":
+    "Las antologías conectadas no se pueden volver a compartir. Elige una de las tuyas.",
+  "connect.copyMemoirTitle": "Copiar a mi antología",
+  "connect.copyNoDestination":
+    "Crea primero una antología privada tuya.",
 
   /* --------------------------------- Search --------------------------------- */
   "search.result": "resultado",

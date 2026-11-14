@@ -1,28 +1,25 @@
-import { useAppDispatch } from "@src/store/utils/hooks";
-import { updateCurrentPath } from "@src/store/slices/userSlice";
-import { shortenAddress } from "@src/utils/shortenAddress";
-import type { CurrentPaths } from "@src/types/common";
+import { useId, useState } from "react";
 import type { ConnectionGroup } from "@src/utils/groupConnections";
+import { formatContactName } from "@src/utils/connectDisplay";
+import { UserConnectedMemory } from "./UserConnectedMemory";
 import { useTranslation } from "@src/i18n/useTranslation";
 
 export const ConnectContactSection = ({
   group,
+  hasDuplicateNametag,
 }: {
   group: ConnectionGroup;
+  hasDuplicateNametag: boolean;
 }) => {
   const { t } = useTranslation();
-  const dispatch = useAppDispatch();
+  const [expanded, setExpanded] = useState(false);
+  const contentId = useId();
 
-  const openAnthology = (address: string) => {
-    const path = `contract/${address}` as CurrentPaths;
-    dispatch(updateCurrentPath(path));
-    window.history.pushState(
-      { currentPath: path },
-      "",
-      window.location.pathname
-    );
-  };
-
+  const displayName = formatContactName(
+    group.nametag,
+    group.deviceId,
+    hasDuplicateNametag
+  );
   const date = new Date(group.lastConnectedAt).toLocaleDateString();
   const anthologyCount =
     group.anthologies.length === 1
@@ -31,41 +28,36 @@ export const ConnectContactSection = ({
 
   return (
     <section className="w-full rounded-xl border border-sky-500/40 bg-[#161b22] p-4 text-zinc-100 shadow-[0_0_15px_rgba(14,165,233,0.15)]">
-      <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h2 className="m-0 text-xl font-semibold" translate="no">
-          {group.nametag}
-        </h2>
-        <span className="text-xs font-mono text-zinc-400" translate="no">
-          {shortenAddress(group.deviceId, 8, 4)}
-        </span>
-      </div>
+      <h2 className="m-0 text-xl font-semibold">
+        <button
+          type="button"
+          aria-expanded={expanded}
+          aria-controls={contentId}
+          onClick={() => setExpanded((value) => !value)}
+          style={{
+            background: "none",
+            border: "none",
+            padding: 0,
+            color: "inherit",
+            cursor: "pointer",
+            font: "inherit",
+            textAlign: "left",
+          }}
+        >
+          <span translate="no">{displayName}</span>{" "}
+          <span aria-hidden="true" className="text-sm text-zinc-400">
+            {expanded ? "▾" : "▸"}
+          </span>
+        </button>
+      </h2>
 
       <p className="mt-1 text-sm text-zinc-400">
         {anthologyCount} · {t("connect.lastConnected", { date })}
       </p>
 
-      <ul className="mt-3 space-y-2">
-        {group.anthologies.map((anthology) => (
-          <li key={anthology.address}>
-            <button
-              type="button"
-              onClick={() => openAnthology(anthology.address)}
-              className="flex w-full flex-wrap items-baseline justify-between gap-2 rounded-lg bg-transparent px-2 py-1 text-left text-white transition-colors hover:bg-white/5"
-            >
-              <span className="font-medium" translate="no">
-                {anthology.title}
-              </span>
-              <span className="text-xs text-zinc-400">
-                {anthology.memoirCount === 1
-                  ? t("connect.memoirCountOne")
-                  : t("connect.memoirCount", {
-                      count: anthology.memoirCount,
-                    })}
-              </span>
-            </button>
-          </li>
-        ))}
-      </ul>
+      <div id={contentId} hidden={!expanded}>
+        <UserConnectedMemory anthologies={group.anthologies} />
+      </div>
     </section>
   );
 };

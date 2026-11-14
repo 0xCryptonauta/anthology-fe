@@ -41,6 +41,7 @@ export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
   const dispatch = useAppDispatch();
   const { addToast } = useToast();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showDownloadModal, setShowDownloadModal] = useState(false);
 
   const sharePayload: LoadedJson = {
     anthology: {
@@ -54,9 +55,21 @@ export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
     /\s+/g,
     "_"
   )}_share.json`;
+  const anthologyFilename = `${(currentTitle || "anthology").replace(
+    /\s+/g,
+    "_"
+  )}_anthology.json`;
 
   const downloadLocalAnthology = () => {
-    downloadObjAsJson(sharePayload, shareFilename);
+    downloadObjAsJson(sharePayload, anthologyFilename);
+  };
+
+  const handleDownloadClick = () => {
+    if (receivedFrom) {
+      setShowDownloadModal(true);
+      return;
+    }
+    downloadLocalAnthology();
   };
 
   const handleDeleteAnthology = () => {
@@ -134,29 +147,31 @@ export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
                 border: "none",
                 padding: 0,
               }}
-              onClick={downloadLocalAnthology}
+              onClick={handleDownloadClick}
             >
               💾
             </button>
-            <QrStreamShareModal
-              payload={sharePayload}
-              filename={shareFilename}
-              title={t("connect.shareTitle", { title: currentTitle || "" })}
-              trigger={
-                <button
-                  type="button"
-                  className="icon-button"
-                  title={t("connect.shareQr")}
-                  aria-label={t("connect.shareQr")}
-                >
-                  <img
-                    src="/icons/qrIcon.svg"
-                    alt=""
-                    style={{ width: "20px", height: "20px", display: "block" }}
-                  />
-                </button>
-              }
-            />
+            {!receivedFrom && (
+              <QrStreamShareModal
+                payload={sharePayload}
+                filename={shareFilename}
+                title={t("connect.shareTitle", { title: currentTitle || "" })}
+                trigger={
+                  <button
+                    type="button"
+                    className="icon-button"
+                    title={t("connect.shareQr")}
+                    aria-label={t("connect.shareQr")}
+                  >
+                    <img
+                      src="/icons/qrIcon.svg"
+                      alt=""
+                      style={{ width: "20px", height: "20px", display: "block" }}
+                    />
+                  </button>
+                }
+              />
+            )}
           </div>
         }
       />
@@ -242,6 +257,64 @@ export const LocalAnthologyState: React.FC<LocalAnthologyStateProps> = ({
           </Modal>
         }
       />
+
+      {receivedFrom && (
+        <Modal
+          show={showDownloadModal}
+          onHide={() => setShowDownloadModal(false)}
+        >
+          <div
+            style={{
+              margin: "20px 10px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "10px",
+              color: "#1a1a1a",
+              textAlign: "center",
+            }}
+          >
+            <span style={{ fontWeight: "bold" }}>
+              {t("connect.downloadConnectedTitleOne")}
+            </span>
+            <span>{t("connect.downloadConnectedDescOne")}</span>
+
+            <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+              <button
+                type="button"
+                style={{
+                  backgroundColor: "#e2e8f0",
+                  color: "#1a1a1a",
+                  padding: "10px 20px",
+                  borderRadius: "5px",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+                onClick={() => setShowDownloadModal(false)}
+              >
+                {t("common.cancel")}
+              </button>
+              <button
+                type="button"
+                style={{
+                  backgroundColor: "#2b6cb0",
+                  color: "white",
+                  padding: "10px 20px",
+                  borderRadius: "5px",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  downloadLocalAnthology();
+                  setShowDownloadModal(false);
+                }}
+              >
+                {t("connect.downloadConnectedConfirm")}
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };

@@ -9,7 +9,10 @@ import { Address, MemoirContent } from "@src/types/common";
 import { LOCAL_USER_ADDR, DEFAULT_SKIN } from "@src/utils/constants";
 import { localAnthologyState } from "@src/store/slices/localAnthologySlice";
 import { useTranslation } from "@src/i18n/useTranslation";
-import { pickLocalMemory } from "@src/utils/localMemoryPayload";
+import {
+  filterShareableAddresses,
+  pickLocalMemory,
+} from "@src/utils/localMemoryPayload";
 import type {
   LoadedJson,
   LocalMemoryPayload,
@@ -61,10 +64,19 @@ export const DownloadReduxStore = () => {
     payload: LoadedJson;
     filename: string;
   } | null>(null);
+  const [pendingDownload, setPendingDownload] = useState<{
+    data: Record<string, unknown>;
+    filename: string;
+    connectedCount: number;
+  } | null>(null);
+
+  const receivedFrom = localAnthology.receivedFrom ?? {};
 
   const handleClose = () => {
     setShow(false);
     setSharePayload(null);
+    setPendingDownload(null);
+    setSelectionScreen(false);
   };
 
   const localUserTitles: MemoirContent[] = useMemo(() => {
@@ -89,20 +101,46 @@ export const DownloadReduxStore = () => {
     const filename =
       (addNewFileName ? newFileName : "local_anthology") + "_share.json";
 
-    if (selected) {
-      setSharePayload({
-        payload: {
-          localMemory: filterLocalByAddresses(localAnthology, selected),
-        },
-        filename,
-      });
-    } else if (addLocal) {
-      setSharePayload({
-        payload: { localMemory: pickLocalMemory(localAnthology) },
-        filename,
+    if (!selected && !addLocal) return;
+
+    const localAddresses =
+      localAnthology.userContracts?.[LOCAL_USER_ADDR] || [];
+    const selectedAddresses = (selected
+      ? [...selected]
+      : localAddresses) as Address[];
+    const { shareable, skipped } = filterShareableAddresses(
+      selectedAddresses,
+      receivedFrom
+    );
+
+    if (skipped > 0) {
+      addToast({
+        title: t("connect.shareSkippedConnected", { count: skipped }),
+        content: t("connect.shareSkippedConnectedDesc"),
+        variant: "info",
+        delay: 5000,
       });
     }
 
+    if (shareable.length === 0) {
+      addToast({
+        title: t("connect.shareOnlyConnected"),
+        content: t("connect.shareOnlyConnectedDesc"),
+        variant: "info",
+        delay: 5000,
+      });
+      return;
+    }
+
+    setSharePayload({
+      payload: {
+        localMemory: filterLocalByAddresses(
+          localAnthology,
+          new Set(shareable)
+        ),
+      },
+      filename,
+    });
     setSelectionScreen(false);
   };
 
@@ -161,7 +199,24 @@ export const DownloadReduxStore = () => {
     fileName += addLocal && addDiscovery ? "_&_" : "";
     fileName += addLocal ? "local_anthology" : "";
 
-    downloadObjAsJson(dataToDownload, addNewFileName ? newFileName : fileName);
+    const localAddresses = addLocal
+      ? localAnthology.userContracts?.[LOCAL_USER_ADDR] || []
+      : [];
+    const connectedCount = localAddresses.filter(
+      (address) => receivedFrom[address]
+    ).length;
+    const finalName = addNewFileName ? newFileName : fileName;
+
+    if (connectedCount > 0) {
+      setPendingDownload({
+        data: dataToDownload,
+        filename: finalName,
+        connectedCount,
+      });
+      return;
+    }
+
+    downloadObjAsJson(dataToDownload, finalName);
   };
 
   const handleCustomDownload = (selected: Set<string>) => {
@@ -189,7 +244,22 @@ export const DownloadReduxStore = () => {
     fileName += addDiscovery && selected.size > 0 ? "_&_" : "";
     fileName += selected.size > 0 ? "local_anthology" : "";
 
-    downloadObjAsJson(dataToDownload, addNewFileName ? newFileName : fileName);
+    const connectedCount = [...selected].filter(
+      (address) => receivedFrom[address as Address]
+    ).length;
+    const finalName = addNewFileName ? newFileName : fileName;
+
+    if (connectedCount > 0) {
+      setPendingDownload({
+        data: dataToDownload,
+        filename: finalName,
+        connectedCount,
+      });
+      setSelectionScreen(false);
+      return;
+    }
+
+    downloadObjAsJson(dataToDownload, finalName);
     setSelectionScreen(false);
   };
 
@@ -231,7 +301,64 @@ export const DownloadReduxStore = () => {
           color: "#1a1a1a",
         }}
       >
-        {sharePayload ? (
+        {pendingDownload ? (
+          <div
+            style={{
+              padding: "20px 16px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "10px",
+              color: "#1a1a1a",
+              textAlign: "center",
+            }}
+          >
+            <h3 style={{ margin: 0 }}>
+              {t("connect.downloadConnectedTitle")}
+            </h3>
+            <p style={{ margin: 0 }}>
+              {t("connect.downloadConnectedDesc", {
+                count: pendingDownload.connectedCount,
+              })}
+            </p>
+            <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+              <button
+                type="button"
+                onClick={() => setPendingDownload(null)}
+                style={{
+                  backgroundColor: "#e2e8f0",
+                  color: "#1a1a1a",
+                  padding: "10px 20px",
+                  borderRadius: "5px",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
+                {t("common.cancel")}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  downloadObjAsJson(
+                    pendingDownload.data,
+                    pendingDownload.filename
+                  );
+                  setPendingDownload(null);
+                }}
+                style={{
+                  backgroundColor: "#2b6cb0",
+                  color: "white",
+                  padding: "10px 20px",
+                  borderRadius: "5px",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
+                {t("connect.downloadConnectedConfirm")}
+              </button>
+            </div>
+          </div>
+        ) : sharePayload ? (
           <div
             style={{
               padding: "20px 16px",

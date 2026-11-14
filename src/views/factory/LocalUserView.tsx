@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { UserContracts } from "@components/Factory/UserContracts";
 import { MemoirContent } from "@src/types/common";
 import { useAppSelector } from "@src/store/utils/hooks";
@@ -5,8 +6,19 @@ import { Address } from "@src/types/common";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
 
 export const LocalUserView = () => {
-  const { userContracts, contractsTitles } = useAppSelector(
+  const { userContracts, contractsTitles, anthologies } = useAppSelector(
     (state) => state.localAnthology
+  );
+
+  const memoirCounts = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(anthologies).map(([address, memoirs]) => [
+          address,
+          memoirs.length,
+        ])
+      ),
+    [anthologies]
   );
 
   const userTitles: MemoirContent[] =
@@ -29,7 +41,11 @@ export const LocalUserView = () => {
         flexWrap: "wrap",
       }}
     >
-      <UserContracts userAddr={LOCAL_USER_ADDR} userTitles={userTitles} />
+      <UserContracts
+        userAddr={LOCAL_USER_ADDR}
+        userTitles={userTitles}
+        memoirCounts={memoirCounts}
+      />
     </div>
   );
 };
