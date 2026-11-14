@@ -12,6 +12,24 @@ const DEFAULT_PORT = 4174;
 
 const args = process.argv.slice(2);
 
+if (args.includes("--help") || args.includes("-h")) {
+  console.log(`Usage: bun run preview:tailscale [options]
+
+Starts the production preview and exposes it over HTTPS through Tailscale Serve.
+
+Options:
+  --build          Run \`bun run build\` before starting the preview.
+  --port <n>       Preview port (default 4174).
+  --reset-serve    Clear Tailscale Serve on exit, even if it was already configured.
+  --keep-serve     Leave the Tailscale Serve entry in place after the preview stops.
+  --help, -h       Show this help.
+
+Default: if Tailscale Serve was empty when the script started, it is reset on exit.
+If Serve was already configured, it is left in place and a warning is printed.
+`);
+  process.exit(0);
+}
+
 const getArg = (name: string): string | undefined => {
   const index = args.indexOf(name);
   return index >= 0 ? args[index + 1] : undefined;
@@ -19,6 +37,8 @@ const getArg = (name: string): string | undefined => {
 
 const port = Number(getArg("--port") ?? process.env.PORT ?? DEFAULT_PORT);
 const buildFirst = args.includes("--build");
+// Cleanup policy: reset Serve on exit only when this script created it,
+// unless --reset-serve (always) or --keep-serve (never) is passed.
 const forceResetServe = args.includes("--reset-serve");
 const keepServe = args.includes("--keep-serve");
 
@@ -221,4 +241,6 @@ Tailscale HTTPS preview ready
 
 Tailnet-only. Open the HTTPS URL on the phone (Tailscale on) and allow camera access.
 Press Ctrl+C to stop. ${serveExitMessage}
+
+Options: --build, --port <n>, --reset-serve, --keep-serve. Run with --help for details.
 `);

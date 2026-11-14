@@ -241,7 +241,26 @@ The QR receiver uses `getUserMedia`, which browsers only allow on HTTPS (or `loc
 
 `preview:tailscale` sets `preview.allowedHosts` from the Tailscale DNS name, so no repo or Vite config change is needed. `tailscale serve` is tailnet-only; use `tailscale funnel` if you need a public URL.
 
-Useful flags: `--build` (run the production build first), `--port <n>` (default 4174), `--reset-serve` (force a reset even if Serve was already configured), `--keep-serve` (never reset).
+```bash
+# Default: start the preview. If this script created the Tailscale Serve
+# entry, it is reset on exit; a pre-existing entry is left untouched.
+bun run preview:tailscale
+
+# Force a reset on exit, even if Serve was already configured.
+bun run preview:tailscale -- --reset-serve
+
+# Leave the Serve entry in place after the preview stops.
+bun run preview:tailscale -- --keep-serve
+
+# Run a production build first (same as `bun run build` before the command).
+bun run preview:tailscale -- --build
+
+# Use a different preview port.
+bun run preview:tailscale -- --port 4175
+
+# Show all options without starting anything.
+bun run preview:tailscale -- --help
+```
 
 Troubleshooting:
 
