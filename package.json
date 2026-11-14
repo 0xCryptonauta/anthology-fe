@@ -12,7 +12,8 @@
     "tsc": "tsc -b",
     "test": "bun test",
     "lint": "eslint .",
-    "preview": "vite preview --host"
+    "preview": "vite preview --host",
+    "preview:tailscale": "bun scripts/preview-tailscale.ts"
   },
   "dependencies": {
     "@orozcoh/qr-stream": "0.2.0",
