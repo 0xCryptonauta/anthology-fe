@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useId, useMemo, useState, type CSSProperties } from "react";
 import { useAppDispatch } from "@src/store/utils/hooks";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
 import type { CurrentPaths, MemoirContent } from "@src/types/common";
@@ -11,6 +11,23 @@ import {
 import { shortenAddress } from "@src/utils/shortenAddress";
 import { useTranslation } from "@src/i18n/useTranslation";
 
+const headerButtonStyle: CSSProperties = {
+  display: "flex",
+  width: "100%",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: "8px",
+  background: "none",
+  border: "none",
+  padding: 0,
+  color: "inherit",
+  cursor: "pointer",
+  textAlign: "left",
+  font: "inherit",
+};
+
+const indicatorClassName = "text-xs font-mono text-zinc-400";
+
 export const UserConnectedMemory = ({
   anthologies,
 }: {
@@ -18,6 +35,14 @@ export const UserConnectedMemory = ({
 }) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
+  const baseId = useId();
+
+  const [expandedCategories, setExpandedCategories] = useState<
+    Record<string, boolean>
+  >({});
+  const [expandedSubcategories, setExpandedSubcategories] = useState<
+    Record<string, boolean>
+  >({});
 
   const titles: MemoirContent[] = useMemo(
     () =>
@@ -79,51 +104,115 @@ export const UserConnectedMemory = ({
 
   return (
     <div className="mt-3 space-y-3">
-      {Object.entries(categories).map(([category, data]) => (
-        <section
-          key={category}
-          className={`rounded-xl border bg-[#0d1117] p-3 ${getCategoryStyles(
-            category
-          )}`}
-        >
-          <h3
-            className={`m-0 font-bold tracking-wide text-white ${getCategoryTitleSizeClass(
-              category.length
+      {Object.entries(categories).map(([category, data], categoryIndex) => {
+        const isExpanded = expandedCategories[category] ?? false;
+        const contentId = `${baseId}-category-${categoryIndex}`;
+
+        return (
+          <section
+            key={category}
+            className={`rounded-xl border bg-[#0d1117] p-3 ${getCategoryStyles(
+              category
             )}`}
-            translate="no"
           >
-            {category}
-          </h3>
-
-          <ul className="mt-2 space-y-1">
-            {data.items.map((item) => renderItem(item))}
-          </ul>
-
-          {Object.entries(data.subcategories).map(([sub, items]) => (
-            <div
-              key={sub}
-              className="mt-2 border-t border-white/10 pt-2"
+            <h3
+              className={`m-0 font-bold tracking-wide text-white ${getCategoryTitleSizeClass(
+                category.length
+              )}`}
             >
-              <h4
-                className="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-300"
-                translate="no"
+              <button
+                type="button"
+                aria-expanded={isExpanded}
+                aria-controls={contentId}
+                onClick={() =>
+                  setExpandedCategories((previous) => ({
+                    ...previous,
+                    [category]: !isExpanded,
+                  }))
+                }
+                style={headerButtonStyle}
               >
-                {sub}
-              </h4>
-              <ul className="space-y-1">{items.map((item) => renderItem(item))}</ul>
+                <span translate="no">{category}</span>
+                <span aria-hidden="true" className={indicatorClassName}>
+                  {isExpanded ? "[-]" : "[+]"}
+                </span>
+              </button>
+            </h3>
+
+            <div id={contentId} hidden={!isExpanded}>
+              {data.items.length > 0 && (
+                <ul className="mt-2 space-y-1">
+                  {data.items.map((item) => renderItem(item))}
+                </ul>
+              )}
+
+              {Object.entries(data.subcategories).map(([sub, items], subIndex) => {
+                const subKey = `${category}::${sub}`;
+                const subExpanded = expandedSubcategories[subKey] ?? false;
+                const subContentId = `${baseId}-subcategory-${categoryIndex}-${subIndex}`;
+
+                return (
+                  <div key={sub} className="mt-2 border-t border-white/10 pt-2">
+                    <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-300">
+                      <button
+                        type="button"
+                        aria-expanded={subExpanded}
+                        aria-controls={subContentId}
+                        onClick={() =>
+                          setExpandedSubcategories((previous) => ({
+                            ...previous,
+                            [subKey]: !subExpanded,
+                          }))
+                        }
+                        style={headerButtonStyle}
+                      >
+                        <span translate="no">{sub}</span>
+                        <span aria-hidden="true" className={indicatorClassName}>
+                          {subExpanded ? "[-]" : "[+]"}
+                        </span>
+                      </button>
+                    </h4>
+
+                    <div id={subContentId} hidden={!subExpanded}>
+                      <ul className="space-y-1">
+                        {items.map((item) => renderItem(item))}
+                      </ul>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-          ))}
-        </section>
-      ))}
+          </section>
+        );
+      })}
 
       {uncategorized.length > 0 && (
         <section className="rounded-xl border border-zinc-800 bg-[#0d1117] p-3">
           <h3 className="m-0 text-lg font-bold text-white">
-            {t("common.other")}
+            <button
+              type="button"
+              aria-expanded={expandedCategories.__other__ ?? false}
+              aria-controls={`${baseId}-other`}
+              onClick={() =>
+                setExpandedCategories((previous) => ({
+                  ...previous,
+                  __other__: !(previous.__other__ ?? false),
+                }))
+              }
+              style={headerButtonStyle}
+            >
+              <span>{t("common.other")}</span>
+              <span aria-hidden="true" className={indicatorClassName}>
+                {expandedCategories.__other__ ? "[-]" : "[+]"}
+              </span>
+            </button>
           </h3>
-          <ul className="mt-2 space-y-1">
-            {uncategorized.map((item) => renderItem(item))}
-          </ul>
+
+          <div id={`${baseId}-other`} hidden={!(expandedCategories.__other__ ?? false)}>
+            <ul className="mt-2 space-y-1">
+              {uncategorized.map((item) => renderItem(item))}
+            </ul>
+          </div>
         </section>
       )}
     </div>
