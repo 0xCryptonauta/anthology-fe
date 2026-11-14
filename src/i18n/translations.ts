@@ -561,7 +561,6 @@ export const en = {
   "connect.title": "Connect",
   "connect.subtitle": "Share private anthologies in person, without a server.",
   "connect.scan": "Scan to connect",
-  "connect.yourNamePrefix": "You:",
   "connect.setNametag": "Set Name Tag",
   "connect.changeNametag": "Change Name Tag",
   "connect.empty":
@@ -1217,7 +1216,6 @@ export const es: Record<TranslationKey, string> = {
   "connect.subtitle":
     "Comparte antologías privadas en persona, sin servidor.",
   "connect.scan": "Escanear para conectar",
-  "connect.yourNamePrefix": "Tú:",
   "connect.setNametag": "Configurar apodo",
   "connect.changeNametag": "Cambiar apodo",
   "connect.empty":

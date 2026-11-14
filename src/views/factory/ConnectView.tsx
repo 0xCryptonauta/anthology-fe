@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 import { ensureDeviceId } from "@src/store/slices/connectSlice";
 import { groupConnections } from "@src/utils/groupConnections";
@@ -10,7 +9,7 @@ import { useTranslation } from "@src/i18n/useTranslation";
 export const ConnectView = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const { nametag, deviceId } = useAppSelector((state) => state.connect);
+  const { deviceId } = useAppSelector((state) => state.connect);
   const receivedFrom = useAppSelector(
     (state) => state.localAnthology.receivedFrom ?? {}
   );
@@ -56,25 +55,6 @@ export const ConnectView = () => {
     >
       <h1 style={{ margin: 0 }}>{t("connect.title")}</h1>
       <p style={{ margin: 0, color: "#cbd5e1" }}>{t("connect.subtitle")}</p>
-
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "8px",
-          fontSize: "14px",
-        }}
-      >
-        <span>{t("connect.yourNamePrefix")}</span>
-        <span translate="no" style={{ fontWeight: 600 }}>
-          {nametag || "—"}
-        </span>
-        <Link to="/settings" style={{ color: "#7dd3fc" }}>
-          {t("connect.changeNametag")}
-        </Link>
-      </div>
 
       <button
         type="button"
