@@ -1,4 +1,5 @@
 import { useId, useState } from "react";
+import { useAppSelector } from "@src/store/utils/hooks";
 import type { ConnectionGroup } from "@src/utils/groupConnections";
 import { formatContactName } from "@src/utils/connectDisplay";
 import { UserConnectedMemory } from "./UserConnectedMemory";
@@ -12,6 +13,9 @@ export const ConnectContactSection = ({
   hasDuplicateNametag: boolean;
 }) => {
   const { t } = useTranslation();
+  const categoryBackgroundsEnabled = useAppSelector(
+    (state) => state.dapp.categoryBackgroundsEnabled
+  );
   const [expanded, setExpanded] = useState(false);
   const contentId = useId();
 
@@ -27,7 +31,13 @@ export const ConnectContactSection = ({
       : t("connect.anthologyCount", { count: group.anthologies.length });
 
   return (
-    <section className="w-full rounded-xl border border-sky-500/40 bg-[#161b22] p-4 text-zinc-100 shadow-[0_0_15px_rgba(14,165,233,0.15)]">
+    <section
+      className={`w-full rounded-xl border border-sky-500/40 p-4 text-zinc-100 shadow-[0_0_15px_rgba(14,165,233,0.15)] ${
+        categoryBackgroundsEnabled
+          ? "bg-overlay bg-nested-triangles text-shadow-dark"
+          : "bg-[#161b22]"
+      }`}
+    >
       <h2 className="m-0 text-xl font-semibold">
         <button
           type="button"

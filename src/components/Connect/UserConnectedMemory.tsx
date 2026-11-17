@@ -1,5 +1,5 @@
 import { useId, useMemo, useState, type CSSProperties } from "react";
-import { useAppDispatch } from "@src/store/utils/hooks";
+import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
 import type { CurrentPaths, MemoirContent } from "@src/types/common";
 import type { ConnectionAnthology } from "@src/utils/groupConnections";
@@ -8,6 +8,7 @@ import {
   getCategoryStyles,
   getCategoryTitleSizeClass,
 } from "@src/utils/categoryStyles";
+import { getBgClass } from "@src/utils/backgrounds";
 import { shortenAddress } from "@src/utils/shortenAddress";
 import { useTranslation } from "@src/i18n/useTranslation";
 
@@ -35,6 +36,9 @@ export const UserConnectedMemory = ({
 }) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
+  const categoryBackgroundsEnabled = useAppSelector(
+    (state) => state.dapp.categoryBackgroundsEnabled
+  );
   const baseId = useId();
 
   const [expandedCategories, setExpandedCategories] = useState<
@@ -90,7 +94,7 @@ export const UserConnectedMemory = ({
       <button
         type="button"
         onClick={() => openAnthology(address)}
-        className="flex w-full flex-wrap items-baseline justify-between gap-2 rounded-md px-1 py-0.5 text-left text-sm text-white transition-colors hover:bg-white/5"
+        className="flex w-full flex-wrap items-baseline justify-between gap-2 rounded-md bg-transparent px-1 py-0.5 text-left text-sm text-white transition-colors hover:bg-white/5"
       >
         <span translate="no">
           {title.trim() ? title : shortenAddress(address, 12, 9)}
@@ -111,9 +115,11 @@ export const UserConnectedMemory = ({
         return (
           <section
             key={category}
-            className={`rounded-xl border bg-[#0d1117] p-3 ${getCategoryStyles(
-              category
-            )}`}
+            className={`rounded-xl border p-3 transition-all duration-200 ${
+              categoryBackgroundsEnabled
+                ? `${getBgClass(category)} text-shadow-dark`
+                : "bg-[#0d1117]"
+            } ${getCategoryStyles(category)}`}
           >
             <h3
               className={`m-0 font-bold tracking-wide text-white ${getCategoryTitleSizeClass(
@@ -141,7 +147,7 @@ export const UserConnectedMemory = ({
 
             <div id={contentId} hidden={!isExpanded}>
               {data.items.length > 0 && (
-                <ul className="mt-2 space-y-1">
+                <ul className="mt-2 ml-4 space-y-1">
                   {data.items.map((item) => renderItem(item))}
                 </ul>
               )}
@@ -152,7 +158,7 @@ export const UserConnectedMemory = ({
                 const subContentId = `${baseId}-subcategory-${categoryIndex}-${subIndex}`;
 
                 return (
-                  <div key={sub} className="mt-2 border-t border-white/10 pt-2">
+                  <div key={sub} className="mt-2 ml-4 border-t border-white/10 pt-2">
                     <h4 className="mb-1 text-xs font-semibold uppercase tracking-wide text-zinc-300">
                       <button
                         type="button"
@@ -174,7 +180,7 @@ export const UserConnectedMemory = ({
                     </h4>
 
                     <div id={subContentId} hidden={!subExpanded}>
-                      <ul className="space-y-1">
+                      <ul className="ml-4 space-y-1">
                         {items.map((item) => renderItem(item))}
                       </ul>
                     </div>
@@ -187,7 +193,13 @@ export const UserConnectedMemory = ({
       })}
 
       {uncategorized.length > 0 && (
-        <section className="rounded-xl border border-zinc-800 bg-[#0d1117] p-3">
+        <section
+          className={`rounded-xl border border-zinc-800 p-3 transition-all duration-200 ${
+            categoryBackgroundsEnabled
+              ? `${getBgClass("uncategorized")} text-shadow-dark`
+              : "bg-[#0d1117]"
+          }`}
+        >
           <h3 className="m-0 text-lg font-bold text-white">
             <button
               type="button"
@@ -209,7 +221,7 @@ export const UserConnectedMemory = ({
           </h3>
 
           <div id={`${baseId}-other`} hidden={!(expandedCategories.__other__ ?? false)}>
-            <ul className="mt-2 space-y-1">
+            <ul className="mt-2 ml-4 space-y-1">
               {uncategorized.map((item) => renderItem(item))}
             </ul>
           </div>

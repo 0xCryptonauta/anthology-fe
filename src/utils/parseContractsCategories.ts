@@ -1,5 +1,35 @@
 import { Categories, MemoirContent } from "@src/types/common";
 
+export interface ParsedContractTitle {
+  category: string | null;
+  subcategory: string | null;
+  title: string;
+}
+
+/** Split a `[Category][Subcategory]Title` anthology title for display. */
+export const parseContractTitle = (raw: string): ParsedContractTitle => {
+  if (!raw.trim()) {
+    return { category: null, subcategory: null, title: raw };
+  }
+
+  const match =
+    raw.match(/\[(.*?)\](?:\[(.*?)\])?\s*(.*)$/) ||
+    raw.match(/^([^[]+)$/);
+
+  if (!match) {
+    return { category: null, subcategory: null, title: raw };
+  }
+
+  const [, category, subcategory, item] =
+    match.length === 4 ? match : [null, null, null, match[1]];
+
+  return {
+    category: category || null,
+    subcategory: subcategory || null,
+    title: item?.trim() || raw,
+  };
+};
+
 export const parseContractsCategories = (
   contracts: MemoirContent[]
 ): { categories: Categories; uncategorized: MemoirContent[] } => {
