@@ -23,6 +23,8 @@ export const en = {
   "common.untitled": "Untitled",
   "common.other": "Other",
   "common.unknownError": "Unknown error",
+  "common.download": "Download",
+  "common.delete": "Delete",
 
   /* ------------------------------ Accessibility ---------------------------- */
   "a11y.skipToMain": "Skip to main content",
@@ -377,6 +379,15 @@ export const en = {
   "anthology.info": "Anthology Info",
   "anthology.show": "Show Anthology",
 
+  /* ----------------------------- Anthology panel --------------------------- */
+  "anthologyPanel.title": "Anthology",
+  "anthologyPanel.open": "Open anthology info and settings",
+  "anthologyPanel.close": "Close",
+  "anthologyPanel.info": "Anthology Info",
+  "anthologyPanel.settings": "Anthology Settings",
+  "anthologyPanel.ownerOnly":
+    "Only the anthology owner can change these settings.",
+
   /* ----------------------------- Anthology state ---------------------------- */
   "anthologyState.address": "Anthology Address",
   "anthologyState.shareQr": "Share QR Code",
@@ -403,6 +414,10 @@ export const en = {
   /* --------------------------- Local anthology state ------------------------ */
   "localState.maxMemoirs": "Max memoirs",
   "localState.download": "Download Anthology",
+  "localState.downloadConfirmTitle": "Download this anthology?",
+  "localState.downloadConfirmDesc":
+    "A JSON copy of “{title}” will be saved to your device.",
+  "localState.downloadConfirm": "Download",
   "localState.delete": "Delete Anthology",
   "localState.deleteTitle": "Delete this anthology?",
   "localState.deleteDesc":
@@ -707,6 +722,8 @@ export const es: Record<TranslationKey, string> = {
   "common.untitled": "Sin título",
   "common.other": "Otros",
   "common.unknownError": "Error desconocido",
+  "common.download": "Descargar",
+  "common.delete": "Eliminar",
 
   /* ------------------------------ Accessibility ---------------------------- */
   "a11y.skipToMain": "Saltar al contenido principal",
@@ -1066,6 +1083,15 @@ export const es: Record<TranslationKey, string> = {
   "anthology.info": "Info Antología",
   "anthology.show": "Ver Antología",
 
+  /* ----------------------------- Anthology panel --------------------------- */
+  "anthologyPanel.title": "Antología",
+  "anthologyPanel.open": "Abrir información y ajustes de la antología",
+  "anthologyPanel.close": "Cerrar",
+  "anthologyPanel.info": "Información de la antología",
+  "anthologyPanel.settings": "Ajustes de la antología",
+  "anthologyPanel.ownerOnly":
+    "Solo el propietario de la antología puede cambiar estos ajustes.",
+
   /* ----------------------------- Anthology state ---------------------------- */
   "anthologyState.address": "Dirección de la antología",
   "anthologyState.shareQr": "Código QR para compartir",
@@ -1093,6 +1119,10 @@ export const es: Record<TranslationKey, string> = {
   /* --------------------------- Local anthology state ------------------------ */
   "localState.maxMemoirs": "Máximo de memoirs",
   "localState.download": "Descargar antología",
+  "localState.downloadConfirmTitle": "¿Descargar esta antología?",
+  "localState.downloadConfirmDesc":
+    "Se guardará una copia JSON de «{title}» en tu dispositivo.",
+  "localState.downloadConfirm": "Descargar",
   "localState.delete": "Borrar antología",
   "localState.deleteTitle": "¿Borrar esta antología?",
   "localState.deleteDesc":
