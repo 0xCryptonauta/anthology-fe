@@ -88,7 +88,7 @@ export const SettingsView = () => {
           <SettingsRow
             first
             label={t("settings.localData")}
-            control={<DownloadReduxStore />}
+            control={<DownloadReduxStore mode="download" />}
           />
           <SettingsRow
             label={t("settings.import")}

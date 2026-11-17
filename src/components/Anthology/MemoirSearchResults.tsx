@@ -5,6 +5,8 @@ import { updateCurrentPath } from "@src/store/slices/userSlice";
 import { extractEmbed } from "@src/utils/embeds";
 import { matchesSearch } from "@src/utils/searchMatch";
 import { EmbedRenderer } from "@src/components/Anthology/Memoirs/thirdPartyEmbeds";
+import { MemoirActions } from "@src/components/Anthology/MemoirActions";
+import { formatUnixTime } from "@utils/formatUnixTime";
 import { Address } from "@src/types/common";
 import {
   AnthologyInterface,
@@ -19,6 +21,7 @@ interface SearchResult {
   title: string;
   content: string;
   index: number;
+  memoir: MemoirInterface;
 }
 
 export const MemoirSearchResults = ({ term }: { term: string }) => {
@@ -57,6 +60,7 @@ export const MemoirSearchResults = ({ term }: { term: string }) => {
             title: memoir.title,
             content: memoir.content,
             index,
+            memoir,
           });
         }
       });
@@ -77,6 +81,7 @@ export const MemoirSearchResults = ({ term }: { term: string }) => {
             title: memoir.title,
             content: memoir.content,
             index,
+            memoir,
           });
         }
       });
@@ -172,6 +177,26 @@ export const MemoirSearchResults = ({ term }: { term: string }) => {
                 ) : (
                   result.content
                 )}
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  flexWrap: "wrap",
+                  gap: "8px 12px",
+                  marginTop: "8px",
+                }}
+              >
+                <span style={{ fontSize: "12px", color: "#666" }}>
+                  {formatUnixTime(Number(result.memoir.timestamp))}
+                </span>
+                <MemoirActions
+                  anthologyAddr={result.anthologyAddr}
+                  index={result.index}
+                  memoir={result.memoir}
+                />
               </div>
             </div>
           );

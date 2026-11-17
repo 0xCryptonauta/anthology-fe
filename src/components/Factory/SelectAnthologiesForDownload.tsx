@@ -11,7 +11,7 @@ interface SelectAnthologiesForDownloadProps {
   onHide?: () => void;
   inline?: boolean;
   userTitles: MemoirContent[];
-  onDownload: (selected: Set<string>) => void;
+  onDownload?: (selected: Set<string>) => void;
   onShare?: (selected: Set<string>) => void;
 }
 
@@ -60,7 +60,7 @@ export const SelectAnthologiesForDownload: React.FC<SelectAnthologiesForDownload
   const deselectAll = () => setSelected(new Set());
 
   const handleDownload = () => {
-    if (selected.size === 0) return;
+    if (selected.size === 0 || !onDownload) return;
     onDownload(selected);
   };
 
@@ -136,14 +136,16 @@ export const SelectAnthologiesForDownload: React.FC<SelectAnthologiesForDownload
               {t("settings.shareViaQrCount", { count: selected.size })}
             </button>
           )}
-          <button
-            type="button"
-            className="sel-download-btn"
-            disabled={selected.size === 0}
-            onClick={handleDownload}
-          >
-            {t("settings.downloadCount", { count: selected.size })}
-          </button>
+          {onDownload && (
+            <button
+              type="button"
+              className="sel-download-btn"
+              disabled={selected.size === 0}
+              onClick={handleDownload}
+            >
+              {t("settings.downloadCount", { count: selected.size })}
+            </button>
+          )}
         </div>
       </div>
     </div>

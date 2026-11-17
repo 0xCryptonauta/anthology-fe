@@ -1,6 +1,12 @@
 import { useAppSelector } from "@src/store/utils/hooks";
 import { useToast } from "./Toast";
-import { useState, useMemo } from "react";
+import {
+  cloneElement,
+  useState,
+  useMemo,
+  type MouseEvent as ReactMouseEvent,
+  type ReactElement,
+} from "react";
 import { downloadObjAsJson } from "@src/utils/downloadObjAsJson";
 import { useAccount } from "wagmi";
 import { Modal } from "./Modal";
@@ -18,6 +24,7 @@ import type {
   LocalMemoryPayload,
 } from "@src/utils/validateJsonContentType";
 import { QrStreamSharePanel } from "@components/Connect/QrStreamSharePanel";
+import { settingsActionButtonStyle } from "./settingsStyles";
 
 const filterLocalByAddresses = (
   local: localAnthologyState,
@@ -43,7 +50,15 @@ const filterLocalByAddresses = (
   return result;
 };
 
-export const DownloadReduxStore = () => {
+interface DownloadReduxStoreProps {
+  mode?: "download" | "share";
+  trigger?: ReactElement;
+}
+
+export const DownloadReduxStore = ({
+  mode = "download",
+  trigger,
+}: DownloadReduxStoreProps = {}) => {
   const { t } = useTranslation();
   const { users, userContracts, contractsTitles } = useAppSelector(
     (state) => state.factory
@@ -53,6 +68,8 @@ export const DownloadReduxStore = () => {
   const { isConnected } = useAccount();
 
   const [addDiscovery, setAddDiscovery] = useState(false);
+  // Share via QR starts with no scope selected: the user must choose
+  // Complete Memory or Custom Selection before the action is enabled.
   const [addLocal, setAddLocal] = useState(false);
   const [addCustomSelection, setAddCustomSelection] = useState(false);
   const [addNewFileName, setAddNewFileName] = useState(false);
@@ -75,6 +92,11 @@ export const DownloadReduxStore = () => {
     setShow(false);
     setSharePayload(null);
     setSelectionScreen(false);
+    setAddDiscovery(false);
+    setAddLocal(false);
+    setAddCustomSelection(false);
+    setAddNewFileName(false);
+    setNewFileName("");
   };
 
   const localUserTitles: MemoirContent[] = useMemo(
@@ -237,30 +259,33 @@ export const DownloadReduxStore = () => {
     setSelectionScreen(false);
   };
 
+  const defaultTrigger = (
+    <button
+      type="button"
+      style={settingsActionButtonStyle}
+      onClick={() => setShow(true)}
+    >
+      {t("settings.download")}
+    </button>
+  );
+
+  const triggerElement = trigger
+    ? cloneElement(trigger, {
+        onClick: (event: ReactMouseEvent) => {
+          trigger.props.onClick?.(event);
+          setShow(true);
+        },
+      })
+    : defaultTrigger;
+
   return (
     <Modal
       placement="bottom"
       show={show}
       onHide={handleClose}
-      trigger={
-        <button
-          type="button"
-          style={{
-            cursor: "pointer",
-            border: "1px solid #ccc",
-            padding: "10px 16px",
-            borderRadius: "8px",
-            display: "inline-block",
-            fontSize: "14px",
-            fontWeight: "bold",
-            backgroundColor: "#f7fafc",
-            color: "#2b6cb0",
-          }}
-          onClick={() => setShow(true)}
-        >
-          {t("settings.downloadData")}
-        </button>
-      }
+      height="90dvh"
+      scrollable
+      trigger={triggerElement}
     >
       <div
         style={{
@@ -269,8 +294,7 @@ export const DownloadReduxStore = () => {
           //margin: "10px auto",
           //padding: "25px 30px",
           borderRadius: "16px",
-          backgroundColor: "#ffffff",
-          boxShadow: "0 12px 24px rgba(0,0,0,0.08)",
+          backgroundColor: "transparent",
           fontFamily: `"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif`,
           color: "#1a1a1a",
         }}
@@ -291,21 +315,44 @@ export const DownloadReduxStore = () => {
             />
           </div>
         ) : selectionScreen ? (
-          <SelectAnthologiesForDownload
-            inline
-            onHide={() => setSelectionScreen(false)}
-            userTitles={localUserTitles}
-            onDownload={handleCustomDownload}
-            onShare={(selected) => openShare(selected)}
-          />
+          mode === "share" ? (
+            <SelectAnthologiesForDownload
+              inline
+              onHide={() => setSelectionScreen(false)}
+              userTitles={localUserTitles}
+              onShare={(selected) => openShare(selected)}
+            />
+          ) : (
+            <SelectAnthologiesForDownload
+              inline
+              onHide={() => setSelectionScreen(false)}
+              userTitles={localUserTitles}
+              onDownload={handleCustomDownload}
+            />
+          )
         ) : (
           <>
             <h3 style={{ textAlign: "center", marginBottom: "20px" }}>
-              {t("settings.downloadDataTitle")}
+              {mode === "share"
+                ? t("settings.shareCompleteMemory")
+                : t("settings.localData")}
             </h3>
 
+            {mode === "share" && !addLocal && !addCustomSelection && (
+              <p
+                style={{
+                  margin: "-8px 0 16px",
+                  fontSize: "13px",
+                  color: "#6b7280",
+                  textAlign: "center",
+                }}
+              >
+                {t("settings.chooseShareScope")}
+              </p>
+            )}
+
             <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-              {isConnected && (
+              {isConnected && mode === "download" && (
                 <label style={checkboxLabelStyle}>
                   <input
                     type="checkbox"
@@ -355,99 +402,97 @@ export const DownloadReduxStore = () => {
                 <span>{t("settings.customSelection")}</span>
               </label>
 
-              <label style={checkboxLabelStyle}>
-                <input
-                  type="checkbox"
-                  checked={addNewFileName}
-                  onChange={() => setAddNewFileName(!addNewFileName)}
-                  style={checkboxInputStyle}
-                />
-                <span>{t("settings.customFileName")}</span>
-              </label>
+              {mode === "download" && (
+                <>
+                  <label style={checkboxLabelStyle}>
+                    <input
+                      type="checkbox"
+                      checked={addNewFileName}
+                      onChange={() => setAddNewFileName(!addNewFileName)}
+                      style={checkboxInputStyle}
+                    />
+                    <span>{t("settings.customFileName")}</span>
+                  </label>
 
-              {addNewFileName && (
-                <input
-                  type="text"
-                  placeholder={t("settings.enterFileName")}
-                  value={newFileName}
-                  onChange={(e) => setNewFileName(e.target.value)}
-                  style={{
-                    padding: "10px 5px",
-                    borderRadius: "8px",
-                    border: "1px solid #ccc",
-                    fontSize: "14px",
-                    outline: "none",
-                    transition: "border-color 0.2s",
-                  }}
-                />
+                  {addNewFileName && (
+                    <input
+                      type="text"
+                      placeholder={t("settings.enterFileName")}
+                      value={newFileName}
+                      onChange={(e) => setNewFileName(e.target.value)}
+                      style={{
+                        padding: "10px 5px",
+                        borderRadius: "8px",
+                        border: "1px solid #ccc",
+                        fontSize: "14px",
+                        outline: "none",
+                        transition: "border-color 0.2s",
+                      }}
+                    />
+                  )}
+                </>
               )}
 
-              <button
-                type="button"
-                onClick={downloadUserSelection}
-                style={{
-                  marginTop: "20px",
-                  backgroundColor: "#3b82f6",
-                  color: "#fff",
-                  fontWeight: "500",
-                  fontSize: "15px",
-                  padding: "12px",
-                  borderRadius: "8px",
-                  border: "none",
-                  cursor: "pointer",
-                  transition: "background-color 0.2s",
-                }}
-                onMouseOver={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#2563eb")
-                }
-                onMouseOut={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#3b82f6")
-                }
-                onFocus={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#2563eb")
-                }
-                onBlur={(e) =>
-                  (e.currentTarget.style.backgroundColor = "#3b82f6")
-                }
-              >
-                {addCustomSelection
-                  ? t("settings.selectAnthologies")
-                  : t("settings.download")}
-              </button>
-
-              <button
-                type="button"
-                onClick={handleShareClick}
-                disabled={!addLocal && !addCustomSelection}
-                style={{
-                  marginTop: "-8px",
-                  backgroundColor: "#f9fafb",
-                  color: "#374151",
-                  fontWeight: "500",
-                  fontSize: "15px",
-                  padding: "12px",
-                  borderRadius: "8px",
-                  border: "1px solid #d1d5db",
-                  cursor:
-                    !addLocal && !addCustomSelection
-                      ? "not-allowed"
-                      : "pointer",
-                  opacity: !addLocal && !addCustomSelection ? 0.5 : 1,
-                }}
-              >
-                {t("settings.shareViaQr")}
-              </button>
-
-              {addDiscovery && !addLocal && !addCustomSelection && (
-                <span
+              {mode === "download" && (
+                <button
+                  type="button"
+                  onClick={downloadUserSelection}
                   style={{
-                    color: "#718096",
-                    fontSize: "12px",
-                    textAlign: "center",
+                    marginTop: "20px",
+                    backgroundColor: "#3b82f6",
+                    color: "#fff",
+                    fontWeight: "500",
+                    fontSize: "15px",
+                    padding: "12px",
+                    borderRadius: "8px",
+                    border: "none",
+                    cursor: "pointer",
+                    transition: "background-color 0.2s",
+                  }}
+                  onMouseOver={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#2563eb")
+                  }
+                  onMouseOut={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#3b82f6")
+                  }
+                  onFocus={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#2563eb")
+                  }
+                  onBlur={(e) =>
+                    (e.currentTarget.style.backgroundColor = "#3b82f6")
+                  }
+                >
+                  {addCustomSelection
+                    ? t("settings.selectAnthologies")
+                    : t("settings.download")}
+                </button>
+              )}
+
+              {mode === "share" && (
+                <button
+                  type="button"
+                  onClick={handleShareClick}
+                  disabled={!addLocal && !addCustomSelection}
+                  style={{
+                    marginTop: "20px",
+                    backgroundColor: "#3b82f6",
+                    color: "#fff",
+                    fontWeight: "500",
+                    fontSize: "15px",
+                    padding: "12px",
+                    borderRadius: "8px",
+                    border: "none",
+                    cursor:
+                      !addLocal && !addCustomSelection
+                        ? "not-allowed"
+                        : "pointer",
+                    opacity: !addLocal && !addCustomSelection ? 0.5 : 1,
                   }}
                 >
-                  {t("settings.sharePrivateOnly")}
-                </span>
+                  {addCustomSelection
+                    ? t("settings.selectAnthologies")
+                    : t("settings.shareViaQr")}
+                </button>
               )}
             </div>
           </>
