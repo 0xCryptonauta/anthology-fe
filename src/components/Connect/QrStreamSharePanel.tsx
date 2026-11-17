@@ -24,7 +24,8 @@ interface QrStreamSharePanelProps {
   onBack?: () => void;
 }
 
-const DEFAULT_STREAM_FPS = 15;
+// 10 fps is the mobile-safe default; the slider can raise it live.
+const DEFAULT_STREAM_FPS = 10;
 // Keep the 0.2 transfer budget while piloting 1.0. The wire cap is still 1 MiB
 // compressed, and this panel has no separate compressed-size estimate.
 const SHARE_INPUT_LIMIT = 1024 * 1024;
