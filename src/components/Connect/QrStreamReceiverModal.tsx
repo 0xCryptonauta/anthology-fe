@@ -4,12 +4,12 @@ import {
   useMemo,
   useState,
   type CSSProperties,
-  type RefObject,
 } from "react";
 import { useCameraReader, useQrStreamReader } from "@orozcoh/qr-stream/react";
 import { createZXingDecoder } from "@orozcoh/qr-stream/browser/zxing";
 import zxingWasmUrl from "zxing-wasm/reader/zxing_reader.wasm?url";
 import { Modal } from "../Layout/Modal";
+import { PreviewCategoryTree } from "./PreviewCategoryTree";
 import { useToast } from "../Layout/Toast";
 import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 import { markAnthologiesReceived } from "@src/store/slices/localAnthologySlice";
@@ -23,8 +23,11 @@ import {
   type SharePayloadKind,
 } from "@src/utils/shareEnvelope";
 import type { SharedBy } from "@src/types/connect";
-import type { Address } from "@src/types/common";
 import type { LoadedJson } from "@src/utils/validateJsonContentType";
+import {
+  buildPreviewItems,
+  type PreviewAnthology,
+} from "@src/utils/previewItems";
 import { useTranslation } from "@src/i18n/useTranslation";
 
 const zxingDecoder = () => createZXingDecoder({ wasmUrl: zxingWasmUrl });
@@ -99,7 +102,7 @@ const ScannerView = ({
   const percent =
     progress.k > 0 ? Math.round((progress.solved / progress.k) * 100) : 0;
   const cameraMessage =
-    cameraError && /decoder|wasm|zxing/i.test(cameraError)
+    cameraError?.code === "DECODER_FAILED"
       ? t("connect.decoderError")
       : cameraError
       ? t("connect.cameraError")
@@ -121,9 +124,7 @@ const ScannerView = ({
       </h3>
 
       <video
-        // qr-stream types the ref as React 19's nullable RefObject; the
-        // runtime ref is the same HTMLVideoElement under React 18.
-        ref={videoRef as RefObject<HTMLVideoElement>}
+        ref={videoRef}
         playsInline
         muted
         autoPlay
@@ -246,28 +247,14 @@ export const QrStreamReceiverModal = ({ onClose }: { onClose: () => void }) => {
 
   const summary = useMemo(() => {
     if (!parsed) {
-      return { anthologies: 0, memoirs: 0, titles: [] as string[] };
+      return { anthologies: 0, memoirs: 0, items: [] as PreviewAnthology[] };
     }
 
-    if (parsed.kind === "single" && parsed.data.anthology) {
-      return {
-        anthologies: 1,
-        memoirs: parsed.data.anthology.anthology.length,
-        titles: [parsed.data.anthology.title],
-      };
-    }
-
-    const local = parsed.data.localMemory;
-    const entries = Object.entries(local?.anthologies ?? {});
+    const items = buildPreviewItems(parsed.kind, parsed.data);
     return {
-      anthologies: entries.length,
-      memoirs: entries.reduce((sum, [, memoirs]) => sum + memoirs.length, 0),
-      titles: entries
-        .map(
-          ([address]) =>
-            local?.contractsTitles[address as Address] || address
-        )
-        .slice(0, 5),
+      anthologies: items.length,
+      memoirs: items.reduce((sum, item) => sum + item.memoirCount, 0),
+      items,
     };
   }, [parsed]);
 
@@ -309,7 +296,15 @@ export const QrStreamReceiverModal = ({ onClose }: { onClose: () => void }) => {
   };
 
   return (
-    <Modal show onHide={onClose}>
+    <Modal
+      show
+      onHide={onClose}
+      height="90dvh"
+      maxWidth="min(362px, calc(100vw - 10px))"
+      bodyPadding="0"
+      contentPadding="5px"
+      contentMargin="0"
+    >
       {phase === "scanning" ? (
         <ScannerView onDecoded={handleDecoded} onClose={onClose} />
       ) : phase === "error" ? (
@@ -340,18 +335,34 @@ export const QrStreamReceiverModal = ({ onClose }: { onClose: () => void }) => {
         </div>
       ) : parsed ? (
         <div
+          data-preview-phase
           style={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             gap: "10px",
+            width: "100%",
+            maxWidth: "100%",
+            boxSizing: "border-box",
             color: "#1a1a1a",
             textAlign: "center",
           }}
         >
           <h3 style={{ margin: 0 }}>{t("connect.reviewTitle")}</h3>
-          <p style={{ margin: 0 }}>
-            <span translate="no">{parsed.sharedBy.nametag}</span>{" "}
+          <p style={{ margin: 0, lineHeight: 1.3 }}>
+            <span
+              translate="no"
+              style={{
+                fontWeight: 700,
+                fontSize: "20px",
+                color: "#166534",
+                textDecoration: "underline",
+                textUnderlineOffset: "2px",
+                overflowWrap: "anywhere",
+              }}
+            >
+              {parsed.sharedBy.nametag}
+            </span>{" "}
             {t("connect.wantsToConnect")}
           </p>
           <p style={{ margin: 0 }}>
@@ -360,14 +371,23 @@ export const QrStreamReceiverModal = ({ onClose }: { onClose: () => void }) => {
               memoirs: summary.memoirs,
             })}
           </p>
-          {summary.titles.length > 0 && (
-            <ul style={{ margin: 0, paddingLeft: "18px", textAlign: "left" }}>
-              {summary.titles.map((title, index) => (
-                <li key={`${title}-${index}`} translate="no">
-                  {title}
-                </li>
-              ))}
-            </ul>
+          {summary.items.length > 0 && (
+            <div
+              data-preview-scroll
+              style={{
+                width: "100%",
+                maxHeight: "min(40dvh, 360px)",
+                overflowY: "auto",
+                overscrollBehavior: "contain",
+                WebkitOverflowScrolling: "touch",
+                boxSizing: "border-box",
+              }}
+            >
+              <PreviewCategoryTree
+                items={summary.items}
+                single={parsed.kind === "single"}
+              />
+            </div>
           )}
 
           <button
