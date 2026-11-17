@@ -6,10 +6,12 @@ import { LOCAL_USER_PATH } from "@src/utils/constants";
 import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 import { CurrentPaths } from "@src/types/common";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
+import { useHideOnScroll } from "@src/hooks/useHideOnScroll";
 
 export const Header = () => {
   const { isConnected, address } = useAccount();
   const { isIconToLocal, categoryBackgroundsEnabled } = useAppSelector((state) => state.dapp);
+  const { hidden } = useHideOnScroll();
 
   const dispatch = useAppDispatch();
 
@@ -25,7 +27,12 @@ export const Header = () => {
   };
 
   return (
-    <nav className={`navbar ${categoryBackgroundsEnabled ? "bg-dark-film" : "bg-dark"}`} data-bs-theme="dark">
+    <nav
+      className={`navbar app-header ${
+        hidden ? "app-header--hidden" : ""
+      } ${categoryBackgroundsEnabled ? "bg-dark-film" : "bg-dark"}`}
+      data-bs-theme="dark"
+    >
       <div className="container-fluid">
         <Link
           className="navbar-brand"

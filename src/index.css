@@ -121,6 +121,32 @@ html {
   scroll-padding-top: 80px;
 }
 
+/* Semi-sticky header: visible at the top, hides while scrolling down, slides
+   back on the first upward gesture. Animates `top` (not `transform`) because a
+   transformed ancestor would break the fixed-position side panel rendered
+   inside the header. */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  transition: top 0.25s ease;
+}
+
+.app-header--hidden {
+  top: -84px;
+}
+
+/* Keyboard focus must never land inside a hidden header. */
+.app-header:focus-within {
+  top: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-header {
+    transition: none;
+  }
+}
+
 /* SC 2.5.8 Target Size (Minimum) — icon-only controls keep a 24×24 box */
 .icon-button {
   min-width: 24px;

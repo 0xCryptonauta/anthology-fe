@@ -18,28 +18,41 @@ export const RootView = () => {
       <a href="#main-content" className="skip-link">
         {t("a11y.skipToMain")}
       </a>
+      {/* The header lives outside the pattern grid: `position: sticky` on a grid
+          item is trapped inside its grid row, and `.bg-overlay > *` would force
+          `position: relative` on it. The shell owns the viewport height. */}
       <div
-        className={backgroundsEnabled ? (footerBgClass || "bg-overlay bg-arabesque-style") : "bg-dark"}
+        className="app-shell"
         style={{
-          display: "grid",
+          display: "flex",
+          flexDirection: "column",
           minHeight: "100dvh",
-          gridTemplateRows: "auto 1fr auto",
         }}
       >
         <Header />
-        <main
-          id="main-content"
-          tabIndex={-1}
+        <div
+          className={backgroundsEnabled ? (footerBgClass || "bg-overlay bg-arabesque-style") : "bg-dark"}
           style={{
-            color: "white",
-            outline: "none",
+            display: "grid",
+            gridTemplateRows: "1fr auto",
+            flex: 1,
             minWidth: 0,
-            maxWidth: "100%",
           }}
         >
-          <Outlet />
-        </main>
-        <Footer />
+          <main
+            id="main-content"
+            tabIndex={-1}
+            style={{
+              color: "white",
+              outline: "none",
+              minWidth: 0,
+              maxWidth: "100%",
+            }}
+          >
+            <Outlet />
+          </main>
+          <Footer />
+        </div>
       </div>
     </>
   );
