@@ -134,6 +134,12 @@ html {
   cursor: pointer;
 }
 
+/* Modals keep dark text, so the pattern sits under a light film. */
+.modal-pattern.bg-overlay::before {
+  background: rgba(255, 255, 255, 0.78);
+}
+
+
 
 /* @media (prefers-color-scheme: light) {
   :root {

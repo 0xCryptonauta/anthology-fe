@@ -17,7 +17,14 @@ export const QrStreamShareModal = ({
   trigger,
 }: QrStreamShareModalProps) => {
   return (
-    <Modal trigger={trigger}>
+    <Modal
+      trigger={trigger}
+      height="90dvh"
+      maxWidth="min(362px, calc(100vw - 10px))"
+      bodyPadding="0"
+      contentPadding="5px"
+      scrollable
+    >
       <QrStreamSharePanel
         payload={payload}
         filename={filename}

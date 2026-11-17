@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { MAX_INPUT_BYTES, PRESETS } from "@orozcoh/qr-stream";
 import { useQrStreamWriter } from "@orozcoh/qr-stream/react";
 import {
   estimateTransferSeconds,
+  quantizeFps,
   renderQrStream,
+  type RenderController,
 } from "@orozcoh/qr-stream/browser";
 import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 import { ensureDeviceId } from "@src/store/slices/connectSlice";
@@ -23,7 +24,10 @@ interface QrStreamSharePanelProps {
   onBack?: () => void;
 }
 
-const STREAM_FPS = 15;
+const DEFAULT_STREAM_FPS = 15;
+// Keep the 0.2 transfer budget while piloting 1.0. The wire cap is still 1 MiB
+// compressed, and this panel has no separate compressed-size estimate.
+const SHARE_INPUT_LIMIT = 1024 * 1024;
 
 export const QrStreamSharePanel = ({
   payload,
@@ -35,17 +39,15 @@ export const QrStreamSharePanel = ({
   const dispatch = useAppDispatch();
   const { deviceId, nametag } = useAppSelector((state) => state.connect);
 
-  const [running, setRunning] = useState(false);
   const [view, setView] = useState<"share" | "nametag">("share");
+  const [fps, setFps] = useState(DEFAULT_STREAM_FPS);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const liveControllerRef = useRef<RenderController | null>(null);
+  const fpsRef = useRef(fps);
 
   useEffect(() => {
     if (!deviceId) dispatch(ensureDeviceId());
   }, [deviceId, dispatch]);
-
-  useEffect(() => {
-    if (view !== "share") setRunning(false);
-  }, [view]);
 
   const hasNametag = validateNametag(nametag) === null;
 
@@ -67,35 +69,46 @@ export const QrStreamSharePanel = ({
     [payload, sharedBy]
   );
 
-  const tooLarge = bytes !== null && bytes.length > MAX_INPUT_BYTES;
+  const tooLarge = bytes !== null && bytes.length > SHARE_INPUT_LIMIT;
   const sizeKb = bytes ? Math.ceil(bytes.length / 1024) : 0;
 
   const { writer, error: writerError, pending } = useQrStreamWriter({
     data: tooLarge ? null : bytes,
     filename,
-    preset: "fast",
+    preset: "balanced",
+    limits: { maxInputBytes: SHARE_INPUT_LIMIT },
   });
 
+  const overBudget =
+    tooLarge ||
+    writerError?.code === "WIRE_TOO_LARGE" ||
+    writerError?.code === "INPUT_TOO_LARGE";
+
   useEffect(() => {
-    if (!running || !writer || !canvasRef.current) return;
+    fpsRef.current = fps;
+    liveControllerRef.current?.setFps(fps);
+  }, [fps]);
+
+  useEffect(() => {
+    if (view !== "share" || !writer || !canvasRef.current) return;
 
     const controller = renderQrStream({
-      packets: writer.packets(),
+      writer,
       canvas: canvasRef.current,
-      fps: STREAM_FPS,
-      version: PRESETS.fast.version,
+      fps: fpsRef.current,
     });
+    liveControllerRef.current = controller;
     controller.play();
 
-    return () => controller.stop();
-  }, [running, writer]);
+    return () => {
+      controller.stop();
+      liveControllerRef.current = null;
+    };
+  }, [view, writer]);
 
-  useEffect(() => {
-    if (!writer) setRunning(false);
-  }, [writer]);
-
+  const effectiveFps = quantizeFps(fps);
   const estimate = writer
-    ? estimateTransferSeconds(writer.k, STREAM_FPS)
+    ? estimateTransferSeconds(writer.k, effectiveFps)
     : null;
 
   const handleDownloadShareFile = () => {
@@ -142,6 +155,35 @@ export const QrStreamSharePanel = ({
         />
       ) : (
         <>
+          <div
+            style={{
+              textAlign: "center",
+              lineHeight: 1.15,
+              maxWidth: "100%",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "13px",
+                fontWeight: 700,
+                color: "#1a1a1a",
+              }}
+            >
+              {t("connect.sharingAs")}
+            </div>
+            <div
+              translate="no"
+              style={{
+                fontSize: "20px",
+                fontWeight: 800,
+                color: hasNametag ? "#166534" : "#c53030",
+                overflowWrap: "anywhere",
+              }}
+            >
+              {hasNametag ? nametag : t("settings.notSet")}
+            </div>
+          </div>
+
           <button
             type="button"
             onClick={() => setView("nametag")}
@@ -193,16 +235,14 @@ export const QrStreamSharePanel = ({
           >
             {pending
               ? t("connect.preparing")
-              : tooLarge
+              : overBudget
               ? t("connect.tooLarge", { size: sizeKb })
               : writerError
               ? t("connect.unsupported")
-              : running
-              ? t("connect.streaming")
-              : t("connect.readyToStream")}
+              : t("connect.streaming")}
           </span>
 
-          {!tooLarge && !writerError && estimate !== null && (
+          {!overBudget && !writerError && estimate !== null && (
             <span style={{ fontSize: "12px", color: "#4a5568" }}>
               {t("connect.estimated", {
                 seconds: estimate,
@@ -211,31 +251,38 @@ export const QrStreamSharePanel = ({
             </span>
           )}
 
-          <button
-            type="button"
-            onClick={() => setRunning((value) => !value)}
-            disabled={!sharedBy || tooLarge || !writer || !!writerError}
+          <label
             style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "2px",
               width: "100%",
-              padding: "10px 16px",
-              borderRadius: "8px",
-              border: "none",
-              backgroundColor:
-                !sharedBy || tooLarge || !writer || writerError
-                  ? "#a0aec0"
-                  : running
-                  ? "#c53030"
-                  : "#2b6cb0",
-              color: "#fff",
-              fontWeight: 600,
-              cursor:
-                !sharedBy || tooLarge || !writer || writerError
-                  ? "not-allowed"
-                  : "pointer",
+              fontSize: "12px",
+              color: "#4a5568",
             }}
           >
-            {running ? t("connect.stop") : t("connect.start")}
-          </button>
+            <span>
+              {t("connect.streamSpeed")} · {effectiveFps} fps
+            </span>
+            <input
+              type="range"
+              min={5}
+              max={30}
+              step={1}
+              value={fps}
+              onChange={(event) => setFps(Number(event.target.value))}
+              disabled={!writer || !!writerError || overBudget}
+              aria-label={t("connect.streamSpeed")}
+              style={{
+                width: "100%",
+                accentColor: "#2b6cb0",
+                cursor:
+                  !writer || writerError || overBudget
+                    ? "not-allowed"
+                    : "pointer",
+              }}
+            />
+          </label>
 
           <button
             type="button"
