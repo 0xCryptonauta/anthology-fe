@@ -35,6 +35,7 @@ interface UserContractsProps {
 // the neighbouring columns, and `grid-auto-flow: dense` moves the cards below
 // into the free slots beside them.
 const CARD_ROW_PX = 60; // unopened card height (p-4 padding + header)
+const CARD_WIDTH_PX = 333;
 const CARD_PADDING_PX = 32; // p-4 top + bottom
 const CARD_GAP_PX = 16; // gap-4 between rows
 const CARD_PITCH_PX = CARD_ROW_PX + CARD_GAP_PX;
@@ -317,7 +318,10 @@ export const UserContracts: React.FC<UserContractsProps> = ({
       <div className="w-full max-w-7xl">
 
         {/* --- HEADER DE USUARIO --- */}
-        <div className={`flex flex-wrap justify-between items-center mb-8 gap-y-3 p-4 ${categoryBackgroundsEnabled && userAddr === LOCAL_USER_ADDR ? "bg-overlay bg-nested-triangles text-shadow-dark" : "bg-[#161b22]"} rounded-xl border-sky-500/40 shadow-[0_0_15px_rgba(14,165,233,0.15)] mx-auto w-full max-w-2xl`}>
+        <div
+          className={`flex flex-wrap justify-between items-center mb-8 gap-y-3 p-4 ${categoryBackgroundsEnabled && userAddr === LOCAL_USER_ADDR ? "bg-overlay bg-nested-triangles text-shadow-dark" : "bg-[#161b22]"} rounded-xl border-sky-500/40 shadow-[0_0_15px_rgba(14,165,233,0.15)] mx-auto w-full`}
+          style={{ maxWidth: `${CARD_WIDTH_PX}px` }}
+        >
           <div className="flex items-center gap-4">
 {/*             {userAddr === LOCAL_USER_ADDR && (
                 <div className="h-10 w-10 bg-zinc-800 rounded-full flex items-center justify-center font-bold text-zinc-400 select-none">
@@ -395,7 +399,10 @@ export const UserContracts: React.FC<UserContractsProps> = ({
         </div>
 
         {userAddr === LOCAL_USER_ADDR && (
-          <div className="w-full max-w-2xl mx-auto mb-6 flex items-center gap-2">
+          <div
+            className="w-full mx-auto mb-6 flex items-center gap-2"
+            style={{ maxWidth: `${CARD_WIDTH_PX}px` }}
+          >
             <div className="relative flex-1 min-w-0">
               <input
                 value={search}
@@ -448,12 +455,13 @@ export const UserContracts: React.FC<UserContractsProps> = ({
           </Suspense>
         ) : (
         <div
-          /* Fixed-width card units: every card is 260px, so a long anthology
-             name can never widen it. `1fr` tracks used to resize the whole grid
-             when content or scroll chrome changed. */
+          /* Fixed-width card units: every card is 333px wide (or the available
+             width on very narrow phones, so nothing overflows horizontally),
+             so a long anthology name can never widen it. `1fr` tracks used to
+             resize the whole grid when content or scroll chrome changed. */
           className="grid grid-flow-dense gap-4 w-full"
           style={{
-            gridTemplateColumns: "repeat(auto-fill, 260px)",
+            gridTemplateColumns: `repeat(auto-fill, min(${CARD_WIDTH_PX}px, 100%))`,
             gridAutoRows: `${CARD_ROW_PX}px`,
             justifyContent: "center",
           }}
