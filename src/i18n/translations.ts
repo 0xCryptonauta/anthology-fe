@@ -644,7 +644,7 @@ export const en = {
   "connect.nametagHelp":
     "Required to share. People you connect with will see this name.",
   "connect.nametagEmpty": "Enter a name before sharing.",
-  "connect.nametagTooLong": "Use 32 characters or fewer.",
+  "connect.nametagTooLong": "Use 13 characters or fewer.",
   "connect.nametagSaved": "Nametag saved.",
   "connect.shareTitle": "Share \"{title}\"",
   "connect.shareQr": "Share by QR",
@@ -1364,7 +1364,7 @@ export const es: Record<TranslationKey, string> = {
   "connect.nametagHelp":
     "Obligatorio para compartir. Las personas con las que conectes verán este nombre.",
   "connect.nametagEmpty": "Escribe un nombre antes de compartir.",
-  "connect.nametagTooLong": "Usa 32 caracteres o menos.",
+  "connect.nametagTooLong": "Usa 13 caracteres o menos.",
   "connect.nametagSaved": "Apodo guardado.",
   "connect.shareTitle": "Compartir \"{title}\"",
   "connect.shareQr": "Compartir por QR",

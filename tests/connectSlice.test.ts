@@ -18,11 +18,11 @@ describe("connectSlice", () => {
     expect(state.deviceId).toBe(first);
   });
 
-  test("setNametag trims and caps at 32 chars", () => {
+  test("setNametag trims and caps at 13 chars", () => {
     let state = reducer(undefined, init);
     state = reducer(state, setNametag("  Ana  "));
     expect(state.nametag).toBe("Ana");
     state = reducer(state, setNametag("x".repeat(40)));
-    expect(state.nametag).toHaveLength(32);
+    expect(state.nametag).toHaveLength(13);
   });
 });

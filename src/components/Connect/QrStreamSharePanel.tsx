@@ -8,10 +8,7 @@ import {
 } from "@orozcoh/qr-stream/browser";
 import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 import { ensureDeviceId } from "@src/store/slices/connectSlice";
-import {
-  buildShareEnvelope,
-  validateNametag,
-} from "@src/utils/shareEnvelope";
+import { buildShareEnvelope } from "@src/utils/shareEnvelope";
 import type { LoadedJson } from "@src/utils/validateJsonContentType";
 import { downloadObjAsJson } from "@src/utils/downloadObjAsJson";
 import { useTranslation } from "@src/i18n/useTranslation";
@@ -50,7 +47,8 @@ export const QrStreamSharePanel = ({
     if (!deviceId) dispatch(ensureDeviceId());
   }, [deviceId, dispatch]);
 
-  const hasNametag = validateNametag(nametag) === null;
+  // Legacy nametags (up to 32 chars) still share; only the editor caps at 13.
+  const hasNametag = nametag.trim().length > 0;
 
   const sharedBy = useMemo(
     () =>
