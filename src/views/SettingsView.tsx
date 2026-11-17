@@ -53,7 +53,32 @@ export const SettingsView = () => {
           <SettingsRow
             first
             label={t("connect.nametagTitle")}
-            description={nametag || t("settings.notSet")}
+            description={
+              nametag ? (
+                <span
+                  translate="no"
+                  style={{
+                    display: "inline-block",
+                    marginTop: "6px",
+                    padding: "2px 8px",
+                    borderRadius: "6px",
+                    border: "1px solid #bbf7d0",
+                    backgroundColor: "#f0fdf4",
+                    color: "#166534",
+                    fontSize: "20px",
+                    fontWeight: 700,
+                    lineHeight: 1.25,
+                    textDecoration: "underline",
+                    textUnderlineOffset: "3px",
+                    overflowWrap: "anywhere",
+                  }}
+                >
+                  {nametag}
+                </span>
+              ) : (
+                t("settings.notSet")
+              )
+            }
             control={<NametagSettings compact />}
           />
           <SettingsRow
