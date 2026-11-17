@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useId } from "react";
+import { useEffect, useMemo, useRef, useState, useId } from "react";
 import { writeAnthology } from "@src/contract-functions/anthologyFunctions";
 import "./style.css";
 import { useToast } from "@components/Layout/Toast";
@@ -28,22 +28,34 @@ export const AddMemoir = ({
   contractAddr,
   title = "",
   content = "",
+  initialOpen = false,
+  onAutoOpened,
 }: {
   contractAddr: Address;
   title?: string;
   content?: string;
+  /** Opens the sheet on mount (used after creating an anthology in /share). */
+  initialOpen?: boolean;
+  onAutoOpened?: () => void;
 }) => {
   const { t } = useTranslation();
   const isReadOnly = useIsReadOnlyAnthology(contractAddr);
   const [anthologyTitle, setAnthologyTitle] = useState(title);
   const [anthologyContent, setAnthologyContent] = useState(content);
   const [shouldFilterTracking, setShouldFilterTracking] = useState(true);
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(initialOpen);
+  const autoOpenedRef = useRef(false);
   const [titleError, setTitleError] = useState("");
   const [urlError, setUrlError] = useState("");
   const [urlWarning, setUrlWarning] = useState("");
   const [isFetchingTitle, setIsFetchingTitle] = useState(false);
   const handleClose = () => setShow(false);
+
+  useEffect(() => {
+    if (!initialOpen || autoOpenedRef.current) return;
+    autoOpenedRef.current = true;
+    onAutoOpened?.();
+  }, [initialOpen, onAutoOpened]);
 
   // WCAG 3.3.2 / 4.1.2 — explicit label/form connections.
   const titleInputId = useId();

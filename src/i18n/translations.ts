@@ -365,6 +365,12 @@ export const en = {
   "deploy.addPublic": "Add Public Anthology",
   "deploy.created": "New Anthology was created",
 
+  /* ---------------------------------- Share --------------------------------- */
+  "share.newAnthology": "New anthology",
+  "share.createAnthology": "Create anthology",
+  "share.anthologyCreated": "Anthology created",
+  "share.addingTo": "Adding to",
+
   /* ------------------------------- Title editor ----------------------------- */
   "title.category": "Category (Optional)",
   "title.subcategory": "Subcategory (Optional)",
@@ -1069,6 +1075,12 @@ export const es: Record<TranslationKey, string> = {
   "deploy.addPrivate": "Añadir antología privada",
   "deploy.addPublic": "Añadir antología pública",
   "deploy.created": "Se creó una nueva antología",
+
+  /* ---------------------------------- Share --------------------------------- */
+  "share.newAnthology": "Nueva antología",
+  "share.createAnthology": "Crear antología",
+  "share.anthologyCreated": "Antología creada",
+  "share.addingTo": "Agregando a",
 
   /* ------------------------------- Title editor ----------------------------- */
   "title.category": "Categoría (opcional)",
