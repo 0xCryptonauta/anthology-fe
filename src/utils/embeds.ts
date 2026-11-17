@@ -14,7 +14,7 @@ export type SpotifyContentType =
   | "show";
 
 export type EmbedMatch =
-  | { provider: "youtube"; videoId: string }
+  | { provider: "youtube"; videoId: string; vertical: boolean }
   | { provider: "vimeo"; videoId: string; hash?: string }
   | { provider: "archiveorg"; itemId: string }
   | { provider: "spotify"; contentType: SpotifyContentType; contentId: string }
@@ -62,17 +62,20 @@ const parseYouTube = (url: URL): EmbedMatch | null => {
 
   const segments = pathSegments(url);
   let videoId: string | null = null;
+  let vertical = false;
 
   if (url.hostname.endsWith("youtu.be")) {
     videoId = segments[0] ?? null;
   } else if (segments[0] === "watch") {
     videoId = url.searchParams.get("v");
   } else if (["embed", "shorts", "live", "v"].includes(segments[0])) {
+    // Shorts are vertical 9:16; everything else renders as 16:9.
+    vertical = segments[0] === "shorts";
     videoId = segments[1] ?? null;
   }
 
   if (!videoId || !YOUTUBE_ID_REGEX.test(videoId)) return null;
-  return { provider: "youtube", videoId };
+  return { provider: "youtube", videoId, vertical };
 };
 
 /* --------------------------------- Spotify --------------------------------- */

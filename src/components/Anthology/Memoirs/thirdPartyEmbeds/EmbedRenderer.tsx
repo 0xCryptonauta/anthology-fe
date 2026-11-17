@@ -158,7 +158,7 @@ export const EmbedRenderer = ({ embed }: { embed: EmbedMatch }) => {
 
   switch (embed.provider) {
     case "youtube":
-      return <YoutubeEmbed videoId={embed.videoId} />;
+      return <YoutubeEmbed videoId={embed.videoId} vertical={embed.vertical} />;
     case "vimeo":
       return <VimeoEmbed videoId={embed.videoId} hash={embed.hash} />;
     case "archiveorg":
