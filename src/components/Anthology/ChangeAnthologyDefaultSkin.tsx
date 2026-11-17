@@ -11,8 +11,11 @@ import { useTranslation } from "@src/i18n/useTranslation";
 
 export const ChangeAnthologyDefaultSkin = ({
   contractAddr,
+  embedded = false,
 }: {
   contractAddr: Address;
+  /** Renders just the selector + action for a SettingsRow. */
+  embedded?: boolean;
 }) => {
   const { t } = useTranslation();
   const isLocal = isLocalAnthology(contractAddr);
@@ -31,6 +34,60 @@ export const ChangeAnthologyDefaultSkin = ({
   const [newDefaultSkin, setNewDefaultSkin] = useState(
     isLocal ? localDefaultSkin : (anthologyState?.skin as SkinType)
   );
+  const [saving, setSaving] = useState(false);
+
+  const applySkin = async (skin: SkinType) => {
+    if (!skin) return;
+
+    try {
+      if (isLocal) {
+        dispatch(
+          setDefaultSkin({
+            contract: contractAddr,
+            newDefaultSkin: skin,
+          })
+        );
+        addToast({
+          title: t("skin.changedTitle"),
+          content: skin,
+          variant: "success",
+          delay: 3000,
+        });
+        return;
+      }
+
+      setSaving(true);
+      const encodedBytes8 = toBytes8Hex(skin);
+      const txHash = await writeAnthology(contractAddr, "setSkin", [
+        encodedBytes8,
+      ]);
+      if (txHash) {
+        addToast({
+          title: t("skin.changedTitle"),
+          content: skin + "\n\nTxHash: " + txHash,
+          variant: "success",
+          delay: 3000,
+        });
+      }
+    } catch (error) {
+      addToast({
+        title: t("skin.errorChanged"),
+        content: t("common.unknownError"),
+        variant: "warning",
+        delay: 3000,
+      });
+      console.error("Error setting new new default skin", error);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleSkinChange = (skin: SkinType) => {
+    setNewDefaultSkin(skin);
+    // In the anthology panel the selection is the action: no separate
+    // Change button, and on-chain writes disable the selector while pending.
+    if (embedded) void applySkin(skin);
+  };
 
   return (
     <div
@@ -38,15 +95,17 @@ export const ChangeAnthologyDefaultSkin = ({
          never widens the page on small screens. */
       style={{
         display: "flex",
-        flexDirection: "column",
+        flexDirection: embedded ? "row" : "column",
         alignItems: "center",
+        justifyContent: embedded ? "flex-end" : "center",
         gap: "8px",
-        margin: "12px 0",
+        margin: embedded ? 0 : "12px 0",
         width: "100%",
         boxSizing: "border-box",
+        flexWrap: "wrap",
       }}
     >
-      <span style={{ fontWeight: 500 }}>{t("skin.default")}</span>
+      {!embedded && <span style={{ fontWeight: 500 }}>{t("skin.default")}</span>}
 
       <div
         style={{
@@ -59,69 +118,31 @@ export const ChangeAnthologyDefaultSkin = ({
       >
         <SkinSelector
           value={newDefaultSkin}
-          onChange={(newSkin) => {
-            setNewDefaultSkin(newSkin);
-          }}
+          onChange={handleSkinChange}
+          disabled={saving}
         />
-        <button
-          type="button"
-          style={{
-            backgroundColor: "dodgerblue",
-            color: "white",
-            border: "none",
-            height: "36px",
-            padding: "0 12px",
-            borderRadius: "8px",
-            fontSize: "14px",
-            fontWeight: 500,
-            cursor: "pointer",
-            whiteSpace: "nowrap",
-            display: "inline-flex",
-            alignItems: "center",
-          }}
-          onClick={async () => {
-            try {
-              if (isLocal) {
-                dispatch(
-                  setDefaultSkin({
-                    contract: contractAddr,
-                    newDefaultSkin: newDefaultSkin,
-                  })
-                );
-                addToast({
-                  title: t("skin.changedTitle"),
-                  content: newDefaultSkin,
-                  variant: "success",
-                  delay: 3000,
-                });
-              } else {
-                const encodedBytes8 = toBytes8Hex(newDefaultSkin);
-
-                const txHash = await writeAnthology(contractAddr, "setSkin", [
-                  encodedBytes8,
-                ]);
-                if (txHash) {
-                  addToast({
-                    title: t("skin.changedTitle"),
-                    content: newDefaultSkin + "\n\nTxHash: " + txHash,
-                    variant: "success",
-                    delay: 3000,
-                  });
-                }
-              }
-            } catch (error) {
-              addToast({
-                title: t("skin.errorChanged"),
-                content: t("common.unknownError"),
-                variant: "warning",
-                delay: 3000,
-              });
-              console.error("Error setting new new default skin", error);
-            }
-          }}
-        >
-          {t("common.change")}
-        </button>
+        {!embedded && (
+          <button
+            type="button"
+            style={{
+              backgroundColor: "dodgerblue",
+              color: "white",
+              border: "none",
+              height: "36px",
+              padding: "0 12px",
+              borderRadius: "8px",
+              fontSize: "14px",
+              fontWeight: 500,
+              cursor: "pointer",
+              whiteSpace: "nowrap",
+              display: "inline-flex",
+              alignItems: "center",
+            }}
+            onClick={() => void applySkin(newDefaultSkin)}
+          >
+            {t("common.change")}
+          </button>
+        )}
       </div>
     </div>
   );

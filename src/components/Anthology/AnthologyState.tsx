@@ -1,4 +1,7 @@
+import type { CSSProperties } from "react";
 import { Card } from "../Layout/Card";
+import { SettingsRow } from "../Layout/SettingsRow";
+import { settingsActionButtonStyle } from "../Layout/settingsStyles";
 
 import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
 
@@ -21,13 +24,35 @@ import {
 import { removePadding } from "@src/utils/removePadding";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
 import { useTranslation } from "@src/i18n/useTranslation";
+import { parseContractTitle } from "@src/utils/parseContractsCategories";
 
 interface AnthologyStateProps {
   contractAddr: Address;
+  /** Renders the SettingsRow layout used by the anthology panel. */
+  embedded?: boolean;
 }
+
+const valueStyle: CSSProperties = {
+  fontSize: "14px",
+  color: "#cbd5e1",
+  wordBreak: "break-word",
+  overflowWrap: "anywhere",
+};
+
+const linkStyle: CSSProperties = {
+  ...valueStyle,
+  color: "#7dd3fc",
+};
+
+const panelActionStyle: CSSProperties = {
+  ...settingsActionButtonStyle,
+  minWidth: "auto",
+  minHeight: "36px",
+};
 
 export const AnthologyState: React.FC<AnthologyStateProps> = ({
   contractAddr,
+  embedded = false,
 }) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -46,6 +71,9 @@ export const AnthologyState: React.FC<AnthologyStateProps> = ({
   const memoirs = anthologyData?.memoirs || [];
 
   const shareUrl = `${window.location.origin}/?contract=${contractAddr}`;
+  const displayTitle = anthologyState?.title
+    ? parseContractTitle(anthologyState.title).title
+    : "";
 
   const handleCopyShareLink = async () => {
     const ok = await copyToClipboard(shareUrl);
@@ -114,6 +142,187 @@ export const AnthologyState: React.FC<AnthologyStateProps> = ({
       delay: 4000,
     });
   };
+
+  if (embedded) {
+    return (
+      <div style={{ width: "100%" }}>
+        <SettingsRow
+          first
+          label={t("anthologyState.address")}
+          control={
+            <a
+              href={CHAIN_SCAN_URL + contractAddr}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={linkStyle}
+              translate="no"
+            >
+              {contractAddr}
+            </a>
+          }
+        />
+
+        <SettingsRow
+          label={t("anthologyState.shareQr")}
+          control={<QRCodeGenerator text={shareUrl} />}
+        />
+
+        <SettingsRow
+          label={t("anthologyState.shareLink")}
+          control={
+            <button
+              type="button"
+              title={t("anthologyState.shareLink")}
+              aria-label={t("anthologyState.shareLink")}
+              style={{
+                ...panelActionStyle,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+              }}
+              onClick={handleCopyShareLink}
+            >
+              <img
+                src="/icons/copy-clipboard-icon.svg"
+                alt=""
+                style={{
+                  width: "16px",
+                  height: "16px",
+                  display: "block",
+                  filter: "invert(1)",
+                }}
+              />
+              {t("anthologyState.shareLink")}
+            </button>
+          }
+        />
+
+        <SettingsRow
+          label={t("anthologyState.saveToLocal")}
+          control={
+            <button
+              type="button"
+              title={t("anthologyState.saveToLocal")}
+              aria-label={t("anthologyState.saveToLocal")}
+              style={panelActionStyle}
+              onClick={handleCloneToLocal}
+            >
+              {t("common.save")}
+            </button>
+          }
+        />
+
+        <SettingsRow
+          label={t("anthologyState.owner")}
+          control={
+            <span style={valueStyle} translate="no">
+              {anthologyState?.owner.toString()}
+            </span>
+          }
+        />
+
+        <SettingsRow
+          label={t("anthologyState.title")}
+          control={
+            <span style={valueStyle} translate="no">
+              {displayTitle}
+            </span>
+          }
+        />
+
+        <SettingsRow
+          label={t("anthologyState.memoirCount")}
+          control={
+            <span style={valueStyle}>
+              {anthologyState?.currentMemoirCount.toString()}
+            </span>
+          }
+        />
+
+        <SettingsRow
+          label={t("anthologyState.totalCreated")}
+          control={
+            <span style={valueStyle}>
+              {anthologyState?.totalCreatedMemoirs.toString()}
+            </span>
+          }
+        />
+
+        <SettingsRow
+          label={t("anthologyState.maxMemoirs")}
+          control={
+            <span style={valueStyle}>
+              {anthologyState?.maxMemoirs.toString()}
+            </span>
+          }
+        />
+
+        <SettingsRow
+          label={t("anthologyState.price")}
+          control={
+            <span style={valueStyle}>
+              {anthologyState?.memoirPrice.toString()}
+            </span>
+          }
+        />
+
+        <SettingsRow
+          label={t("anthologyState.tokenPayment")}
+          control={
+            <span style={valueStyle}>
+              {anthologyState?.useERC20
+                ? t("common.enabled")
+                : t("common.disabled")}
+            </span>
+          }
+        />
+
+        {anthologyState?.useERC20 && (
+          <SettingsRow
+            label={t("anthologyState.tokenAddress")}
+            control={
+              <span style={valueStyle} translate="no">
+                {anthologyState?.erc20Token.toString()}
+              </span>
+            }
+          />
+        )}
+
+        <SettingsRow
+          label={t("anthologyState.buffer")}
+          control={
+            <span style={valueStyle}>
+              {anthologyState?.useBuffer
+                ? t("common.enabled")
+                : t("common.disabled")}
+            </span>
+          }
+        />
+
+        <SettingsRow
+          label={t("anthologyState.whitelistOnly")}
+          control={
+            <span style={valueStyle}>
+              {anthologyState?.whitelistEnabled
+                ? t("common.enabled")
+                : t("common.disabled")}
+            </span>
+          }
+        />
+
+        <SettingsRow
+          label={t("anthologyState.defaultSkin")}
+          control={
+            <span style={valueStyle}>
+              {anthologyState?.skin
+                ? removePadding(anthologyState.skin)
+                : DEFAULT_SKIN}
+            </span>
+          }
+        />
+      </div>
+    );
+  }
 
   return (
     <div

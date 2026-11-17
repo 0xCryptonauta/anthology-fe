@@ -6,6 +6,7 @@ import { useTranslation } from "@src/i18n/useTranslation";
 interface SelectorProps {
   value: SkinType;
   onChange: (value: SkinType) => void;
+  disabled?: boolean;
 }
 
 // Kept in English on purpose (product terms) so the control stays compact on
@@ -13,7 +14,11 @@ interface SelectorProps {
 const skinOptions = ["media", "text", "json", "list", "playlist"];
 
 // Define the component
-export const SkinSelector = ({ value, onChange }: SelectorProps) => {
+export const SkinSelector = ({
+  value,
+  onChange,
+  disabled = false,
+}: SelectorProps) => {
   const { t } = useTranslation();
 
   // Handle the change event
@@ -26,6 +31,7 @@ export const SkinSelector = ({ value, onChange }: SelectorProps) => {
     <select
       value={value}
       onChange={handleChange}
+      disabled={disabled}
       translate="no"
       aria-label={t("a11y.skinSelector")}
       style={{
@@ -37,7 +43,8 @@ export const SkinSelector = ({ value, onChange }: SelectorProps) => {
         border: "1px solid #e2e2e2",
         fontSize: "14px",
         fontWeight: 500,
-        cursor: "pointer",
+        cursor: disabled ? "not-allowed" : "pointer",
+        opacity: disabled ? 0.7 : 1,
         outline: "none",
         transition: "all 0.2s ease",
         boxShadow: "0 1px 2px rgba(0,0,0,0.05)",

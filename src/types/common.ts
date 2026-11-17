@@ -4,7 +4,8 @@ export type CurrentPaths =
   | "factory"
   | `user/${string}`
   | `contract/${string}`
-  | "discover";
+  | "discover"
+  | "connect";
 
 export type Address = `0x${string}`;
 

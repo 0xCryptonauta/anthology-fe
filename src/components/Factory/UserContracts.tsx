@@ -5,11 +5,17 @@ import { syncUserContractsToStore } from "@src/store/utils/thunks";
 import { Address, CurrentPaths, MemoirContent } from "@src/types/common";
 import { parseContractsCategoriesSorted } from "@src/utils/parseContractsCategories";
 import { DeployButton } from "./DeployButton";
+import { DownloadReduxStore } from "@components/Layout/DownloadReduxStore";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
 import "@src/styles/backgrounds.css";
-import { getBgClass, hashString } from "@utils/backgrounds";
+import { getBgClass } from "@utils/backgrounds";
+import {
+  getCategoryStyles,
+  getCategoryTitleSizeClass,
+} from "@src/utils/categoryStyles";
 import { useTranslation } from "@src/i18n/useTranslation";
+import { QrIcon } from "@components/Layout/QrIcon";
 
 const MemoirSearchResults = lazy(() =>
   import("@src/components/Anthology/MemoirSearchResults").then((m) => ({
@@ -20,37 +26,8 @@ const MemoirSearchResults = lazy(() =>
 interface UserContractsProps {
   userAddr: Address;
   userTitles: MemoirContent[];
+  memoirCounts?: Record<string, number>;
 }
-
-const CATEGORY_COLORS = [
-  "border-cyan-500/40 shadow-[0_0_15px_rgba(6,182,212,0.15)]",
-  "border-yellow-500/40 shadow-[0_0_15px_rgba(234,179,8,0.15)]",
-  "border-red-500/40 shadow-[0_0_15px_rgba(239,68,68,0.15)]",
-  "border-purple-500/40 shadow-[0_0_15px_rgba(168,85,247,0.15)]",
-  "border-orange-500/40 shadow-[0_0_15px_rgba(249,115,22,0.15)]",
-  "border-green-500/40 shadow-[0_0_15px_rgba(34,197,94,0.15)]",
-  "border-pink-500/40 shadow-[0_0_15px_rgba(236,72,153,0.15)]",
-  "border-blue-500/40 shadow-[0_0_15px_rgba(59,130,246,0.15)]",
-  "border-emerald-500/40 shadow-[0_0_15px_rgba(16,185,129,0.15)]",
-  "border-violet-500/40 shadow-[0_0_15px_rgba(139,92,246,0.15)]",
-  "border-rose-500/40 shadow-[0_0_15px_rgba(244,63,94,0.15)]",
-  "border-amber-500/40 shadow-[0_0_15px_rgba(245,158,11,0.15)]",
-  "border-lime-500/40 shadow-[0_0_15px_rgba(132,204,22,0.15)]",
-  "border-sky-500/40 shadow-[0_0_15px_rgba(14,165,233,0.15)]",
-  "border-fuchsia-500/40 shadow-[0_0_15px_rgba(217,70,239,0.15)]",
-];
-
-const getCategoryStyles = (category: string) =>
-  CATEGORY_COLORS[hashString(category) % CATEGORY_COLORS.length];
-
-// Scale the header font down for longer category names so they fit the 60px
-// card unit without truncating with an ellipsis.
-const getCategoryTitleSizeClass = (length: number): string => {
-  if (length <= 14) return "text-lg";
-  if (length <= 20) return "text-base";
-  if (length <= 26) return "text-sm";
-  return "text-xs";
-};
 
 /* ------------------------------- Card units ------------------------------- */
 // One unopened card = exactly one grid row. Expanded cards snap their height
@@ -133,6 +110,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
 export const UserContracts: React.FC<UserContractsProps> = ({
   userAddr,
   userTitles,
+  memoirCounts,
 }) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -155,6 +133,14 @@ export const UserContracts: React.FC<UserContractsProps> = ({
     localStorage.setItem(EXPANDED_KEY, JSON.stringify(expandedCategories));
   }, [expandedCategories, EXPANDED_KEY]);
 
+  const memoirCountLabel = (address: string): string | null => {
+    const count = memoirCounts?.[address];
+    if (count === undefined) return null;
+    return count === 1
+      ? t("connect.memoirCountOne")
+      : t("connect.memoirCount", { count });
+  };
+
   const handleOnClick = (newCurrentPath: CurrentPaths) => {
     dispatch(updateCurrentPath(newCurrentPath));
     window.history.pushState({ currentPath: newCurrentPath }, "", window.location.pathname);
@@ -165,6 +151,17 @@ export const UserContracts: React.FC<UserContractsProps> = ({
       ...prev,
       [category]: !prev[category],
     }));
+  };
+
+  const hasExpandedCategory = useMemo(
+    () => Object.values(expandedCategories).some(Boolean),
+    [expandedCategories]
+  );
+
+  const collapseAllCategories = () => {
+    setExpandedCategories((previous) =>
+      Object.values(previous).some(Boolean) ? {} : previous
+    );
   };
 
   const processedData = useMemo(() => {
@@ -230,11 +227,15 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                 <li key={address}>
                   <button
                     type="button"
-                    translate="no"
-                    className="text-lg cursor-pointer text-white hover:text-white transition-colors bg-transparent border-none p-0 text-left"
+                    className="inline-flex flex-wrap items-baseline gap-1 text-lg cursor-pointer text-white hover:text-white transition-colors bg-transparent border-none p-0 text-left"
                     onClick={() => handleOnClick(`contract/${address}`)}
                   >
-                    &middot; {title}
+                    <span translate="no">&middot; {title}</span>
+                    {memoirCountLabel(address) && (
+                      <span className="text-xs text-zinc-400">
+                        {memoirCountLabel(address)}
+                      </span>
+                    )}
                   </button>
                 </li>
               ))}
@@ -248,11 +249,15 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                     <li key={address}>
                       <button
                         type="button"
-                        translate="no"
-                        className="text-lg cursor-pointer text-white hover:text-white transition-colors bg-transparent border-none p-0 text-left"
+                        className="inline-flex flex-wrap items-baseline gap-1 text-lg cursor-pointer text-white hover:text-white transition-colors bg-transparent border-none p-0 text-left"
                         onClick={() => handleOnClick(`contract/${address}`)}
                       >
-                        &middot; {title}
+                        <span translate="no">&middot; {title}</span>
+                        {memoirCountLabel(address) && (
+                          <span className="text-xs text-zinc-400">
+                            {memoirCountLabel(address)}
+                          </span>
+                        )}
                       </button>
                     </li>
                   ))}
@@ -288,11 +293,17 @@ export const UserContracts: React.FC<UserContractsProps> = ({
             <li key={address}>
               <button
                 type="button"
-                translate="no"
-                className="text-sm cursor-pointer text-white hover:text-white transition-colors bg-transparent border-none p-0 text-left"
+                className="inline-flex flex-wrap items-baseline gap-1 text-sm cursor-pointer text-white hover:text-white transition-colors bg-transparent border-none p-0 text-left"
                 onClick={() => handleOnClick(`contract/${address}`)}
               >
-                &middot; {title.trim() ? title : shortenAddress(address, 12, 9)}
+                <span translate="no">
+                  &middot; {title.trim() ? title : shortenAddress(address, 12, 9)}
+                </span>
+                {memoirCountLabel(address) && (
+                  <span className="text-xs text-zinc-400">
+                    {memoirCountLabel(address)}
+                  </span>
+                )}
               </button>
             </li>
           ))}
@@ -314,13 +325,46 @@ export const UserContracts: React.FC<UserContractsProps> = ({
             </div>
               )} */}
             
-            <div className="flex flex-wrap items-center gap-2">
+            <div
+              className="flex flex-wrap items-center"
+              style={{ marginLeft: "-10px", gap: "4px" }}
+            >
+              {userAddr === LOCAL_USER_ADDR && (
+                <DownloadReduxStore
+                  mode="share"
+                  trigger={
+                    <button
+                      type="button"
+                      title={t("connect.shareQr")}
+                      aria-label={t("connect.shareQr")}
+                      style={{
+                        width: "44px",
+                        height: "44px",
+                        padding: "4px",
+                        border: "none",
+                        borderRadius: "8px",
+                        background: "transparent",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
+                        cursor: "pointer",
+                      }}
+                    >
+                      <QrIcon size={36} radius={4} />
+                    </button>
+                  }
+                />
+              )}
               {/* `text-2xl!` is required: the legacy unlayered
                   `h1 { font-size: 3.2em }` rule in index.css beats Tailwind's
                   layered utilities, which rendered this heading at 51px and
                   widened the whole page past phone viewports. `wrap-anywhere`
                   keeps long wallet addresses from forcing it wider still. */}
-              <h1 className="m-0 text-2xl! font-medium leading-none wrap-anywhere">
+              <h1
+                className="text-2xl! font-medium leading-none wrap-anywhere"
+                style={{ margin: 0 }}
+              >
                 <button
                   type="button"
                   className="text-2xl font-medium hover:text-white transition-colors bg-transparent border-none text-zinc-100 p-0"
@@ -343,11 +387,6 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                   {userAddr === LOCAL_USER_ADDR ? t("nav.privateMemory") : shortenAddress(userAddr, 12, 9)}
                 </button>
               </h1>
-              {userAddr === LOCAL_USER_ADDR && (
-                <span className="text-xs font-bold tracking-wider bg-cyan-500/20 text-cyan-50 px-2 py-0.5 rounded-md select-none">
-                  {t("directory.local")}
-                </span>
-              )}
             </div>
           </div>
           {(currentUserAddr === userAddr || userAddr === LOCAL_USER_ADDR) && (
@@ -356,25 +395,50 @@ export const UserContracts: React.FC<UserContractsProps> = ({
         </div>
 
         {userAddr === LOCAL_USER_ADDR && (
-          <div className="w-full max-w-2xl mx-auto mb-6 relative">
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={t("directory.searchAll")}
-              type="search"
-              aria-label={t("a11y.searchMemoirs")}
-              className="w-full px-4 py-2 pr-10 rounded-xl bg-[#161b22] border border-sky-500/40 text-zinc-100 placeholder-zinc-400 outline-none"
-            />
-            {search && (
-              <button
-                onClick={() => setSearch("")}
-                aria-label="Clear search"
-                style={{ padding: 0 }}
-                className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-none p-0 text-zinc-400 hover:text-zinc-100 text-sm leading-none cursor-pointer"
+          <div className="w-full max-w-2xl mx-auto mb-6 flex items-center gap-2">
+            <div className="relative flex-1 min-w-0">
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder={t("directory.searchAll")}
+                type="search"
+                aria-label={t("a11y.searchMemoirs")}
+                className="w-full px-4 py-2 pr-10 rounded-xl bg-[#161b22] border border-sky-500/40 text-zinc-100 placeholder-zinc-400 outline-none"
+              />
+              {search && (
+                <button
+                  onClick={() => setSearch("")}
+                  aria-label="Clear search"
+                  style={{ padding: 0 }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-none p-0 text-zinc-400 hover:text-zinc-100 text-sm leading-none cursor-pointer"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={collapseAllCategories}
+              disabled={!hasExpandedCategory}
+              aria-label={t("directory.collapseAll")}
+              title={t("directory.collapseAll")}
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl p-0 bg-[#161b22] border border-sky-500/40 text-zinc-100 transition-colors hover:bg-[#1f2937] disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
               >
-                ✕
-              </button>
-            )}
+                <path d="M7 14l5-5 5 5" />
+                <path d="M7 20l5-5 5 5" />
+              </svg>
+            </button>
           </div>
         )}
 

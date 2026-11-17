@@ -1,22 +1,39 @@
+import { useMemo } from "react";
 import { UserContracts } from "@components/Factory/UserContracts";
 import { MemoirContent } from "@src/types/common";
 import { useAppSelector } from "@src/store/utils/hooks";
-import { Address } from "@src/types/common";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
+import { getOwnLocalAddresses } from "@src/utils/localMemoryPayload";
 
 export const LocalUserView = () => {
-  const { userContracts, contractsTitles } = useAppSelector(
-    (state) => state.localAnthology
+  const localAnthology = useAppSelector((state) => state.localAnthology);
+  const { contractsTitles, anthologies } = localAnthology;
+
+  const ownAddresses = useMemo(
+    () => getOwnLocalAddresses(localAnthology),
+    [localAnthology]
   );
 
-  const userTitles: MemoirContent[] =
-    userContracts?.[LOCAL_USER_ADDR]?.map(
-      (contractAddr: Address, index: number) => ({
+  const memoirCounts = useMemo(
+    () =>
+      Object.fromEntries(
+        ownAddresses.map((address) => [
+          address,
+          (anthologies[address] || []).length,
+        ])
+      ),
+    [ownAddresses, anthologies]
+  );
+
+  const userTitles: MemoirContent[] = useMemo(
+    () =>
+      ownAddresses.map((contractAddr, index) => ({
         address: contractAddr,
         title: contractsTitles[contractAddr] || "",
         originalIndex: index,
-      })
-    ) || []; // Provide a default value if userTitles is undefined
+      })),
+    [ownAddresses, contractsTitles]
+  );
 
   return (
     <div
@@ -29,7 +46,11 @@ export const LocalUserView = () => {
         flexWrap: "wrap",
       }}
     >
-      <UserContracts userAddr={LOCAL_USER_ADDR} userTitles={userTitles} />
+      <UserContracts
+        userAddr={LOCAL_USER_ADDR}
+        userTitles={userTitles}
+        memoirCounts={memoirCounts}
+      />
     </div>
   );
 };

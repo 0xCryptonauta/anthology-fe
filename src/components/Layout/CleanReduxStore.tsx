@@ -8,6 +8,7 @@ import { resetFactoryStore } from "@src/store/slices/factorySlice";
 import { resetDappStore } from "@src/store/slices/dappSlice";
 import { resetUserStore } from "@src/store/slices/userSlice";
 import { resetLocalAnthologyStore } from "@src/store/slices/localAnthologySlice";
+import { resetConnectStore } from "@src/store/slices/connectSlice";
 import { useTranslation } from "@src/i18n/useTranslation";
 
 export const CleanReduxStore = () => {
@@ -22,14 +23,19 @@ export const CleanReduxStore = () => {
     <Modal
       show={show}
       onHide={handleClose}
+      disablePattern
       trigger={
         <button
+          type="button"
           style={{
-            backgroundColor: "red",
+            backgroundColor: "#7f1d1d",
+            border: "1px solid #b91c1c",
             color: "white",
-            padding: "10px 20px",
-            margin: "10px",
-            borderRadius: "5px",
+            padding: "9px 14px",
+            borderRadius: "8px",
+            fontSize: "13px",
+            fontWeight: 600,
+            cursor: "pointer",
           }}
           onClick={() => {
             setShow(true);
@@ -69,6 +75,7 @@ export const CleanReduxStore = () => {
           dispatch(resetDappStore());
           dispatch(resetUserStore());
           dispatch(resetLocalAnthologyStore());
+          dispatch(resetConnectStore());
           //clear CP timestamps in local storage
           localStorage.clear();
 

@@ -20,6 +20,7 @@ import { MemoirInterface } from "@src/store/slices/anthologySlice";
 import { HighlightDifferences } from "../Layout/HighlightDifferences";
 import { Modal } from "../Layout/Modal";
 import { useTranslation } from "@src/i18n/useTranslation";
+import { useIsReadOnlyAnthology } from "@src/hooks/useIsReadOnlyAnthology";
 
 // Imports remain the same
 
@@ -33,6 +34,7 @@ export const AddMemoir = ({
   content?: string;
 }) => {
   const { t } = useTranslation();
+  const isReadOnly = useIsReadOnlyAnthology(contractAddr);
   const [anthologyTitle, setAnthologyTitle] = useState(title);
   const [anthologyContent, setAnthologyContent] = useState(content);
   const [shouldFilterTracking, setShouldFilterTracking] = useState(true);
@@ -126,6 +128,8 @@ export const AddMemoir = ({
   ]);
 
   const handleAddMemoir = async () => {
+    if (isReadOnly) return;
+
     if (titleError || urlError) {
       addToast({
         title: t("memoir.cannotAdd"),
@@ -197,6 +201,7 @@ export const AddMemoir = ({
   }, [show]);
 
   return (
+    !isReadOnly &&
     (!whitelistEnabled ||
       whitelist.includes(userAddr) ||
       userAddr === owner) && (
@@ -287,6 +292,9 @@ export const AddMemoir = ({
             aria-describedby={titleError ? titleErrorId : undefined}
             onChange={(e) => setAnthologyTitle(e.target.value)}
             style={{
+              width: "100%",
+              maxWidth: "100%",
+              boxSizing: "border-box",
               padding: "0.75rem 1rem",
               borderRadius: "0.75rem",
               border: titleError ? "1px solid #dc2626" : "1px solid #d1d5db",
@@ -365,9 +373,11 @@ export const AddMemoir = ({
                 position: "relative",
                 zIndex: 1,
                 width: "100%",
+                maxWidth: "100%",
                 height: "10.5rem",
                 resize: "none",
                 padding: "0.75rem",
+                boxSizing: "border-box",
                 fontSize: "0.875rem",
                 fontFamily: "monospace",
                 backgroundColor: "transparent",

@@ -31,6 +31,11 @@ const DiscoverView = lazy(() =>
     default: m.DiscoverView,
   }))
 );
+const ConnectView = lazy(() =>
+  import("./factory/ConnectView").then((m) => ({
+    default: m.ConnectView,
+  }))
+);
 
 export const IndexView = () => {
   const { userAddr, currentPath } = useAppSelector((state) => state.user);
@@ -53,6 +58,8 @@ export const IndexView = () => {
         <Suspense fallback={null}>
           {currentPath === `discover` ? (
             <DiscoverView />
+          ) : currentPath === "connect" ? (
+            <ConnectView />
           ) : currentPath === `user/${userAddr}` ? (
             <CurrentUserView />
           ) : currentPath === LOCAL_USER_PATH ? (

@@ -59,7 +59,7 @@ export default defineConfig({
         cleanupOutdatedCaches: true,
         clientsClaim: true,
         skipWaiting: true,
-        globPatterns: ["**/*.{js,css,html,woff2,webp}"],
+        globPatterns: ["**/*.{js,css,html,woff2,webp,wasm}"],
         navigateFallbackDenylist: [/^\/onboarding\.html/, /^\/og-image\.html/],
         ignoreURLParametersMatching: [/^lang$/, /^utm_/, /^fbclid$/],
         runtimeCaching: [

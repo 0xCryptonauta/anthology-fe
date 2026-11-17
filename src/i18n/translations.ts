@@ -23,6 +23,8 @@ export const en = {
   "common.untitled": "Untitled",
   "common.other": "Other",
   "common.unknownError": "Unknown error",
+  "common.download": "Download",
+  "common.delete": "Delete",
 
   /* ------------------------------ Accessibility ---------------------------- */
   "a11y.skipToMain": "Skip to main content",
@@ -41,8 +43,10 @@ export const en = {
   "a11y.connectorLogo": "Wallet connection option",
 
   /* ------------------------------ Navigation ------------------------------- */
-  "nav.myAnthologies": "My Anthologies",
+  "nav.myAnthologies": "Public Memory",
+  "nav.memory": "Memory",
   "nav.discover": "Discover",
+  "nav.connect": "Connect",
   "nav.privateMemory": "Private Memory",
   "nav.about": "About",
   "nav.factoryInfo": "Factory Info",
@@ -168,11 +172,16 @@ export const en = {
   "settings.downloadData": "Download your Data",
   "settings.downloadDataTitle": "Download Your Data",
   "settings.myDiscoveries": "My Discoveries",
-  "settings.localAnthologies": "Local Anthologies",
+  "settings.localAnthologies": "Complete Memory",
+  "settings.shareCompleteMemory": "Share Complete Memory",
   "settings.customSelection": "Custom Selection",
   "settings.customFileName": "Custom File Name",
   "settings.enterFileName": "Enter file name",
-  "settings.download": "💾 Download",
+  "settings.download": "Download",
+  "settings.shareViaQr": "Share via QR",
+  "settings.chooseShareScope": "Choose what to share.",
+  "settings.shareViaQrCount": "Share {count} via QR",
+  "settings.sharePrivateOnly": "QR sharing includes private anthologies only.",
   "settings.selectAnthologies": "Select Anthologies →",
   "settings.fileNameRequired": "File name required",
   "settings.fileNameRequiredDesc":
@@ -188,6 +197,31 @@ export const en = {
   "settings.downloadCount": "Download ({count})",
   "settings.socialEmbeds": "Social embeds",
   "settings.privacySettings": "Privacy Settings",
+  "settings.profile": "Profile",
+  "settings.profileDescription": "Your name tag and language.",
+  "settings.appearance": "Appearance",
+  "settings.appearanceDescription": "How the app looks and reads.",
+  "settings.data": "Data",
+  "settings.dataDescription": "Back up, restore, and manage local data.",
+  "settings.app": "App",
+  "settings.appDescription": "Install the app and manage privacy.",
+  "settings.advanced": "Advanced",
+  "settings.advancedDescription": "Network and RPC settings.",
+  "settings.danger": "Danger zone",
+  "settings.dangerDescription": "Destructive actions cannot be undone.",
+  "settings.export": "Export",
+  "settings.localData": "Local Data",
+  "settings.actionShareExport": "Share/Export",
+  "settings.actionLoad": "Load",
+  "settings.actionView": "View",
+  "settings.actionClear": "Clear",
+  "settings.import": "Import",
+  "settings.storage": "Storage",
+  "settings.cache": "Cache",
+  "settings.installApp": "Install app",
+  "settings.deleteMemoryDescription":
+    "Delete every anthology and connection on this device.",
+  "settings.notSet": "Not set",
   "settings.socialEmbedsDesc":
     "Nothing from social platforms loads until you allow it here or choose Load once in an embed. Enabling a provider may let it set cookies or collect data under its own policy. Turning it off stops new embeds but does not delete cookies the provider already set.",
   "settings.socialEmbedsPolicy": "Official privacy policy: {provider}",
@@ -245,6 +279,12 @@ export const en = {
   "load.button": "Load JSON",
   "load.addToMemory": "Add to my memory",
   "load.anthologyAdded": "Anthology added to your memory",
+  "load.sharedByPrefix": "Shared by",
+  "load.invalidSharedBy": "This share has an invalid sender name.",
+  "load.invalidSharedByDesc":
+    "Ask the sender to check their nametag, or import it as a backup at your own risk.",
+  "load.fileError": "Could not read the file",
+  "load.fileErrorDesc": "Use a valid JSON file under 10 MB.",
   "load.discoverPart": "Discover",
   "load.memoryPart": "Private Memory",
   "load.addedToMemory": "Added to your memory",
@@ -271,6 +311,9 @@ export const en = {
 
   /* --------------------------------- Install -------------------------------- */
   "install.label": "Install App: ",
+  "install.button": "Install",
+  "install.installed": "Installed",
+  "install.unavailable": "Not available",
 
   /* ------------------------------- Backgrounds ------------------------------ */
   "backgrounds.toggle": "Category Backgrounds",
@@ -280,6 +323,7 @@ export const en = {
 
   /* -------------------------------- Directory ------------------------------- */
   "directory.searchAll": "Search all memoirs...",
+  "directory.collapseAll": "Collapse all categories",
   "directory.local": "LOCAL",
   "discover.noAnthologies": "You have not discovered any Anthologies",
   "discover.notFound": "Anthologies not found",
@@ -336,6 +380,15 @@ export const en = {
   "anthology.info": "Anthology Info",
   "anthology.show": "Show Anthology",
 
+  /* ----------------------------- Anthology panel --------------------------- */
+  "anthologyPanel.title": "Anthology",
+  "anthologyPanel.open": "Open anthology info and settings",
+  "anthologyPanel.close": "Close",
+  "anthologyPanel.info": "Anthology Info",
+  "anthologyPanel.settings": "Anthology Settings",
+  "anthologyPanel.ownerOnly":
+    "Only the anthology owner can change these settings.",
+
   /* ----------------------------- Anthology state ---------------------------- */
   "anthologyState.address": "Anthology Address",
   "anthologyState.shareQr": "Share QR Code",
@@ -362,6 +415,10 @@ export const en = {
   /* --------------------------- Local anthology state ------------------------ */
   "localState.maxMemoirs": "Max memoirs",
   "localState.download": "Download Anthology",
+  "localState.downloadConfirmTitle": "Download this anthology?",
+  "localState.downloadConfirmDesc":
+    "A JSON copy of “{title}” will be saved to your device.",
+  "localState.downloadConfirm": "Download",
   "localState.delete": "Delete Anthology",
   "localState.deleteTitle": "Delete this anthology?",
   "localState.deleteDesc":
@@ -547,6 +604,100 @@ export const en = {
   "memoirs.showingCount": "Showing {loaded} of {total} memoirs",
   "memoirs.allLoaded": "All {total} memoirs loaded",
 
+  /* --------------------------------- Connect -------------------------------- */
+  "connect.title": "Connect",
+  "connect.subtitle": "Share private anthologies in person, without a server.",
+  "connect.scan": "Scan to connect",
+  "connect.setNametag": "Set Name Tag",
+  "connect.changeNametag": "Change Name Tag",
+  "connect.sharingAs": "Share by:",
+  "connect.empty":
+    "No connections yet. Scan someone's QR to receive their private anthologies.",
+  "connect.anthologyCount": "{count} anthologies",
+  "connect.anthologyCountOne": "1 anthology",
+  "connect.searchPlaceholder": "Search connected anthologies",
+  "connect.searchClear": "Clear search",
+  "connect.searchNoResults": "No connected anthologies match “{query}”.",
+  "connect.memoirCount": "{count} memoirs",
+  "connect.memoirCountOne": "1 memoir",
+  "connect.lastConnected": "Last connected {date}",
+  "connect.readOnlyBannerPrefix": "Shared by",
+  "connect.readOnlyBannerSuffix": "— read-only",
+  "connect.readOnlyHint":
+    "You can read, copy, and share these memoirs, but not edit or add to them.",
+  "connect.connectedFrom": "Connected from",
+  "connect.receivedOn": "Received",
+  "connect.nametagTitle": "Your nametag",
+  "connect.nametagLabel": "Name others will see",
+  "connect.nametagHelp":
+    "Required to share. People you connect with will see this name.",
+  "connect.nametagEmpty": "Enter a name before sharing.",
+  "connect.nametagTooLong": "Use 32 characters or fewer.",
+  "connect.nametagSaved": "Nametag saved.",
+  "connect.shareTitle": "Share \"{title}\"",
+  "connect.shareQr": "Share by QR",
+  "connect.start": "Start stream",
+  "connect.stop": "Stop stream",
+  "connect.preparing": "Preparing…",
+  "connect.readyToStream": "Ready to stream",
+  "connect.streaming": "Streaming…",
+  "connect.estimated": "~{seconds} s · {size} KB",
+  "connect.streamSpeed": "Stream speed",
+  "connect.tooLarge":
+    "This share is {size} KB. QR streaming is limited to 1 MB; download the share file instead.",
+  "connect.downloadShareFile": "Download share file instead",
+  "connect.qrAria": "Animated QR code containing this anthology share",
+  "connect.streamHint":
+    "Point the other device's camera at this code. Keep this screen open.",
+  "connect.unsupported":
+    "This browser can't stream QR codes. Download the share file instead.",
+  "connect.shareGroupTitle": "Share private anthologies",
+  "connect.receiveTitle": "Scan to connect",
+  "connect.scanningHint": "Point the camera at the other device's code.",
+  "connect.cameraPreview": "Camera preview for scanning a connection QR",
+  "connect.blocks": "{solved} / {total} blocks · {percent}% · {rate} frames/s",
+  "connect.cameraSwitch": "Switch camera",
+  "connect.switching": "Switching…",
+  "connect.cameraError": "Camera unavailable. Check permissions and try again.",
+  "connect.decoderError":
+    "The QR decoder could not load. Open the app once with internet, then try again.",
+  "connect.readerError": "The stream could not be read. Try scanning again.",
+  "connect.stale": "A different stream is being received. Scan again to switch.",
+  "connect.decode.invalid-json": "This QR isn't valid JSON.",
+  "connect.decode.invalid-payload": "This QR isn't an Anthology share.",
+  "connect.decode.missing-sender":
+    "This share doesn't include a sender name. Ask the sender to update the app.",
+  "connect.decode.invalid-sender":
+    "This share has an invalid sender name. Ask the sender to check their nametag.",
+  "connect.reviewTitle": "Review connection",
+  "connect.wantsToConnect": "wants to connect",
+  "connect.previewCounts": "{anthologies} anthologies · {memoirs} memoirs",
+  "connect.addToMemory": "Add to memory",
+  "connect.scanAgain": "Scan again",
+  "connect.imported": "Connected with {name}",
+  "connect.importedDesc":
+    "{anthologies} anthologies and {memoirs} memoirs added to your memory.",
+  "connect.selfShare":
+    "That's your own share — the content is already in your memory.",
+  "connect.deleteCopyTitle": "Remove this connected anthology?",
+  "connect.deleteCopyDesc":
+    "This removes your copy only. The sender's anthology is unchanged.",
+  "connect.downloadConnectedTitleOne": "Download a connected anthology",
+  "connect.downloadConnectedDescOne":
+    "The downloaded JSON can be edited on another device. Continue?",
+  "connect.downloadConnectedConfirm": "Download",
+  "connect.shareSkippedConnected":
+    "{count} connected anthologies were skipped",
+  "connect.shareSkippedConnectedDesc":
+    "Only your own anthologies can be shared.",
+  "connect.shareOnlyConnected":
+    "Only connected anthologies were selected",
+  "connect.shareOnlyConnectedDesc":
+    "Connected anthologies can't be re-shared. Select one of your own.",
+  "connect.copyMemoirTitle": "Copy to my anthology",
+  "connect.copyNoDestination":
+    "Create a private anthology of your own first.",
+
   /* --------------------------------- Search --------------------------------- */
   "search.result": "result",
   "search.results": "results",
@@ -572,6 +723,8 @@ export const es: Record<TranslationKey, string> = {
   "common.untitled": "Sin título",
   "common.other": "Otros",
   "common.unknownError": "Error desconocido",
+  "common.download": "Descargar",
+  "common.delete": "Eliminar",
 
   /* ------------------------------ Accessibility ---------------------------- */
   "a11y.skipToMain": "Saltar al contenido principal",
@@ -590,8 +743,10 @@ export const es: Record<TranslationKey, string> = {
   "a11y.connectorLogo": "Opción de conexión de billetera",
 
   /* ------------------------------ Navigation ------------------------------- */
-  "nav.myAnthologies": "Mis antologías",
+  "nav.myAnthologies": "Memoria pública",
+  "nav.memory": "Memoria",
   "nav.discover": "Explorar",
+  "nav.connect": "Conectar",
   "nav.privateMemory": "Memoria privada",
   "nav.about": "Acerca de",
   "nav.factoryInfo": "Info de fábrica",
@@ -717,11 +872,17 @@ export const es: Record<TranslationKey, string> = {
   "settings.downloadData": "Descargar tus datos",
   "settings.downloadDataTitle": "Descargar tus datos",
   "settings.myDiscoveries": "Mis descubrimientos",
-  "settings.localAnthologies": "Antologías locales",
+  "settings.localAnthologies": "Memoria Completa",
+  "settings.shareCompleteMemory": "Compartir memoria completa",
   "settings.customSelection": "Selección personalizada",
   "settings.customFileName": "Nombre de archivo personalizado",
   "settings.enterFileName": "Escribe un nombre de archivo",
-  "settings.download": "💾 Descargar",
+  "settings.download": "Descargar",
+  "settings.shareViaQr": "Compartir por QR",
+  "settings.chooseShareScope": "Elige qué compartir.",
+  "settings.shareViaQrCount": "Compartir {count} por QR",
+  "settings.sharePrivateOnly":
+    "Compartir por QR incluye solo antologías privadas.",
   "settings.selectAnthologies": "Seleccionar antologías →",
   "settings.fileNameRequired": "Nombre de archivo requerido",
   "settings.fileNameRequiredDesc":
@@ -737,6 +898,32 @@ export const es: Record<TranslationKey, string> = {
   "settings.downloadCount": "Descargar ({count})",
   "settings.socialEmbeds": "Embeds sociales",
   "settings.privacySettings": "Ajustes de privacidad",
+  "settings.profile": "Perfil",
+  "settings.profileDescription": "Tu apodo e idioma.",
+  "settings.appearance": "Apariencia",
+  "settings.appearanceDescription": "Cómo se ve y se lee la app.",
+  "settings.data": "Datos",
+  "settings.dataDescription": "Respalda, restaura y gestiona los datos locales.",
+  "settings.app": "Aplicación",
+  "settings.appDescription": "Instala la app y gestiona la privacidad.",
+  "settings.advanced": "Avanzado",
+  "settings.advancedDescription": "Ajustes de red y RPC.",
+  "settings.danger": "Zona de peligro",
+  "settings.dangerDescription":
+    "Las acciones destructivas no se pueden deshacer.",
+  "settings.export": "Exportar",
+  "settings.localData": "Datos locales",
+  "settings.actionShareExport": "Compartir/Exportar",
+  "settings.actionLoad": "Cargar",
+  "settings.actionView": "Ver",
+  "settings.actionClear": "Borrar",
+  "settings.import": "Importar",
+  "settings.storage": "Almacenamiento",
+  "settings.cache": "Caché",
+  "settings.installApp": "Instalar app",
+  "settings.deleteMemoryDescription":
+    "Elimina todas las antologías y conexiones de este dispositivo.",
+  "settings.notSet": "Sin configurar",
   "settings.socialEmbedsDesc":
     "Nada de las plataformas sociales se carga hasta que lo permitas aquí o elijas Cargar una vez en un embed. Activar un proveedor puede permitirle establecer cookies o recopilar datos según su propia política. Desactivarlo detiene las nuevas cargas, pero no borra las cookies que el proveedor ya estableció.",
   "settings.socialEmbedsPolicy": "Política de privacidad oficial: {provider}",
@@ -794,6 +981,13 @@ export const es: Record<TranslationKey, string> = {
   "load.button": "Cargar JSON",
   "load.addToMemory": "Añadir a mi memoria",
   "load.anthologyAdded": "Antología añadida a tu memoria",
+  "load.sharedByPrefix": "Compartido por",
+  "load.invalidSharedBy":
+    "Esta compartición tiene un nombre de remitente no válido.",
+  "load.invalidSharedByDesc":
+    "Pide al remitente que revise su apodo o impórtalo como copia de seguridad bajo tu responsabilidad.",
+  "load.fileError": "No se pudo leer el archivo",
+  "load.fileErrorDesc": "Usa un archivo JSON válido de menos de 10 MB.",
   "load.discoverPart": "Explorar",
   "load.memoryPart": "Memoria privada",
   "load.addedToMemory": "Añadido a tu memoria",
@@ -820,6 +1014,9 @@ export const es: Record<TranslationKey, string> = {
 
   /* --------------------------------- Install -------------------------------- */
   "install.label": "Instalar app: ",
+  "install.button": "Instalar",
+  "install.installed": "Instalada",
+  "install.unavailable": "No disponible",
 
   /* ------------------------------- Backgrounds ------------------------------ */
   "backgrounds.toggle": "Fondos de categoría",
@@ -829,6 +1026,7 @@ export const es: Record<TranslationKey, string> = {
 
   /* -------------------------------- Directory ------------------------------- */
   "directory.searchAll": "Buscar en todos los memoirs...",
+  "directory.collapseAll": "Contraer todas las categorías",
   "directory.local": "LOCAL",
   "discover.noAnthologies": "Aún no has descubierto antologías",
   "discover.notFound": "No se encontraron antologías",
@@ -887,6 +1085,15 @@ export const es: Record<TranslationKey, string> = {
   "anthology.info": "Info Antología",
   "anthology.show": "Ver Antología",
 
+  /* ----------------------------- Anthology panel --------------------------- */
+  "anthologyPanel.title": "Antología",
+  "anthologyPanel.open": "Abrir información y ajustes de la antología",
+  "anthologyPanel.close": "Cerrar",
+  "anthologyPanel.info": "Información de la antología",
+  "anthologyPanel.settings": "Ajustes de la antología",
+  "anthologyPanel.ownerOnly":
+    "Solo el propietario de la antología puede cambiar estos ajustes.",
+
   /* ----------------------------- Anthology state ---------------------------- */
   "anthologyState.address": "Dirección de la antología",
   "anthologyState.shareQr": "Código QR para compartir",
@@ -914,6 +1121,10 @@ export const es: Record<TranslationKey, string> = {
   /* --------------------------- Local anthology state ------------------------ */
   "localState.maxMemoirs": "Máximo de memoirs",
   "localState.download": "Descargar antología",
+  "localState.downloadConfirmTitle": "¿Descargar esta antología?",
+  "localState.downloadConfirmDesc":
+    "Se guardará una copia JSON de «{title}» en tu dispositivo.",
+  "localState.downloadConfirm": "Descargar",
   "localState.delete": "Borrar antología",
   "localState.deleteTitle": "¿Borrar esta antología?",
   "localState.deleteDesc":
@@ -1099,6 +1310,106 @@ export const es: Record<TranslationKey, string> = {
   "memoirs.loadingMore": "Cargando más memoirs...",
   "memoirs.showingCount": "Mostrando {loaded} de {total} memoirs",
   "memoirs.allLoaded": "Se cargaron los {total} memoirs",
+
+  /* --------------------------------- Connect -------------------------------- */
+  "connect.title": "Conectar",
+  "connect.subtitle":
+    "Comparte antologías privadas en persona, sin servidor.",
+  "connect.scan": "Escanear para conectar",
+  "connect.setNametag": "Configurar apodo",
+  "connect.changeNametag": "Cambiar apodo",
+  "connect.sharingAs": "Compartido por:",
+  "connect.empty":
+    "Aún no hay conexiones. Escanea el QR de alguien para recibir sus antologías privadas.",
+  "connect.anthologyCount": "{count} antologías",
+  "connect.anthologyCountOne": "1 antología",
+  "connect.searchPlaceholder": "Buscar antologías conectadas",
+  "connect.searchClear": "Borrar búsqueda",
+  "connect.searchNoResults": "Ninguna antología conectada coincide con “{query}”.",
+  "connect.memoirCount": "{count} memoirs",
+  "connect.memoirCountOne": "1 memoir",
+  "connect.lastConnected": "Última conexión: {date}",
+  "connect.readOnlyBannerPrefix": "Compartido por",
+  "connect.readOnlyBannerSuffix": "— solo lectura",
+  "connect.readOnlyHint":
+    "Puedes leer, copiar y compartir estos memoirs, pero no editarlos ni añadirlos.",
+  "connect.connectedFrom": "Conectado desde",
+  "connect.receivedOn": "Recibido",
+  "connect.nametagTitle": "Tu apodo",
+  "connect.nametagLabel": "Nombre que verán los demás",
+  "connect.nametagHelp":
+    "Obligatorio para compartir. Las personas con las que conectes verán este nombre.",
+  "connect.nametagEmpty": "Escribe un nombre antes de compartir.",
+  "connect.nametagTooLong": "Usa 32 caracteres o menos.",
+  "connect.nametagSaved": "Apodo guardado.",
+  "connect.shareTitle": "Compartir \"{title}\"",
+  "connect.shareQr": "Compartir por QR",
+  "connect.start": "Iniciar transmisión",
+  "connect.stop": "Detener transmisión",
+  "connect.preparing": "Preparando…",
+  "connect.readyToStream": "Listo para transmitir",
+  "connect.streaming": "Transmitiendo…",
+  "connect.estimated": "~{seconds} s · {size} KB",
+  "connect.streamSpeed": "Velocidad de transmisión",
+  "connect.tooLarge":
+    "Esta compartición ocupa {size} KB. La transmisión QR está limitada a 1 MB; descarga el archivo para compartir.",
+  "connect.downloadShareFile": "Descargar archivo para compartir",
+  "connect.qrAria": "Código QR animado que contiene esta antología compartida",
+  "connect.streamHint":
+    "Apunta la cámara del otro dispositivo a este código. Mantén esta pantalla abierta.",
+  "connect.unsupported":
+    "Este navegador no puede transmitir códigos QR. Descarga el archivo para compartir.",
+  "connect.shareGroupTitle": "Compartir antologías privadas",
+  "connect.receiveTitle": "Escanear para conectar",
+  "connect.scanningHint": "Apunta la cámara al código del otro dispositivo.",
+  "connect.cameraPreview": "Vista de la cámara para escanear un QR de conexión",
+  "connect.blocks":
+    "{solved} / {total} bloques · {percent}% · {rate} fotogramas/s",
+  "connect.cameraSwitch": "Cambiar cámara",
+  "connect.switching": "Cambiando…",
+  "connect.cameraError":
+    "Cámara no disponible. Revisa los permisos e inténtalo de nuevo.",
+  "connect.decoderError":
+    "No se pudo cargar el decodificador QR. Abre la app una vez con internet e inténtalo de nuevo.",
+  "connect.readerError":
+    "No se pudo leer la transmisión. Intenta escanear de nuevo.",
+  "connect.stale":
+    "Se está recibiendo otra transmisión. Escanea de nuevo para cambiar.",
+  "connect.decode.invalid-json": "Este QR no es JSON válido.",
+  "connect.decode.invalid-payload": "Este QR no es una antología compartida.",
+  "connect.decode.missing-sender":
+    "Esta compartición no incluye un nombre de remitente. Pide al remitente que actualice la app.",
+  "connect.decode.invalid-sender":
+    "Esta compartición tiene un nombre de remitente no válido. Pide al remitente que revise su apodo.",
+  "connect.reviewTitle": "Revisar conexión",
+  "connect.wantsToConnect": "quiere conectar",
+  "connect.previewCounts": "{anthologies} antologías · {memoirs} memoirs",
+  "connect.addToMemory": "Añadir a la memoria",
+  "connect.scanAgain": "Escanear de nuevo",
+  "connect.imported": "Conectado con {name}",
+  "connect.importedDesc":
+    "{anthologies} antologías y {memoirs} memoirs añadidos a tu memoria.",
+  "connect.selfShare":
+    "Es tu propia compartición: el contenido ya está en tu memoria.",
+  "connect.deleteCopyTitle": "¿Eliminar esta antología conectada?",
+  "connect.deleteCopyDesc":
+    "Esto elimina solo tu copia. La antología del remitente no cambia.",
+  "connect.downloadConnectedTitleOne":
+    "Descargar una antología conectada",
+  "connect.downloadConnectedDescOne":
+    "El JSON descargado se puede editar en otro dispositivo. ¿Continuar?",
+  "connect.downloadConnectedConfirm": "Descargar",
+  "connect.shareSkippedConnected":
+    "Se omitieron {count} antologías conectadas",
+  "connect.shareSkippedConnectedDesc":
+    "Solo se pueden compartir tus propias antologías.",
+  "connect.shareOnlyConnected":
+    "Solo se seleccionaron antologías conectadas",
+  "connect.shareOnlyConnectedDesc":
+    "Las antologías conectadas no se pueden volver a compartir. Elige una de las tuyas.",
+  "connect.copyMemoirTitle": "Copiar a mi antología",
+  "connect.copyNoDestination":
+    "Crea primero una antología privada tuya.",
 
   /* --------------------------------- Search --------------------------------- */
   "search.result": "resultado",

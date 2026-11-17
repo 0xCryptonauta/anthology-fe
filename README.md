@@ -58,6 +58,8 @@ Every blockchain read is cached (5-min TTL). Factory state, anthology metadata, 
 ### 🔗 QR sharing
 Every anthology generates a QR code. Other users scan it to import it into their Discover view. Two-way discovery without copy-paste. Uses structured JSON payloads for forward compatibility.
 
+Private anthologies can also be streamed device-to-device as animated QR codes. Recipients see them in **Connect** as read-only contacts, grouped by sender.
+
 </td>
 </tr>
 <tr>
@@ -188,7 +190,7 @@ Content is stored as plain strings on-chain. Skins interpret strings client-side
 | **Routing** | React Router DOM v7 |
 | **Web3** | wagmi v2 &middot; viem &middot; WalletConnect |
 | **PWA** | vite-plugin-pwa &middot; Workbox |
-| **QR** | qrcode.react &middot; html5-qrcode |
+| **QR** | qrcode.react &middot; html5-qrcode &middot; @orozcoh/qr-stream &middot; zxing-wasm |
 | **Build** | Vite 6 &middot; bun &middot; ESLint &middot; standard-version |
 
 ---
@@ -215,10 +217,57 @@ VITE_ENV="development"
 | `bun run dev` | Start dev server (LAN-accessible) |
 | `bun run build` | Production build → `dist/` |
 | `bun run preview` | Preview production build |
+| `bun run preview:tailscale` | HTTPS preview via Tailscale for camera testing |
 | `bun run tsc` | Type-check |
 | `bun run lint` | Lint |
 | `bun run release` | Bump version + changelog (main only) |
 | `bun run pre-release` | Dry-run release |
+
+### Testing the QR camera flow (HTTPS)
+
+The QR receiver uses `getUserMedia`, which browsers only allow on HTTPS (or `localhost`). For a two-device test without deploying, use Tailscale:
+
+1. Install Tailscale on the Mac and the phone. Both must be on the same tailnet, with HTTPS certificates enabled in the Tailscale admin console.
+2. Build and start the HTTPS preview:
+   ```bash
+   bun run build
+   bun run preview:tailscale
+   ```
+   The script prints `https://<machine>.<tailnet>.ts.net/` and verifies it answers.
+3. Open that URL on the phone (Tailscale on) and allow camera access.
+4. Test both directions: Mac sender (`http://localhost:4174`) → phone receiver, then phone sender → Mac receiver. Share a single anthology and a group; verify the Connect contact and the read-only view.
+5. Offline PWA: install the Tailscale URL on the phone, load once online, then enable airplane mode and reload.
+6. Stop with Ctrl+C. If the script created the Tailscale Serve entry, it removes it on exit. If Serve was already configured, it leaves the existing config in place and prints a warning; use `--reset-serve` to force a reset or `--keep-serve` to leave the entry the script created.
+
+`preview:tailscale` sets `preview.allowedHosts` from the Tailscale DNS name, so no repo or Vite config change is needed. `tailscale serve` is tailnet-only; use `tailscale funnel` if you need a public URL.
+
+```bash
+# Default: start the preview. If this script created the Tailscale Serve
+# entry, it is reset on exit; a pre-existing entry is left untouched.
+bun run preview:tailscale
+
+# Force a reset on exit, even if Serve was already configured.
+bun run preview:tailscale -- --reset-serve
+
+# Leave the Serve entry in place after the preview stops.
+bun run preview:tailscale -- --keep-serve
+
+# Run a production build first (same as `bun run build` before the command).
+bun run preview:tailscale -- --build
+
+# Use a different preview port.
+bun run preview:tailscale -- --port 4175
+
+# Show all options without starting anything.
+bun run preview:tailscale -- --help
+```
+
+Troubleshooting:
+
+- `Blocked request. This host is not allowed` — use `preview:tailscale`; if running `vite preview` manually, add the hostname to `preview.allowedHosts`.
+- `Port 4174 is already in use` — stop the previous preview or run `bun run preview:tailscale -- --port 4175`.
+- Camera unavailable — check the browser permission and that the page is HTTPS.
+- `tailscale serve` fails — enable HTTPS certificates for the tailnet.
 
 ### Git workflow
 

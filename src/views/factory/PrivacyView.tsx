@@ -6,10 +6,16 @@ import {
   readingPageStyle,
   readingPanelStyle,
 } from "@src/styles/readingPanelStyles";
+import { useAppSelector } from "@src/store/utils/hooks";
+import { getBgClass } from "@src/utils/backgrounds";
+import "@src/styles/backgrounds.css";
 import { useTranslation } from "@src/i18n/useTranslation";
 
 export const PrivacyView = () => {
   const { t } = useTranslation();
+  const categoryBackgroundsEnabled = useAppSelector(
+    (state) => state.dapp.categoryBackgroundsEnabled
+  );
 
   return (
     <>
@@ -18,7 +24,19 @@ export const PrivacyView = () => {
         description="How Anthology handles local data, wallet connections and third-party social embeds"
       />
       <div style={readingPageStyle}>
-        <div style={readingPanelStyle}>
+        <div
+          className={
+            categoryBackgroundsEnabled
+              ? `reading-panel-pattern ${getBgClass("privacy")}`
+              : undefined
+          }
+          style={{
+            ...readingPanelStyle,
+            backgroundColor: categoryBackgroundsEnabled
+              ? "transparent"
+              : readingPanelStyle.backgroundColor,
+          }}
+        >
           <h1 style={titleStyle}>{t("about.privacyTitle")}</h1>
 
           <section
