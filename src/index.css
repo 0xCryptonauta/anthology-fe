@@ -139,8 +139,10 @@ html {
   top: -84px;
 }
 
-/* Keyboard focus must never land inside a hidden header. */
-.app-header:focus-within {
+/* Keyboard focus must never land inside a hidden header. `:focus-visible`
+   (not `:focus-within`) so clicking a header control with the mouse does not
+   pin the header open on the next scroll. */
+.app-header:has(:focus-visible) {
   top: 0;
 }
 
