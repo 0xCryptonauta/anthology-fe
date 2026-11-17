@@ -43,7 +43,8 @@ export const en = {
   "a11y.connectorLogo": "Wallet connection option",
 
   /* ------------------------------ Navigation ------------------------------- */
-  "nav.myAnthologies": "My Anthologies",
+  "nav.myAnthologies": "Public Memory",
+  "nav.memory": "Memory",
   "nav.discover": "Discover",
   "nav.connect": "Connect",
   "nav.privateMemory": "Private Memory",
@@ -742,7 +743,8 @@ export const es: Record<TranslationKey, string> = {
   "a11y.connectorLogo": "Opción de conexión de billetera",
 
   /* ------------------------------ Navigation ------------------------------- */
-  "nav.myAnthologies": "Mis antologías",
+  "nav.myAnthologies": "Memoria pública",
+  "nav.memory": "Memoria",
   "nav.discover": "Explorar",
   "nav.connect": "Conectar",
   "nav.privateMemory": "Memoria privada",

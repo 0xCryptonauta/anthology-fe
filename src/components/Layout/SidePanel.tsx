@@ -108,21 +108,43 @@ export const SidePanel = () => {
           }}
         >
           {isConnected && (
-            <>
-              <Link
-                to="/"
-                onClick={() => handleOnClick(`user/${userAddr}`)}
-                style={{
-                  margin: "10px 0px",
-                  fontSize: "18px",
-                  textDecoration: "none",
-                  color: "white",
-                }}
-              >
-                {t("nav.myAnthologies")}
-              </Link>
-            </>
+            <Link
+              to="/"
+              onClick={() => handleOnClick(`user/${userAddr}`)}
+              style={{
+                margin: "10px 0px",
+                fontSize: "18px",
+                textDecoration: "none",
+                color: "white",
+              }}
+            >
+              {t("nav.myAnthologies")}
+            </Link>
           )}
+          <Link
+            to="/"
+            onClick={() => handleOnClick(LOCAL_USER_PATH)}
+            style={{
+              margin: "10px 0px",
+              fontSize: "18px",
+              color: "white",
+              textDecoration: "none",
+            }}
+          >
+            {t("nav.memory")}
+          </Link>
+          <Link
+            to="/"
+            onClick={() => handleOnClick("connect")}
+            style={{
+              margin: "10px 0px",
+              fontSize: "18px",
+              textDecoration: "none",
+              color: "white",
+            }}
+          >
+            {t("nav.connect")}
+          </Link>
           <Link
             to="/"
             onClick={() => handleOnClick("discover")}
@@ -134,40 +156,6 @@ export const SidePanel = () => {
             }}
           >
             {t("nav.discover")}
-          </Link>
-          <Link
-            to="/"
-            onClick={() => handleOnClick("connect")}
-            style={{
-              margin: "10px 0px",
-              fontSize: "18px",
-              textDecoration: "none",
-              color: "white",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "6px",
-            }}
-          >
-            <img
-              src="/icons/qrIcon.svg"
-              alt=""
-              width={18}
-              height={18}
-              aria-hidden="true"
-              style={{ borderRadius: "3px" }}
-            />
-            {t("nav.connect")}
-          </Link>
-          <Link
-            to="/"
-            onClick={() => handleOnClick(LOCAL_USER_PATH)}
-            style={{
-              margin: "10px 0px",
-              color: "white",
-              textDecoration: "none",
-            }}
-          >
-            {t("nav.privateMemory")}
           </Link>
         </div>
         <div
