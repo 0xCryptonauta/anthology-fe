@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { Header } from "@components/Layout/Header";
 import { Footer } from "@components/Layout/Footer";
+import { PwaInstallPrompt } from "@components/Layout/PwaInstallPrompt";
 import { useAppSelector } from "@store/utils/hooks";
 import { useTranslation } from "@src/i18n/useTranslation";
 import "@src/styles/backgrounds.css";
@@ -54,6 +55,7 @@ export const RootView = () => {
           <Footer />
         </div>
       </div>
+      <PwaInstallPrompt />
     </>
   );
 };

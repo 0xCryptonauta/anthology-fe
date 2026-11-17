@@ -314,6 +314,12 @@ export const en = {
   "install.button": "Install",
   "install.installed": "Installed",
   "install.unavailable": "Not available",
+  "install.promptTitle": "Install Anthology",
+  "install.promptBody":
+    "Add Anthology to this device to open it like an app, offline and one tap away.",
+  "install.promptHint":
+    "You can install it any time from Settings. We will not ask again for a week.",
+  "install.notNow": "Not now",
 
   /* ------------------------------- Backgrounds ------------------------------ */
   "backgrounds.toggle": "Category Backgrounds",
@@ -1023,6 +1029,12 @@ export const es: Record<TranslationKey, string> = {
   "install.button": "Instalar",
   "install.installed": "Instalada",
   "install.unavailable": "No disponible",
+  "install.promptTitle": "Instalar Anthology",
+  "install.promptBody":
+    "Agrega Anthology a este dispositivo para abrirla como una app, sin conexión y a un toque.",
+  "install.promptHint":
+    "Puedes instalarla cuando quieras desde Ajustes. No volveremos a preguntar por una semana.",
+  "install.notNow": "Ahora no",
 
   /* ------------------------------- Backgrounds ------------------------------ */
   "backgrounds.toggle": "Fondos de categoría",
