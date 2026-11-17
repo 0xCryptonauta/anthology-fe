@@ -43,6 +43,8 @@ export const PwaInstallPrompt = () => {
     if (!eligible()) return;
 
     const timer = window.setTimeout(() => {
+      // Never stack sheets: another modal may have opened while we waited.
+      if (document.querySelector(".offcanvas.show")) return;
       // Re-check at fire time: the user may have installed or navigated away.
       if (eligible()) setOpen(true);
     }, PWA_INSTALL_PROMPT_DELAY_MS);
