@@ -3,7 +3,11 @@ import { toggleCategoryBackgrounds } from "@store/slices/dappSlice";
 import { useTranslation } from "@src/i18n/useTranslation";
 import { Form } from "react-bootstrap";
 
-export const CategoryBackgroundsToggle = () => {
+export const CategoryBackgroundsToggle = ({
+  showLabel = true,
+}: {
+  showLabel?: boolean;
+}) => {
   const { t } = useTranslation();
   const enabled = useAppSelector((s) => s.dapp.categoryBackgroundsEnabled);
   const dispatch = useAppDispatch();
@@ -12,7 +16,8 @@ export const CategoryBackgroundsToggle = () => {
     <Form.Check
       type="switch"
       reverse
-      label={t("backgrounds.toggle")}
+      label={showLabel ? t("backgrounds.toggle") : undefined}
+      aria-label={showLabel ? undefined : t("backgrounds.toggle")}
       checked={enabled}
       onChange={() => dispatch(toggleCategoryBackgrounds())}
       className="text-white"

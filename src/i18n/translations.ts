@@ -192,6 +192,31 @@ export const en = {
   "settings.downloadCount": "Download ({count})",
   "settings.socialEmbeds": "Social embeds",
   "settings.privacySettings": "Privacy Settings",
+  "settings.profile": "Profile",
+  "settings.profileDescription": "Your name tag and language.",
+  "settings.appearance": "Appearance",
+  "settings.appearanceDescription": "How the app looks and reads.",
+  "settings.data": "Data",
+  "settings.dataDescription": "Back up, restore, and manage local data.",
+  "settings.app": "App",
+  "settings.appDescription": "Install the app and manage privacy.",
+  "settings.advanced": "Advanced",
+  "settings.advancedDescription": "Network and RPC settings.",
+  "settings.danger": "Danger zone",
+  "settings.dangerDescription": "Destructive actions cannot be undone.",
+  "settings.export": "Export",
+  "settings.localData": "Local Data",
+  "settings.actionShareExport": "Share/Export",
+  "settings.actionLoad": "Load",
+  "settings.actionView": "View",
+  "settings.actionClear": "Clear",
+  "settings.import": "Import",
+  "settings.storage": "Storage",
+  "settings.cache": "Cache",
+  "settings.installApp": "Install app",
+  "settings.deleteMemoryDescription":
+    "Delete every anthology and connection on this device.",
+  "settings.notSet": "Not set",
   "settings.socialEmbedsDesc":
     "Nothing from social platforms loads until you allow it here or choose Load once in an embed. Enabling a provider may let it set cookies or collect data under its own policy. Turning it off stops new embeds but does not delete cookies the provider already set.",
   "settings.socialEmbedsPolicy": "Official privacy policy: {provider}",
@@ -281,6 +306,9 @@ export const en = {
 
   /* --------------------------------- Install -------------------------------- */
   "install.label": "Install App: ",
+  "install.button": "Install",
+  "install.installed": "Installed",
+  "install.unavailable": "Not available",
 
   /* ------------------------------- Backgrounds ------------------------------ */
   "backgrounds.toggle": "Category Backgrounds",
@@ -846,6 +874,32 @@ export const es: Record<TranslationKey, string> = {
   "settings.downloadCount": "Descargar ({count})",
   "settings.socialEmbeds": "Embeds sociales",
   "settings.privacySettings": "Ajustes de privacidad",
+  "settings.profile": "Perfil",
+  "settings.profileDescription": "Tu apodo e idioma.",
+  "settings.appearance": "Apariencia",
+  "settings.appearanceDescription": "Cómo se ve y se lee la app.",
+  "settings.data": "Datos",
+  "settings.dataDescription": "Respalda, restaura y gestiona los datos locales.",
+  "settings.app": "Aplicación",
+  "settings.appDescription": "Instala la app y gestiona la privacidad.",
+  "settings.advanced": "Avanzado",
+  "settings.advancedDescription": "Ajustes de red y RPC.",
+  "settings.danger": "Zona de peligro",
+  "settings.dangerDescription":
+    "Las acciones destructivas no se pueden deshacer.",
+  "settings.export": "Exportar",
+  "settings.localData": "Datos locales",
+  "settings.actionShareExport": "Compartir/Exportar",
+  "settings.actionLoad": "Cargar",
+  "settings.actionView": "Ver",
+  "settings.actionClear": "Borrar",
+  "settings.import": "Importar",
+  "settings.storage": "Almacenamiento",
+  "settings.cache": "Caché",
+  "settings.installApp": "Instalar app",
+  "settings.deleteMemoryDescription":
+    "Elimina todas las antologías y conexiones de este dispositivo.",
+  "settings.notSet": "Sin configurar",
   "settings.socialEmbedsDesc":
     "Nada de las plataformas sociales se carga hasta que lo permitas aquí o elijas Cargar una vez en un embed. Activar un proveedor puede permitirle establecer cookies o recopilar datos según su propia política. Desactivarlo detiene las nuevas cargas, pero no borra las cookies que el proveedor ya estableció.",
   "settings.socialEmbedsPolicy": "Política de privacidad oficial: {provider}",
@@ -936,6 +990,9 @@ export const es: Record<TranslationKey, string> = {
 
   /* --------------------------------- Install -------------------------------- */
   "install.label": "Instalar app: ",
+  "install.button": "Instalar",
+  "install.installed": "Instalada",
+  "install.unavailable": "No disponible",
 
   /* ------------------------------- Backgrounds ------------------------------ */
   "backgrounds.toggle": "Fondos de categoría",

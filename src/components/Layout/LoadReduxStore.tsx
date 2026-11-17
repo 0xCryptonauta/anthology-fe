@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Modal } from "./Modal";
+import { settingsActionButtonStyle } from "./settingsStyles";
 import { loadJsonAsObj } from "@src/utils/loadJsonAsObj";
 import {
   LoadedJson,
@@ -107,20 +108,10 @@ export const LoadReduxStore = () => {
       trigger={
         <button
           type="button"
-          style={{
-            cursor: "pointer",
-            border: "1px solid #ccc",
-            padding: "10px 16px",
-            borderRadius: "8px",
-            display: "inline-block",
-            fontSize: "14px",
-            fontWeight: "bold",
-            backgroundColor: "#f7fafc",
-            color: "#2b6cb0",
-          }}
+          style={settingsActionButtonStyle}
           onClick={() => setShow(true)}
         >
-          {t("load.trigger")}
+          {t("settings.actionLoad")}
         </button>
       }
     >

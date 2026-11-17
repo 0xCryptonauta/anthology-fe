@@ -23,14 +23,19 @@ export const CleanReduxStore = () => {
     <Modal
       show={show}
       onHide={handleClose}
+      disablePattern
       trigger={
         <button
+          type="button"
           style={{
-            backgroundColor: "red",
+            backgroundColor: "#7f1d1d",
+            border: "1px solid #b91c1c",
             color: "white",
-            padding: "10px 20px",
-            margin: "10px",
-            borderRadius: "5px",
+            padding: "9px 14px",
+            borderRadius: "8px",
+            fontSize: "13px",
+            fontWeight: 600,
+            cursor: "pointer",
           }}
           onClick={() => {
             setShow(true);

@@ -134,6 +134,35 @@ html {
   cursor: pointer;
 }
 
+/* Settings rows: two columns normally, stacked on very narrow phones. */
+.settings-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px 16px;
+  padding: 12px 0;
+}
+
+.settings-row > :last-child {
+  justify-self: end;
+}
+
+@media (max-width: 360px) {
+  .settings-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .settings-row > :last-child {
+    justify-self: start;
+  }
+}
+
+/* Settings cards carry more text than memoir cards; use a stronger film so
+   the pattern stays visible without competing with descriptions. */
+.settings-card.bg-overlay {
+  --bg-film-alpha: 0.78;
+}
+
 /* Modals keep dark text, so the pattern sits under a light film. */
 .modal-pattern.bg-overlay::before {
   background: rgba(255, 255, 255, 0.78);

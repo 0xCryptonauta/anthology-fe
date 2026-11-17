@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Modal } from "./Modal";
+import { settingsActionButtonStyle } from "./settingsStyles";
 import { store } from "@store/redux";
 import { useTranslation } from "@src/i18n/useTranslation";
 
@@ -93,20 +94,10 @@ export const CacheStorageViewer = () => {
       trigger={
         <button
           type="button"
-          style={{
-            cursor: "pointer",
-            border: "1px solid #ccc",
-            padding: "10px 16px",
-            borderRadius: "8px",
-            display: "inline-block",
-            fontSize: "14px",
-            fontWeight: "bold",
-            backgroundColor: "#f7fafc",
-            color: "#2f855a",
-          }}
+          style={settingsActionButtonStyle}
           onClick={() => setShow(true)}
         >
-          {t("storage.viewUsage")}
+          {t("settings.actionView")}
         </button>
       }
     >
@@ -115,8 +106,7 @@ export const CacheStorageViewer = () => {
           width: "100%",
           maxWidth: "340px",
           borderRadius: "16px",
-          backgroundColor: "#ffffff",
-          boxShadow: "0 12px 24px rgba(0,0,0,0.08)",
+          backgroundColor: "transparent",
           fontFamily: `"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif`,
           color: "#1a1a1a",
         }}
