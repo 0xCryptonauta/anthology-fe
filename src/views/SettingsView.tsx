@@ -75,8 +75,6 @@ export const SettingsView = () => {
                       fontSize: "20px",
                       fontWeight: 700,
                       lineHeight: 1.25,
-                      textDecoration: "underline",
-                      textUnderlineOffset: "3px",
                       overflowWrap: "anywhere",
                       // The section's .text-shadow-dark blurs the chip text.
                       textShadow: "none",
