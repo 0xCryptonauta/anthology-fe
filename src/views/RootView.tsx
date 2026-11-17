@@ -36,6 +36,7 @@ export const RootView = () => {
           style={{
             display: "grid",
             gridTemplateRows: "1fr auto",
+            gridTemplateColumns: "minmax(0, 1fr)",
             flex: 1,
             minWidth: 0,
           }}

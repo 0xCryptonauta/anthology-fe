@@ -87,7 +87,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({
   return (
     <div
       className={`${className} ${expanded ? "" : "flex flex-col justify-center"}`}
-      style={{ gridRow: `span ${rowSpan}`, overflow: "hidden" }}
+      style={{ gridRow: `span ${rowSpan}`, overflow: "hidden", minWidth: 0 }}
     >
       <div ref={contentRef}>
         <button
@@ -227,7 +227,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                 <li key={address}>
                   <button
                     type="button"
-                    className="inline-flex flex-wrap items-baseline gap-1 text-lg cursor-pointer text-white hover:text-white transition-colors bg-transparent border-none p-0 text-left"
+                    className="inline-flex flex-wrap items-baseline gap-1 text-lg cursor-pointer text-white hover:text-white transition-colors bg-transparent border-none p-0 text-left wrap-anywhere min-w-0"
                     onClick={() => handleOnClick(`contract/${address}`)}
                   >
                     <span translate="no">&middot; {title}</span>
@@ -249,7 +249,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                     <li key={address}>
                       <button
                         type="button"
-                        className="inline-flex flex-wrap items-baseline gap-1 text-lg cursor-pointer text-white hover:text-white transition-colors bg-transparent border-none p-0 text-left"
+                        className="inline-flex flex-wrap items-baseline gap-1 text-lg cursor-pointer text-white hover:text-white transition-colors bg-transparent border-none p-0 text-left wrap-anywhere min-w-0"
                         onClick={() => handleOnClick(`contract/${address}`)}
                       >
                         <span translate="no">&middot; {title}</span>
@@ -293,7 +293,7 @@ export const UserContracts: React.FC<UserContractsProps> = ({
             <li key={address}>
               <button
                 type="button"
-                className="inline-flex flex-wrap items-baseline gap-1 text-sm cursor-pointer text-white hover:text-white transition-colors bg-transparent border-none p-0 text-left"
+                className="inline-flex flex-wrap items-baseline gap-1 text-sm cursor-pointer text-white hover:text-white transition-colors bg-transparent border-none p-0 text-left wrap-anywhere min-w-0"
                 onClick={() => handleOnClick(`contract/${address}`)}
               >
                 <span translate="no">
@@ -448,11 +448,15 @@ export const UserContracts: React.FC<UserContractsProps> = ({
           </Suspense>
         ) : (
         <div
-          /* Unit grid: fixed 60px rows + dense flow. An expanded card spans
-             whole card units, so its bottom edge aligns with the closed cards
-             beside it and the cards below slide into the free slots. */
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid-flow-dense gap-4 w-full"
-          style={{ gridAutoRows: `${CARD_ROW_PX}px` }}
+          /* Fixed-width card units: every card is 260px, so a long anthology
+             name can never widen it. `1fr` tracks used to resize the whole grid
+             when content or scroll chrome changed. */
+          className="grid grid-flow-dense gap-4 w-full"
+          style={{
+            gridTemplateColumns: "repeat(auto-fill, 260px)",
+            gridAutoRows: `${CARD_ROW_PX}px`,
+            justifyContent: "center",
+          }}
         >
           {categoryCards}
         </div>
