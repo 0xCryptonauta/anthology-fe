@@ -129,7 +129,7 @@ export const PwaInstallPrompt = () => {
             {t("install.notNow")}
           </button>
         </div>
-        <p style={{ margin: 0, fontSize: "12px", color: "#64748b" }}>
+        <p style={{ margin: 0, fontSize: "12px", color: "#475569" }}>
           {t("install.promptHint")}
         </p>
       </div>
