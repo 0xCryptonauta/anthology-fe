@@ -10,7 +10,7 @@ import { useHideOnScroll } from "@src/hooks/useHideOnScroll";
 
 export const Header = () => {
   const { isConnected, address } = useAccount();
-  const { isIconToLocal, categoryBackgroundsEnabled } = useAppSelector((state) => state.dapp);
+  const { isIconToLocal } = useAppSelector((state) => state.dapp);
   const { hidden } = useHideOnScroll();
 
   const dispatch = useAppDispatch();
@@ -30,7 +30,7 @@ export const Header = () => {
     <nav
       className={`navbar app-header ${
         hidden ? "app-header--hidden" : ""
-      } ${categoryBackgroundsEnabled ? "bg-dark-film" : "bg-dark"}`}
+      }`}
       data-bs-theme="dark"
     >
       <div className="container-fluid">

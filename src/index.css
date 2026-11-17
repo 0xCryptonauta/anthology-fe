@@ -128,6 +128,9 @@ html {
 .app-header {
   position: sticky;
   top: 0;
+  /* Opaque app background: `bg-dark-film` alone is just a 60% black film, so
+     over the white body it rendered as gray. */
+  background-color: #242424;
   z-index: 1030;
   transition: top 0.25s ease;
 }
