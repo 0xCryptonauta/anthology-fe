@@ -2,7 +2,7 @@ import { describe, expect, test } from "bun:test";
 import {
   nextHeaderScrollState,
   type HeaderScrollState,
-} from "./headerVisibility";
+} from "../src/utils/headerVisibility";
 
 const shown: HeaderScrollState = { hidden: false, anchorY: 0 };
 const hidden: HeaderScrollState = { hidden: true, anchorY: 200 };

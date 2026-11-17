@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { detectEmbed } from "./embeds";
+import { detectEmbed } from "../src/utils/embeds";
 
 describe("detectEmbed — YouTube orientation", () => {
   test("marks /shorts/<id> as vertical", () => {
