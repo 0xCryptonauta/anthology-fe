@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "@src/i18n/useTranslation";
 
 interface BeforeInstallPromptEvent extends Event {
@@ -9,16 +9,16 @@ interface BeforeInstallPromptEvent extends Event {
   }>;
 }
 
-const InstallPWAButton: React.FC = () => {
+const InstallPWAButton = () => {
   const { t } = useTranslation();
   const [deferredPrompt, setDeferredPrompt] =
     useState<BeforeInstallPromptEvent | null>(null);
   const [isInstalled, setIsInstalled] = useState<boolean>(false);
 
   useEffect(() => {
-    const handler = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
+    const handler = (event: Event) => {
+      event.preventDefault();
+      setDeferredPrompt(event as BeforeInstallPromptEvent);
     };
 
     const installedHandler = () => {
@@ -28,7 +28,6 @@ const InstallPWAButton: React.FC = () => {
     window.addEventListener("beforeinstallprompt", handler);
     window.addEventListener("appinstalled", installedHandler);
 
-    // Check if already installed (on iOS or others)
     if (window.matchMedia("(display-mode: standalone)").matches) {
       setIsInstalled(true);
     }
@@ -39,47 +38,41 @@ const InstallPWAButton: React.FC = () => {
     };
   }, []);
 
+  const available = Boolean(deferredPrompt) && !isInstalled;
+
   const handleInstallClick = async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const choice = await deferredPrompt.userChoice;
-      if (choice.outcome === "accepted") {
-        console.log("PWA installation accepted");
-      } else {
-        console.log("PWA installation dismissed");
-      }
-      setDeferredPrompt(null);
-    }
+    if (!deferredPrompt) return;
+
+    deferredPrompt.prompt();
+    const choice = await deferredPrompt.userChoice;
+    if (choice.outcome === "accepted") setIsInstalled(true);
+    setDeferredPrompt(null);
   };
 
-  if (isInstalled || !deferredPrompt) return null;
-
   return (
-    <div
+    <button
+      type="button"
+      onClick={handleInstallClick}
+      disabled={!available}
       style={{
-        width: "fit-content",
-        height: "fit-content",
-        padding: "10px",
-        borderRadius: "10px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
+        minHeight: "40px",
+        padding: "7px 12px",
+        borderRadius: "8px",
+        border: "1px solid #30363d",
+        backgroundColor: available ? "#238636" : "#21262d",
+        color: "white",
+        fontSize: "13px",
+        fontWeight: 500,
+        cursor: available ? "pointer" : "not-allowed",
+        opacity: available ? 1 : 0.6,
       }}
     >
-      <span>{t("install.label")}</span>
-      <span
-        role="button"
-        tabIndex={0}
-        onClick={handleInstallClick}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") handleInstallClick();
-        }}
-        className="text-2xl cursor-pointer select-none hover:opacity-80 transition"
-        style={{ fontSize: "25px" }}
-      >
-        📲
-      </span>
-    </div>
+      {isInstalled
+        ? t("install.installed")
+        : available
+        ? t("install.button")
+        : t("install.unavailable")}
+    </button>
   );
 };
 

@@ -1,4 +1,4 @@
-const maxSizeMB = 2;
+const maxSizeMB = 10;
 
 export const loadJsonAsObj = <T extends object>(): Promise<T> => {
   return new Promise((resolve, reject) => {

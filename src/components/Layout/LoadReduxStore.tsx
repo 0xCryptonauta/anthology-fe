@@ -1,37 +1,24 @@
 import { useState } from "react";
 import { Modal } from "./Modal";
+import { settingsActionButtonStyle } from "./settingsStyles";
 import { loadJsonAsObj } from "@src/utils/loadJsonAsObj";
 import {
   LoadedJson,
   validateJsonContentType,
 } from "@src/utils/validateJsonContentType";
-import { useAppDispatch } from "@src/store/utils/hooks";
-import { LOCAL_USER_PATH, LOCAL_USER_ADDR } from "@src/utils/constants";
-import {
-  addAnthologiesToLocalMemory,
-  addManyMemoirsToUserLocalAnthology,
-  addUserLocalAnthology,
-  setDefaultSkin,
-  setManyDefaultSkin,
-  updateLocalContractTitles,
-  updateLocalUserContracts,
-} from "@src/store/slices/localAnthologySlice";
-import {
-  Address,
-  AnthologyType,
-  ContractTitlesType,
-  CurrentPaths,
-  SkinType,
-  UserContractsType,
-} from "@src/types/common";
-import { MemoirInterface } from "@src/store/slices/anthologySlice";
+import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
+import { LOCAL_USER_ADDR, LOCAL_USER_PATH } from "@src/utils/constants";
+import { Address, CurrentPaths } from "@src/types/common";
+import type { SharedBy } from "@src/types/connect";
 import { useNavigate } from "react-router-dom";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
+import { markAnthologiesReceived } from "@src/store/slices/localAnthologySlice";
 import {
-  updateContractTitles,
-  updateUserContracts,
-  updateUsers,
-} from "@src/store/slices/factorySlice";
+  addDiscoveriesToMemory,
+  addMemoryToMemory,
+  addOneAnthologyToLocal,
+} from "@src/utils/applyLoadedJson";
+import { classifySharedBy } from "@src/utils/shareEnvelope";
 import { useToast } from "./Toast";
 import { useTranslation } from "@src/i18n/useTranslation";
 
@@ -39,6 +26,12 @@ export const LoadReduxStore = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const ownDeviceId = useAppSelector((state) => state.connect.deviceId);
+  const localAnthology = useAppSelector((state) => state.localAnthology);
+  const importContext = {
+    existingOwn: localAnthology.userContracts?.[LOCAL_USER_ADDR] || [],
+    receivedFrom: localAnthology.receivedFrom ?? {},
+  };
 
   const { addToast } = useToast();
 
@@ -56,6 +49,8 @@ export const LoadReduxStore = () => {
   const [loadLocalMemory, setLoadLocalMemory] = useState(false);
 
   const [loadedJsonState, setLoadedJsonState] = useState<LoadedJson>({});
+  const [sharedBy, setSharedBy] = useState<SharedBy | null>(null);
+  const [invalidSharedBy, setInvalidSharedBy] = useState(false);
 
   const handleJsonLoad = async () => {
     setIsValidJson(undefined);
@@ -63,8 +58,25 @@ export const LoadReduxStore = () => {
     setHasLocal(false);
     setIsOneAnthology(false);
     setLoadedJsonState({});
+    setSharedBy(null);
+    setInvalidSharedBy(false);
 
-    const loadedState = await loadJsonAsObj();
+    let loadedState: LoadedJson;
+    try {
+      loadedState = await loadJsonAsObj<LoadedJson>();
+    } catch (error) {
+      if (error instanceof Error && error.message === "No file selected") {
+        return;
+      }
+      addToast({
+        title: t("load.fileError"),
+        content: t("load.fileErrorDesc"),
+        variant: "danger",
+        delay: 5000,
+      });
+      return;
+    }
+
     const {
       hasDiscovery: hasDiscoveryJson,
       hasLocal: hasLocalJson,
@@ -78,73 +90,15 @@ export const LoadReduxStore = () => {
     setLoadLocalMemory(hasLocalJson);
 
     if (hasDiscoveryJson || hasLocalJson || isOneAnthologyJson) {
+      const sender = classifySharedBy(loadedState);
+
       setIsValidJson(true);
       setLoadedJsonState(loadedState);
+      setSharedBy(sender.kind === "valid" ? sender.sharedBy : null);
+      setInvalidSharedBy(sender.kind === "invalid");
     } else {
       setIsValidJson(false);
     }
-  };
-
-  const addOneAnthologyToLocal = () => {
-    dispatch(
-      addUserLocalAnthology({
-        user: LOCAL_USER_ADDR,
-        contract: loadedJsonState.anthology?.contractAddr as Address,
-        title: loadedJsonState.anthology?.title || "Error loading title",
-      })
-    );
-
-    dispatch(
-      addManyMemoirsToUserLocalAnthology({
-        contract: loadedJsonState.anthology?.contractAddr as Address,
-        memoirs: loadedJsonState.anthology?.anthology as MemoirInterface[],
-      })
-    );
-
-    dispatch(
-      setDefaultSkin({
-        contract: loadedJsonState.anthology?.contractAddr as Address,
-        newDefaultSkin: loadedJsonState.anthology?.defaultSkin as SkinType,
-      })
-    );
-  };
-
-  const addDiscoveriesToMemory = () => {
-    dispatch(updateUsers(loadedJsonState.discoveries?.users as Address[]));
-
-    dispatch(
-      updateUserContracts(
-        loadedJsonState.discoveries?.userContracts as UserContractsType
-      )
-    );
-    dispatch(
-      updateContractTitles(
-        loadedJsonState.discoveries?.contractsTitles as ContractTitlesType
-      )
-    );
-  };
-
-  const addMemoryToMemory = () => {
-    dispatch(
-      updateLocalUserContracts(
-        loadedJsonState.localMemory?.userContracts as UserContractsType
-      )
-    );
-    dispatch(
-      updateLocalContractTitles(
-        loadedJsonState.localMemory?.contractsTitles as ContractTitlesType
-      )
-    );
-    dispatch(
-      setManyDefaultSkin(
-        loadedJsonState.localMemory?.defaultSkin as { [key: Address]: SkinType }
-      )
-    );
-    dispatch(
-      addAnthologiesToLocalMemory({
-        anthologies: loadedJsonState.localMemory?.anthologies as AnthologyType,
-      })
-    );
   };
 
   return (
@@ -154,20 +108,10 @@ export const LoadReduxStore = () => {
       trigger={
         <button
           type="button"
-          style={{
-            cursor: "pointer",
-            border: "1px solid #ccc",
-            padding: "10px 16px",
-            borderRadius: "8px",
-            display: "inline-block",
-            fontSize: "14px",
-            fontWeight: "bold",
-            backgroundColor: "#f7fafc",
-            color: "#2b6cb0",
-          }}
+          style={settingsActionButtonStyle}
           onClick={() => setShow(true)}
         >
-          {t("load.trigger")}
+          {t("settings.actionLoad")}
         </button>
       }
     >
@@ -256,6 +200,32 @@ export const LoadReduxStore = () => {
                     <span>{loadedJsonState.anthology?.title}</span>
                   </div>
                 )}
+
+                {sharedBy && (
+                  <div
+                    style={{
+                      color: "#4a5568",
+                      fontSize: "14px",
+                      marginTop: "8px",
+                    }}
+                  >
+                    {t("load.sharedByPrefix")}{" "}
+                    <span translate="no">{sharedBy.nametag}</span>
+                  </div>
+                )}
+
+                {invalidSharedBy && (
+                  <div
+                    role="alert"
+                    style={{
+                      color: "#c53030",
+                      fontSize: "14px",
+                      marginTop: "8px",
+                    }}
+                  >
+                    {t("load.invalidSharedBy")}
+                  </div>
+                )}
               </div>
             ) : (
               <button
@@ -342,8 +312,36 @@ export const LoadReduxStore = () => {
                 fontWeight: "500",
               }}
               onClick={() => {
+                if (invalidSharedBy) {
+                  addToast({
+                    title: t("load.invalidSharedBy"),
+                    content: t("load.invalidSharedByDesc"),
+                    variant: "danger",
+                    delay: 5000,
+                  });
+                  return;
+                }
+
+                let importedAddresses: Address[] = [];
+
                 if (isOneAnthology) {
-                  addOneAnthologyToLocal();
+                  importedAddresses = addOneAnthologyToLocal(
+                    dispatch,
+                    loadedJsonState,
+                    importContext
+                  );
+
+                  if (sharedBy && sharedBy.deviceId !== ownDeviceId) {
+                    dispatch(
+                      markAnthologiesReceived({
+                        addresses: importedAddresses,
+                        deviceId: sharedBy.deviceId,
+                        nametag: sharedBy.nametag,
+                        receivedAt: Date.now(),
+                      })
+                    );
+                  }
+
                   const newPath =
                     "contract/" + loadedJsonState.anthology?.contractAddr;
                   navigate("/");
@@ -375,13 +373,32 @@ export const LoadReduxStore = () => {
                 let newPath = "";
 
                 if (shouldLoadDiscovery) {
-                  addDiscoveriesToMemory();
+                  addDiscoveriesToMemory(dispatch, loadedJsonState);
                   newPath = "discover";
                 }
 
                 if (shouldLoadLocal) {
-                  addMemoryToMemory();
+                  importedAddresses = addMemoryToMemory(
+                    dispatch,
+                    loadedJsonState,
+                    importContext
+                  );
                   newPath = LOCAL_USER_PATH;
+                }
+
+                if (
+                  sharedBy &&
+                  importedAddresses.length > 0 &&
+                  sharedBy.deviceId !== ownDeviceId
+                ) {
+                  dispatch(
+                    markAnthologiesReceived({
+                      addresses: importedAddresses,
+                      deviceId: sharedBy.deviceId,
+                      nametag: sharedBy.nametag,
+                      receivedAt: Date.now(),
+                    })
+                  );
                 }
 
                 addToast({

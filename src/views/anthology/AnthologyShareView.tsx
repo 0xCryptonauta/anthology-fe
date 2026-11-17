@@ -6,16 +6,19 @@ export const AnthologyShareView = () => {
     <>
       <Seo title="Shared Anthology" description="Check out this anthology on Anthology" />
       <div
-      style={{
-        color: "white",
-        height: "600px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "space-around",
-        flexWrap: "wrap",
-      }}
-    >
+        style={{
+          color: "white",
+          minHeight: "100dvh",
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "16px",
+          padding: "24px 16px",
+          boxSizing: "border-box",
+        }}
+      >
       <SharePage />
 
       {/* 

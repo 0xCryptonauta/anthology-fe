@@ -1,6 +1,7 @@
 import { MemoirInterface } from "@src/store/slices/anthologySlice";
 import { localAnthologyState } from "@src/store/slices/localAnthologySlice";
 import { Address, SkinType } from "@src/types/common";
+import type { SharedBy } from "@src/types/connect";
 
 type LocalMemoryType = {
   users: Address[]; //local users is just one, or not?
@@ -15,9 +16,17 @@ type LocalAnthologyType = {
   defaultSkin: SkinType;
 };
 
+/** The five fields that leave the device. Provenance is deliberately excluded. */
+export type LocalMemoryPayload = Pick<
+  localAnthologyState,
+  "users" | "userContracts" | "contractsTitles" | "anthologies" | "defaultSkin"
+>;
+
 export type LoadedJson = {
+  sharedBy?: SharedBy;
+  sharedAt?: number;
   discoveries?: LocalMemoryType;
-  localMemory?: localAnthologyState;
+  localMemory?: LocalMemoryPayload;
   anthology?: LocalAnthologyType;
 };
 

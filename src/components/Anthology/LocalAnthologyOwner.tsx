@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, type CSSProperties } from "react";
 import { useToast } from "@components/Layout/Toast";
 
 import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
@@ -12,21 +12,51 @@ import {
 import { ChangeAnthologyDefaultSkin } from "./ChangeAnthologyDefaultSkin";
 import { TitleEditor } from "@components/Factory/TitleEditor";
 import { Modal } from "@src/components/Layout/Modal";
+import { SettingsRow } from "@src/components/Layout/SettingsRow";
+import { settingsActionButtonStyle } from "@src/components/Layout/settingsStyles";
 import { useTranslation } from "@src/i18n/useTranslation";
+import { useReceivedFrom } from "@src/hooks/useIsReadOnlyAnthology";
+import { parseContractTitle } from "@src/utils/parseContractsCategories";
+
+const readOnlyNoteStyle: CSSProperties = {
+  margin: 0,
+  fontSize: "14px",
+  lineHeight: 1.6,
+  color: "#94a3b8",
+};
+
+const panelActionStyle: CSSProperties = {
+  ...settingsActionButtonStyle,
+  minWidth: "auto",
+  minHeight: "36px",
+};
+
+const panelDangerStyle: CSSProperties = {
+  ...panelActionStyle,
+  backgroundColor: "#7f1d1d",
+  border: "1px solid #991b1b",
+  color: "#fecaca",
+};
 
 export const LocalAnthologyOwner = ({
   contractAddr,
+  embedded = false,
 }: {
   contractAddr: Address;
+  /** Renders the SettingsRow layout used by the anthology panel. */
+  embedded?: boolean;
 }) => {
   const { t } = useTranslation();
   const { addToast } = useToast();
+  const receivedFrom = useReceivedFrom(contractAddr);
+  const isReadOnly = Boolean(receivedFrom);
 
   const { contractsTitles, userContracts, anthologies } = useAppSelector(
     (state) => state.localAnthology
   );
 
   const currentTitle = contractsTitles[contractAddr] || "";
+  const displayTitle = parseContractTitle(currentTitle).title;
   const memoirCount = anthologies[contractAddr]?.length ?? 0;
 
   const dispatch = useAppDispatch();
@@ -81,6 +111,157 @@ export const LocalAnthologyOwner = ({
     setShowCleanModal(false);
   };
 
+  if (embedded) {
+    if (isReadOnly) {
+      return <p style={readOnlyNoteStyle}>{t("connect.readOnlyHint")}</p>;
+    }
+
+    return (
+      <div style={{ width: "100%" }}>
+        <SettingsRow
+          first
+          label={t("anthologyState.title")}
+          description={displayTitle}
+          control={
+            <Modal
+              placement="bottom"
+              show={showTitleModal}
+              onHide={handleCloseTitleModal}
+              trigger={
+                <button
+                  type="button"
+                  style={panelActionStyle}
+                  onClick={() => setShowTitleModal(true)}
+                >
+                  {t("common.change")}
+                </button>
+              }
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: "1rem",
+                  padding: "1.25rem 1rem",
+                  width: "100%",
+                  maxWidth: "320px",
+                  boxSizing: "border-box",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: "1rem",
+                    fontWeight: 600,
+                    color: "#111827",
+                    textAlign: "center",
+                  }}
+                >
+                  {t("owner.setNewTitle")}
+                </span>
+                <TitleEditor
+                  initialTitle={currentTitle}
+                  userTitles={userTitles}
+                  submitLabel={t("owner.changeTitle")}
+                  onSubmit={handleTitleSubmit}
+                />
+              </div>
+            </Modal>
+          }
+        />
+
+        <SettingsRow
+          label={t("anthologyState.defaultSkin")}
+          control={
+            <ChangeAnthologyDefaultSkin contractAddr={contractAddr} embedded />
+          }
+        />
+
+        {memoirCount > 0 && (
+          <SettingsRow
+            danger
+            label={t("owner.deleteAllMemoirs")}
+            control={
+              <Modal
+                placement="bottom"
+                show={showCleanModal}
+                onHide={() => setShowCleanModal(false)}
+                trigger={
+                  <button
+                    type="button"
+                    style={panelDangerStyle}
+                    onClick={() => setShowCleanModal(true)}
+                  >
+                    {t("common.delete")}
+                  </button>
+                }
+              >
+                <div
+                  style={{
+                    margin: "30px 10px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "8px",
+                    color: "#1a1a1a",
+                  }}
+                >
+                  <span style={{ fontWeight: "bold", textAlign: "center" }}>
+                    {t("owner.deleteAllTitle")}
+                  </span>
+                  <span style={{ textAlign: "center" }}>
+                    {t("owner.deleteAllDesc", {
+                      count: memoirCount,
+                      title: displayTitle || t("owner.thisAnthology"),
+                    })}
+                  </span>
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    gap: "10px",
+                    marginTop: "10px",
+                  }}
+                >
+                  <button
+                    type="button"
+                    style={{
+                      backgroundColor: "#e2e8f0",
+                      color: "#1a1a1a",
+                      padding: "10px 20px",
+                      borderRadius: "5px",
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => setShowCleanModal(false)}
+                  >
+                    {t("common.cancel")}
+                  </button>
+                  <button
+                    type="button"
+                    style={{
+                      backgroundColor: "red",
+                      color: "white",
+                      padding: "10px 20px",
+                      borderRadius: "5px",
+                      border: "none",
+                      cursor: "pointer",
+                    }}
+                    onClick={handleCleanMemoirs}
+                  >
+                    {t("owner.deleteAllMemoirs")}
+                  </button>
+                </div>
+              </Modal>
+            }
+          />
+        )}
+      </div>
+    );
+  }
+
   return (
     <div
       style={{
@@ -95,8 +276,10 @@ export const LocalAnthologyOwner = ({
       }}
     >
       <br />
-      {/* ------------------------------- Update Anthology title ------------------------------ */}
-      <Modal
+      {!isReadOnly && (
+        <>
+          {/* ------------------------------- Update Anthology title ------------------------------ */}
+          <Modal
         placement="bottom"
         show={showTitleModal}
         onHide={handleCloseTitleModal}
@@ -147,12 +330,19 @@ export const LocalAnthologyOwner = ({
             onSubmit={handleTitleSubmit}
           />
         </div>
-      </Modal>
-      <br />
+          </Modal>
+          <br />
+        </>
+      )}
       <ChangeAnthologyDefaultSkin contractAddr={contractAddr} />
+      {isReadOnly && (
+        <p style={{ maxWidth: 280, textAlign: "center" }}>
+          {t("connect.readOnlyHint")}
+        </p>
+      )}
 
       {/* ----------------------------------- cleanMemoirs ------------------------------------ */}
-      {memoirCount > 0 && (
+      {!isReadOnly && memoirCount > 0 && (
         <div style={{ marginTop: "20px" }}>
           <Modal
             placement="bottom"

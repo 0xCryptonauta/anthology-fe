@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Modal } from "./Modal";
+import { settingsActionButtonStyle } from "./settingsStyles";
 import { useToast } from "./Toast";
 import { useTranslation } from "@src/i18n/useTranslation";
 
@@ -41,20 +42,10 @@ export const ClearCacheButton = () => {
       trigger={
         <button
           type="button"
-          style={{
-            cursor: "pointer",
-            border: "1px solid #ccc",
-            padding: "10px 16px",
-            borderRadius: "8px",
-            display: "inline-block",
-            fontSize: "14px",
-            fontWeight: "bold",
-            backgroundColor: "#f7fafc",
-            color: "#dd6b20",
-          }}
+          style={settingsActionButtonStyle}
           onClick={() => setShow(true)}
         >
-          {t("cache.clearTrigger")}
+          {t("settings.actionClear")}
         </button>
       }
     >
@@ -63,8 +54,7 @@ export const ClearCacheButton = () => {
           width: "100%",
           maxWidth: "340px",
           borderRadius: "16px",
-          backgroundColor: "#ffffff",
-          boxShadow: "0 12px 24px rgba(0,0,0,0.08)",
+          backgroundColor: "transparent",
           fontFamily: `"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif`,
           color: "#1a1a1a",
           padding: "10px 0",

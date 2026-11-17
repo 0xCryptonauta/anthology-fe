@@ -134,6 +134,96 @@ html {
   cursor: pointer;
 }
 
+/* Settings rows: two columns normally, stacked on very narrow phones. */
+.settings-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px 16px;
+  padding: 12px 0;
+}
+
+.settings-row > :last-child {
+  justify-self: end;
+}
+
+@media (max-width: 360px) {
+  .settings-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .settings-row > :last-child {
+    justify-self: start;
+  }
+}
+
+/* Settings cards carry more text than memoir cards; use a stronger film so
+   the pattern stays visible without competing with descriptions. */
+.settings-card.bg-overlay {
+  --bg-film-alpha: 0.78;
+}
+
+/* Modals keep dark text, so the pattern sits under a light film. */
+.modal-pattern.bg-overlay::before {
+  background: rgba(255, 255, 255, 0.78);
+}
+
+/* /about and /privacy: the reading panel keeps dark body text, so the
+   hashed pattern sits under a light film instead of the dark one. */
+.reading-panel-pattern.bg-overlay::before {
+  background: rgba(255, 255, 255, 0.82);
+}
+
+/* Anthology info + settings sheet, matching the /settings surface. */
+.anthology-panel {
+  width: 100%;
+  color: #e6edf3;
+  text-align: left;
+}
+
+.anthology-panel-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #161b22;
+  border-bottom: 1px solid #30363d;
+}
+
+.anthology-panel-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.anthology-panel-body {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 14px;
+  box-sizing: border-box;
+}
+
+.anthology-panel-note {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #94a3b8;
+}
+
+.anthology-panel .settings-row {
+  padding: 10px 0;
+}
+
+.anthology-panel .settings-row > :last-child {
+  min-width: 0;
+  max-width: 100%;
+}
+
 
 /* @media (prefers-color-scheme: light) {
   :root {

@@ -22,10 +22,7 @@ import {
 import { fetchAnthologyInfo } from "@src/contract-functions/fetchContractInfo";
 import { Memoirs } from "@components/Anthology/Memoirs";
 import { AddMemoir } from "@components/Anthology/AddMemoir";
-import { AnthologyState } from "@components/Anthology/AnthologyState";
-import { AnthologyOwner } from "@components/Anthology/AnthologyOwner";
-import { MemoirBuffer } from "@components/Anthology/MemoirBuffer";
-import { AnthologyWhitelistedUsers } from "@components/Anthology/AnthologyWhitelistedUsers";
+import { AnthologyPanel } from "@components/Anthology/AnthologyPanel";
 import { SkinSelector } from "@src/components/Layout/SkinSelector";
 import { OrderSelector, OrderType } from "@src/components/Layout/OrderSelector";
 import { Address, SkinType } from "@src/types/common";
@@ -35,10 +32,8 @@ import { FormatAnthologyTitle } from "@src/utils/FormatAnthologyTitle";
 import "@src/styles/backgrounds.css";
 import { getBgClass } from "@utils/backgrounds";
 import { setAnthologyFooterBgClass } from "@src/store/slices/dappSlice";
-import { useTranslation } from "@src/i18n/useTranslation";
 
 export const AnthologyView = () => {
-  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { currentPath } = useAppSelector((state) => state.user);
   const categoryBackgroundsEnabled = useAppSelector((s) => s.dapp.categoryBackgroundsEnabled);
@@ -63,9 +58,6 @@ export const AnthologyView = () => {
   );
 
   const contractTitle = anthology?.anthologyState.title;
-
-  const [showInfo, setShowInfo] = useState(false);
-  const [sudoMode, setSudoMode] = useState(false);
 
   const initialSkin: SkinType = anthology?.anthologyState?.skin ?? DEFAULT_SKIN;
   const [currentSkin, setCurrentSkin] = useState<SkinType>(initialSkin);
@@ -247,125 +239,50 @@ export const AnthologyView = () => {
 
       <div
         /* Mobile-first control bar: one compact row (36px controls, 8px gaps)
-           that fits down to 320px in both languages. */
+           that fits down to 320px in both languages. The 50px inset matches
+           the memoir search bar: 5px Memoirs padding + 20px search gutter
+           on each side (see Memoirs/index.tsx). */
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "space-between",
           flexWrap: "wrap",
           gap: "8px",
-          padding: "0 8px",
-          maxWidth: "100%",
+          width: "calc(100% - 50px)",
+          maxWidth: "600px",
+          padding: 0,
           boxSizing: "border-box",
         }}
       >
-        <button
-          type="button"
-          aria-expanded={showInfo}
-          onClick={() => setShowInfo(!showInfo)}
-          style={{
-            backgroundColor: "rgb(143 200 129)",
-            color: "#111",
-            height: "36px",
-            padding: "0 10px",
-            borderRadius: "8px",
-            border: "1px solid rgb(143 200 129)",
-            fontSize: "14px",
-            fontWeight: 500,
-            cursor: "pointer",
-            transition: "all 0.2s ease",
-            boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-            whiteSpace: "nowrap",
-            display: "inline-flex",
-            alignItems: "center",
-          }}
-        >
-          {showInfo ? t("anthology.show") : t("anthology.info")}
-        </button>
+        <AnthologyPanel contractAddr={contractAddr} />
 
-        {!showInfo && (
-          <>
-            <SkinSelector
-              value={currentSkin}
-              onChange={(newValue) => setCurrentSkin(newValue)}
-            />
-
-            <OrderSelector
-              value={currentOrder}
-              onChange={(newValue) => setCurrentOrder(newValue)}
-            />
-          </>
-        )}
-
-        {showInfo && userAddr === anthology?.anthologyState.owner && (
-          <button
-            type="button"
-            aria-expanded={sudoMode}
-            onClick={() => setSudoMode(!sudoMode)}
-            style={{
-              border: "1px solid darkred",
-              height: "36px",
-              padding: "0 10px",
-              borderRadius: "8px",
-              cursor: "pointer",
-              backgroundColor: "darkred",
-              color: "white",
-              fontSize: "14px",
-              fontWeight: 500,
-              whiteSpace: "nowrap",
-              display: "inline-flex",
-              alignItems: "center",
-            }}
-          >
-            {sudoMode ? t("anthology.info") : t("nav.settings")}
-          </button>
-        )}
-      </div>
-
-      {/* ----------------------------------------------------------- */}
-      {showInfo ? (
         <div
           style={{
             display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            flexWrap: "wrap",
+            gap: "8px",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-
-              flexDirection: "row",
-              alignItems: "flex-start",
-              flexWrap: "wrap",
-              justifyContent: "space-around",
-            }}
-          >
-            {sudoMode ? (
-              <>
-                <AnthologyOwner contractAddr={contractAddr} />
-                {anthology?.anthologyState.useBuffer && (
-                  <MemoirBuffer contractAddr={contractAddr} />
-                )}
-              </>
-            ) : (
-              <>
-                <AnthologyState contractAddr={contractAddr} />
-                {anthology?.anthologyState.whitelistEnabled && (
-                  <AnthologyWhitelistedUsers contractAddr={contractAddr} />
-                )}
-              </>
-            )}
-          </div>
-        </div>
-      ) : (
-        <>
-          {/* <AddMemoir contractAddr={contractAddr} /> */}
-          <Memoirs
-            anthologyAddr={contractAddr}
-            order={currentOrder}
-            skin={currentSkin}
+          <SkinSelector
+            value={currentSkin}
+            onChange={(newValue) => setCurrentSkin(newValue)}
           />
-        </>
-      )}
+
+          <OrderSelector
+            value={currentOrder}
+            onChange={(newValue) => setCurrentOrder(newValue)}
+          />
+        </div>
+      </div>
+
+      {/* ----------------------------------------------------------- */}
+      <Memoirs
+        anthologyAddr={contractAddr}
+        order={currentOrder}
+        skin={currentSkin}
+      />
     </div>
   );
 };

@@ -21,8 +21,16 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
     (state) => state.factory
   );
 
-  const localContracts = useAppSelector(
+  const localContractsRaw = useAppSelector(
     (state) => state.localAnthology.userContracts[LOCAL_USER_ADDR]
+  );
+  const receivedFrom = useAppSelector(
+    (state) => state.localAnthology.receivedFrom
+  );
+  const localContracts = useMemo(
+    () =>
+      (localContractsRaw || []).filter((addr) => !receivedFrom?.[addr]),
+    [localContractsRaw, receivedFrom]
   );
   const localTitles = useAppSelector(
     (state) => state.localAnthology.contractsTitles
@@ -134,11 +142,14 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
             id={userSelectId}
             value={selectedUser}
             style={{
-            minHeight: "30px",
-            border: "1px solid #94a3b8",
-            borderRadius: "6px",
-            padding: "4px 8px",
-          }}
+              width: "100%",
+              maxWidth: "100%",
+              minHeight: "30px",
+              border: "1px solid #94a3b8",
+              borderRadius: "6px",
+              padding: "4px 8px",
+              boxSizing: "border-box",
+            }}
             onChange={(e) => {
               setSelectedUser(e.target.value as Address);
               setSelectedCategory("");
@@ -165,11 +176,14 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
         value={selectedCategory}
         onChange={handleCategoryChange}
         style={{
-            minHeight: "30px",
-            border: "1px solid #94a3b8",
-            borderRadius: "6px",
-            padding: "4px 8px",
-          }}
+          width: "100%",
+          maxWidth: "100%",
+          minHeight: "30px",
+          border: "1px solid #94a3b8",
+          borderRadius: "6px",
+          padding: "4px 8px",
+          boxSizing: "border-box",
+        }}
       >
         {/* <option value="">No Category</option> */}
         {
@@ -204,11 +218,14 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
             value={selectedSubcategory}
             onChange={handleSubcategoryChange}
             style={{
+              width: "100%",
+              maxWidth: "100%",
               minHeight: "30px",
               marginTop: "10px",
               border: "1px solid #94a3b8",
               borderRadius: "6px",
               padding: "4px 8px",
+              boxSizing: "border-box",
             }}
           >
             <option value="">{t("selector.noSubcategory")}</option>
@@ -233,7 +250,7 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
         {/*  <h3>Memoirs</h3> */}
         <ul
           style={{
-            minHeight: "100px",
+            minHeight: filteredContracts.length > 0 ? "100px" : "0",
             //border: "1px solid #ccc",
             padding: "0px 10px 10px 10px",
           }}
@@ -291,7 +308,16 @@ export const ContractSelector: React.FC<ContractSelectorProps> = ({
                 : selectedAddress
             }
             readOnly
-            style={{ width: "100%", justifyItems: "center" }}
+            style={{
+              width: "100%",
+              maxWidth: "100%",
+              boxSizing: "border-box",
+              minHeight: "30px",
+              border: "1px solid #94a3b8",
+              borderRadius: "6px",
+              padding: "4px 8px",
+              justifyItems: "center",
+            }}
           />
         </div>
       )}

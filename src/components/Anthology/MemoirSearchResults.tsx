@@ -5,6 +5,8 @@ import { updateCurrentPath } from "@src/store/slices/userSlice";
 import { extractEmbed } from "@src/utils/embeds";
 import { matchesSearch } from "@src/utils/searchMatch";
 import { EmbedRenderer } from "@src/components/Anthology/Memoirs/thirdPartyEmbeds";
+import { MemoirActions } from "@src/components/Anthology/MemoirActions";
+import { formatUnixTime } from "@utils/formatUnixTime";
 import { Address } from "@src/types/common";
 import {
   AnthologyInterface,
@@ -19,12 +21,16 @@ interface SearchResult {
   title: string;
   content: string;
   index: number;
+  memoir: MemoirInterface;
 }
 
 export const MemoirSearchResults = ({ term }: { term: string }) => {
   const { t } = useTranslation();
   const localAnthologies = useAppSelector((s) => s.localAnthology.anthologies);
   const localTitles = useAppSelector((s) => s.localAnthology.contractsTitles);
+  const receivedFrom = useAppSelector(
+    (s) => s.localAnthology.receivedFrom ?? {}
+  );
   const onchainAnthologies = useAppSelector((s) => s.anthology);
 
   const dispatch = useAppDispatch();
@@ -39,6 +45,9 @@ export const MemoirSearchResults = ({ term }: { term: string }) => {
     (
       Object.entries(localAnthologies) as [Address, MemoirInterface[]][]
     ).forEach(([addr, memoirs]) => {
+      // Private Memory search must not surface connected anthologies.
+      if (receivedFrom[addr]) return;
+
       memoirs.forEach((memoir, index) => {
         if (
           matchesSearch(memoir.title, normalizedTerm) ||
@@ -51,6 +60,7 @@ export const MemoirSearchResults = ({ term }: { term: string }) => {
             title: memoir.title,
             content: memoir.content,
             index,
+            memoir,
           });
         }
       });
@@ -71,13 +81,14 @@ export const MemoirSearchResults = ({ term }: { term: string }) => {
             title: memoir.title,
             content: memoir.content,
             index,
+            memoir,
           });
         }
       });
     });
 
     return out;
-  }, [term, localAnthologies, localTitles, onchainAnthologies]);
+  }, [term, localAnthologies, localTitles, receivedFrom, onchainAnthologies]);
 
   const openAnthology = (addr: Address) => {
     dispatch(updateCurrentPath(`contract/${addr}`));
@@ -166,6 +177,26 @@ export const MemoirSearchResults = ({ term }: { term: string }) => {
                 ) : (
                   result.content
                 )}
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  flexWrap: "wrap",
+                  gap: "8px 12px",
+                  marginTop: "8px",
+                }}
+              >
+                <span style={{ fontSize: "12px", color: "#666" }}>
+                  {formatUnixTime(Number(result.memoir.timestamp))}
+                </span>
+                <MemoirActions
+                  anthologyAddr={result.anthologyAddr}
+                  index={result.index}
+                  memoir={result.memoir}
+                />
               </div>
             </div>
           );

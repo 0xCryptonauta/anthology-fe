@@ -11,7 +11,8 @@ interface SelectAnthologiesForDownloadProps {
   onHide?: () => void;
   inline?: boolean;
   userTitles: MemoirContent[];
-  onDownload: (selected: Set<string>) => void;
+  onDownload?: (selected: Set<string>) => void;
+  onShare?: (selected: Set<string>) => void;
 }
 
 export const SelectAnthologiesForDownload: React.FC<SelectAnthologiesForDownloadProps> = ({
@@ -20,6 +21,7 @@ export const SelectAnthologiesForDownload: React.FC<SelectAnthologiesForDownload
   inline,
   userTitles,
   onDownload,
+  onShare,
 }) => {
   const { t } = useTranslation();
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -58,7 +60,7 @@ export const SelectAnthologiesForDownload: React.FC<SelectAnthologiesForDownload
   const deselectAll = () => setSelected(new Set());
 
   const handleDownload = () => {
-    if (selected.size === 0) return;
+    if (selected.size === 0 || !onDownload) return;
     onDownload(selected);
   };
 
@@ -123,9 +125,28 @@ export const SelectAnthologiesForDownload: React.FC<SelectAnthologiesForDownload
         <span className="sel-count">
           {t("settings.selectedCount", { count: selected.size })}
         </span>
-        <button className="sel-download-btn" disabled={selected.size === 0} onClick={handleDownload}>
-          {t("settings.downloadCount", { count: selected.size })}
-        </button>
+        <div className="sel-footer-actions">
+          {onShare && (
+            <button
+              type="button"
+              className="sel-share-btn"
+              disabled={selected.size === 0}
+              onClick={() => onShare(selected)}
+            >
+              {t("settings.shareViaQrCount", { count: selected.size })}
+            </button>
+          )}
+          {onDownload && (
+            <button
+              type="button"
+              className="sel-download-btn"
+              disabled={selected.size === 0}
+              onClick={handleDownload}
+            >
+              {t("settings.downloadCount", { count: selected.size })}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

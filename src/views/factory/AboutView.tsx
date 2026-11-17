@@ -5,6 +5,9 @@ import {
   readingPageStyle,
   readingPanelStyle,
 } from "@src/styles/readingPanelStyles";
+import { useAppSelector } from "@src/store/utils/hooks";
+import { getBgClass } from "@src/utils/backgrounds";
+import "@src/styles/backgrounds.css";
 import { useTranslation } from "@src/i18n/useTranslation";
 
 const headingStyle = {
@@ -41,6 +44,9 @@ const quoteStyle = {
 
 export const AboutView = () => {
   const { t, locale } = useTranslation();
+  const categoryBackgroundsEnabled = useAppSelector(
+    (state) => state.dapp.categoryBackgroundsEnabled
+  );
   const [showFull, setShowFull] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [iframeHeight, setIframeHeight] = useState(1400);
@@ -80,8 +86,16 @@ export const AboutView = () => {
       <Seo title={t("nav.about")} description="Learn more about the Anthology project" />
       <div style={readingPageStyle}>
         <div
+          className={
+            categoryBackgroundsEnabled
+              ? `reading-panel-pattern ${getBgClass("about")}`
+              : undefined
+          }
           style={{
             ...readingPanelStyle,
+            backgroundColor: categoryBackgroundsEnabled
+              ? "transparent"
+              : readingPanelStyle.backgroundColor,
             maxWidth: showOnboarding ? "1040px" : readingPanelStyle.maxWidth,
             padding: showOnboarding ? "20px 12px" : readingPanelStyle.padding,
             transition: "max-width 0.2s ease",

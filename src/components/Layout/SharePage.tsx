@@ -3,6 +3,8 @@ import { useSearchParams } from "react-router-dom";
 import { ContractSelector } from "./ContractSelector";
 import { AddMemoir } from "@components/Anthology/AddMemoir";
 import { Address } from "@src/types/common";
+import { useAppSelector } from "@src/store/utils/hooks";
+import { getBgClass } from "@src/utils/backgrounds";
 
 /* 
   users: string[]; // Array of user addresses
@@ -25,18 +27,33 @@ export const SharePage = () => {
         : `${text}\n${url}`
       : text || url;
 
+  const categoryBackgroundsEnabled = useAppSelector(
+    (state) => state.dapp.categoryBackgroundsEnabled
+  );
+  const backgroundKey = selectedContract || title || url || "share";
+
   return (
     <div
+      className={
+        categoryBackgroundsEnabled
+          ? `${getBgClass(backgroundKey)} text-shadow-dark`
+          : undefined
+      }
       style={{
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "space-around",
-        border: "1px solid white",
-        width: "fit-content",
-        padding: "7px",
-        borderRadius: "7px",
+        gap: "16px",
+        border: "1px solid #30363d",
+        width: "100%",
+        maxWidth: "420px",
+        padding: "16px",
+        borderRadius: "12px",
         margin: "5px",
+        boxSizing: "border-box",
+        backgroundColor: categoryBackgroundsEnabled
+          ? "transparent"
+          : "#161b22",
       }}
     >
       <ContractSelector

@@ -1,11 +1,14 @@
 import React, {
   useEffect,
+  useId,
   useRef,
   useState,
   ReactElement,
   cloneElement,
 } from "react";
 import { Offcanvas } from "react-bootstrap";
+import { useAppSelector } from "@src/store/utils/hooks";
+import { getBgClass } from "@src/utils/backgrounds";
 
 type ModalProps = {
   placement?: "top" | "bottom" | "end";
@@ -19,6 +22,19 @@ type ModalProps = {
   stickToBottom?: boolean;
   containerClassName?: string;
   height?: string;
+  maxWidth?: string;
+  bodyPadding?: string;
+  contentPadding?: string;
+  contentMargin?: string;
+  backgroundKey?: string;
+  disablePattern?: boolean;
+  scrollable?: boolean;
+  /** Dark sheet for full-height settings panels. */
+  surface?: "light" | "dark";
+  /** Accessible name for the dialog (Offcanvas has none by default). */
+  dialogLabel?: string;
+  /** Keep the panel open while a nested modal is used. */
+  dismissOnOutsideClick?: boolean;
 };
 
 export const Modal = ({
@@ -33,9 +49,24 @@ export const Modal = ({
   stickToBottom = false,
   containerClassName,
   height,
+  maxWidth = "315px",
+  bodyPadding,
+  contentPadding = "10px",
+  contentMargin = "3px",
+  backgroundKey,
+  disablePattern = false,
+  scrollable = false,
+  surface = "light",
+  dialogLabel,
+  dismissOnOutsideClick = true,
 }: ModalProps) => {
   const [internalShow, setInternalShow] = useState(false);
   const show = externalShow ?? internalShow;
+  const generatedId = useId();
+  const patternKey = backgroundKey ?? generatedId;
+  const categoryBackgroundsEnabled = useAppSelector(
+    (state) => state.dapp.categoryBackgroundsEnabled
+  );
 
   const handleClose = React.useCallback(() => {
     if (onHide) onHide();
@@ -51,7 +82,7 @@ export const Modal = ({
   // Close when a press starts outside the panel. Pointer events cover mouse,
   // touch and pen uniformly, so taps on mobile close the modal reliably.
   useEffect(() => {
-    if (!show) return;
+    if (!show || !dismissOnOutsideClick) return;
 
     const handlePointerDown = (e: PointerEvent) => {
       if (
@@ -67,9 +98,16 @@ export const Modal = ({
     return () => {
       document.removeEventListener("pointerdown", handlePointerDown);
     };
-  }, [handleClose, show]);
+  }, [handleClose, show, dismissOnOutsideClick]);
 
   const isSidePanel = variant === "sidepanel";
+  const isDark = surface === "dark";
+  const patterned =
+    !isSidePanel &&
+    !transparent &&
+    !disablePattern &&
+    !isDark &&
+    categoryBackgroundsEnabled;
   const isPortrait = window.innerHeight > window.innerWidth;
   const resolvedPlacement = placement === "end" ? "end" : "bottom";
 
@@ -113,7 +151,8 @@ export const Modal = ({
           onHide={handleClose}
           placement={stickToBottom ? "bottom" : resolvedPlacement}
           className={isSidePanel ? (containerClassName || "") : ""}
-          data-bs-theme={isSidePanel ? "dark" : undefined}
+          data-bs-theme={isSidePanel || isDark ? "dark" : undefined}
+          aria-label={dialogLabel}
           style={{
             width: isSidePanel ? "200px" : undefined,
             height:
@@ -147,21 +186,48 @@ export const Modal = ({
                   ? "flex-start"
                   : "flex-end",
               backgroundColor: "transparent",
+              padding: bodyPadding,
+              overflow: scrollable ? "hidden" : undefined,
             }}
           >
             <div
               ref={offcanvasRef}
+              className={
+                patterned
+                  ? `modal-pattern ${getBgClass(patternKey)}`
+                  : undefined
+              }
               style={{
                 backgroundColor:
-                  isSidePanel || transparent ? "transparent" : "white",
-                border: isSidePanel || transparent ? "none" : "1px solid black",
-                borderRadius: "7px",
-                padding: "10px",
-                margin: isSidePanel ? "0px" : "3px",
+                  isSidePanel || transparent
+                    ? "transparent"
+                    : isDark
+                    ? "#0d1117"
+                    : patterned
+                    ? "transparent"
+                    : "white",
+                color:
+                  isSidePanel || transparent
+                    ? undefined
+                    : isDark
+                    ? "#e6edf3"
+                    : "#1a1a1a",
+                border:
+                  isSidePanel || transparent
+                    ? "none"
+                    : isDark
+                    ? "1px solid #30363d"
+                    : "1px solid black",
+                borderRadius: isDark ? "14px" : "7px",
+                padding: contentPadding,
+                margin: isSidePanel ? "0px" : contentMargin,
                 width: transparent ? "unset" : "100%",
                 height: isSidePanel ? "100%" : "unset",
-                maxWidth: isSidePanel || transparent ? "100%" : "315px",
+                maxWidth: isSidePanel || transparent ? "100%" : maxWidth,
                 maxHeight: "calc(100% - 6px)",
+                overflowY: scrollable ? "auto" : undefined,
+                minHeight: scrollable ? 0 : undefined,
+                WebkitOverflowScrolling: scrollable ? "touch" : undefined,
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",

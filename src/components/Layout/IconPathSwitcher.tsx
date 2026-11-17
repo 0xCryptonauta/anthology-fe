@@ -2,8 +2,6 @@ import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 import { useToast } from "./Toast";
 import { toggleIsIconToLocal } from "@src/store/slices/dappSlice";
 import { useAccount } from "wagmi";
-import { Modal } from "./Modal";
-import { useState } from "react";
 import { useTranslation } from "@src/i18n/useTranslation";
 
 export const IconPathSwitcher = () => {
@@ -13,108 +11,62 @@ export const IconPathSwitcher = () => {
   const { addToast } = useToast();
   const { isConnected } = useAccount();
 
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
+  if (!isConnected) return null;
 
   const handleToggle = (toLocal: boolean) => {
-    if (toLocal !== isIconToLocal) {
-      dispatch(toggleIsIconToLocal());
-      addToast({
-        title: t("iconPath.changedTitle"),
-        content: toLocal
-          ? t("iconPath.changedLocal")
-          : t("iconPath.changedWeb3"),
-        variant: "success",
-        delay: 3000,
-      });
-    }
+    if (toLocal === isIconToLocal) return;
+
+    dispatch(toggleIsIconToLocal());
+    addToast({
+      title: t("iconPath.changedTitle"),
+      content: toLocal
+        ? t("iconPath.changedLocal")
+        : t("iconPath.changedWeb3"),
+      variant: "success",
+      delay: 3000,
+    });
   };
 
+  const options = [
+    { local: true, label: t("iconPath.local") },
+    { local: false, label: t("iconPath.web3") },
+  ];
+
   return (
-    <Modal
-      placement="bottom"
-      show={show}
-      onHide={handleClose}
-      trigger={
-        isConnected ? (
-          <button
-            type="button"
-            style={{
-              cursor: "pointer",
-              border: "1px solid #ccc",
-              padding: "10px 16px",
-              borderRadius: "8px",
-              display: "inline-block",
-              fontSize: "14px",
-              fontWeight: "bold",
-              backgroundColor: "#f7fafc",
-              color: "#2b6cb0",
-            }}
-            onClick={() => setShow(true)}
-          >
-            {t("iconPath.trigger")}
-          </button>
-        ) : (
-          <></>
-        )
-      }
+    <div
+      role="group"
+      aria-label={t("iconPath.title")}
+      style={{
+        display: "inline-flex",
+        border: "1px solid #30363d",
+        borderRadius: "8px",
+        overflow: "hidden",
+      }}
     >
-      <div
-        style={{
-          maxWidth: "420px",
-          margin: "10px auto",
-          padding: "25px 30px",
-          borderRadius: "16px",
-          backgroundColor: "#ffffff",
-          boxShadow: "0 12px 24px rgba(0,0,0,0.08)",
-          fontFamily: `"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif`,
-          color: "#1a1a1a",
-        }}
-      >
-        <h3 style={{ textAlign: "center", marginBottom: "20px" }}>
-          {t("iconPath.title")}
-        </h3>
+      {options.map((option) => {
+        const active = option.local === isIconToLocal;
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          <label style={radioLabelStyle}>
-            <input
-              type="radio"
-              name="iconPath"
-              checked={isIconToLocal}
-              onChange={() => handleToggle(true)}
-              style={radioInputStyle}
-            />
-            <span>{t("iconPath.local")}</span>
-          </label>
-
-          <label style={radioLabelStyle}>
-            <input
-              type="radio"
-              name="iconPath"
-              checked={!isIconToLocal}
-              onChange={() => handleToggle(false)}
-              style={radioInputStyle}
-            />
-            <span>{t("iconPath.web3")}</span>
-          </label>
-        </div>
-      </div>
-    </Modal>
+        return (
+          <button
+            key={option.label}
+            type="button"
+            aria-pressed={active}
+            onClick={() => handleToggle(option.local)}
+            style={{
+              minHeight: "40px",
+              padding: "7px 12px",
+              border: "none",
+              backgroundColor: active ? "#238636" : "#21262d",
+              color: "white",
+              fontSize: "13px",
+              fontWeight: 500,
+              cursor: "pointer",
+            }}
+          >
+            {option.label}
+          </button>
+        );
+      })}
+    </div>
   );
-};
-
-// Reusable styles
-const radioLabelStyle: React.CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  gap: "10px",
-  fontSize: "15px",
-  cursor: "pointer",
-};
-
-const radioInputStyle: React.CSSProperties = {
-  width: "18px",
-  height: "18px",
-  accentColor: "#3b82f6",
-  cursor: "pointer",
 };
