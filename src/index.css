@@ -168,6 +168,12 @@ html {
   background: rgba(255, 255, 255, 0.78);
 }
 
+/* /about and /privacy: the reading panel keeps dark body text, so the
+   hashed pattern sits under a light film instead of the dark one. */
+.reading-panel-pattern.bg-overlay::before {
+  background: rgba(255, 255, 255, 0.82);
+}
+
 /* Anthology info + settings sheet, matching the /settings surface. */
 .anthology-panel {
   width: 100%;
