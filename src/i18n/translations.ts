@@ -321,6 +321,12 @@ export const en = {
     "You can install it any time from Settings. We will not ask again for a week.",
   "install.notNow": "Not now",
 
+  /* ------------------------------ Leaving app ------------------------------ */
+  "leave.title": "Leave Anthology?",
+  "leave.body": "This link leaves Anthology for {destination}.",
+  "leave.stay": "Stay",
+  "leave.leave": "Leave",
+
   /* ------------------------------- Backgrounds ------------------------------ */
   "backgrounds.toggle": "Category Backgrounds",
 
@@ -1035,6 +1041,12 @@ export const es: Record<TranslationKey, string> = {
   "install.promptHint":
     "Puedes instalarla cuando quieras desde Ajustes. No volveremos a preguntar por una semana.",
   "install.notNow": "Ahora no",
+
+  /* ------------------------------ Leaving app ------------------------------ */
+  "leave.title": "¿Salir de Anthology?",
+  "leave.body": "Este enlace sale de Anthology hacia {destination}.",
+  "leave.stay": "Quedarme",
+  "leave.leave": "Salir",
 
   /* ------------------------------- Backgrounds ------------------------------ */
   "backgrounds.toggle": "Fondos de categoría",
