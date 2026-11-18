@@ -3,6 +3,10 @@ import { Modal } from "./Modal";
 import { settingsActionButtonStyle } from "./settingsStyles";
 import { store } from "@store/redux";
 import { useTranslation } from "@src/i18n/useTranslation";
+import {
+  summarizeCacheStorage,
+  type CacheSummary,
+} from "@src/utils/cacheStorage";
 
 const formatBytes = (bytes: number): string => {
   if (bytes >= 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
@@ -10,13 +14,21 @@ const formatBytes = (bytes: number): string => {
   return `${bytes} B`;
 };
 
+const sumBy = (
+  summaries: CacheSummary[] | null,
+  key: "readableBytes" | "opaqueEntries" | "otherEntries"
+): number | null =>
+  summaries
+    ? summaries.reduce((total, summary) => total + summary[key], 0)
+    : null;
+
 export const CacheStorageViewer = () => {
   const { t } = useTranslation();
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [cacheBytes, setCacheBytes] = useState<number | null>(null);
   const [usageBytes, setUsageBytes] = useState<number | null>(null);
   const [storeBytes, setStoreBytes] = useState<number | null>(null);
+  const [summaries, setSummaries] = useState<CacheSummary[] | null>(null);
 
   useEffect(() => {
     if (!show) return;
@@ -24,31 +36,21 @@ export const CacheStorageViewer = () => {
     const load = async () => {
       setIsLoading(true);
 
-      // The memoir data (Redux store) — reported as "Memory (Anthologies)"
-      setStoreBytes(JSON.stringify(store.getState()).length);
+      // The memoir data (Redux store) — reported as "Memory (Anthologies)".
+      // Blob.size counts UTF-8 bytes, unlike String.length.
+      setStoreBytes(new Blob([JSON.stringify(store.getState())]).size);
 
-      // Total size of the service worker caches (thumbnails, assets, pages)
+      // Readable bytes and opaque entry counts. Opaque responses (cross-origin
+      // no-cors fetches) are unreadable from JavaScript and are padded by the
+      // browser in the quota estimate below.
       if (typeof caches !== "undefined") {
         try {
-          const names = await caches.keys();
-          let total = 0;
-          for (const name of names) {
-            const cache = await caches.open(name);
-            const requests = await cache.keys();
-            for (const request of requests) {
-              const response = await cache.match(request);
-              if (response) {
-                const blob = await response.clone().blob();
-                total += blob.size;
-              }
-            }
-          }
-          setCacheBytes(total);
+          setSummaries(await summarizeCacheStorage(caches));
         } catch {
-          setCacheBytes(null);
+          setSummaries(null);
         }
       } else {
-        setCacheBytes(null);
+        setSummaries(null);
       }
 
       // Browser-reported usage: caches + database + service worker
@@ -69,14 +71,19 @@ export const CacheStorageViewer = () => {
     load();
   }, [show]);
 
-  const appDataBytes =
-    usageBytes !== null && cacheBytes !== null
-      ? Math.max(0, usageBytes - cacheBytes)
+  const readableBytes = sumBy(summaries, "readableBytes");
+  const opaqueEntries = sumBy(summaries, "opaqueEntries");
+
+  // localStorage is not part of the browser storage estimate on every browser,
+  // so keep both numbers visible instead of pretending they are one metric.
+  const totalBytes =
+    usageBytes !== null && storeBytes !== null
+      ? usageBytes + storeBytes
       : null;
 
-  const totalBytes =
-    usageBytes !== null && cacheBytes !== null && storeBytes !== null
-      ? cacheBytes + Math.max(0, usageBytes - cacheBytes) + storeBytes
+  const appDataBytes =
+    usageBytes !== null && readableBytes !== null
+      ? Math.max(0, usageBytes - readableBytes)
       : null;
 
   const rowStyle = {
@@ -142,22 +149,39 @@ export const CacheStorageViewer = () => {
             </div>
 
             <div style={rowStyle}>
-              <span>{t("storage.cachedFiles")}</span>
+              <span>{t("storage.cachedFilesReadable")}</span>
               <span>
-                {cacheBytes !== null
-                  ? formatBytes(cacheBytes)
+                {readableBytes !== null
+                  ? formatBytes(readableBytes)
                   : t("storage.nA")}
               </span>
             </div>
 
+            {opaqueEntries !== null && opaqueEntries > 0 && (
+              <div style={rowStyle}>
+                <span>{t("storage.opaqueResponses")}</span>
+                <span>{opaqueEntries}</span>
+              </div>
+            )}
+
             <div style={rowStyle}>
-              <span>{t("storage.appData")}</span>
+              <span>
+                {opaqueEntries !== null && opaqueEntries > 0
+                  ? t("storage.appDataWithOpaque")
+                  : t("storage.appData")}
+              </span>
               <span>
                 {appDataBytes !== null
                   ? `~${formatBytes(appDataBytes)}`
                   : t("storage.nA")}
               </span>
             </div>
+
+            {opaqueEntries !== null && opaqueEntries > 0 && (
+              <p role="note" style={{ fontSize: "12px", margin: 0 }}>
+                {t("storage.opaqueHint")}
+              </p>
+            )}
           </div>
         )}
       </div>

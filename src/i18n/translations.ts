@@ -245,8 +245,12 @@ export const en = {
   "storage.title": "Storage",
   "storage.totalUsed": "Total used by the app",
   "storage.memory": "Memory (Anthologies)",
-  "storage.cachedFiles": "Cached thumbnails and files",
+  "storage.cachedFilesReadable": "Cached files (readable)",
+  "storage.opaqueResponses": "Opaque cached responses",
   "storage.appData": "App data (wallet and others)",
+  "storage.appDataWithOpaque": "Other data (includes opaque padding)",
+  "storage.opaqueHint":
+    "Chrome charges about 7 MB of quota for each opaque cached response, so this total is much larger than the real disk usage. Use \"Clear\" under \"Cache\" to remove them.",
   "storage.nA": "n/a",
 
   /* ------------------------------- Clear cache ------------------------------ */
@@ -965,8 +969,12 @@ export const es: Record<TranslationKey, string> = {
   "storage.title": "Almacenamiento",
   "storage.totalUsed": "Total usado por la app",
   "storage.memory": "Memoria (antologías)",
-  "storage.cachedFiles": "Miniaturas y archivos en caché",
+  "storage.cachedFilesReadable": "Archivos en caché (legibles)",
+  "storage.opaqueResponses": "Respuestas opacas en caché",
   "storage.appData": "Datos de la app (billetera y otros)",
+  "storage.appDataWithOpaque": "Otros datos (incluye relleno opaco)",
+  "storage.opaqueHint":
+    "Chrome suma unos 7 MB de cuota por cada respuesta opaca en caché, por lo que el total es mucho mayor que el uso real en disco. Usa «Borrar» en «Caché» para eliminarlas.",
   "storage.nA": "n/d",
 
   /* ------------------------------- Clear cache ------------------------------ */
