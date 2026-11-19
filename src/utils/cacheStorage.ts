@@ -97,6 +97,35 @@ export const summarizeCacheStorage = async (
   );
 };
 
+export type CacheGroupTotals = {
+  precacheBytes: number;
+  otherReadableBytes: number;
+};
+
+const PRECACHE_CACHE_PREFIX = "workbox-precache";
+
+/**
+ * Splits readable cache bytes into the offline app shell (workbox precache)
+ * and everything else. The app-shell row explains most of the baseline size.
+ */
+export const groupCacheSummaries = (
+  summaries: CacheSummary[] | null
+): CacheGroupTotals | null => {
+  if (!summaries) return null;
+
+  return summaries.reduce<CacheGroupTotals>(
+    (totals, summary) => {
+      if (summary.name.startsWith(PRECACHE_CACHE_PREFIX)) {
+        totals.precacheBytes += summary.readableBytes;
+      } else {
+        totals.otherReadableBytes += summary.readableBytes;
+      }
+      return totals;
+    },
+    { precacheBytes: 0, otherReadableBytes: 0 }
+  );
+};
+
 /**
  * Deletes cached responses that JavaScript cannot read (opaque responses).
  * Those are the ones Chromium pads in the quota estimate. Same-origin assets

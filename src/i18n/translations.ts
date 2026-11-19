@@ -243,14 +243,17 @@ export const en = {
   /* --------------------------------- Storage -------------------------------- */
   "storage.viewUsage": "View app storage usage",
   "storage.title": "Storage",
-  "storage.totalUsed": "Total used by the app",
+  "storage.totalUsed": "Total used by the app (estimate)",
   "storage.memory": "Memory (Anthologies)",
-  "storage.cachedFilesReadable": "Cached files (readable)",
+  "storage.appShell": "App shell (offline cache)",
+  "storage.otherCachedFiles": "Other cached files",
   "storage.opaqueResponses": "Opaque cached responses",
   "storage.appData": "App data (wallet and others)",
   "storage.appDataWithOpaque": "Other data (includes opaque padding)",
   "storage.opaqueHint":
     "Chrome charges about 7 MB of quota for each opaque cached response, so this total is much larger than the real disk usage. Use \"Clear\" under \"Cache\" to remove them.",
+  "storage.browserCacheNote":
+    "Third-party images (YouTube, Vimeo, Spotify thumbnails) are cached by the browser's HTTP cache, outside the app's storage quota. They are not included in this total.",
   "storage.nA": "n/a",
 
   /* ------------------------------- Clear cache ------------------------------ */
@@ -967,14 +970,17 @@ export const es: Record<TranslationKey, string> = {
   /* --------------------------------- Storage -------------------------------- */
   "storage.viewUsage": "Ver uso de almacenamiento",
   "storage.title": "Almacenamiento",
-  "storage.totalUsed": "Total usado por la app",
+  "storage.totalUsed": "Total usado por la app (estimado)",
   "storage.memory": "Memoria (antologías)",
-  "storage.cachedFilesReadable": "Archivos en caché (legibles)",
+  "storage.appShell": "App base (caché sin conexión)",
+  "storage.otherCachedFiles": "Otros archivos en caché",
   "storage.opaqueResponses": "Respuestas opacas en caché",
   "storage.appData": "Datos de la app (billetera y otros)",
   "storage.appDataWithOpaque": "Otros datos (incluye relleno opaco)",
   "storage.opaqueHint":
     "Chrome suma unos 7 MB de cuota por cada respuesta opaca en caché, por lo que el total es mucho mayor que el uso real en disco. Usa «Borrar» en «Caché» para eliminarlas.",
+  "storage.browserCacheNote":
+    "Las imágenes de terceros (miniaturas de YouTube, Vimeo y Spotify) las guarda la caché HTTP del navegador, fuera de la cuota de almacenamiento de la app. No se incluyen en este total.",
   "storage.nA": "n/d",
 
   /* ------------------------------- Clear cache ------------------------------ */
