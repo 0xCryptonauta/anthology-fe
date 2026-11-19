@@ -1,10 +1,12 @@
 import { describe, expect, test } from "bun:test";
 import {
+  groupCacheSummaries,
   isOpaqueResponse,
   purgeLegacyOpaqueCache,
   purgeOpaqueEntries,
   summarizeCache,
   summarizeCacheStorage,
+  type CacheSummary,
   type MinimalCacheStorage,
 } from "../src/utils/cacheStorage";
 
@@ -85,6 +87,43 @@ describe("isOpaqueResponse", () => {
   test("treats readable responses as readable", () => {
     expect(isOpaqueResponse({ type: "cors", status: 200 })).toBe(false);
     expect(isOpaqueResponse({ type: "basic", status: 200 })).toBe(false);
+  });
+});
+
+describe("groupCacheSummaries", () => {
+  const summary = (
+    name: string,
+    readableBytes: number
+  ): CacheSummary => ({
+    name,
+    entries: 1,
+    readableBytes,
+    opaqueEntries: 0,
+    otherEntries: 0,
+  });
+
+  test("returns null when cache summaries are unavailable", () => {
+    expect(groupCacheSummaries(null)).toBeNull();
+  });
+
+  test("splits the app-shell precache from other readable caches", () => {
+    const grouped = groupCacheSummaries([
+      summary("workbox-precache-v2-http://localhost/", 3000),
+      summary("static-assets", 500),
+      summary("html-cache", 100),
+    ]);
+
+    expect(grouped).toEqual({
+      precacheBytes: 3000,
+      otherReadableBytes: 600,
+    });
+  });
+
+  test("returns zeroes for an empty cache list", () => {
+    expect(groupCacheSummaries([])).toEqual({
+      precacheBytes: 0,
+      otherReadableBytes: 0,
+    });
   });
 });
 

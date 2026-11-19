@@ -4,6 +4,7 @@ import { settingsActionButtonStyle } from "./settingsStyles";
 import { store } from "@store/redux";
 import { useTranslation } from "@src/i18n/useTranslation";
 import {
+  groupCacheSummaries,
   summarizeCacheStorage,
   type CacheSummary,
 } from "@src/utils/cacheStorage";
@@ -73,6 +74,7 @@ export const CacheStorageViewer = () => {
 
   const readableBytes = sumBy(summaries, "readableBytes");
   const opaqueEntries = sumBy(summaries, "opaqueEntries");
+  const groups = groupCacheSummaries(summaries);
 
   // localStorage is not part of the browser storage estimate on every browser,
   // so keep both numbers visible instead of pretending they are one metric.
@@ -149,10 +151,19 @@ export const CacheStorageViewer = () => {
             </div>
 
             <div style={rowStyle}>
-              <span>{t("storage.cachedFilesReadable")}</span>
+              <span>{t("storage.appShell")}</span>
               <span>
-                {readableBytes !== null
-                  ? formatBytes(readableBytes)
+                {groups !== null
+                  ? formatBytes(groups.precacheBytes)
+                  : t("storage.nA")}
+              </span>
+            </div>
+
+            <div style={rowStyle}>
+              <span>{t("storage.otherCachedFiles")}</span>
+              <span>
+                {groups !== null
+                  ? formatBytes(groups.otherReadableBytes)
                   : t("storage.nA")}
               </span>
             </div>
@@ -182,6 +193,10 @@ export const CacheStorageViewer = () => {
                 {t("storage.opaqueHint")}
               </p>
             )}
+
+            <p role="note" style={{ fontSize: "12px", margin: 0 }}>
+              {t("storage.browserCacheNote")}
+            </p>
           </div>
         )}
       </div>
