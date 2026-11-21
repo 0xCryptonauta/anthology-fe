@@ -18,9 +18,27 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          /*          if (id.includes("node_modules/@reown/appkit-wallet")) {
-            return "reown-appkit-wallet";
-          } */
+          // Web3 is opt-in: pin the WalletConnect provider's entry module to a
+          // stable-named chunk so the service worker can keep it (and the
+          // dependency subtree only it uses) out of the precache. Matching
+          // only the provider entry — not the whole @walletconnect namespace —
+          // leaves modules shared with the shell (e.g. abitype) where Rollup
+          // put them, so the main entry never grows a static edge to this
+          // chunk. It is only fetched when the user clicks connect.
+          if (id.includes("node_modules/@walletconnect/ethereum-provider")) {
+            return "walletconnect-vendor";
+          }
+          // abitype and Vite's preload-helper are shared by the entry graph
+          // and the vendor graph. Without an explicit home, Rollup drops them
+          // into the vendor chunk, which gives the entry a static import edge
+          // to it — and a modulepreload that downloads wallet code at boot.
+          // Keep them in their own small chunk that both sides import instead.
+          if (
+            id.includes("node_modules/abitype") ||
+            id.includes("preload-helper")
+          ) {
+            return "shared-deps";
+          }
           if (id.includes("node_modules/@remix-run/router/dist/router.js")) {
             return "remix-run-router";
           }
@@ -60,9 +78,30 @@ export default defineConfig({
         clientsClaim: true,
         skipWaiting: true,
         globPatterns: ["**/*.{js,css,html,woff2,webp,wasm}"],
+        // The WalletConnect vendor chunk is on-demand: never precached, so
+        // local-only users never download wallet code. The runtime route
+        // below serves it after the first connect click fetches it.
+        globIgnores: ["**/walletconnect-vendor-*.js"],
         navigateFallbackDenylist: [/^\/onboarding\.html/, /^\/og-image\.html/],
         ignoreURLParametersMatching: [/^lang$/, /^utm_/, /^fbclid$/],
         runtimeCaching: [
+          {
+            // Web3 is opt-in — this chunk downloads on the first
+            // wallet-connect click and is cached from then on. Never
+            // precached (see globIgnores above).
+            urlPattern: /\/assets\/walletconnect-vendor-[^/]+\.js$/,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "wc-vendor",
+              expiration: {
+                maxEntries: 4,
+                purgeOnQuotaError: true,
+              },
+              cacheableResponse: {
+                statuses: [200],
+              },
+            },
+          },
           {
             // Note: "script" is intentionally NOT cached here — caching Vite's
             // dev modules makes reloads serve stale code (and prod app scripts
