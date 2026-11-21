@@ -2,17 +2,20 @@ import { useState } from "react";
 import { useConnect } from "wagmi";
 import type { CreateConnectorFn } from "wagmi";
 import { WALLETCONNECT_PARAMETERS } from "@src/wagmiConfig";
-import { classifyWalletConnectError } from "@src/utils/walletConnectError";
+import {
+  classifyWalletConnectError,
+  type WalletConnectErrorKind,
+} from "@src/utils/walletConnectError";
 import { useToast } from "@components/Layout/Toast";
 import { useTranslation } from "@src/i18n/useTranslation";
 
 const TOAST_DELAY_MS = 3000;
 
 /**
- * The only trigger that loads wallet code. The WalletConnect vendor chunk is
- * kept out of the service-worker precache, so the dynamic import below can
- * fail offline — that failure is classified and explained to the user
- * instead of leaving a silently dead button.
+ * The only trigger that loads wallet code. Neither the connector shim nor
+ * the WalletConnect vendor chunk is precached, so the dynamic imports on
+ * this path can fail offline — failures are classified and explained to
+ * the user instead of leaving a silently dead button.
  *
  * With a stored WalletConnect session the connector silently re-enables it;
  * without one the provider's bundled pairing modal opens (QR on desktop,
@@ -28,43 +31,36 @@ export const WalletOptions = () => {
     if (connecting) return;
     setConnecting(true);
 
+    const report = (kind: WalletConnectErrorKind) => {
+      // The user closing the pairing modal is not worth reporting.
+      if (kind === "rejected") return;
+      const offline = kind === "offline";
+      addToast({
+        title: t(offline ? "wallet.offlineConnect" : "wallet.connectFailed"),
+        content: t(
+          offline ? "wallet.offlineConnectDesc" : "wallet.connectFailedDesc"
+        ),
+        variant: offline ? "warning" : "danger",
+        delay: TOAST_DELAY_MS,
+      });
+    };
+
     let connector: CreateConnectorFn;
     try {
       const { walletConnect } = await import("@src/connectors/walletConnect");
       connector = walletConnect(WALLETCONNECT_PARAMETERS);
     } catch (error) {
+      report(classifyWalletConnectError(error));
       setConnecting(false);
-      // The vendor chunk is not precached: offline it cannot be downloaded.
-      const kind = classifyWalletConnectError(error);
-      if (kind === "offline") {
-        addToast({
-          title: t("wallet.offlineConnect"),
-          content: t("wallet.offlineConnectDesc"),
-          variant: "warning",
-          delay: TOAST_DELAY_MS,
-        });
-      } else {
-        addToast({
-          title: t("wallet.connectFailed"),
-          content: t("wallet.connectFailedDesc"),
-          variant: "danger",
-          delay: TOAST_DELAY_MS,
-        });
-      }
       return;
     }
 
     try {
       await connectAsync({ connector });
     } catch (error) {
-      // The user closing the pairing modal is not worth reporting.
-      if (classifyWalletConnectError(error) === "rejected") return;
-      addToast({
-        title: t("wallet.connectFailed"),
-        content: t("wallet.connectFailedDesc"),
-        variant: "danger",
-        delay: TOAST_DELAY_MS,
-      });
+      // The connector fetches the vendor chunk from inside connectAsync, so
+      // an unloadable vendor lands here too — classify before reporting.
+      report(classifyWalletConnectError(error));
     } finally {
       setConnecting(false);
     }

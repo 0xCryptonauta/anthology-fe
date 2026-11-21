@@ -341,7 +341,7 @@ export const en = {
   "wallet.disconnect": "Disconnect wallet",
   "wallet.offlineConnect": "Connection needs the internet",
   "wallet.offlineConnectDesc":
-    "The wallet connector downloads on demand. Go online and tap again — if your wallet was connected before, it reconnects on its own.",
+    "The wallet connector downloads on demand. Go online and reload the page, then tap again — if your wallet was connected before, it reconnects on its own.",
   "wallet.connectFailed": "Couldn't connect",
   "wallet.connectFailedDesc":
     "Your wallet didn't respond. Try again in a moment.",
@@ -1075,7 +1075,7 @@ export const es: Record<TranslationKey, string> = {
   "wallet.disconnect": "Desconectar billetera",
   "wallet.offlineConnect": "Conectar necesita internet",
   "wallet.offlineConnectDesc":
-    "El conector de billeteras se descarga al usarlo. Conéctate a internet y toca de nuevo — si ya habías conectado una billetera, se reconecta sola.",
+    "El conector de billeteras se descarga al usarlo. Conéctate a internet y recarga la página, luego toca de nuevo — si ya habías conectado una billetera, se reconecta sola.",
   "wallet.connectFailed": "No se pudo conectar",
   "wallet.connectFailedDesc":
     "Tu billetera no respondió. Inténtalo de nuevo en un momento.",

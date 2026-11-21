@@ -78,18 +78,23 @@ export default defineConfig({
         clientsClaim: true,
         skipWaiting: true,
         globPatterns: ["**/*.{js,css,html,woff2,webp,wasm}"],
-        // The WalletConnect vendor chunk is on-demand: never precached, so
-        // local-only users never download wallet code. The runtime route
-        // below serves it after the first connect click fetches it.
-        globIgnores: ["**/walletconnect-vendor-*.js"],
+        // Wallet code is opt-in and on-demand: neither the connector shim
+        // nor the WalletConnect vendor chunk is precached, so local-only
+        // users never download it. The runtime route below serves both
+        // after the first connect click fetches them.
+        globIgnores: [
+          "**/walletconnect-vendor-*.js",
+          "**/walletConnect-*.js",
+        ],
         navigateFallbackDenylist: [/^\/onboarding\.html/, /^\/og-image\.html/],
         ignoreURLParametersMatching: [/^lang$/, /^utm_/, /^fbclid$/],
         runtimeCaching: [
           {
-            // Web3 is opt-in — this chunk downloads on the first
-            // wallet-connect click and is cached from then on. Never
-            // precached (see globIgnores above).
-            urlPattern: /\/assets\/walletconnect-vendor-[^/]+\.js$/,
+            // Web3 is opt-in — the connector shim and the WalletConnect
+            // vendor chunk download on the first wallet-connect click and
+            // are cached from then on. Never precached (see globIgnores
+            // above).
+            urlPattern: /\/assets\/(walletconnect-vendor|walletConnect)-[^/]+\.js$/,
             handler: "CacheFirst",
             options: {
               cacheName: "wc-vendor",
