@@ -1,6 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { LocalId } from "@src/types/connect";
 import { generateLocalId } from "@src/utils/localId";
+import { MAX_NAMETAG_LENGTH } from "@src/utils/shareEnvelope";
 
 export interface ConnectState {
   deviceId: LocalId | null;
@@ -22,7 +23,7 @@ export const connectSlice = createSlice({
       },
     },
     setNametag(state, action: PayloadAction<string>) {
-      state.nametag = action.payload.trim().slice(0, 32);
+      state.nametag = action.payload.trim().slice(0, MAX_NAMETAG_LENGTH);
     },
     resetConnectStore() {
       return { deviceId: null, nametag: "" };

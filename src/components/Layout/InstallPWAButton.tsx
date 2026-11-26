@@ -1,52 +1,16 @@
-import { useEffect, useState } from "react";
 import { useTranslation } from "@src/i18n/useTranslation";
-
-interface BeforeInstallPromptEvent extends Event {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{
-    outcome: "accepted" | "dismissed";
-    platform: string;
-  }>;
-}
+import { usePwaInstallState } from "@src/hooks/usePwaInstallState";
+import { promptInstall } from "@src/utils/pwaInstallPrompt";
 
 const InstallPWAButton = () => {
   const { t } = useTranslation();
-  const [deferredPrompt, setDeferredPrompt] =
-    useState<BeforeInstallPromptEvent | null>(null);
-  const [isInstalled, setIsInstalled] = useState<boolean>(false);
+  const { canInstall, installed } = usePwaInstallState();
 
-  useEffect(() => {
-    const handler = (event: Event) => {
-      event.preventDefault();
-      setDeferredPrompt(event as BeforeInstallPromptEvent);
-    };
-
-    const installedHandler = () => {
-      setIsInstalled(true);
-    };
-
-    window.addEventListener("beforeinstallprompt", handler);
-    window.addEventListener("appinstalled", installedHandler);
-
-    if (window.matchMedia("(display-mode: standalone)").matches) {
-      setIsInstalled(true);
-    }
-
-    return () => {
-      window.removeEventListener("beforeinstallprompt", handler);
-      window.removeEventListener("appinstalled", installedHandler);
-    };
-  }, []);
-
-  const available = Boolean(deferredPrompt) && !isInstalled;
+  const available = canInstall && !installed;
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
-
-    deferredPrompt.prompt();
-    const choice = await deferredPrompt.userChoice;
-    if (choice.outcome === "accepted") setIsInstalled(true);
-    setDeferredPrompt(null);
+    if (!available) return;
+    await promptInstall();
   };
 
   return (
@@ -67,7 +31,7 @@ const InstallPWAButton = () => {
         opacity: available ? 1 : 0.6,
       }}
     >
-      {isInstalled
+      {installed
         ? t("install.installed")
         : available
         ? t("install.button")

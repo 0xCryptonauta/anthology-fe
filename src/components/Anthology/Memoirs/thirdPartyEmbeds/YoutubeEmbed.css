@@ -12,6 +12,19 @@
   position: relative;
 }
 
+/* Shorts are 9:16. Cap the height so a full-width card doesn't become a
+   1400px-tall column on desktop, and keep the player centered. */
+.yt-embed-container--short {
+  display: flex;
+  justify-content: center;
+}
+
+.yt-embed-aspect--short {
+  width: min(100%, calc(70dvh * 9 / 16));
+  padding-bottom: 0;
+  aspect-ratio: 9 / 16;
+}
+
 .yt-embed-fill {
   position: absolute;
   inset: 0;

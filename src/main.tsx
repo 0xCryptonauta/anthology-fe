@@ -12,6 +12,7 @@ import { NotFound } from "@views/NotFound.tsx";
 import { RootView } from "@views/RootView.tsx";
 import { IndexView } from "@views/IndexView.tsx";
 import { ContextWagmiProvider } from "./components/Layout/ContextWagmiProvider";
+import { purgeLegacyOpaqueCache } from "@utils/cacheStorage";
 
 const FactoryStateView = lazy(() =>
   import("@views/factory/FactoryStateView.tsx").then((m) => ({
@@ -90,6 +91,11 @@ const router = createBrowserRouter([
   },
   { path: "*", element: <NotFound /> },
 ]);
+
+// Older service worker configs cached third-party thumbnails as opaque
+// responses. Chromium charges ~7 MB of quota per opaque entry, so remove the
+// legacy entries once and let the new same-origin-only rule from here on.
+void purgeLegacyOpaqueCache();
 
 createRoot(document.getElementById("root")!).render(
   import.meta.env.VITE_ENV === "development" ? (

@@ -42,7 +42,12 @@ export const ClearCacheButton = () => {
       trigger={
         <button
           type="button"
-          style={settingsActionButtonStyle}
+          style={{
+            ...settingsActionButtonStyle,
+            backgroundColor: "#7f1d1d",
+            border: "1px solid #b91c1c",
+            color: "white",
+          }}
           onClick={() => setShow(true)}
         >
           {t("settings.actionClear")}
@@ -84,6 +89,7 @@ export const ClearCacheButton = () => {
           }}
         >
           <button
+            type="button"
             style={{
               backgroundColor: "#e2e8f0",
               color: "#1a1a1a",
@@ -98,8 +104,9 @@ export const ClearCacheButton = () => {
           </button>
 
           <button
+            type="button"
             style={{
-              backgroundColor: "#dd6b20",
+              backgroundColor: "#b91c1c",
               color: "white",
               padding: "10px 20px",
               borderRadius: "5px",

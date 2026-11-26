@@ -2,7 +2,13 @@ import type { SharedBy } from "@src/types/connect";
 import { isLocalId } from "@src/utils/localId";
 import type { LoadedJson } from "@src/utils/validateJsonContentType";
 
-export const MAX_NAMETAG_LENGTH = 32;
+export const MAX_NAMETAG_LENGTH = 13;
+/**
+ * Names received from older builds may be up to 32 characters. The input is
+ * capped at 13, but decoding still accepts the legacy length so transfers
+ * between mixed versions are not rejected.
+ */
+export const MAX_RECEIVED_NAMETAG_LENGTH = 32;
 
 export type NametagError = "empty" | "too-long" | null;
 
@@ -108,6 +114,13 @@ export const validateNametag = (value: string): NametagError => {
   return null;
 };
 
+const validateReceivedNametag = (value: string): NametagError => {
+  const normalized = normalizeNametag(value);
+  if (normalized.length === 0) return "empty";
+  if (normalized.length > MAX_RECEIVED_NAMETAG_LENGTH) return "too-long";
+  return null;
+};
+
 export const buildShareEnvelope = (
   payload: LoadedJson,
   sharedBy: SharedBy,
@@ -127,7 +140,7 @@ export const validateSharedBy = (value: unknown): SharedBy | null => {
   const candidate = value as Partial<SharedBy>;
   if (!isLocalId(candidate.deviceId)) return null;
   if (typeof candidate.nametag !== "string") return null;
-  if (validateNametag(candidate.nametag) !== null) return null;
+  if (validateReceivedNametag(candidate.nametag) !== null) return null;
 
   return {
     deviceId: candidate.deviceId,

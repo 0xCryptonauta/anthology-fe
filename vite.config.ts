@@ -67,19 +67,28 @@ export default defineConfig({
             // Note: "script" is intentionally NOT cached here — caching Vite's
             // dev modules makes reloads serve stale code (and prod app scripts
             // are already covered by the workbox precache).
-            urlPattern: ({ request }) =>
-              request.destination === "style" ||
-              request.destination === "font" ||
-              request.destination === "image",
+            //
+            // Same-origin only: cross-origin images are fetched without CORS
+            // (opaque responses) and Chromium pads each cached opaque response
+            // by 0–14 MB of quota (≈7 MB average), which made a 50-thumbnail
+            // list report ~350 MB in navigator.storage.estimate(). Let the
+            // browser HTTP cache handle third-party images instead.
+            urlPattern: ({ request, sameOrigin }) =>
+              sameOrigin &&
+              (request.destination === "style" ||
+                request.destination === "font" ||
+                request.destination === "image"),
             handler: "CacheFirst",
             options: {
               cacheName: "static-assets",
               expiration: {
                 maxEntries: 50,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+                purgeOnQuotaError: true,
               },
               cacheableResponse: {
-                statuses: [0, 200],
+                // 0 means "opaque" — never cache those (see comment above).
+                statuses: [200],
               },
             },
           },

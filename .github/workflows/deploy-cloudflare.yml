@@ -1,0 +1,63 @@
+# Stage 1 of the GitHub Pages -> Cloudflare Workers migration.
+# Runs ALONGSIDE CICD.yml until the custom domain is verified and flipped,
+# then CICD.yml is deleted (stage 3).
+
+name: Deploy to Cloudflare
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+concurrency:
+  group: "cloudflare-deploy"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      # Public build-time config. These values are inlined into the client
+      # bundle by Vite, so they are public by construction — plain text
+      # here makes them reviewable and avoids dashboard round-trips. Never
+      # put anything private in this block.
+      VITE_FACTORY_CONTRACT: "0x82fefba6bdcbcc61d691e2b3887741bf05691a43"
+      VITE_FACTORY_RPC: "https://arb1.arbitrum.io/rpc"
+      VITE_WC_PROJECT_ID: "864607028b5c007ecf45f57347eb1438"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Refuse to deploy with unfilled config
+        run: |
+          for var in VITE_FACTORY_CONTRACT VITE_WC_PROJECT_ID; do
+            if [ -z "${!var}" ]; then
+              echo "::error::${var} is empty — fill the TODO in deploy-cloudflare.yml before deploying."
+              exit 1
+            fi
+          done
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build
+        run: bun run build
+
+      - name: Deploy to Cloudflare Workers
+        run: |
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || {
+            echo "::error::CLOUDFLARE_ACCOUNT_ID is empty — fill the TODO in deploy-cloudflare.yml."
+            exit 1
+          }
+          npx --yes wrangler@4 deploy
+        env:
+          # The only true secret in this repo: created in the Cloudflare
+          # dashboard with the "Edit Cloudflare Workers" API token template.
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          # An identifier, not a credential — but fill it in anyway.
+          CLOUDFLARE_ACCOUNT_ID: "f0825dc7dca5f6831a9beb091e7f585e" # Your Cloudflare account ID
