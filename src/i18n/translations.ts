@@ -338,6 +338,7 @@ export const en = {
   "backgrounds.toggle": "Category Backgrounds",
 
   /* ---------------------------------- Wallet -------------------------------- */
+  "wallet.connect": "Connect wallet",
   "wallet.disconnect": "Disconnect wallet",
   "wallet.offlineConnect": "Connection needs the internet",
   "wallet.offlineConnectDesc":
@@ -1072,6 +1073,7 @@ export const es: Record<TranslationKey, string> = {
   "backgrounds.toggle": "Fondos de categoría",
 
   /* ---------------------------------- Wallet -------------------------------- */
+  "wallet.connect": "Conectar billetera",
   "wallet.disconnect": "Desconectar billetera",
   "wallet.offlineConnect": "Conectar necesita internet",
   "wallet.offlineConnectDesc":

@@ -77,8 +77,8 @@ export const WalletOptions = () => {
       <button
         type="button"
         className="icon-button"
-        aria-label="WalletConnect"
-        title="WalletConnect"
+        aria-label={t("wallet.connect")}
+        title={t("wallet.connect")}
         disabled={connecting}
         style={{
           margin: "5px",
