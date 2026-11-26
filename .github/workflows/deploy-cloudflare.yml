@@ -1,6 +1,6 @@
-# Stage 1 of the GitHub Pages -> Cloudflare Workers migration.
-# Runs ALONGSIDE CICD.yml until the custom domain is verified and flipped,
-# then CICD.yml is deleted (stage 3).
+# Production deploy: main -> memory.inbytes.xyz via Workers static assets.
+# Development deploys to GitHub Pages from the dev branch (CICD.yml), served
+# at memoria.inbytes.xyz.
 
 name: Deploy to Cloudflare
 
