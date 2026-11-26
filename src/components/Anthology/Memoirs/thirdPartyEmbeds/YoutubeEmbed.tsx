@@ -5,9 +5,14 @@ import { useTranslation } from "@src/i18n/useTranslation";
 
 type YoutubeEmbedProps = {
   videoId: string;
+  /** Shorts are 9:16; regular videos stay 16:9. */
+  vertical?: boolean;
 };
 
-export const YoutubeEmbed: React.FC<YoutubeEmbedProps> = ({ videoId }) => {
+export const YoutubeEmbed: React.FC<YoutubeEmbedProps> = ({
+  videoId,
+  vertical = false,
+}) => {
   const { t } = useTranslation();
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0 });
   const { isActive, activate } = useEmbedPlayback();
@@ -15,7 +20,9 @@ export const YoutubeEmbed: React.FC<YoutubeEmbedProps> = ({ videoId }) => {
   return (
     <div
       ref={ref}
-      className="yt-embed-container"
+      className={`yt-embed-container${
+        vertical ? " yt-embed-container--short" : ""
+      }`}
       role={isActive ? undefined : "button"}
       tabIndex={isActive ? -1 : 0}
       aria-label={isActive ? undefined : t("a11y.playVideo")}
@@ -31,7 +38,11 @@ export const YoutubeEmbed: React.FC<YoutubeEmbedProps> = ({ videoId }) => {
             }
       }
     >
-      <div className="yt-embed-aspect">
+      <div
+        className={`yt-embed-aspect${
+          vertical ? " yt-embed-aspect--short" : ""
+        }`}
+      >
         {inView ? (
           isActive ? (
             <iframe
@@ -46,8 +57,10 @@ export const YoutubeEmbed: React.FC<YoutubeEmbedProps> = ({ videoId }) => {
             <>
               <img
                 className="yt-embed-fill yt-embed-thumbnail"
-                src={`https://img.youtube.com/vi/${videoId}/sddefault.jpg`}
-                alt="YouTube thumbnail"
+                src={`https://img.youtube.com/vi/${videoId}/${
+                  vertical ? "oar2" : "sddefault"
+                }.jpg`}
+                alt=""
                 loading="lazy"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src =

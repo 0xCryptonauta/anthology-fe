@@ -27,5 +27,8 @@ dev-dist
 # Environments
 .env
 
+# Wrangler (Cloudflare CLI) local state
+.wrangler
+
 # stats
 stats.html

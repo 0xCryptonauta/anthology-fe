@@ -8,10 +8,7 @@ import {
 } from "@orozcoh/qr-stream/browser";
 import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 import { ensureDeviceId } from "@src/store/slices/connectSlice";
-import {
-  buildShareEnvelope,
-  validateNametag,
-} from "@src/utils/shareEnvelope";
+import { buildShareEnvelope } from "@src/utils/shareEnvelope";
 import type { LoadedJson } from "@src/utils/validateJsonContentType";
 import { downloadObjAsJson } from "@src/utils/downloadObjAsJson";
 import { useTranslation } from "@src/i18n/useTranslation";
@@ -24,7 +21,8 @@ interface QrStreamSharePanelProps {
   onBack?: () => void;
 }
 
-const DEFAULT_STREAM_FPS = 15;
+// 10 fps is the mobile-safe default; the slider can raise it live.
+const DEFAULT_STREAM_FPS = 10;
 // Keep the 0.2 transfer budget while piloting 1.0. The wire cap is still 1 MiB
 // compressed, and this panel has no separate compressed-size estimate.
 const SHARE_INPUT_LIMIT = 1024 * 1024;
@@ -49,7 +47,8 @@ export const QrStreamSharePanel = ({
     if (!deviceId) dispatch(ensureDeviceId());
   }, [deviceId, dispatch]);
 
-  const hasNametag = validateNametag(nametag) === null;
+  // Legacy nametags (up to 32 chars) still share; only the editor caps at 13.
+  const hasNametag = nametag.trim().length > 0;
 
   const sharedBy = useMemo(
     () =>

@@ -53,8 +53,43 @@ export const SettingsView = () => {
           <SettingsRow
             first
             label={t("connect.nametagTitle")}
-            description={nametag || t("settings.notSet")}
-            control={<NametagSettings compact />}
+            control={
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                  gap: "10px",
+                }}
+              >
+                {nametag ? (
+                  <span
+                    translate="no"
+                    style={{
+                      display: "inline-block",
+                      padding: "2px 8px",
+                      borderRadius: "6px",
+                      border: "1px solid #bbf7d0",
+                      backgroundColor: "#f0fdf4",
+                      color: "#166534",
+                      fontSize: "20px",
+                      fontWeight: 700,
+                      lineHeight: 1.25,
+                      overflowWrap: "anywhere",
+                      // The section's .text-shadow-dark blurs the chip text.
+                      textShadow: "none",
+                    }}
+                  >
+                    {nametag}
+                  </span>
+                ) : (
+                  <span style={{ color: "#94a3b8", fontSize: "14px" }}>
+                    {t("settings.notSet")}
+                  </span>
+                )}
+                <NametagSettings compact />
+              </div>
+            }
           />
           <SettingsRow
             label={t("language.title")}

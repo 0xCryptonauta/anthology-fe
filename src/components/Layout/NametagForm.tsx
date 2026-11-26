@@ -1,7 +1,7 @@
 import { useEffect, useId, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 import { ensureDeviceId, setNametag } from "@src/store/slices/connectSlice";
-import { validateNametag } from "@src/utils/shareEnvelope";
+import { validateNametag, MAX_NAMETAG_LENGTH } from "@src/utils/shareEnvelope";
 import { useToast } from "./Toast";
 import { useTranslation } from "@src/i18n/useTranslation";
 
@@ -72,7 +72,7 @@ export const NametagForm = ({ onSaved, onCancel }: NametagFormProps) => {
         id={inputId}
         type="text"
         value={draft}
-        maxLength={32}
+        maxLength={MAX_NAMETAG_LENGTH}
         translate="no"
         aria-invalid={!!error}
         aria-describedby={errorMessage ? errorId : undefined}

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, useId } from "react";
+import { useEffect, useMemo, useState, useId } from "react";
 import { Address } from "@src/types/common";
 import { MemoirInterface } from "@src/store/slices/anthologySlice";
 import { updateMemoirInUserLocalAnthology } from "@src/store/slices/localAnthologySlice";
@@ -10,7 +10,7 @@ import {
 } from "@src/utils/memoirDuplicates";
 import { extractFirstUrl } from "@src/utils/embeds";
 import { fetchUrlTitle } from "@src/utils/fetchUrlTitle";
-import { HighlightDifferences } from "../Layout/HighlightDifferences";
+import { MemoirContentField } from "./MemoirContentField";
 import { useToast } from "../Layout/Toast";
 import { Modal } from "../Layout/Modal";
 import { useTranslation } from "@src/i18n/useTranslation";
@@ -152,23 +152,6 @@ const EditMemoirForm = ({
     t,
   ]);
 
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const textarea = textareaRef.current;
-    const overlay = overlayRef.current;
-    if (!textarea || !overlay) return;
-
-    const handleScroll = () => {
-      overlay.scrollTop = textarea.scrollTop;
-      overlay.scrollLeft = textarea.scrollLeft;
-    };
-
-    textarea.addEventListener("scroll", handleScroll);
-    return () => textarea.removeEventListener("scroll", handleScroll);
-  }, []);
-
   const handleSave = () => {
     if (titleError || urlError) {
       addToast({
@@ -294,68 +277,16 @@ const EditMemoirForm = ({
       >
         {t("memoir.content")}
       </label>
-      <div
-        style={{
-          position: "relative",
-          width: "100%",
-          backgroundColor: "#fff",
-          border: urlError ? "1px solid #dc2626" : "1px solid #d1d5db",
-          borderRadius: "0.75rem",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          ref={overlayRef}
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 2,
-            height: "10.5rem",
-            overflowY: "auto",
-            pointerEvents: "none",
-            whiteSpace: "pre-wrap",
-            wordBreak: "break-word",
-            color: "#111",
-            fontSize: "0.875rem",
-            fontFamily: "monospace",
-            padding: "0.75rem",
-          }}
-          aria-hidden="true"
-        >
-          {HighlightDifferences(content, filteredContent)}
-        </div>
-
-        <textarea
-          ref={textareaRef}
-          id={contentInputId}
-          value={content}
-          maxLength={255}
-          aria-invalid={!!urlError}
-          aria-describedby={
-            urlError ? urlErrorId : urlWarning ? urlWarningId : undefined
-          }
-          onChange={(e) => setContent(e.target.value)}
-          style={{
-            position: "relative",
-            zIndex: 1,
-            width: "100%",
-            height: "10.5rem",
-            resize: "none",
-            padding: "0.75rem",
-            fontSize: "0.875rem",
-            fontFamily: "monospace",
-            backgroundColor: "transparent",
-            color: "transparent",
-            caretColor: "#111",
-            border: "none",
-            borderRadius: "0.75rem",
-            outline: "none",
-          }}
-        />
-      </div>
+      <MemoirContentField
+        id={contentInputId}
+        value={content}
+        filteredValue={filteredContent}
+        onChange={setContent}
+        invalid={!!urlError}
+        describedBy={
+          urlError ? urlErrorId : urlWarning ? urlWarningId : undefined
+        }
+      />
       {urlError && (
         <span
           id={urlErrorId}

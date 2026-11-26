@@ -44,6 +44,8 @@ export const LocalUserView = () => {
         alignItems: "flex-start",
         justifyContent: "space-around",
         flexWrap: "wrap",
+        width: "100%",
+        minWidth: 0,
       }}
     >
       <UserContracts

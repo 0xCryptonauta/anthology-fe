@@ -8,7 +8,7 @@ export const SettingsRow = ({
   danger = false,
 }: {
   label: string;
-  description?: string;
+  description?: ReactNode;
   control: ReactNode;
   first?: boolean;
   danger?: boolean;

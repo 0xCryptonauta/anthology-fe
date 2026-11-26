@@ -34,6 +34,8 @@ export const CurrentUserView = () => {
         alignItems: "flex-start",
         justifyContent: "space-around",
         flexWrap: "wrap",
+        width: "100%",
+        minWidth: 0,
       }}
     >
       <UserContracts userAddr={userAddr} userTitles={userTitles} />

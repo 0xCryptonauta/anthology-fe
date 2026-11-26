@@ -121,6 +121,37 @@ html {
   scroll-padding-top: 80px;
 }
 
+/* Semi-sticky header: visible at the top, hides while scrolling down, slides
+   back on the first upward gesture. Animates `top` (not `transform`) because a
+   transformed ancestor would break the fixed-position side panel rendered
+   inside the header. */
+.app-header {
+  position: sticky;
+  top: 0;
+  /* Opaque app background: `bg-dark-film` alone is just a 60% black film, so
+     over the white body it rendered as gray. */
+  background-color: #242424;
+  z-index: 1030;
+  transition: top 0.25s ease;
+}
+
+.app-header--hidden {
+  top: -84px;
+}
+
+/* Keyboard focus must never land inside a hidden header. `:focus-visible`
+   (not `:focus-within`) so clicking a header control with the mouse does not
+   pin the header open on the next scroll. */
+.app-header:has(:focus-visible) {
+  top: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-header {
+    transition: none;
+  }
+}
+
 /* SC 2.5.8 Target Size (Minimum) — icon-only controls keep a 24×24 box */
 .icon-button {
   min-width: 24px;

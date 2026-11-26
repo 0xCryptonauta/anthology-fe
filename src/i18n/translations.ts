@@ -243,10 +243,17 @@ export const en = {
   /* --------------------------------- Storage -------------------------------- */
   "storage.viewUsage": "View app storage usage",
   "storage.title": "Storage",
-  "storage.totalUsed": "Total used by the app",
+  "storage.totalUsed": "Total used by the app (estimate)",
   "storage.memory": "Memory (Anthologies)",
-  "storage.cachedFiles": "Cached thumbnails and files",
+  "storage.appShell": "App shell (offline cache)",
+  "storage.otherCachedFiles": "Other cached files",
+  "storage.opaqueResponses": "Opaque cached responses",
   "storage.appData": "App data (wallet and others)",
+  "storage.appDataWithOpaque": "Other data (includes opaque padding)",
+  "storage.opaqueHint":
+    "Chrome charges about 7 MB of quota for each opaque cached response, so this total is much larger than the real disk usage. Use \"Clear\" under \"Cache\" to remove them.",
+  "storage.browserCacheNote":
+    "Third-party images (YouTube, Vimeo, Spotify thumbnails) are cached by the browser's HTTP cache, outside the app's storage quota. They are not included in this total.",
   "storage.nA": "n/a",
 
   /* ------------------------------- Clear cache ------------------------------ */
@@ -314,6 +321,18 @@ export const en = {
   "install.button": "Install",
   "install.installed": "Installed",
   "install.unavailable": "Not available",
+  "install.promptTitle": "Install Anthology",
+  "install.promptBody":
+    "Add Anthology to this device to open it like an app, offline and one tap away.",
+  "install.promptHint":
+    "You can install it any time from Settings. We will not ask again for a week.",
+  "install.notNow": "Not now",
+
+  /* ------------------------------ Leaving app ------------------------------ */
+  "leave.title": "Leave Anthology?",
+  "leave.body": "This link leaves Anthology for {destination}.",
+  "leave.stay": "Stay",
+  "leave.leave": "Leave",
 
   /* ------------------------------- Backgrounds ------------------------------ */
   "backgrounds.toggle": "Category Backgrounds",
@@ -364,6 +383,12 @@ export const en = {
   "deploy.addPrivate": "Add Private Anthology",
   "deploy.addPublic": "Add Public Anthology",
   "deploy.created": "New Anthology was created",
+
+  /* ---------------------------------- Share --------------------------------- */
+  "share.newAnthology": "New anthology",
+  "share.createAnthology": "Create anthology",
+  "share.anthologyCreated": "Anthology created",
+  "share.addingTo": "Adding to",
 
   /* ------------------------------- Title editor ----------------------------- */
   "title.category": "Category (Optional)",
@@ -632,7 +657,7 @@ export const en = {
   "connect.nametagHelp":
     "Required to share. People you connect with will see this name.",
   "connect.nametagEmpty": "Enter a name before sharing.",
-  "connect.nametagTooLong": "Use 32 characters or fewer.",
+  "connect.nametagTooLong": "Use 13 characters or fewer.",
   "connect.nametagSaved": "Nametag saved.",
   "connect.shareTitle": "Share \"{title}\"",
   "connect.shareQr": "Share by QR",
@@ -945,10 +970,17 @@ export const es: Record<TranslationKey, string> = {
   /* --------------------------------- Storage -------------------------------- */
   "storage.viewUsage": "Ver uso de almacenamiento",
   "storage.title": "Almacenamiento",
-  "storage.totalUsed": "Total usado por la app",
+  "storage.totalUsed": "Total usado por la app (estimado)",
   "storage.memory": "Memoria (antologías)",
-  "storage.cachedFiles": "Miniaturas y archivos en caché",
+  "storage.appShell": "App base (caché sin conexión)",
+  "storage.otherCachedFiles": "Otros archivos en caché",
+  "storage.opaqueResponses": "Respuestas opacas en caché",
   "storage.appData": "Datos de la app (billetera y otros)",
+  "storage.appDataWithOpaque": "Otros datos (incluye relleno opaco)",
+  "storage.opaqueHint":
+    "Chrome suma unos 7 MB de cuota por cada respuesta opaca en caché, por lo que el total es mucho mayor que el uso real en disco. Usa «Borrar» en «Caché» para eliminarlas.",
+  "storage.browserCacheNote":
+    "Las imágenes de terceros (miniaturas de YouTube, Vimeo y Spotify) las guarda la caché HTTP del navegador, fuera de la cuota de almacenamiento de la app. No se incluyen en este total.",
   "storage.nA": "n/d",
 
   /* ------------------------------- Clear cache ------------------------------ */
@@ -1017,6 +1049,18 @@ export const es: Record<TranslationKey, string> = {
   "install.button": "Instalar",
   "install.installed": "Instalada",
   "install.unavailable": "No disponible",
+  "install.promptTitle": "Instalar Anthology",
+  "install.promptBody":
+    "Agrega Anthology a este dispositivo para abrirla como una app, sin conexión y a un toque.",
+  "install.promptHint":
+    "Puedes instalarla cuando quieras desde Ajustes. No volveremos a preguntar por una semana.",
+  "install.notNow": "Ahora no",
+
+  /* ------------------------------ Leaving app ------------------------------ */
+  "leave.title": "¿Salir de Anthology?",
+  "leave.body": "Este enlace sale de Anthology hacia {destination}.",
+  "leave.stay": "Quedarme",
+  "leave.leave": "Salir",
 
   /* ------------------------------- Backgrounds ------------------------------ */
   "backgrounds.toggle": "Fondos de categoría",
@@ -1069,6 +1113,12 @@ export const es: Record<TranslationKey, string> = {
   "deploy.addPrivate": "Añadir antología privada",
   "deploy.addPublic": "Añadir antología pública",
   "deploy.created": "Se creó una nueva antología",
+
+  /* ---------------------------------- Share --------------------------------- */
+  "share.newAnthology": "Nueva antología",
+  "share.createAnthology": "Crear antología",
+  "share.anthologyCreated": "Antología creada",
+  "share.addingTo": "Agregando a",
 
   /* ------------------------------- Title editor ----------------------------- */
   "title.category": "Categoría (opcional)",
@@ -1340,7 +1390,7 @@ export const es: Record<TranslationKey, string> = {
   "connect.nametagHelp":
     "Obligatorio para compartir. Las personas con las que conectes verán este nombre.",
   "connect.nametagEmpty": "Escribe un nombre antes de compartir.",
-  "connect.nametagTooLong": "Usa 32 caracteres o menos.",
+  "connect.nametagTooLong": "Usa 13 caracteres o menos.",
   "connect.nametagSaved": "Apodo guardado.",
   "connect.shareTitle": "Compartir \"{title}\"",
   "connect.shareQr": "Compartir por QR",

@@ -14,6 +14,8 @@ export interface dappState {
   locale: LocalePreference;
   /** Providers whose embeds the user explicitly allowed to load. */
   allowedSocialEmbeds: SocialEmbedProvider[];
+  /** Epoch ms of the last install-sheet dismissal (weekly cooldown). */
+  pwaInstallPromptDismissedAt: number | null;
 }
 
 const initialState: dappState = {
@@ -23,6 +25,7 @@ const initialState: dappState = {
   anthologyFooterBgClass: "",
   locale: "auto",
   allowedSocialEmbeds: [],
+  pwaInstallPromptDismissedAt: null,
 };
 
 export const dappSlice = createSlice({
@@ -66,6 +69,9 @@ export const dappSlice = createSlice({
     resetSocialEmbedConsent: (state) => {
       state.allowedSocialEmbeds = [];
     },
+    dismissPwaInstallPrompt: (state) => {
+      state.pwaInstallPromptDismissedAt = Date.now();
+    },
   },
 });
 
@@ -78,6 +84,7 @@ export const {
   setAnthologyFooterBgClass,
   setSocialEmbedAllowed,
   resetSocialEmbedConsent,
+  dismissPwaInstallPrompt,
 } = dappSlice.actions;
 
 export default dappSlice.reducer;

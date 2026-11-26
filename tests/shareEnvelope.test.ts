@@ -42,7 +42,8 @@ describe("shareEnvelope", () => {
   test("validates nametags", () => {
     expect(validateNametag("")).toBe("empty");
     expect(validateNametag("   ")).toBe("empty");
-    expect(validateNametag("x".repeat(33))).toBe("too-long");
+    expect(validateNametag("x".repeat(13))).toBeNull();
+    expect(validateNametag("x".repeat(14))).toBe("too-long");
     expect(validateNametag(" Ana ")).toBeNull();
   });
 
@@ -51,6 +52,11 @@ describe("shareEnvelope", () => {
     expect(validateSharedBy({ ...sender, deviceId: "0x1234" })).toBeNull();
     expect(validateSharedBy({ ...sender, nametag: "  " })).toBeNull();
     expect(validateSharedBy(null)).toBeNull();
+  });
+
+  test("keeps accepting legacy nametags longer than the new input limit", () => {
+    const legacy = { ...sender, nametag: "LegacyNameTwentyChars" };
+    expect(validateSharedBy(legacy)).toEqual(legacy);
   });
 
   test("decodes a single anthology share", () => {

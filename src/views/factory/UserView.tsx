@@ -33,6 +33,8 @@ export const UserView: React.FC<UserViewProps> = ({ userAddr }) => {
         alignItems: "flex-start",
         justifyContent: "space-around",
         flexWrap: "wrap",
+        width: "100%",
+        minWidth: 0,
       }}
     >
       <UserContracts userAddr={userAddr} userTitles={userTitles} />

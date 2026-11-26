@@ -20,6 +20,15 @@
     <meta name="twitter:image" content="https://memory.inbytes.xyz/og-image.png" />
 
     <link rel="apple-touch-icon" sizes="180x180" href="/IB_icon.png" />
+    <script>
+      // Capture the install event before React mounts so the in-app sheet can
+      // replay it later. Without preventDefault Chrome shows its own prompt,
+      // whose frequency the app cannot control.
+      window.addEventListener("beforeinstallprompt", function (event) {
+        event.preventDefault();
+        window.__deferredPwaInstallPrompt = event;
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>
