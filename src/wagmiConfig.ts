@@ -18,7 +18,10 @@ const metadata = {
   name: "Anthology",
   description: "Collective memory",
   url: metadataUrl,
-  icons: ["/IB_icon.png"],
+  // WalletConnect metadata requires absolute icon URLs — wallets may not
+  // resolve relative paths, and an unverified/unreadable icon shows up as a
+  // blank dapp card in the pairing screen.
+  icons: [`${metadataUrl}/IB_icon.png`],
 };
 
 const arbitrumCustom = {
@@ -37,11 +40,16 @@ export const networks = [arbitrumCustom];
  * `@wagmi/connectors` import) so callers can lazily load the connector with
  * `await import("@src/connectors/walletConnect")` without pulling it into the
  * initial bundle.
+ *
+ * `showQrModal: true` uses the modal bundled inside the provider (no extra
+ * bytes): with a stored session the connector silently re-enables it, and
+ * without one the pairing modal (QR on desktop, wallet deep links on
+ * mobile) opens for a fresh connection.
  */
 export const WALLETCONNECT_PARAMETERS: WalletConnectParameters = {
   projectId: import.meta.env.VITE_WC_PROJECT_ID,
   isNewChainsStale: false,
-  showQrModal: false,
+  showQrModal: true,
   qrModalOptions: {
     themeMode: "dark",
   },
