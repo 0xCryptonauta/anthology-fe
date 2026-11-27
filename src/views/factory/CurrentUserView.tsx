@@ -1,5 +1,7 @@
 import { UserContracts } from "@components/Factory/UserContracts";
+import { ContractsSyncMessage } from "@components/Factory/ContractsSyncMessage";
 import { useAppSelector } from "@src/store/utils/hooks";
+import { useSyncUserContracts } from "@src/hooks/useSyncUserContracts";
 import { Address } from "@src/types/common";
 import { useTranslation } from "@src/i18n/useTranslation";
 
@@ -16,8 +18,9 @@ export const CurrentUserView = () => {
   );
 
   const { userAddr } = useAppSelector((state) => state.user);
+  const { status, reload } = useSyncUserContracts(userAddr);
 
-  const userTitles: Contract[] = userContracts[userAddr]?.map(
+  const userTitles: Contract[] = (userContracts[userAddr] ?? []).map(
     (contractAddr: Address, index: number) => ({
       address: contractAddr,
       title: contractsTitles[contractAddr] || "",
@@ -28,29 +31,45 @@ export const CurrentUserView = () => {
   return (
     <div
       style={{
-        color: "white",
         display: "flex",
-        flexDirection: "row",
-        alignItems: "flex-start",
-        justifyContent: "space-around",
-        flexWrap: "wrap",
+        flexDirection: "column",
+        alignItems: "center",
         width: "100%",
         minWidth: 0,
+        color: "white",
       }}
     >
-      <UserContracts userAddr={userAddr} userTitles={userTitles} />
       <div
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           gap: "0.5rem",
+          padding: "8px",
         }}
       >
-        {!userTitles?.[0] && <span>{t("discover.notFound")}</span>}
+        <ContractsSyncMessage
+          status={status}
+          empty={userTitles.length === 0}
+          reload={reload}
+        />
         {!whitelistedUsers.includes(userAddr) && (
           <span style={{ color: "Red" }}>{t("discover.notWhitelisted")}</span>
         )}
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "flex-start",
+          justifyContent: "space-around",
+          flexWrap: "wrap",
+          width: "100%",
+          minWidth: 0,
+        }}
+      >
+        <UserContracts userAddr={userAddr} userTitles={userTitles} />
       </div>
     </div>
   );

@@ -1,7 +1,6 @@
 import { useState, useMemo, useEffect, useRef, lazy, Suspense } from "react";
 import { shortenAddress } from "@utils/shortenAddress";
 import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
-import { syncUserContractsToStore } from "@src/store/utils/thunks";
 import { Address, CurrentPaths, MemoirContent } from "@src/types/common";
 import { parseContractsCategoriesSorted } from "@src/utils/parseContractsCategories";
 import { DeployButton } from "./DeployButton";
@@ -369,27 +368,9 @@ export const UserContracts: React.FC<UserContractsProps> = ({
                 className="text-2xl! font-medium leading-none wrap-anywhere"
                 style={{ margin: 0 }}
               >
-                <button
-                  type="button"
-                  className="text-2xl font-medium hover:text-white transition-colors bg-transparent border-none text-zinc-100 p-0"
-                  title={
-                    userAddr !== LOCAL_USER_ADDR
-                      ? t("a11y.syncAnthologies")
-                      : undefined
-                  }
-                  aria-label={
-                    userAddr !== LOCAL_USER_ADDR
-                      ? `${shortenAddress(userAddr, 12, 9)} — ${t("a11y.syncAnthologies")}`
-                      : undefined
-                  }
-                  onClick={() => {
-                    if (userAddr === currentUserAddr) {
-                      dispatch(syncUserContractsToStore(userAddr));
-                    }
-                  }}
-                >
-                  {userAddr === LOCAL_USER_ADDR ? t("nav.privateMemory") : shortenAddress(userAddr, 12, 9)}
-                </button>
+                {userAddr === LOCAL_USER_ADDR
+                  ? t("nav.privateMemory")
+                  : shortenAddress(userAddr, 12, 9)}
               </h1>
             </div>
           </div>

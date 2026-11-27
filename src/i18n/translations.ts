@@ -18,6 +18,7 @@ export const en = {
   "common.remove": "Remove",
   "common.back": "← Back",
   "common.loading": "Loading...",
+  "common.retry": "Retry",
   "common.enabled": "Enabled",
   "common.disabled": "Disabled",
   "common.untitled": "Untitled",
@@ -356,6 +357,8 @@ export const en = {
   "directory.local": "LOCAL",
   "discover.noAnthologies": "You have not discovered any Anthologies",
   "discover.notFound": "Anthologies not found",
+  "discover.loadFailed": "Could not load anthologies.",
+  "discover.loadFailedDesc": "Check your connection and try again.",
   "discover.notWhitelisted": "Your address is not whitelisted",
 
   /* -------------------------------- Discover -------------------------------- */
@@ -753,6 +756,7 @@ export const es: Record<TranslationKey, string> = {
   "common.remove": "Quitar",
   "common.back": "← Atrás",
   "common.loading": "Cargando...",
+  "common.retry": "Reintentar",
   "common.enabled": "Activado",
   "common.disabled": "Desactivado",
   "common.untitled": "Sin título",
@@ -1094,6 +1098,8 @@ export const es: Record<TranslationKey, string> = {
   "directory.local": "LOCAL",
   "discover.noAnthologies": "Aún no has descubierto antologías",
   "discover.notFound": "No se encontraron antologías",
+  "discover.loadFailed": "No se pudieron cargar las antologías.",
+  "discover.loadFailedDesc": "Revisa tu conexión e inténtalo de nuevo.",
   "discover.notWhitelisted": "Tu dirección no está en la lista blanca",
 
   /* -------------------------------- Discover -------------------------------- */
