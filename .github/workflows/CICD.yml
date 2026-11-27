@@ -16,9 +16,13 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  VITE_FACTORY_CONTRACT: ${{secrets.VITE_FACTORY_CONTRACT}}
-  VITE_FACTORY_RPC: ${{secrets.VITE_FACTORY_RPC}}
-  VITE_WC_PROJECT_ID: ${{secrets.VITE_WC_PROJECT_ID}}
+  # Public build-time config. These values are inlined into the client bundle
+  # by Vite, so they are public by construction — plain text here makes them
+  # reviewable and avoids dashboard round-trips. Never put anything private
+  # in this block.
+  VITE_FACTORY_CONTRACT: "0x82fefba6bdcbcc61d691e2b3887741bf05691a43"
+  VITE_FACTORY_RPC: "https://arb1.arbitrum.io/rpc"
+  VITE_WC_PROJECT_ID: "864607028b5c007ecf45f57347eb1438"
 
 jobs:
   build:
