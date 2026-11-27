@@ -107,12 +107,18 @@ string is stored on-chain and parsed client-side. Do not change the format.
 ## Conventions
 
 - **Package manager**: Use `bun` (not npm/yarn). `bun run <script>`.
-- **Branch naming**: `feature/`, `fix/`, `hotfix/`, `docs/`, `chore/` prefixes.
+- **Branch naming**: `feature/`, `fix/`, `hotfix/`, `docs/`, `chore/` prefixes,
+  or any descriptive branch that will be merged into `dev`.
+- **Merge workflow**: Work on a descriptive branch and merge completed work
+  into `dev` with `git merge --no-ff`.
+- **Main branch**: Only the user may commit to, merge into, or push to
+  `main`. Never touch `main` unless the user explicitly instructs it.
+- **Workspaces**: Work in the existing checkout. Do not create Git worktrees
+  unless the user explicitly asks.
 - **Commits**: Conventional commits (`feat:`, `fix:`, `refactor:`). `feat:`
   bumps minor version, `fix:` bumps patch via `standard-version`.
-- **Release**: `bun run release` only on `main` branch. Dry-run with
-  `bun run pre-release`.
-- **Merge**: Use `git merge --no-ff` into `agent/DeepSeekV4.1`; agent work does not merge to `dev` (that's the user's integration branch).
+- **Release**: `bun run release` only on `main` branch, and only when the user
+  explicitly requests it. Dry-run with `bun run pre-release`.
 - **Pre-existing TS errors**: Verify no NEW errors were introduced when
   changing code. Run `bun run tsc --noEmit | grep -c "^src"` and compare
   against the baseline of 12.
