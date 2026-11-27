@@ -15,7 +15,7 @@ export const transformFactoryContracts = (
     !Array.isArray(data[0]) ||
     !Array.isArray(data[1]) ||
     data[0].length !== data[1].length ||
-    users.length < data[0].length ||
+    data[0].length !== users.length ||
     !data[0].every(Array.isArray) ||
     !data[1].every(Array.isArray)
   ) {

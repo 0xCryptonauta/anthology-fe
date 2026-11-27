@@ -2,10 +2,12 @@ import { DiscoverContractsDirectory } from "@src/components/Factory/DiscoverCont
 import { AddToDiscover } from "@src/components/Layout/AddToDiscover";
 import { useGetFactoryUsers } from "@src/hooks/useGetFactoryUsers";
 import { useSyncDiscoveredContracts } from "@src/hooks/useSyncDiscoveredContracts";
+import { useAppSelector } from "@src/store/utils/hooks";
 import { useTranslation } from "@src/i18n/useTranslation";
 
 export const DiscoverView = () => {
   const { t } = useTranslation();
+  const users = useAppSelector((state) => state.factory.users);
   const { status: usersStatus, reload: reloadUsers } = useGetFactoryUsers();
   const { status: contractsStatus, reload: reloadContracts } =
     useSyncDiscoveredContracts(usersStatus === "success");
@@ -16,6 +18,8 @@ export const DiscoverView = () => {
     contractsStatus === "idle" ||
     contractsStatus === "loading";
   const failed = usersStatus === "error" || contractsStatus === "error";
+  const hasCachedUsers = users.length > 0;
+  const showDirectory = hasCachedUsers || (!loading && !failed);
 
   const retry = () => {
     reloadUsers();
@@ -36,7 +40,9 @@ export const DiscoverView = () => {
     >
       <AddToDiscover />
 
-      {loading && !failed && <span role="status">{t("common.loading")}</span>}
+      {loading && !failed && (
+        <span role="status">{t("common.loading")}</span>
+      )}
 
       {failed && (
         <div
@@ -70,7 +76,7 @@ export const DiscoverView = () => {
         </div>
       )}
 
-      {!loading && !failed && <DiscoverContractsDirectory />}
+      {showDirectory && <DiscoverContractsDirectory />}
     </div>
   );
 };

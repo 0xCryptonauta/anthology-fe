@@ -46,4 +46,13 @@ describe("transformFactoryContracts", () => {
       transformFactoryContracts([[contractOne], [["Title A"]]], [userOne])
     ).toThrow("Invalid factory contracts response");
   });
+
+  test("rejects a response with fewer rows than requested users", () => {
+    expect(() =>
+      transformFactoryContracts(
+        [[[contractOne]], [["Title A"]]],
+        [userOne, userTwo]
+      )
+    ).toThrow("Invalid factory contracts response");
+  });
 });

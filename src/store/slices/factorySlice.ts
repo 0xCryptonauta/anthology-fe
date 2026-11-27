@@ -22,6 +22,7 @@ export interface FactoryState {
   anthologyPrice: number;
   userCount: number;
   usersCP: number;
+  usersSyncedCP: number;
 
   whitelistedUsers: Address[];
   users: Address[]; // Array of user addresses
@@ -38,6 +39,7 @@ const initialState: FactoryState = {
   anthologyPrice: 0,
   userCount: 0,
   usersCP: 0,
+  usersSyncedCP: 0,
 
   whitelistedUsers: [],
   users: [],
@@ -72,6 +74,9 @@ export const factorySlice = createSlice({
     },
     updateUsersCP: (state, action: PayloadAction<number>) => {
       state.usersCP = action.payload;
+    },
+    updateUsersSyncedCP: (state, action: PayloadAction<number>) => {
+      state.usersSyncedCP = action.payload;
     },
     updateFactoryBasicInfo: (
       state,
@@ -169,6 +174,7 @@ export const {
   updateContractTitles,
   resetFactoryStore,
   updateUsersCP,
+  updateUsersSyncedCP,
   updateOneContractTitle,
 } = factorySlice.actions;
 

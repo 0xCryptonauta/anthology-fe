@@ -17,6 +17,7 @@ export const DiscoverContractsDirectory = () => {
   );
 
   const { address: currentUser } = useAccount();
+  const visibleUsers = users.filter((user) => user !== currentUser);
 
   return (
     <div
@@ -29,12 +30,10 @@ export const DiscoverContractsDirectory = () => {
       }}
     >
       <div style={{ margin: "5px" }}>
-        {users.length === 0 && (
-          <span>{t("discover.noAnthologies")}</span>
+        {visibleUsers.length === 0 && (
+          <span role="status">{t("discover.noAnthologies")}</span>
         )}
-        {users
-          ?.filter((user) => user !== currentUser)
-          .map((user, userIndex) => {
+        {visibleUsers.map((user, userIndex) => {
             const userTitles: Contract[] = userContracts[user]?.map(
               (contractAddr: Address, index: number) => ({
                 address: contractAddr,

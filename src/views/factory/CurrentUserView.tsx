@@ -31,23 +31,21 @@ export const CurrentUserView = () => {
   return (
     <div
       style={{
-        color: "white",
         display: "flex",
-        flexDirection: "row",
-        alignItems: "flex-start",
-        justifyContent: "space-around",
-        flexWrap: "wrap",
+        flexDirection: "column",
+        alignItems: "center",
         width: "100%",
         minWidth: 0,
+        color: "white",
       }}
     >
-      <UserContracts userAddr={userAddr} userTitles={userTitles} />
       <div
         style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           gap: "0.5rem",
+          padding: "8px",
         }}
       >
         <ContractsSyncMessage
@@ -58,6 +56,20 @@ export const CurrentUserView = () => {
         {!whitelistedUsers.includes(userAddr) && (
           <span style={{ color: "Red" }}>{t("discover.notWhitelisted")}</span>
         )}
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "flex-start",
+          justifyContent: "space-around",
+          flexWrap: "wrap",
+          width: "100%",
+          minWidth: 0,
+        }}
+      >
+        <UserContracts userAddr={userAddr} userTitles={userTitles} />
       </div>
     </div>
   );

@@ -53,7 +53,7 @@ export const ContractsSyncMessage = ({
   }
 
   if (status === "success" && empty) {
-    return <span>{t("discover.notFound")}</span>;
+    return <span role="status">{t("discover.notFound")}</span>;
   }
 
   return null;
