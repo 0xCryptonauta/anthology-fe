@@ -1,5 +1,7 @@
 import { UserContracts } from "@components/Factory/UserContracts";
+import { ContractsSyncMessage } from "@components/Factory/ContractsSyncMessage";
 import { useAppSelector } from "@src/store/utils/hooks";
+import { useSyncUserContracts } from "@src/hooks/useSyncUserContracts";
 import { Address } from "@src/types/common";
 import { useTranslation } from "@src/i18n/useTranslation";
 
@@ -16,8 +18,9 @@ export const CurrentUserView = () => {
   );
 
   const { userAddr } = useAppSelector((state) => state.user);
+  const { status, reload } = useSyncUserContracts(userAddr);
 
-  const userTitles: Contract[] = userContracts[userAddr]?.map(
+  const userTitles: Contract[] = (userContracts[userAddr] ?? []).map(
     (contractAddr: Address, index: number) => ({
       address: contractAddr,
       title: contractsTitles[contractAddr] || "",
@@ -47,7 +50,11 @@ export const CurrentUserView = () => {
           gap: "0.5rem",
         }}
       >
-        {!userTitles?.[0] && <span>{t("discover.notFound")}</span>}
+        <ContractsSyncMessage
+          status={status}
+          empty={userTitles.length === 0}
+          reload={reload}
+        />
         {!whitelistedUsers.includes(userAddr) && (
           <span style={{ color: "Red" }}>{t("discover.notWhitelisted")}</span>
         )}
