@@ -21,10 +21,7 @@ env:
   VITE_WC_PROJECT_ID: ${{secrets.VITE_WC_PROJECT_ID}}
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -46,13 +43,47 @@ jobs:
         run: bun run build
 
       - name: Setup Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v6
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: "./dist"
 
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy_retry_2.outputs.page_url || steps.deploy_retry_1.outputs.page_url || steps.deploy.outputs.page_url }}
+    runs-on: ubuntu-latest
+
+    steps:
+      # GitHub's artifact listing can lag upload finalization
+      # (actions/deploy-pages#451). Retry only deploy: rerunning the build job
+      # would upload a duplicate github-pages artifact and fail permanently.
+      - name: Wait for artifact visibility
+        run: sleep 10
+
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        id: deploy
+        continue-on-error: true
+        uses: actions/deploy-pages@v5
+
+      - name: Wait before first deploy retry
+        if: steps.deploy.outcome == 'failure'
+        run: sleep 20
+
+      - name: Retry GitHub Pages deployment
+        id: deploy_retry_1
+        if: steps.deploy.outcome == 'failure'
+        continue-on-error: true
+        uses: actions/deploy-pages@v5
+
+      - name: Wait before second deploy retry
+        if: steps.deploy_retry_1.outcome == 'failure'
+        run: sleep 40
+
+      - name: Retry GitHub Pages deployment again
+        id: deploy_retry_2
+        if: steps.deploy_retry_1.outcome == 'failure'
+        uses: actions/deploy-pages@v5
