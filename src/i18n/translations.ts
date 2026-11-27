@@ -339,7 +339,10 @@ export const en = {
 
   /* ---------------------------------- Wallet -------------------------------- */
   "wallet.connect": "Connect wallet",
+  "wallet.browser": "Browser wallet",
+  "wallet.connecting": "Connecting…",
   "wallet.disconnect": "Disconnect wallet",
+  "wallet.walletConnect": "Connect with WalletConnect",
   "wallet.offlineConnect": "Connection needs the internet",
   "wallet.offlineConnectDesc":
     "The wallet connector downloads on demand. Go online and reload the page, then tap again — if your wallet was connected before, it reconnects on its own.",
@@ -1074,7 +1077,10 @@ export const es: Record<TranslationKey, string> = {
 
   /* ---------------------------------- Wallet -------------------------------- */
   "wallet.connect": "Conectar billetera",
+  "wallet.browser": "Billetera del navegador",
+  "wallet.connecting": "Conectando…",
   "wallet.disconnect": "Desconectar billetera",
+  "wallet.walletConnect": "Conectar con WalletConnect",
   "wallet.offlineConnect": "Conectar necesita internet",
   "wallet.offlineConnectDesc":
     "El conector de billeteras se descarga al usarlo. Conéctate a internet y recarga la página, luego toca de nuevo — si ya habías conectado una billetera, se reconecta sola.",

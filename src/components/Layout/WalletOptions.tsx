@@ -1,49 +1,77 @@
 import { useState } from "react";
 import { useConnect } from "wagmi";
-import type { CreateConnectorFn } from "wagmi";
+import type { Connector, CreateConnectorFn } from "wagmi";
 import { WALLETCONNECT_PARAMETERS } from "@src/wagmiConfig";
 import {
   classifyWalletConnectError,
   type WalletConnectErrorKind,
 } from "@src/utils/walletConnectError";
+import { selectBrowserWalletConnectors } from "@src/utils/browserWallets";
+import { useIsMobileViewport } from "@src/hooks/useIsMobileViewport";
 import { useToast } from "@components/Layout/Toast";
 import { useTranslation } from "@src/i18n/useTranslation";
 
 const TOAST_DELAY_MS = 3000;
+const WALLETCONNECT_CONNECTING_ID = "walletConnect";
+
+type WindowWithEthereum = Window & { ethereum?: unknown };
+
+const hasLegacyInjectedProvider = () =>
+  typeof window !== "undefined" &&
+  Boolean((window as WindowWithEthereum).ethereum);
 
 /**
- * The only trigger that loads wallet code. Neither the connector shim nor
- * the WalletConnect vendor chunk is precached, so the dynamic imports on
- * this path can fail offline — failures are classified and explained to
- * the user instead of leaving a silently dead button.
+ * WalletConnect is the only control that downloads wallet code. Desktop also
+ * shows up to five detected injected wallets, which connect directly through
+ * wagmi. Mobile deliberately exposes WalletConnect only.
  *
  * With a stored WalletConnect session the connector silently re-enables it;
  * without one the provider's bundled pairing modal opens (QR on desktop,
  * wallet deep links on mobile).
  */
 export const WalletOptions = () => {
-  const { connectAsync } = useConnect();
+  const { connectAsync, connectors } = useConnect();
   const { addToast } = useToast();
   const { t } = useTranslation();
-  const [connecting, setConnecting] = useState(false);
+  const isMobile = useIsMobileViewport();
+  const [connectingId, setConnectingId] = useState<string | null>(null);
+  const connecting = connectingId !== null;
 
-  const handleConnect = async () => {
+  const browserWallets = selectBrowserWalletConnectors(connectors, {
+    isMobile,
+    hasLegacyProvider: hasLegacyInjectedProvider(),
+  });
+
+  const report = (kind: WalletConnectErrorKind) => {
+    // The user closing the pairing modal is not worth reporting.
+    if (kind === "rejected") return;
+    const offline = kind === "offline";
+    addToast({
+      title: t(offline ? "wallet.offlineConnect" : "wallet.connectFailed"),
+      content: t(
+        offline ? "wallet.offlineConnectDesc" : "wallet.connectFailedDesc"
+      ),
+      variant: offline ? "warning" : "danger",
+      delay: TOAST_DELAY_MS,
+    });
+  };
+
+  const handleInjectedConnect = async (connector: Connector) => {
     if (connecting) return;
-    setConnecting(true);
+    setConnectingId(connector.uid);
 
-    const report = (kind: WalletConnectErrorKind) => {
-      // The user closing the pairing modal is not worth reporting.
-      if (kind === "rejected") return;
-      const offline = kind === "offline";
-      addToast({
-        title: t(offline ? "wallet.offlineConnect" : "wallet.connectFailed"),
-        content: t(
-          offline ? "wallet.offlineConnectDesc" : "wallet.connectFailedDesc"
-        ),
-        variant: offline ? "warning" : "danger",
-        delay: TOAST_DELAY_MS,
-      });
-    };
+    try {
+      await connectAsync({ connector });
+    } catch (error) {
+      report(classifyWalletConnectError(error));
+    } finally {
+      setConnectingId(null);
+    }
+  };
+
+  const handleWalletConnect = async () => {
+    if (connecting) return;
+    setConnectingId(WALLETCONNECT_CONNECTING_ID);
 
     let connector: CreateConnectorFn;
     try {
@@ -51,7 +79,7 @@ export const WalletOptions = () => {
       connector = walletConnect(WALLETCONNECT_PARAMETERS);
     } catch (error) {
       report(classifyWalletConnectError(error));
-      setConnecting(false);
+      setConnectingId(null);
       return;
     }
 
@@ -62,7 +90,7 @@ export const WalletOptions = () => {
       // an unloadable vendor lands here too — classify before reporting.
       report(classifyWalletConnectError(error));
     } finally {
-      setConnecting(false);
+      setConnectingId(null);
     }
   };
 
@@ -73,19 +101,62 @@ export const WalletOptions = () => {
         flexDirection: "row",
         alignItems: "center",
       }}
+      aria-busy={connecting}
     >
+      <span className="visually-hidden" role="status">
+        {connecting ? t("wallet.connecting") : ""}
+      </span>
+
+      {browserWallets.map((connector) => {
+        const label =
+          connector.id === "injected"
+            ? t("wallet.browser")
+            : connector.name || t("wallet.browser");
+
+        return (
+          <button
+            key={connector.uid}
+            type="button"
+            className="icon-button"
+            aria-label={label}
+            title={label}
+            aria-disabled={connecting}
+            style={{
+              margin: "5px",
+              display: "flex",
+              alignItems: "center",
+            }}
+            onClick={() => handleInjectedConnect(connector)}
+          >
+            {connector.icon ? (
+              <img
+                src={connector.icon}
+                width={25}
+                height={25}
+                alt=""
+                style={{ width: "25px", height: "25px" }}
+              />
+            ) : (
+              <span aria-hidden="true" style={{ fontSize: "11px" }}>
+                {label}
+              </span>
+            )}
+          </button>
+        );
+      })}
+
       <button
         type="button"
         className="icon-button"
-        aria-label={t("wallet.connect")}
-        title={t("wallet.connect")}
-        disabled={connecting}
+        aria-label={t("wallet.walletConnect")}
+        title={t("wallet.walletConnect")}
+        aria-disabled={connecting}
         style={{
           margin: "5px",
           display: "flex",
           alignItems: "center",
         }}
-        onClick={handleConnect}
+        onClick={handleWalletConnect}
       >
         <img
           src="/icons/WalletConnectIcon.svg"
