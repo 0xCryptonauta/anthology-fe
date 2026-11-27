@@ -10,7 +10,8 @@ import type { WalletConnectParameters } from "@wagmi/connectors";
 import { arbitrum } from "viem/chains";
 import memoize from "lodash.memoize";
 
-const chainRpc = import.meta.env.VITE_FACTORY_RPC;
+const chainRpc =
+  import.meta.env.VITE_FACTORY_RPC || arbitrum.rpcUrls.default.http[0];
 
 const metadataUrl = "https://memory.inbytes.xyz";
 
