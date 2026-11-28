@@ -76,6 +76,28 @@ export const PrivacyView = () => {
             </p>
           </section>
 
+          <section
+            aria-labelledby="privacy-rpc-heading"
+            style={{ ...explainerSectionStyle, marginTop: "1.25rem" }}
+          >
+            <h2
+              id="privacy-rpc-heading"
+              style={{ ...sectionHeadingStyle, textAlign: "center" }}
+            >
+              {t("about.privacyRpcTitle")}
+            </h2>
+            <p style={paragraphStyle}>{t("about.privacyRpcIntro")}</p>
+            <ul style={rpcListStyle}>
+              <li style={rpcListItemStyle}>{t("about.privacyReadRpc")}</li>
+              <li style={rpcListItemStyle}>{t("about.privacyRelayRpc")}</li>
+              <li style={rpcListItemStyle}>{t("about.privacyWalletRpc")}</li>
+            </ul>
+            <p style={paragraphStyle}>{t("about.privacyWalletModal")}</p>
+            <p style={{ ...paragraphStyle, marginBottom: 0 }}>
+              {t("about.privacyRpcBoundary")}
+            </p>
+          </section>
+
           <p style={{ ...paragraphStyle, margin: "1.5rem 0 0" }}>
             <Link to="/about" style={{ color: "#1a1a1a" }}>
               ← {t("nav.about")}
@@ -115,6 +137,18 @@ const socialContentStyle: CSSProperties = {
 const explainerSectionStyle: CSSProperties = {
   paddingTop: "1.25rem",
   borderTop: "1px solid rgba(26, 26, 26, 0.2)",
+};
+
+const rpcListStyle: CSSProperties = {
+  margin: "0 0 1rem",
+  paddingLeft: "1.25rem",
+  color: "#1a1a1a",
+};
+
+const rpcListItemStyle: CSSProperties = {
+  fontSize: "0.95rem",
+  lineHeight: 1.6,
+  marginBottom: "0.5rem",
 };
 
 const sectionHeadingStyle: CSSProperties = {

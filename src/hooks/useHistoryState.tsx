@@ -3,10 +3,10 @@ import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 import { CurrentPaths } from "@src/types/common";
 import { useEffect } from "react";
 import { isAddress } from "viem";
-import { useAccount } from "wagmi";
+import { useConnection } from "wagmi";
 
 export const useHistoryState = () => {
-  const { address, isConnected } = useAccount();
+  const { address, isConnected } = useConnection();
   const { isIconToLocal } = useAppSelector((state) => state.dapp);
   const { currentPath } = useAppSelector((state) => state.user);
 

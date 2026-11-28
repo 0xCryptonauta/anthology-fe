@@ -8,7 +8,7 @@ import {
   type ReactElement,
 } from "react";
 import { downloadObjAsJson } from "@src/utils/downloadObjAsJson";
-import { useAccount } from "wagmi";
+import { useConnection } from "wagmi";
 import { Modal } from "./Modal";
 import { SelectAnthologiesForDownload } from "@components/Factory/SelectAnthologiesForDownload";
 import { Address, MemoirContent } from "@src/types/common";
@@ -65,7 +65,7 @@ export const DownloadReduxStore = ({
   );
   const localAnthology = useAppSelector((state) => state.localAnthology);
   const { addToast } = useToast();
-  const { isConnected } = useAccount();
+  const { isConnected } = useConnection();
 
   const [addDiscovery, setAddDiscovery] = useState(false);
   // Share via QR starts with no scope selected: the user must choose

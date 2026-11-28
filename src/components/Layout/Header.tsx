@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { SidePanel } from "./SidePanel";
 import { WalletConnector } from "./WalletConnector";
-import { useAccount } from "wagmi";
+import { useConnection } from "wagmi";
 import { LOCAL_USER_PATH } from "@src/utils/constants";
 import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 import { CurrentPaths } from "@src/types/common";
@@ -9,7 +9,7 @@ import { updateCurrentPath } from "@src/store/slices/userSlice";
 import { useHideOnScroll } from "@src/hooks/useHideOnScroll";
 
 export const Header = () => {
-  const { isConnected, address } = useAccount();
+  const { isConnected, address } = useConnection();
   const { isIconToLocal } = useAppSelector((state) => state.dapp);
   const { hidden } = useHideOnScroll();
 

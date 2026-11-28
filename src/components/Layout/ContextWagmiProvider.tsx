@@ -8,8 +8,8 @@ const queryClient = new QueryClient();
 /**
  * wagmi context with no WalletConnect connector registered.
  *
- * The WalletConnect provider is a ~294 kB gzipped chunk that the service
- * worker deliberately keeps out of its precache. Nothing web3 is downloaded
+ * The WalletConnect/AppKit vendor is a large chunk that the service worker
+ * deliberately keeps out of its precache. Nothing web3 is downloaded
  * until the user clicks connect: that handler lazily imports the connector,
  * which silently re-enables a stored session or opens the bundled pairing
  * modal for a fresh one. There is no boot-time reconnect either — reloading

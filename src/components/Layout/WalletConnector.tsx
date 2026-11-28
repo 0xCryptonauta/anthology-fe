@@ -1,30 +1,38 @@
 import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
 import { shortenAddress } from "@src/utils/shortenAddress";
-import { useAccount, useDisconnect } from "wagmi";
+import { useConnection, useDisconnect } from "wagmi";
 import { useEffect } from "react";
 import { resetUserStore, updateUserAddr } from "@src/store/slices/userSlice";
 import { WalletOptions } from "./WalletOptions";
+import { useToast } from "@src/components/Layout/Toast";
 import { useTranslation } from "@src/i18n/useTranslation";
 
 export const WalletConnector = () => {
   const { t } = useTranslation();
   const { userAddr } = useAppSelector((state) => state.user);
-  const { disconnect } = useDisconnect({
+  const dispatch = useAppDispatch();
+  const { addToast } = useToast();
+  const disconnectMutation = useDisconnect({
     mutation: {
       onSuccess: () => {
         console.log("Disconnected successfully");
         dispatch(resetUserStore());
       },
+      onError: () => {
+        addToast({
+          title: t("wallet.disconnectFailed"),
+          content: t("wallet.disconnectFailedDesc"),
+          variant: "danger",
+          delay: 3000,
+        });
+      },
     },
   });
-  const dispatch = useAppDispatch();
 
-  const { address, isConnected, connector } = useAccount();
+  const { address, isConnected, connector } = useConnection();
 
   const handleDisconnect = () => {
-    //dispatch(resetUserStore());
-    disconnect();
-    console.log("disconnected");
+    disconnectMutation.mutate();
   };
 
   useEffect(() => {

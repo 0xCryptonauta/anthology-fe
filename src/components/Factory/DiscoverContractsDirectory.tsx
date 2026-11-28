@@ -1,7 +1,7 @@
 import { useAppSelector } from "@store/utils/hooks";
 import { Address } from "@src/types/common";
 import { UserContracts } from "./UserContracts";
-import { useAccount } from "wagmi";
+import { useConnection } from "wagmi";
 import { useTranslation } from "@src/i18n/useTranslation";
 
 interface Contract {
@@ -16,7 +16,7 @@ export const DiscoverContractsDirectory = () => {
     (state) => state.factory
   );
 
-  const { address: currentUser } = useAccount();
+  const { address: currentUser } = useConnection();
   const visibleUsers = users.filter((user) => user !== currentUser);
 
   return (

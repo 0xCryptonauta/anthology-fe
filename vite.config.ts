@@ -18,23 +18,33 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          // Web3 is opt-in: pin the WalletConnect provider's entry module to a
-          // stable-named chunk so the service worker can keep it (and the
-          // dependency subtree only it uses) out of the precache. Matching
-          // only the provider entry — not the whole @walletconnect namespace —
-          // leaves modules shared with the shell (e.g. abitype) where Rollup
-          // put them, so the main entry never grows a static edge to this
-          // chunk. It is only fetched when the user clicks connect.
-          if (id.includes("node_modules/@walletconnect/ethereum-provider")) {
+          // Web3 is opt-in: pin Reown/WalletConnect modules to a stable-named
+          // chunk so the service worker can keep the wallet UI and provider
+          // out of the precache. It is only fetched when the user clicks
+          // connect. Shared runtime dependencies are assigned below so the
+          // entry never grows a static import edge to this chunk.
+          if (
+            id.includes("node_modules/@reown/") ||
+            id.includes("node_modules/@walletconnect/") ||
+            id.includes("node_modules/@phosphor-icons/webcomponents") ||
+            id.includes("node_modules/lit") ||
+            id.includes("node_modules/@lit/")
+          ) {
             return "walletconnect-vendor";
           }
-          // abitype and Vite's preload-helper are shared by the entry graph
-          // and the vendor graph. Without an explicit home, Rollup drops them
-          // into the vendor chunk, which gives the entry a static import edge
-          // to it — and a modulepreload that downloads wallet code at boot.
-          // Keep them in their own small chunk that both sides import instead.
+          // viem/ox, noble crypto and Vite's preload-helper are shared by the
+          // entry graph and the vendor graph. Without an explicit home, Rollup
+          // drops them into the vendor chunk, which gives the entry a static
+          // import edge to it — and a modulepreload that downloads wallet code
+          // at boot. Keep them in their own chunk that both sides import.
           if (
             id.includes("node_modules/abitype") ||
+            id.includes("node_modules/viem") ||
+            id.includes("node_modules/ox") ||
+            id.includes("node_modules/@noble/curves") ||
+            id.includes("node_modules/@noble/hashes") ||
+            id.includes("node_modules/@scure/base") ||
+            id.includes("node_modules/eventemitter3") ||
             id.includes("preload-helper")
           ) {
             return "shared-deps";
@@ -85,6 +95,8 @@ export default defineConfig({
         globIgnores: [
           "**/walletconnect-vendor-*.js",
           "**/walletConnect-*.js",
+          "**/Ph*-*.js",
+          "**/property-*.js",
         ],
         navigateFallbackDenylist: [/^\/onboarding\.html/, /^\/og-image\.html/],
         ignoreURLParametersMatching: [/^lang$/, /^utm_/, /^fbclid$/],
@@ -94,7 +106,8 @@ export default defineConfig({
             // vendor chunk download on the first wallet-connect click and
             // are cached from then on. Never precached (see globIgnores
             // above).
-            urlPattern: /\/assets\/(walletconnect-vendor|walletConnect)-[^/]+\.js$/,
+            urlPattern:
+              /\/assets\/(walletconnect-vendor|walletConnect|Ph[A-Za-z0-9_-]+|property)-[^/]+\.js$/,
             handler: "CacheFirst",
             options: {
               cacheName: "wc-vendor",

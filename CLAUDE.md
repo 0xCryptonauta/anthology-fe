@@ -23,7 +23,7 @@ bun run lint         # ESLint
 - **UI**: React 18, Tailwind CSS 4, Bootstrap 5, react-bootstrap
 - **State**: Redux Toolkit with redux-persist (localStorage)
 - **Routing**: React Router DOM 7
-- **Web3**: wagmi 2, viem, WalletConnect
+- **Web3**: wagmi 3, viem, WalletConnect
 - **Data Fetching**: TanStack Query (React Query 5)
 - **PWA**: vite-plugin-pwa with workbox
 

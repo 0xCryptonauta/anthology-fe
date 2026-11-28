@@ -4,7 +4,7 @@ import { useToast } from "@components/Layout/Toast";
 import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
 import { writeFactory } from "@src/contract-functions/factoryFunctions";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
-import { useAccount } from "wagmi";
+import { useConnection } from "wagmi";
 import { addUserLocalAnthology } from "@src/store/slices/localAnthologySlice";
 import { generateLocalContractAddr } from "@src/utils/generateLocalContractAddr";
 import { Modal } from "@src/components/Layout/Modal";
@@ -31,7 +31,7 @@ export const DeployButton: React.FC<DeployButtonProps> = ({
 
   const dispatch = useAppDispatch();
   const { addToast } = useToast();
-  const { isConnected } = useAccount();
+  const { isConnected } = useConnection();
 
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
