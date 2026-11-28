@@ -9,7 +9,7 @@
 <p align="center">
   <a href="https://github.com/0xCryptonauta/anthology-fe/releases"><img src="https://img.shields.io/github/package-json/v/0xCryptonauta/anthology-fe?color=%2306b6d4&label=version" /></a>
   <a href="#"><img src="https://img.shields.io/badge/license-TBD-%2306b6d4" /></a>
-  <a href="#"><img src="https://img.shields.io/badge/TypeScript-5.5-%233178c6?logo=typescript" /></a>
+  <a href="#"><img src="https://img.shields.io/badge/TypeScript-5.9-%233178c6?logo=typescript" /></a>
   <a href="#"><img src="https://img.shields.io/badge/React-18-%23087ea4?logo=react" /></a>
   <a href="#"><img src="https://img.shields.io/badge/Vite-6-%23646cff?logo=vite" /></a>
   <a href="#"><img src="https://img.shields.io/badge/PWA-ready-%235a0fc8?logo=pwa" /></a>
@@ -72,7 +72,7 @@ Deploy anthologies as smart contracts on Arbitrum for immutable storage. Pay a f
 <td>
 
 ### 🎨 Extensible skins
-Memoirs are plain strings — the rendering is determined by a skin system. Six skins: media (auto-embeds YouTube, Twitter, Instagram), text, JSON, playlist, and expandable list. Add a new skin with one component.
+Memoirs are plain strings — the rendering is determined by a skin system. Five skins: media (auto-embeds supported social and media providers), text, JSON, playlist, and expandable list. Add a new skin with one component.
 
 </td>
 </tr>
@@ -185,10 +185,10 @@ Content is stored as plain strings on-chain. Skins interpret strings client-side
 
 | Layer | Technologies |
 |---|---|
-| **UI** | React 18 &middot; TypeScript 5 &middot; Tailwind CSS 4 &middot; Bootstrap 5 |
+| **UI** | React 18 &middot; TypeScript 5.9 &middot; Tailwind CSS 4 &middot; Bootstrap 5 |
 | **State** | Redux Toolkit &middot; Redux Persist &middot; TanStack Query v5 |
 | **Routing** | React Router DOM v7 |
-| **Web3** | wagmi v3 &middot; viem &middot; WalletConnect |
+| **Web3** | wagmi v3 &middot; viem &middot; WalletConnect v2 (bundled AppKit modal) |
 | **PWA** | vite-plugin-pwa &middot; Workbox |
 | **QR** | qrcode.react &middot; html5-qrcode &middot; @orozcoh/qr-stream &middot; zxing-wasm |
 | **Build** | Vite 6 &middot; bun &middot; ESLint &middot; standard-version |
@@ -209,6 +209,15 @@ VITE_FACTORY_CONTRACT="Factory contract address on Arbitrum"
 VITE_FACTORY_RPC="Arbitrum RPC endpoint"
 VITE_ENV="development"
 ```
+
+### Wallet connection
+
+Anthology stays local-only until you explicitly connect. The WalletConnect code path is lazy-loaded, so a user who never connects does not download the wallet/AppKit bundle or open a relay connection.
+
+- **Injected wallets** are discovered through EIP-6963 and connect directly. They are never filtered by the allowlist.
+- **WalletConnect** uses the modal bundled inside `@walletconnect/ethereum-provider`: QR on desktop, wallet deep links on mobile.
+- The WalletConnect chooser is restricted to the curated allowlist in `src/utils/walletConnectAllowlist.ts`. The QR itself stays universal, so a wallet outside the chooser can still scan it.
+- `VITE_WC_PROJECT_ID` is only needed for the WalletConnect path. The `/privacy` page explains the three connection layers: your read RPC, the WalletConnect/Reown relay, and the wallet's own signing RPC.
 
 ### Scripts
 
@@ -273,7 +282,7 @@ Troubleshooting:
 
 Branch naming: `feature/` &middot; `fix/` &middot; `hotfix/` &middot; `docs/` &middot; `chore/`
 
-Commits follow conventional commits (`feat:`, `fix:`, `refactor:`). `feat:` bumps minor, `fix:` bumps patch via `standard-version`.
+Commits follow conventional commits (`feat:`, `fix:`, `refactor:`). `standard-version` computes the bump; before 1.0, use `bunx standard-version --release-as minor` for a feature release. `bun run release` is restricted to `main`.
 
 ```bash
 git checkout -b feature/my-feature
@@ -291,7 +300,7 @@ src/
 ├── components/     Reusable UI (Anthology, Factory, Layout)
 ├── contract-functions/  On-chain read/write + retry + caching
 ├── hooks/          Custom React hooks
-├── store/          Redux config + 5 slices
+├── store/          Redux config + 6 slices
 ├── styles/         Global CSS + background patterns
 ├── types/          TypeScript type definitions
 ├── utils/          Constants, helpers, regex, hashing
