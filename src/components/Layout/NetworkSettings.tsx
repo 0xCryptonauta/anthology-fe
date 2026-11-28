@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 import { isValidRpc } from "@src/utils/isValidRpc";
 import { useState } from "react";
 import { useToast } from "./Toast";
-import { useAccount } from "wagmi";
+import { useConnection } from "wagmi";
 import { Modal } from "./Modal";
 import { useTranslation } from "@src/i18n/useTranslation";
 
@@ -11,7 +11,7 @@ export const NetworkSettings = () => {
   const { t } = useTranslation();
   const { factoryRpc } = useAppSelector((state) => state.dapp);
 
-  const { isConnected } = useAccount();
+  const { isConnected } = useConnection();
 
   const { addToast } = useToast();
 

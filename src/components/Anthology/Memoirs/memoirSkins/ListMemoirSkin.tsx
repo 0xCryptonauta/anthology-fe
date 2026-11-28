@@ -4,7 +4,7 @@ import { useInfiniteMemoirs } from "@src/hooks/useInfiniteMemoirs";
 import { useAppSelector } from "@src/store/utils/hooks";
 import { Address } from "@src/types/common";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
-import { useAccount } from "wagmi";
+import { useConnection } from "wagmi";
 import { MemoirActions } from "../../MemoirActions";
 import { formatUnixTime } from "@utils/formatUnixTime";
 import { extractEmbed } from "@src/utils/embeds";
@@ -173,7 +173,7 @@ export const ListMemoirSkin: React.FC<ListMemoirSkinProps> = ({
     Record<number, boolean>
   >({});
 
-  const { address: currentUser } = useAccount();
+  const { address: currentUser } = useConnection();
   const anthologyOwner = useAppSelector(
     (state) => state.anthology[anthologyAddr]?.anthologyState?.owner
   );

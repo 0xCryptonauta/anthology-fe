@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 import { useToast } from "./Toast";
 import { toggleIsIconToLocal } from "@src/store/slices/dappSlice";
-import { useAccount } from "wagmi";
+import { useConnection } from "wagmi";
 import { useTranslation } from "@src/i18n/useTranslation";
 
 export const IconPathSwitcher = () => {
@@ -9,7 +9,7 @@ export const IconPathSwitcher = () => {
   const { isIconToLocal } = useAppSelector((state) => state.dapp);
   const dispatch = useAppDispatch();
   const { addToast } = useToast();
-  const { isConnected } = useAccount();
+  const { isConnected } = useConnection();
 
   if (!isConnected) return null;
 

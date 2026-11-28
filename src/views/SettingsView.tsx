@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useAccount } from "wagmi";
+import { useConnection } from "wagmi";
 import { useAppSelector } from "@src/store/utils/hooks";
 import InstallPWAButton from "@src/components/Layout/InstallPWAButton";
 import { NetworkSettings } from "@src/components/Layout/NetworkSettings";
@@ -20,7 +20,7 @@ import { useTranslation } from "@src/i18n/useTranslation";
 export const SettingsView = () => {
   const { t } = useTranslation();
   const { nametag } = useAppSelector((state) => state.connect);
-  const { isConnected } = useAccount();
+  const { isConnected } = useConnection();
 
   return (
     <>

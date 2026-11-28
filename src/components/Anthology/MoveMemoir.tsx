@@ -10,7 +10,7 @@ import { LOCAL_USER_ADDR } from "@src/utils/constants";
 import { buildCopiedMemoir } from "@src/utils/memoirCopy";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 import { writeAnthology } from "@src/contract-functions/anthologyFunctions";
-import { useAccount } from "wagmi";
+import { useConnection } from "wagmi";
 import { useToast } from "../Layout/Toast";
 import { Modal } from "../Layout/Modal";
 import { ContractSelector } from "../Layout/ContractSelector";
@@ -91,7 +91,7 @@ const MoveMemoirForm = ({
 
   const dispatch = useAppDispatch();
   const { addToast } = useToast();
-  const { isConnected } = useAccount();
+  const { isConnected } = useConnection();
   const { userAddr } = useAppSelector((s) => s.user);
   const localContracts = useAppSelector(
     (s) => s.localAnthology.userContracts[LOCAL_USER_ADDR] || []

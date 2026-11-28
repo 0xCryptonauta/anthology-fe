@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useConnect } from "wagmi";
+import { useConnect, useConnectors } from "wagmi";
 import type { Connector, CreateConnectorFn } from "wagmi";
 import { WALLETCONNECT_PARAMETERS } from "@src/wagmiConfig";
 import {
@@ -30,7 +30,8 @@ const hasLegacyInjectedProvider = () =>
  * wallet deep links on mobile).
  */
 export const WalletOptions = () => {
-  const { connectAsync, connectors } = useConnect();
+  const connectMutation = useConnect();
+  const connectors = useConnectors();
   const { addToast } = useToast();
   const { t } = useTranslation();
   const isMobile = useIsMobileViewport();
@@ -61,7 +62,7 @@ export const WalletOptions = () => {
     setConnectingId(connector.uid);
 
     try {
-      await connectAsync({ connector });
+      await connectMutation.mutateAsync({ connector });
     } catch (error) {
       report(classifyWalletConnectError(error));
     } finally {
@@ -84,9 +85,9 @@ export const WalletOptions = () => {
     }
 
     try {
-      await connectAsync({ connector });
+      await connectMutation.mutateAsync({ connector });
     } catch (error) {
-      // The connector fetches the vendor chunk from inside connectAsync, so
+      // The connector fetches the vendor chunk from inside mutateAsync, so
       // an unloadable vendor lands here too — classify before reporting.
       report(classifyWalletConnectError(error));
     } finally {

@@ -6,4 +6,4 @@
  * the initial page load and only download when a WalletConnect session is
  * actually used.
  */
-export { walletConnect } from "@wagmi/connectors";
+export { walletConnect } from "@wagmi/connectors/walletConnect";

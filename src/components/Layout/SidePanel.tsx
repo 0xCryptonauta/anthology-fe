@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Modal } from "./Modal";
 
 import { useAppDispatch, useAppSelector } from "@store/utils/hooks";
-import { useAccount } from "wagmi";
+import { useConnection } from "wagmi";
 import { LOCAL_USER_PATH } from "@src/utils/constants";
 import { updateCurrentPath } from "@src/store/slices/userSlice";
 import { CurrentPaths } from "@src/types/common";
@@ -14,7 +14,7 @@ export const SidePanel = () => {
   const { userAddr } = useAppSelector((state) => state.user);
   const { isIconToLocal } = useAppSelector((state) => state.dapp);
   const backgroundsEnabled = useAppSelector((s) => s.dapp.categoryBackgroundsEnabled);
-  const { isConnected, address } = useAccount();
+  const { isConnected, address } = useConnection();
 
   const dispatch = useAppDispatch();
   const [show, setShow] = useState(false);

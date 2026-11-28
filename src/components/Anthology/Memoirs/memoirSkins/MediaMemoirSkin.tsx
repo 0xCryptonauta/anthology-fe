@@ -10,7 +10,7 @@ import { updateCurrentPath } from "@src/store/slices/userSlice";
 import { useAppDispatch, useAppSelector } from "@src/store/utils/hooks";
 import { OrderType } from "@src/components/Layout/OrderSelector";
 import { useInfiniteMemoirs } from "@src/hooks/useInfiniteMemoirs";
-import { useAccount } from "wagmi";
+import { useConnection } from "wagmi";
 import { isLocalAnthology } from "@src/utils/isLocalAnthology";
 import { MemoirActions } from "../../MemoirActions";
 import { LOCAL_USER_ADDR } from "@src/utils/constants";
@@ -176,7 +176,7 @@ export const MediaMemoirSkin: React.FC<MediaMemoirSkinProps> = ({
     filterKey,
     loadMore,
   } = useInfiniteMemoirs(anthologyAddr, order, search);
-  const { address: currentUser } = useAccount();
+  const { address: currentUser } = useConnection();
   const anthologyOwner = useAppSelector(
     (state) => state.anthology[anthologyAddr]?.anthologyState?.owner
   );
