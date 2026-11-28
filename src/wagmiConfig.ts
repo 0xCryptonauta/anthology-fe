@@ -13,7 +13,13 @@ import memoize from "lodash.memoize";
 const chainRpc =
   import.meta.env.VITE_FACTORY_RPC || arbitrum.rpcUrls.default.http[0];
 
-const metadataUrl = "https://memory.inbytes.xyz";
+// Match the page's real origin so WalletConnect's pairing screen and Verify
+// check agree with the deployment (production: memory.inbytes.xyz, dev:
+// memoria.inbytes.xyz). The fallback keeps Bun-side imports deterministic.
+const metadataUrl =
+  typeof window !== "undefined"
+    ? window.location.origin
+    : "https://memory.inbytes.xyz";
 
 const metadata = {
   name: "Anthology",
