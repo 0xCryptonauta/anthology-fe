@@ -162,15 +162,17 @@ export const en = {
     "Hosting: the site is served as static files. Our hosting/CDN may keep standard security and access logs (such as IP address and user agent) and set strictly necessary security cookies (for example, bot protection) for availability and abuse prevention.",
   "about.privacyControl":
     "You stay in control: export or delete all app data in Settings at any time. The service worker only caches the app shell so it can work offline; it does not track you.",
-  "about.privacyRpcTitle": "Three RPCs and connections",
+  "about.privacyRpcTitle": "Three connection layers",
   "about.privacyRpcIntro":
     "Different parts of the wallet connection use different infrastructure. Changing the RPC in Settings does not move all three.",
   "about.privacyReadRpc":
     "Read RPC: fully configurable by you. It supplies the blockchain data Anthology reads.",
   "about.privacyRelayRpc":
-    "WalletConnect relay: Reown infrastructure selected by the WalletConnect project ID. It transports pairing and signing messages; it is not your blockchain RPC.",
+    "WalletConnect relay: the default WalletConnect/Reown relay, authenticated by the configured WalletConnect project ID. It transports pairing and signing messages; it is not your blockchain RPC.",
   "about.privacyWalletRpc":
     "Wallet signing RPC: controlled by the wallet, not Anthology. Anthology can request Arbitrum through wallet_addEthereumChain, but the wallet may keep its own node.",
+  "about.privacyWalletModal":
+    "WalletConnect modal: to render wallet choices and verification status, the modal may contact Reown's wallet registry and Verify service, and load remote icons or fonts.",
   "about.privacyRpcBoundary":
     "A user-controlled RPC controls Anthology's reads. It cannot guarantee how a WalletConnect wallet signs or broadcasts transactions.",
 
@@ -354,6 +356,8 @@ export const en = {
   "wallet.browser": "Browser wallet",
   "wallet.connecting": "Connecting…",
   "wallet.disconnect": "Disconnect wallet",
+  "wallet.disconnectFailed": "Could not disconnect",
+  "wallet.disconnectFailedDesc": "Try again in a moment.",
   "wallet.walletConnect": "Connect with WalletConnect",
   "wallet.offlineConnect": "Connection needs the internet",
   "wallet.offlineConnectDesc":
@@ -911,15 +915,17 @@ export const es: Record<TranslationKey, string> = {
     "Alojamiento: el sitio se sirve como archivos estáticos. Nuestro hosting/CDN puede conservar registros estándar de seguridad y acceso (como dirección IP y user agent) y establecer cookies de seguridad estrictamente necesarias (por ejemplo, protección contra bots) para disponibilidad y prevención de abuso.",
   "about.privacyControl":
     "Tú tienes el control: exporta o borra todos los datos de la app en Ajustes cuando quieras. El service worker solo cachea la app para que funcione sin conexión; no te rastrea.",
-  "about.privacyRpcTitle": "Tres RPC y conexiones",
+  "about.privacyRpcTitle": "Tres capas de conexión",
   "about.privacyRpcIntro":
     "Distintas partes de la conexión de la billetera usan infraestructura diferente. Cambiar el RPC en Ajustes no traslada las tres.",
   "about.privacyReadRpc":
     "RPC de lectura: totalmente configurable por ti. Proporciona los datos de la blockchain que Anthology lee.",
   "about.privacyRelayRpc":
-    "Relay de WalletConnect: infraestructura de Reown seleccionada por el project ID de WalletConnect. Transporta mensajes de emparejamiento y firma; no es tu RPC de blockchain.",
+    "Relé de WalletConnect: el relé predeterminado de WalletConnect/Reown, autenticado por el ID de proyecto configurado. Transporta mensajes de emparejamiento y firma; no es tu RPC de blockchain.",
   "about.privacyWalletRpc":
     "RPC de firma de la billetera: lo controla la billetera, no Anthology. Anthology puede solicitar Arbitrum mediante wallet_addEthereumChain, pero la billetera puede mantener su propio nodo.",
+  "about.privacyWalletModal":
+    "Modal de WalletConnect: para mostrar las billeteras y el estado de verificación, el modal puede contactar el registro de billeteras y el servicio Verify de Reown, y cargar iconos o fuentes remotas.",
   "about.privacyRpcBoundary":
     "Un RPC controlado por el usuario controla las lecturas de Anthology. No puede garantizar cómo firma o transmite transacciones una billetera WalletConnect.",
 
@@ -1106,6 +1112,8 @@ export const es: Record<TranslationKey, string> = {
   "wallet.browser": "Billetera del navegador",
   "wallet.connecting": "Conectando…",
   "wallet.disconnect": "Desconectar billetera",
+  "wallet.disconnectFailed": "No se pudo desconectar",
+  "wallet.disconnectFailedDesc": "Inténtalo de nuevo en un momento.",
   "wallet.walletConnect": "Conectar con WalletConnect",
   "wallet.offlineConnect": "Conectar necesita internet",
   "wallet.offlineConnectDesc":

@@ -92,6 +92,7 @@ export const PrivacyView = () => {
               <li style={rpcListItemStyle}>{t("about.privacyRelayRpc")}</li>
               <li style={rpcListItemStyle}>{t("about.privacyWalletRpc")}</li>
             </ul>
+            <p style={paragraphStyle}>{t("about.privacyWalletModal")}</p>
             <p style={{ ...paragraphStyle, marginBottom: 0 }}>
               {t("about.privacyRpcBoundary")}
             </p>

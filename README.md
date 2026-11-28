@@ -188,7 +188,7 @@ Content is stored as plain strings on-chain. Skins interpret strings client-side
 | **UI** | React 18 &middot; TypeScript 5 &middot; Tailwind CSS 4 &middot; Bootstrap 5 |
 | **State** | Redux Toolkit &middot; Redux Persist &middot; TanStack Query v5 |
 | **Routing** | React Router DOM v7 |
-| **Web3** | wagmi v2 &middot; viem &middot; WalletConnect |
+| **Web3** | wagmi v3 &middot; viem &middot; WalletConnect |
 | **PWA** | vite-plugin-pwa &middot; Workbox |
 | **QR** | qrcode.react &middot; html5-qrcode &middot; @orozcoh/qr-stream &middot; zxing-wasm |
 | **Build** | Vite 6 &middot; bun &middot; ESLint &middot; standard-version |

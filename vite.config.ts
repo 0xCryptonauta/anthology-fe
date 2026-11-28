@@ -25,7 +25,10 @@ export default defineConfig({
           // entry never grows a static import edge to this chunk.
           if (
             id.includes("node_modules/@reown/") ||
-            id.includes("node_modules/@walletconnect/")
+            id.includes("node_modules/@walletconnect/") ||
+            id.includes("node_modules/@phosphor-icons/webcomponents") ||
+            id.includes("node_modules/lit") ||
+            id.includes("node_modules/@lit/")
           ) {
             return "walletconnect-vendor";
           }
@@ -92,7 +95,8 @@ export default defineConfig({
         globIgnores: [
           "**/walletconnect-vendor-*.js",
           "**/walletConnect-*.js",
-          "**/appkit-*.js",
+          "**/Ph*-*.js",
+          "**/property-*.js",
         ],
         navigateFallbackDenylist: [/^\/onboarding\.html/, /^\/og-image\.html/],
         ignoreURLParametersMatching: [/^lang$/, /^utm_/, /^fbclid$/],
@@ -103,7 +107,7 @@ export default defineConfig({
             // are cached from then on. Never precached (see globIgnores
             // above).
             urlPattern:
-              /\/assets\/(walletconnect-vendor|walletConnect|appkit)-[^/]+\.js$/,
+              /\/assets\/(walletconnect-vendor|walletConnect|Ph[A-Za-z0-9_-]+|property)-[^/]+\.js$/,
             handler: "CacheFirst",
             options: {
               cacheName: "wc-vendor",
